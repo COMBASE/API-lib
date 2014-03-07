@@ -32,6 +32,8 @@ public class Product
 	private List<Price> prices;
 	private List<Product_Text> texts;
 	private Assortment assortment;
+	private List<Product_Code> codes;
+	private String uuid = null;
 
 	private Product(Builder builder)
 	{
@@ -51,6 +53,7 @@ public class Product
 		prices = builder.prices;
 		texts = builder.texts;
 		assortment = builder.assortment;
+		codes = builder.codes;
 	}
 
 	public static class Builder
@@ -72,6 +75,7 @@ public class Product
 		private List<Price> prices = new ArrayList<Price>();
 		private Assortment assortment = null;
 		private List<Product_Text> texts = new ArrayList<Product_Text>();
+		private List<Product_Code> codes = new ArrayList<Product_Code>();
 
 		public Builder(String name)
 		{
@@ -186,6 +190,21 @@ public class Product
 			return this;
 		}
 
+		public Builder codes(Product_Code code)
+		{
+			codes.add(code);
+			return this;
+		}
+
+		public Builder codes(Collection<Product_Code> coll)
+		{
+			for (Product_Code code : coll)
+			{
+				codes.add(code);
+			}
+			return this;
+		}
+
 		public Product build()
 		{
 			return new Product(this);
@@ -231,6 +250,22 @@ public class Product
 				else
 				{
 					obj.put("prices", prices.get(0).toJSON());
+				}
+			}
+			if (!codes.isEmpty())
+			{
+				if (codes.toArray().length > 1)
+				{
+					JSONArray array = new JSONArray();
+					for (Product_Code code : codes)
+					{
+						array.put(code.toJSON());
+					}
+					obj.put("codes", array);
+				}
+				else
+				{
+					obj.put("codes", codes.get(0).toJSON());
 				}
 			}
 			if (!texts.isEmpty())
@@ -437,6 +472,26 @@ public class Product
 	public void setAssortment(Assortment assortment)
 	{
 		this.assortment = assortment;
+	}
+
+	public List<Product_Code> getCodes()
+	{
+		return codes;
+	}
+
+	public void setCodes(List<Product_Code> codes)
+	{
+		this.codes = codes;
+	}
+
+	public String getUuid()
+	{
+		return uuid;
+	}
+
+	public void setUuid(String uuid)
+	{
+		this.uuid = uuid;
 	}
 
 	@Override

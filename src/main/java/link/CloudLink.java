@@ -27,8 +27,8 @@ public class CloudLink
 	public CloudLink(String cloudUrl, String token)
 	{
 		super();
-		if (cloudUrl.endsWith("/"))
-			cloudUrl = cloudUrl.substring(0, cloudUrl.length() - 1);
+		if (!cloudUrl.endsWith("/api/v1"))
+			cloudUrl = cloudUrl + "/api/v1";
 		ApiCon = new ApiConnector(cloudUrl, token);
 	}
 

@@ -16,6 +16,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import domain.DataType;
@@ -84,16 +85,19 @@ public class ApiConnector
 	public StringBuffer fetchData(DataType type, String reference) throws IOException
 	{
 		String url;
+		String slash = "";
+		if (!cloudURL.endsWith("/"))
+			slash = "/";
 		if (isUUID(reference))
 		{
-			url = cloudURL + "/" + token + "/" + type.getReference() + "/id/" + reference;
+			url = cloudURL + slash + token + "/" + type.getReference() + "/id/" + reference;
 		}
 		else if (reference.matches("[0-9]+"))
 		{
-			url = cloudURL + "/" + token + "/" + type.getReference() + "/number/" + reference;
+			url = cloudURL + slash + token + "/" + type.getReference() + "/number/" + reference;
 		}
 		else
-			url = cloudURL + "/" + token + "/" + type.getReference() + "/name/" +
+			url = cloudURL + slash + token + "/" + type.getReference() + "/name/" +
 				reference.replaceAll("%", "%25").replaceAll(" ", "%20");
 		URL obj;
 		obj = new URL(url);
@@ -128,9 +132,32 @@ public class ApiConnector
 	 */
 	public boolean postData(DataType type, JSONObject obj)
 	{
-		String url = cloudURL + "/" + token + "/" + type.getReference() + "/save/";
+		String slash = "";
+		if (!cloudURL.endsWith("/"))
+			slash = "/";
+		String url = cloudURL + slash + token + "/" + type.getReference() + "/save/";
 		try
 		{
+			String uuid = null;
+			int nr = 0;
+			if (obj.has("uuid"))
+			{
+				nr = CloudLink.getNumber(type, obj.opt("uuid").toString());
+			}
+			else
+			{
+				if (obj.has("number"))
+					uuid = CloudLink.getUUID(type, obj.opt("number").toString());
+				else
+				{
+					uuid = CloudLink.getUUID(type, obj.opt("name").toString());
+					nr = CloudLink.getNumber(type, obj.opt("name").toString());
+				}
+			}
+			if (uuid != null)
+				obj.put("uuid", uuid);
+			if (nr > 0)
+				obj.put("number", nr);
 			URL posturl = new URL(url);
 			HttpURLConnection con;
 			if (cloudURL.contains("https"))
@@ -171,6 +198,11 @@ public class ApiConnector
 			}
 		}
 		catch (IOException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+		catch (JSONException e)
 		{
 			e.printStackTrace();
 			return false;
