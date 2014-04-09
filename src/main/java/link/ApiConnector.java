@@ -111,7 +111,7 @@ public class ApiConnector
 		{
 			con = (HttpURLConnection)obj.openConnection();
 		}
-		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
 		String inputLine;
 		StringBuffer response = new StringBuffer();
 		while ((inputLine = in.readLine()) != null)
@@ -178,7 +178,7 @@ public class ApiConnector
 			con.connect();
 
 			OutputStream out = con.getOutputStream();
-			OutputStreamWriter wr = new OutputStreamWriter(out);
+			OutputStreamWriter wr = new OutputStreamWriter(out, "UTF-8");
 			wr.write(obj.toString());
 			wr.flush();
 			wr.close();

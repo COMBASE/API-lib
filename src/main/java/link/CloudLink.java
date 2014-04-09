@@ -123,7 +123,7 @@ public class CloudLink
 				obj = obj.getJSONObject("result");
 				if (obj.has("number"))
 				{
-					return Integer.valueOf(obj.get("number").toString());
+					return Integer.valueOf(obj.get("number").toString()).intValue();
 				}
 			}
 		}

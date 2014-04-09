@@ -15,6 +15,7 @@ public class Sector
 	private String name;
 	private int number;
 	private List<Tax> taxlist;
+	private boolean deleted;
 	private String uuid = null;
 
 	private Sector(Builder builder)
@@ -22,12 +23,14 @@ public class Sector
 		name = builder.name;
 		number = builder.number;
 		taxlist = builder.taxlist;
+		deleted = builder.deleted;
 	}
 
 	public static class Builder
 	{
 		private final String name;
 		private int number = 0;
+		private boolean deleted = false;
 		private List<Tax> taxlist = new ArrayList<Tax>();
 
 		public Builder(String name)
@@ -38,6 +41,12 @@ public class Sector
 		public Builder number(int value)
 		{
 			number = value;
+			return this;
+		}
+
+		public Builder deleted(boolean value)
+		{
+			deleted = value;
 			return this;
 		}
 
@@ -61,6 +70,7 @@ public class Sector
 			obj.put("name", name);
 			if (number != 0)
 				obj.put("number", number);
+			obj.put("deleted", deleted);
 			if (!taxlist.isEmpty())
 			{
 				if (taxlist.toArray().length > 1)

@@ -211,6 +211,28 @@ public class Product
 		}
 	}
 
+	public static Product fromJSON(JSONObject obj)
+	{
+		if (obj.has("result"))
+		{
+			try
+			{
+				obj = obj.getJSONObject("result");
+				Product prod = new Product.Builder(obj.getString("name")).build();
+				if (obj.has("number"))
+					prod.setNumber(obj.getInt("number"));
+
+				return prod;
+			}
+			catch (JSONException e)
+			{
+				e.printStackTrace();
+			}
+		}
+
+		return null;
+	}
+
 	public JSONObject toJSON()
 	{
 		JSONObject obj = new JSONObject();
