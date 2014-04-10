@@ -88,7 +88,7 @@ public class CloudLink
 			if (obj.has("result") && obj.get("result") != null)
 			{
 				obj = obj.getJSONObject("result");
-				if (obj.has("uuid"))
+				if (obj.has("uuid") && obj.get("uuid") != null)
 				{
 					return obj.get("uuid").toString();
 				}
@@ -121,7 +121,7 @@ public class CloudLink
 			if (obj.has("result") && obj.get("result") != null)
 			{
 				obj = obj.getJSONObject("result");
-				if (obj.has("number"))
+				if (obj.has("number") && obj.get("number") != null)
 				{
 					return Integer.valueOf(obj.get("number").toString()).intValue();
 				}

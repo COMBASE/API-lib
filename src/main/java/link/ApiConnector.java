@@ -44,15 +44,18 @@ public class ApiConnector
 	 */
 	private final static TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager()
 	{
+		@Override
 		public X509Certificate[] getAcceptedIssuers()
 		{
 			return null;
 		}
 
+		@Override
 		public void checkClientTrusted(X509Certificate[] certs, String authType)
 		{
 		}
 
+		@Override
 		public void checkServerTrusted(X509Certificate[] certs, String authType)
 		{
 		}
@@ -140,13 +143,13 @@ public class ApiConnector
 		{
 			String uuid = null;
 			int nr = 0;
-			if (obj.has("uuid"))
+			if (obj.has("uuid") && obj.get("uuid") != null)
 			{
 				nr = CloudLink.getNumber(type, obj.opt("uuid").toString());
 			}
 			else
 			{
-				if (obj.has("number"))
+				if (obj.has("number") && obj.get("number") != null)
 					uuid = CloudLink.getUUID(type, obj.opt("number").toString());
 				else
 				{
