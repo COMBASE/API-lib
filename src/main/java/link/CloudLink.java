@@ -85,7 +85,7 @@ public class CloudLink
 		try
 		{
 			JSONObject obj = new JSONObject(ApiCon.fetchData(type, reference).toString());
-			if (obj.has("result"))
+			if (obj.has("result") && obj.get("result") != null)
 			{
 				obj = obj.getJSONObject("result");
 				if (obj.has("uuid"))
@@ -118,7 +118,7 @@ public class CloudLink
 		try
 		{
 			JSONObject obj = new JSONObject(ApiCon.fetchData(type, reference).toString());
-			if (obj.has("result"))
+			if (obj.has("result") && obj.get("result") != null)
 			{
 				obj = obj.getJSONObject("result");
 				if (obj.has("number"))
