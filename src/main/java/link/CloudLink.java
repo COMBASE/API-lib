@@ -85,10 +85,10 @@ public class CloudLink
 		try
 		{
 			JSONObject obj = new JSONObject(ApiCon.fetchData(type, reference).toString());
-			if (obj.has("result") && obj.get("result") != null)
+			if (obj.has("result") && !obj.opt("result").equals(null))
 			{
 				obj = obj.getJSONObject("result");
-				if (obj.has("uuid") && obj.get("uuid") != null)
+				if (obj.has("uuid") && !obj.opt("uuid").equals(null))
 				{
 					return obj.get("uuid").toString();
 				}
@@ -118,10 +118,10 @@ public class CloudLink
 		try
 		{
 			JSONObject obj = new JSONObject(ApiCon.fetchData(type, reference).toString());
-			if (obj.has("result") && obj.get("result") != null)
+			if (obj.has("result") && !obj.opt("result").equals(null))
 			{
 				obj = obj.getJSONObject("result");
-				if (obj.has("number") && obj.get("number") != null)
+				if (obj.has("number") && !obj.opt("number").equals(null))
 				{
 					return Integer.valueOf(obj.get("number").toString()).intValue();
 				}

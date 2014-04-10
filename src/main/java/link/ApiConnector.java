@@ -143,13 +143,13 @@ public class ApiConnector
 		{
 			String uuid = null;
 			int nr = 0;
-			if (obj.has("uuid") && obj.get("uuid") != null)
+			if (obj.has("uuid") && !obj.opt("uuid").equals(null))
 			{
 				nr = CloudLink.getNumber(type, obj.opt("uuid").toString());
 			}
 			else
 			{
-				if (obj.has("number") && obj.get("number") != null)
+				if (obj.has("number") && !obj.opt("number").equals(null))
 					uuid = CloudLink.getUUID(type, obj.opt("number").toString());
 				else
 				{
