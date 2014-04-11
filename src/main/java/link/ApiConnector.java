@@ -84,24 +84,20 @@ public class ApiConnector
 	 * @param type
 	 * @param reference
 	 * @return
+	 * @throws IOException 
 	 */
 	public StringBuffer fetchData(DataType type, String reference) throws IOException
-	{
+	{	
 		String url;
 		String slash = "";
+		
 		if (!cloudURL.endsWith("/"))
 			slash = "/";
-		if (isUUID(reference))
-		{
-			url = cloudURL + slash + token + "/" + type.getReference() + "/id/" + reference;
-		}
-		else if (reference.matches("[0-9]+"))
-		{
-			url = cloudURL + slash + token + "/" + type.getReference() + "/number/" + reference;
-		}
-		else
-			url = cloudURL + slash + token + "/" + type.getReference() + "/name/" +
-				reference.replaceAll("%", "%25").replaceAll(" ", "%20");
+		
+			url = cloudURL + slash + token + "/" + type.getReference() + reference;
+		
+		
+		
 		URL obj;
 		obj = new URL(url);
 		URLConnection con;
@@ -145,16 +141,16 @@ public class ApiConnector
 			int nr = 0;
 			if (obj.has("uuid") && !obj.opt("uuid").equals(null))
 			{
-				nr = CloudLink.getNumber(type, obj.opt("uuid").toString());
+				nr = CloudLink.getNumberByUuid(type, obj.opt("uuid").toString());
 			}
 			else
 			{
 				if (obj.has("number") && !obj.opt("number").equals(null))
-					uuid = CloudLink.getUUID(type, obj.opt("number").toString());
+					uuid = CloudLink.getUUIDByNumber(type, obj.opt("number").toString());
 				else
 				{
-					uuid = CloudLink.getUUID(type, obj.opt("name").toString());
-					nr = CloudLink.getNumber(type, obj.opt("name").toString());
+					uuid = CloudLink.getUUIDByName(type, obj.opt("name").toString());
+					nr = CloudLink.getNumberByName(type, obj.opt("name").toString());
 				}
 			}
 			if (uuid != null)

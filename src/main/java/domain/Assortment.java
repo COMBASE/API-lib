@@ -82,9 +82,9 @@ public class Assortment
 	{
 		boolean result = CloudLink.getConnector().postData(DataType.assortment, this.toJSON());
 		if (number != 0)
-			uuid = CloudLink.getUUID(DataType.assortment, String.valueOf(number));
+			uuid = CloudLink.getUUIDByNumber(DataType.assortment, String.valueOf(number));
 		else
-			uuid = CloudLink.getUUID(DataType.assortment, name);
+			uuid = CloudLink.getUUIDByName(DataType.assortment, name);
 		return result;
 	}
 

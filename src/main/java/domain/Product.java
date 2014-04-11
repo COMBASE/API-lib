@@ -13,9 +13,9 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-public class Product
-{
-	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+public class Product {
+	private static final SimpleDateFormat inputDf = new SimpleDateFormat(
+			"yyyy-MM-dd'T'HH:mm:ssXXX");
 	private String name;
 	private int number;
 	private boolean deleted;
@@ -35,8 +35,7 @@ public class Product
 	private List<Product_Code> codes;
 	private String uuid = null;
 
-	private Product(Builder builder)
-	{
+	private Product(Builder builder) {
 		name = builder.name;
 		number = builder.number;
 		deleted = builder.deleted;
@@ -56,8 +55,7 @@ public class Product
 		codes = builder.codes;
 	}
 
-	public static class Builder
-	{
+	public static class Builder {
 		private final String name;
 		private int number = 0;
 
@@ -77,155 +75,127 @@ public class Product
 		private List<Product_Text> texts = new ArrayList<Product_Text>();
 		private List<Product_Code> codes = new ArrayList<Product_Code>();
 
-		public Builder(String name)
-		{
+		public Builder(String name) {
 			this.name = name;
 		}
 
-		public Builder number(int value)
-		{
+		public Builder number(int value) {
 			number = value;
 			return this;
 		}
 
-		public Builder deleted(boolean value)
-		{
+		public Builder deleted(boolean value) {
 			deleted = value;
 			return this;
 		}
 
-		public Builder activeAssortment(boolean value)
-		{
+		public Builder activeAssortment(boolean value) {
 			activeAssortment = value;
 			return this;
 		}
 
-		public Builder activeAssortmentFrom(Date value)
-		{
+		public Builder activeAssortmentFrom(Date value) {
 			activeAssortmentFrom = value;
 			return this;
 		}
 
-		public Builder costs(int i)
-		{
+		public Builder costs(int i) {
 			costs = i;
 			return this;
 		}
 
-		public Builder discountable(boolean value)
-		{
+		public Builder discountable(boolean value) {
 			discountable = value;
 			return this;
 		}
 
-		public Builder priceChangeable(boolean value)
-		{
+		public Builder priceChangeable(boolean value) {
 			priceChangeable = value;
 			return this;
 		}
 
-		public Builder requiresSerialNumber(boolean value)
-		{
+		public Builder requiresSerialNumber(boolean value) {
 			requiresSerialNumber = value;
 			return this;
 		}
 
-		public Builder trackInventory(boolean value)
-		{
+		public Builder trackInventory(boolean value) {
 			trackInventory = value;
 			return this;
 		}
 
-		public Builder commodityGroup(CommodityGroup grp)
-		{
+		public Builder commodityGroup(CommodityGroup grp) {
 			commodityGroup = grp;
 			return this;
 		}
 
-		public Builder sector(Sector sec)
-		{
+		public Builder sector(Sector sec) {
 			sector = sec;
 			return this;
 		}
 
-		public Builder altsector(Sector sec)
-		{
+		public Builder altsector(Sector sec) {
 			altsector = sec;
 			return this;
 		}
 
-		public Builder prices(Price p)
-		{
+		public Builder prices(Price p) {
 			prices.add(p);
 			return this;
 		}
 
-		public Builder prices(Collection<Price> coll)
-		{
-			for (Price price : coll)
-			{
+		public Builder prices(Collection<Price> coll) {
+			for (Price price : coll) {
 				prices.add(price);
 			}
 			return this;
 		}
 
-		public Builder texts(Product_Text text)
-		{
+		public Builder texts(Product_Text text) {
 			texts.add(text);
 			return this;
 		}
 
-		public Builder texts(Collection<Product_Text> coll)
-		{
-			for (Product_Text text : coll)
-			{
+		public Builder texts(Collection<Product_Text> coll) {
+			for (Product_Text text : coll) {
 				texts.add(text);
 			}
 			return this;
 		}
 
-		public Builder assortment(Assortment value)
-		{
+		public Builder assortment(Assortment value) {
 			assortment = value;
 			return this;
 		}
 
-		public Builder codes(Product_Code code)
-		{
+		public Builder codes(Product_Code code) {
 			codes.add(code);
 			return this;
 		}
 
-		public Builder codes(Collection<Product_Code> coll)
-		{
-			for (Product_Code code : coll)
-			{
+		public Builder codes(Collection<Product_Code> coll) {
+			for (Product_Code code : coll) {
 				codes.add(code);
 			}
 			return this;
 		}
 
-		public Product build()
-		{
+		public Product build() {
 			return new Product(this);
 		}
 	}
 
-	public static Product fromJSON(JSONObject obj)
-	{
-		if (obj.has("result"))
-		{
-			try
-			{
+	public static Product fromJSON(JSONObject obj) {
+		if (obj.has("result")) {
+			try {
 				obj = obj.getJSONObject("result");
-				Product prod = new Product.Builder(obj.getString("name")).build();
+				Product prod = new Product.Builder(obj.getString("name"))
+						.build();
 				if (obj.has("number"))
 					prod.setNumber(obj.getInt("number"));
 
 				return prod;
-			}
-			catch (JSONException e)
-			{
+			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 		}
@@ -233,18 +203,17 @@ public class Product
 		return null;
 	}
 
-	public JSONObject toJSON()
-	{
+	public JSONObject toJSON() {
 		JSONObject obj = new JSONObject();
-		try
-		{
+		try {
 			obj.put("name", name);
 			if (number != 0)
 				obj.put("number", number);
 			obj.put("deleted", deleted);
 			obj.put("activeAssortment", activeAssortment);
 			if (activeAssortmentFrom != null)
-				obj.put("activeAssortmentFrom", inputDf.format(activeAssortmentFrom));
+				obj.put("activeAssortmentFrom",
+						inputDf.format(activeAssortmentFrom));
 			obj.put("costs", costs);
 			obj.put("discountable", discountable);
 			obj.put("priceChangeable", priceChangeable);
@@ -258,69 +227,49 @@ public class Product
 				obj.put("sector", sector.getUuid());
 			if (altsector != null)
 				obj.put("alternativeSector", altsector.getUuid());
-			if (!prices.isEmpty())
-			{
-				if (prices.toArray().length > 1)
-				{
+			if (!prices.isEmpty()) {
+				if (prices.toArray().length > 1) {
 					JSONArray array = new JSONArray();
-					for (Price p : prices)
-					{
+					for (Price p : prices) {
 						array.put(p.toJSON());
 					}
 					obj.put("prices", array);
-				}
-				else
-				{
+				} else {
 					obj.put("prices", prices.get(0).toJSON());
 				}
 			}
-			if (!codes.isEmpty())
-			{
-				if (codes.toArray().length > 1)
-				{
+			if (!codes.isEmpty()) {
+				if (codes.toArray().length > 1) {
 					JSONArray array = new JSONArray();
-					for (Product_Code code : codes)
-					{
+					for (Product_Code code : codes) {
 						array.put(code.toJSON());
 					}
 					obj.put("codes", array);
-				}
-				else
-				{
+				} else {
 					obj.put("codes", codes.get(0).toJSON());
 				}
 			}
-			if (!texts.isEmpty())
-			{
-				if (texts.toArray().length > 1)
-				{
+			if (!texts.isEmpty()) {
+				if (texts.toArray().length > 1) {
 					JSONArray array = new JSONArray();
-					for (Product_Text text : texts)
-					{
+					for (Product_Text text : texts) {
 						array.put(text.toJSON());
 					}
 					obj.put("articleTexts", array);
-				}
-				else
-				{
+				} else {
 					obj.put("articleTexts", texts.get(0).toJSON());
 				}
 			}
 			return obj;
-		}
-		catch (JSONException e)
-		{
+		} catch (JSONException e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
 
-	public boolean post() throws IOException
-	{
-		if (!prices.isEmpty())
-		{
-			for (Price p : prices)
-			{
+	public boolean post() throws IOException {
+		if (!prices.isEmpty()) {
+			for (Price p : prices) {
 				if (p.getPriceList().getUuid() == null)
 					p.getPriceList().post();
 			}
@@ -333,192 +282,156 @@ public class Product
 			altsector.post();
 		if (assortment != null && assortment.getUuid() == null)
 			assortment.post();
-		return CloudLink.getConnector().postData(DataType.product, this.toJSON());
+		return CloudLink.getConnector().postData(DataType.product,
+				this.toJSON());
 	}
 
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
-	public void setName(String name)
-	{
+	public void setName(String name) {
 		this.name = name;
 	}
 
-	public int getNumber()
-	{
+	public int getNumber() {
 		return number;
 	}
 
-	public void setNumber(int number)
-	{
+	public void setNumber(int number) {
 		this.number = number;
 	}
 
-	public boolean isDeleted()
-	{
+	public boolean isDeleted() {
 		return deleted;
 	}
 
-	public void setDeleted(boolean deleted)
-	{
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
 
-	public boolean isActiveAssortment()
-	{
+	public boolean isActiveAssortment() {
 		return activeAssortment;
 	}
 
-	public void setActiveAssortment(boolean activeAssortment)
-	{
+	public void setActiveAssortment(boolean activeAssortment) {
 		this.activeAssortment = activeAssortment;
 	}
 
-	public Date getActiveAssortmentFrom()
-	{
+	public Date getActiveAssortmentFrom() {
 		return activeAssortmentFrom;
 	}
 
-	public void setActiveAssortmentFrom(Date activeAssortmentFrom)
-	{
+	public void setActiveAssortmentFrom(Date activeAssortmentFrom) {
 		this.activeAssortmentFrom = activeAssortmentFrom;
 	}
 
-	public int getCosts()
-	{
+	public int getCosts() {
 		return costs;
 	}
 
-	public void setCosts(int costs)
-	{
+	public void setCosts(int costs) {
 		this.costs = costs;
 	}
 
-	public boolean isDiscountable()
-	{
+	public boolean isDiscountable() {
 		return discountable;
 	}
 
-	public void setDiscountable(boolean discountable)
-	{
+	public void setDiscountable(boolean discountable) {
 		this.discountable = discountable;
 	}
 
-	public boolean isPriceChangeable()
-	{
+	public boolean isPriceChangeable() {
 		return priceChangeable;
 	}
 
-	public void setPriceChangeable(boolean priceChangeable)
-	{
+	public void setPriceChangeable(boolean priceChangeable) {
 		this.priceChangeable = priceChangeable;
 	}
 
-	public boolean isRequiresSerialNumber()
-	{
+	public boolean isRequiresSerialNumber() {
 		return requiresSerialNumber;
 	}
 
-	public void setRequiresSerialNumber(boolean requiresSerialNumber)
-	{
+	public void setRequiresSerialNumber(boolean requiresSerialNumber) {
 		this.requiresSerialNumber = requiresSerialNumber;
 	}
 
-	public boolean isTrackInventory()
-	{
+	public boolean isTrackInventory() {
 		return trackInventory;
 	}
 
-	public void setTrackInventory(boolean trackInventory)
-	{
+	public void setTrackInventory(boolean trackInventory) {
 		this.trackInventory = trackInventory;
 	}
 
-	public CommodityGroup getCommodityGroup()
-	{
+	public CommodityGroup getCommodityGroup() {
 		return commodityGroup;
 	}
 
-	public void setCommodityGroup(CommodityGroup commodityGroup)
-	{
+	public void setCommodityGroup(CommodityGroup commodityGroup) {
 		this.commodityGroup = commodityGroup;
 	}
 
-	public Sector getSector()
-	{
+	public Sector getSector() {
 		return sector;
 	}
 
-	public void setSector(Sector sector)
-	{
+	public void setSector(Sector sector) {
 		this.sector = sector;
 	}
 
-	public Sector getAltsector()
-	{
+	public Sector getAltsector() {
 		return altsector;
 	}
 
-	public void setAltsector(Sector altsector)
-	{
+	public void setAltsector(Sector altsector) {
 		this.altsector = altsector;
 	}
 
-	public List<Price> getPrices()
-	{
+	public List<Price> getPrices() {
 		return prices;
 	}
 
-	public void setPrices(List<Price> prices)
-	{
+	public void setPrices(List<Price> prices) {
 		this.prices = prices;
 	}
 
-	public List<Product_Text> getTexts()
-	{
+	public List<Product_Text> getTexts() {
 		return texts;
 	}
 
-	public void setTexts(List<Product_Text> texts)
-	{
+	public void setTexts(List<Product_Text> texts) {
 		this.texts = texts;
 	}
 
-	public Assortment getAssortment()
-	{
+	public Assortment getAssortment() {
 		return assortment;
 	}
 
-	public void setAssortment(Assortment assortment)
-	{
+	public void setAssortment(Assortment assortment) {
 		this.assortment = assortment;
 	}
 
-	public List<Product_Code> getCodes()
-	{
+	public List<Product_Code> getCodes() {
 		return codes;
 	}
 
-	public void setCodes(List<Product_Code> codes)
-	{
+	public void setCodes(List<Product_Code> codes) {
 		this.codes = codes;
 	}
 
-	public String getUuid()
-	{
+	public String getUuid() {
 		return uuid;
 	}
 
-	public void setUuid(String uuid)
-	{
+	public void setUuid(String uuid) {
 		this.uuid = uuid;
 	}
 
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		return name;
 	}
 }

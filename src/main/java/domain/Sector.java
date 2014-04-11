@@ -116,9 +116,9 @@ public class Sector
 		}
 		boolean result = CloudLink.getConnector().postData(DataType.sector, this.toJSON());
 		if (number != 0)
-			uuid = CloudLink.getUUID(DataType.sector, String.valueOf(number));
+			uuid = CloudLink.getUUIDByNumber(DataType.sector, String.valueOf(number));
 		else
-			uuid = CloudLink.getUUID(DataType.sector, name);
+			uuid = CloudLink.getUUIDByName(DataType.sector, name);
 		return result;
 	}
 

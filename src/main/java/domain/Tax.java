@@ -123,9 +123,9 @@ public class Tax
 		}
 		boolean result = CloudLink.getConnector().postData(DataType.tax, this.toJSON());
 		if (number != 0)
-			uuid = CloudLink.getUUID(DataType.tax, String.valueOf(number));
+			uuid = CloudLink.getUUIDByNumber(DataType.tax, String.valueOf(number));
 		else
-			uuid = CloudLink.getUUID(DataType.tax, name);
+			uuid = CloudLink.getUUIDByName(DataType.tax, name);
 		return result;
 	}
 

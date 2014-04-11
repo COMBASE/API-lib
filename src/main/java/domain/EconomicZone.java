@@ -46,9 +46,9 @@ public class EconomicZone
 	{
 		boolean result = CloudLink.getConnector().postData(DataType.economicZone, this.toJSON());
 		if (number != 0)
-			uuid = CloudLink.getUUID(DataType.economicZone, String.valueOf(number));
+			uuid = CloudLink.getUUIDByNumber(DataType.economicZone, String.valueOf(number));
 		else
-			uuid = CloudLink.getUUID(DataType.economicZone, name);
+			uuid = CloudLink.getUUIDByName(DataType.economicZone, name);
 		return result;
 	}
 
