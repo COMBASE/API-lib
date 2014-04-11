@@ -75,6 +75,7 @@ public class Cashier {
 			obj.put("number", number);
 			obj.put("firstName", firstName);
 			obj.put("surName", surName);
+			
 			return obj;
 		} catch (JSONException e) {
 			e.printStackTrace();
