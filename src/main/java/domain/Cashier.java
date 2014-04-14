@@ -23,6 +23,7 @@ public class Cashier {
 		firstName=builder.firstName;
 		surName=builder.surName;
 		loginCode=builder.loginCode;
+		uuid=builder.uuid;
 	}
 	public static class Builder {
 		private final String name;
@@ -31,6 +32,7 @@ public class Cashier {
 		private String firstName=null;
 		private String surName=null;
 		private int loginCode=1; //default login code
+		private String uuid;
 		
 		
 		//ctor
@@ -62,10 +64,28 @@ public class Cashier {
 			return this;
 		}
 		
+		public Builder uuid(String value){
+			uuid=value;
+			return this;
+		}
+		
 		public Cashier build() {
 			return new Cashier(this);
 		}
 	}
+	
+	public static Cashier fromJSON(JSONObject obj) throws JSONException {
+		
+		obj = obj.getJSONObject("result");
+		Cashier cash = new Cashier.Builder(obj.getString("name")).deleted(obj.getBoolean("deleted")).uuid(obj.getString("uuid")).number(obj.getInt("number")).firstName(obj.getString("firstname")).surName(obj.getString("surname"))
+				.build();
+		return cash;
+	
+
+
+
+	}
+	
 	public JSONObject toJSON() {
 		JSONObject obj = new JSONObject();
 		try {
@@ -142,5 +162,9 @@ public class Cashier {
 	}
 	public int getLoginCode(){
 		return this.loginCode;
+	}
+	@Override
+	public String toString() {
+		return name;
 	}
 }

@@ -20,6 +20,7 @@ public class TimeTrackingEntities {
 		deleted=builder.deleted;
 		number=builder.number;
 		paidTime=builder.paidTime;
+		uuid=builder.uuid;
 		
 	}
 	public static class Builder {
@@ -27,6 +28,7 @@ public class TimeTrackingEntities {
 		private int number = 0;
 		private boolean deleted = false;
 		private boolean paidTime;
+		private String uuid;
 		
 		
 		//ctor
@@ -48,11 +50,24 @@ public class TimeTrackingEntities {
 			paidTime=value;
 			return this;
 		}
-		
+		public Builder uuid(String value){
+			uuid=value;
+			return this;
+		}
+				
 		public TimeTrackingEntities build() {
 			return new TimeTrackingEntities(this);
 		}
 	}
+	
+	public static TimeTrackingEntities fromJSON(JSONObject obj) throws JSONException {
+		
+		obj = obj.getJSONObject("result");
+		TimeTrackingEntities tTrackE = new TimeTrackingEntities.Builder(obj.getString("name")).deleted(obj.getBoolean("deleted")).uuid(obj.getString("uuid")).number(obj.getInt("number")).paidTime(obj.getBoolean("paidTime"))
+				.build();
+		return tTrackE;
+	}
+	
 	public JSONObject toJSON() {
 		JSONObject obj = new JSONObject();
 		try {
@@ -116,5 +131,5 @@ public class TimeTrackingEntities {
 	@Override
 	public String toString() {
 		return name;
-}
+	}
 }
