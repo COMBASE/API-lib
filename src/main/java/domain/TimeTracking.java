@@ -17,8 +17,8 @@ public class TimeTracking {
 	private Cashier cashier;
 	private String org;
 	private long start;
-	
 	private TimeTrackingEntities timeTrackingEntity;
+	
 	private TimeTracking(Builder builder) {
 		name = builder.name;
 		deleted=builder.deleted;
@@ -26,6 +26,7 @@ public class TimeTracking {
 		org=builder.org;
 		start=builder.start;
 		timeTrackingEntity=builder.timeTrackingEntity;
+		
 	}
 	public static class Builder {
 		private final String name;
@@ -72,11 +73,16 @@ public class TimeTracking {
 		}
 	}
 	
-	public static TimeTracking fromJSON(JSONObject obj, TimeTrackingEntities ent,Cashier cash) throws JSONException {
-				
-				TimeTracking tTrack = new TimeTracking.Builder(obj.getString("name")).deleted(obj.getBoolean("deleted")).start(obj.getLong("start")).timeTrackingentity(ent).cashier(cash)
+	public static TimeTracking fromJSON(JSONObject obj) throws JSONException {
+		if(obj.has("result") && obj.getString("result")!=null)
+			obj=obj.getJSONObject("result"); 		
+		TimeTrackingEntities ent=new TimeTrackingEntities.Builder(null).build();
+		ent.setUuid(obj.getString("timeTrackingEntity"));
+		Cashier cash=new Cashier.Builder(null).build();
+		cash.setUuid(obj.getString("cashier"));
+		TimeTracking tTrack = new TimeTracking.Builder(null).deleted(obj.getBoolean("deleted")).start(obj.getLong("start")).timeTrackingentity(ent).cashier(cash)
 						.build();
-				return tTrack;
+		return tTrack;
 	}
 	
 	public JSONObject toJSON() {

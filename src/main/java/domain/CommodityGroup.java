@@ -14,7 +14,7 @@ public class CommodityGroup
 	private boolean deleted;
 	private boolean hasChildren;
 	private String key;
-	private String uuid = null;
+	private String uuid;
 	private CommodityGroup parent;
 
 	private CommodityGroup(Builder builder)
@@ -99,7 +99,22 @@ public class CommodityGroup
 			return null;
 		}
 	}
+	
+	public static CommodityGroup fromJSON(JSONObject obj) throws JSONException {
+		if(obj.has("result") && obj.getString("result")!=null)
+			obj = obj.getJSONObject("result");
+		CommodityGroup grp = new CommodityGroup.Builder(obj.getString("name"))
+						.build();
+		if (obj.has("number"))
+			grp.setNumber(obj.getInt("number"));
+		
+		return grp;
+			
+		
 
+		
+	}
+	
 	public boolean post() throws IOException
 	{
 		if (parent != null)

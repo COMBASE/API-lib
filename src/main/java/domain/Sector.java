@@ -103,7 +103,20 @@ public class Sector
 			return null;
 		}
 	}
+	
+	public static Sector fromJSON(JSONObject obj) throws JSONException {
+		if(obj.has("result") && obj.getString("result")!=null)
+			obj=obj.getJSONObject("result");  
+			
+		obj = obj.getJSONObject("result");
+		Sector sec = new Sector.Builder(obj.getString("name"))
+						.build();
+		if (obj.has("number"))
+			sec.setNumber(obj.getInt("number"));
 
+		return sec;
+	}
+	
 	public boolean post() throws IOException
 	{
 		if (taxlist != null)

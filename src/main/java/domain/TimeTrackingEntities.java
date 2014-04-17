@@ -24,7 +24,7 @@ public class TimeTrackingEntities {
 		
 	}
 	public static class Builder {
-		private final String name;
+		private String name;
 		private int number = 0;
 		private boolean deleted = false;
 		private boolean paidTime;
@@ -62,8 +62,14 @@ public class TimeTrackingEntities {
 	
 	public static TimeTrackingEntities fromJSON(JSONObject obj) throws JSONException {
 		
-		obj = obj.getJSONObject("result");
-		TimeTrackingEntities tTrackE = new TimeTrackingEntities.Builder(obj.getString("name")).deleted(obj.getBoolean("deleted")).uuid(obj.getString("uuid")).number(obj.getInt("number")).paidTime(obj.getBoolean("paidTime"))
+		if(obj.has("result") && obj.getString("result")!=null)
+			obj=obj.getJSONObject("result"); 
+		TimeTrackingEntities tTrackE = new TimeTrackingEntities.
+							Builder(obj.getString("name")).
+							deleted(obj.getBoolean("deleted")).
+							uuid(obj.getString("uuid")).
+							number(obj.getInt("number")).
+							paidTime(obj.getBoolean("paidTime"))
 				.build();
 		return tTrackE;
 	}

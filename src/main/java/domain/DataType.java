@@ -3,12 +3,12 @@ package domain;
 
 public enum DataType
 {
-	assortment("assortments"), cashier("cashiers"), commodityGroup("commodityGroups"), currency(
-		"currencies"), customer("customers"), customergroup("customergroups"), dispatchnotification(
-		"dispatchnotifications"), economicZone("economicZones"), infotext("infotexts"), price(
-		"prices"), product("products"), receipt("rceipts"), sale("sales"), sector("sectors"), stockorder(
+	accountTransaction("accountTransactions"),assortment("assortments"), cashier("cashiers"), commodityGroup("commodityGroups"), currency(
+		"currencies"), customer("customers"), customergroup("customerGroups"), dispatchnotification(
+		"dispatchnotifications"), economicZone("economicZones"), infotext("infotexts"), organizationalUnit("organizationalUnits"), payment("payments"), paymentMethod("paymentMethods"), price(
+		"prices"), product("products"), receipt("receipts"), sale("sales"), sector("sectors"), stockorder(
 		"stockorders"), supplier("suppliers"), tag("tags"), tax("taxes"), timeTrackingEntity(
-		"timeTrackingEntities"), timeTracking("timeTrackings"), user("users");
+		"timeTrackingEntities"), timeTracking("timeTrackings"), user("users"),pos("pos");
 	private final String reference;
 
 	DataType(String s)

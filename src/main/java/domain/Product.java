@@ -53,12 +53,13 @@ public class Product {
 		texts = builder.texts;
 		assortment = builder.assortment;
 		codes = builder.codes;
+		uuid=builder.uuid;
 	}
 
 	public static class Builder {
 		private final String name;
 		private int number = 0;
-
+		private String uuid=null;
 		private boolean deleted = false;
 		private boolean activeAssortment = false;
 		private Date activeAssortmentFrom = null;
@@ -77,6 +78,11 @@ public class Product {
 
 		public Builder(String name) {
 			this.name = name;
+		}
+		
+		public Builder uuid(String value){
+			uuid=value;
+			return this;
 		}
 
 		public Builder number(int value) {
@@ -185,22 +191,16 @@ public class Product {
 		}
 	}
 
-	public static Product fromJSON(JSONObject obj) {
-		if (obj.has("result")) {
-			try {
-				obj = obj.getJSONObject("result");
-				Product prod = new Product.Builder(obj.getString("name"))
+	public static Product fromJSON(JSONObject obj) throws JSONException {
+		if(obj.has("result") && obj.getString("result")!=null)
+			obj = obj.getJSONObject("result");
+			
+		Product prod = new Product.Builder(obj.getString("name"))
 						.build();
-				if (obj.has("number"))
-					prod.setNumber(obj.getInt("number"));
+		if (obj.has("number"))
+			prod.setNumber(obj.getInt("number"));
 
-				return prod;
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		}
-
-		return null;
+		return prod;
 	}
 
 	public JSONObject toJSON() {

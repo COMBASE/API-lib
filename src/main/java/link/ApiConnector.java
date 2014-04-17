@@ -95,8 +95,7 @@ public class ApiConnector
 			slash = "/";
 		
 			url = cloudURL + slash + token + "/" + type.getReference() + reference;
-		
-		
+				
 		
 		URL obj;
 		obj = new URL(url);
