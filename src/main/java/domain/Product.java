@@ -261,7 +261,7 @@ public class Product {
 				}
 			}
 			
-			System.out.println("jString"+obj.toString());
+			
 			return obj;
 		} catch (JSONException e) {
 			e.printStackTrace();
