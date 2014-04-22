@@ -12,7 +12,7 @@ public class AccountTransaction {
 	private boolean deleted;
 	private String revision;
 	private String uuid;
-	//private Account account; 
+	private Account account; 
 	private Receipt receipt;
 	private Cashier cashier;
 	private POS pos;
@@ -25,7 +25,7 @@ public class AccountTransaction {
 	private AccountTransaction(Builder builder){
 		revision=builder.revision;
 		deleted=builder.deleted;
-		//account=builder.account;
+		account=builder.account;
 		receipt=builder.receipt;
 		cashier=builder.cashier;
 		pos=builder.pos;
@@ -39,7 +39,7 @@ public class AccountTransaction {
 	 private boolean deleted=false;
 	 private String uuid=null;
 	 private String revision=null;
-	 //private Account account;
+	 private Account account;
 	 private Receipt receipt=null;
 	 private Cashier cashier=null;
 	 private POS pos=null;
@@ -56,10 +56,10 @@ public class AccountTransaction {
 		 deleted=value;
 		 return this;
 	 }
-	/* public Builder account(Account acc){
+	 public Builder account(Account acc){
 		  account=acc;
 		  return this;
-	 }*/
+	 }
 	 public Builder receipt(Receipt rec){
 		  receipt=rec;
 		  return this;
@@ -99,7 +99,7 @@ public class AccountTransaction {
 			obj.put("deleted", deleted);
 			obj.put("revision", revision);
 			obj.put("uuid", uuid);
-			//obj.put("account", account.getUuid());
+			obj.put("account", account.getUuid());
 			obj.put("receipt", receipt.getUuid());
 			obj.put("cashier", cashier.getUuid());
 			obj.put("pos", pos.getUuid());
@@ -117,15 +117,15 @@ public class AccountTransaction {
 	public static AccountTransaction fromJSON(JSONObject obj) throws JSONException {
 		if(obj.has("result") && obj.getString("result")!=null)
 			obj=obj.getJSONObject("result"); 
-		//Account acc=new Account.Builder().build();
-		//acc.setUuid(obj.get("account"));
+		Account acc=new Account.Builder().build();
+		acc.setUuid(obj.getString("account"));
 		Receipt rec = new Receipt.Builder().build();
 		rec.setUuid(obj.getString("receipt"));
 		Cashier cash =new Cashier.Builder(null).build();
 		cash.setUuid(obj.getString("cashier"));
 		POS pos=new POS.Builder(null).build();
 		pos.setUuid(obj.getString("pos"));
-		AccountTransaction acc = new AccountTransaction.Builder().
+		AccountTransaction accT = new AccountTransaction.Builder().
 					deleted(obj.getBoolean("deleted")).
 					revision(obj.getString("revision")).
 					receipt(rec).
@@ -136,7 +136,7 @@ public class AccountTransaction {
 					receiptIndex(obj.getInt("receiptIndex")).
 					description(obj.getString("description"))
 				.build();
-		return acc;
+		return accT;
 	}
 	
 	public boolean post() throws IOException {
@@ -231,6 +231,14 @@ public String getDescription() {
 
 public void setDescription(String description) {
 	this.description = description;
+}
+
+public Account getAccount() {
+	return account;
+}
+
+public void setAccount(Account account) {
+	this.account = account;
 }
  
 }

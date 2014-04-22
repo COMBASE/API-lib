@@ -3,7 +3,7 @@ package domain;
 
 public enum DataType
 {
-	accountTransaction("accountTransactions"),assortment("assortments"), cashier("cashiers"), commodityGroup("commodityGroups"), currency(
+	account("accounts"), accountTransaction("accountTransactions"),assortment("assortments"), cashier("cashiers"), commodityGroup("commodityGroups"), currency(
 		"currencies"), customer("customers"), customergroup("customerGroups"), dispatchnotification(
 		"dispatchnotifications"), economicZone("economicZones"), infotext("infotexts"), organizationalUnit("organizationalUnits"), payment("payments"), paymentMethod("paymentMethods"), price(
 		"prices"), product("products"), receipt("receipts"), sale("sales"), sector("sectors"), stockorder(

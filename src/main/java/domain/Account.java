@@ -1,0 +1,85 @@
+package domain;
+
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
+public class Account {
+	
+	private boolean deleted;
+	private String uuid;
+	private String revision;
+	private int number;
+	
+	public Account(Builder builder){
+		deleted=builder.deleted;
+		number=builder.number;
+	}
+	
+	public static class Builder{
+		private boolean deleted=false;
+		private String uuid=null;
+		private String revision=null;
+		private int number=0;
+		
+		public Builder deleted(boolean value){
+			deleted=value;
+			return this;
+		}
+		public Builder revision(String value){
+			revision=value;
+			return this;
+		}
+		public Builder number(int value){
+			number=value;
+			return this;
+		}
+		public Account build(){
+			return new Account(this);
+		}
+	}
+	
+	public static Account fromJSON(JSONObject obj) throws JSONException {
+		if(obj.has("result") && obj.getString("result")!=null)
+			obj=obj.getJSONObject("result"); 
+		
+		Account acc = new Account.Builder().
+					deleted(obj.getBoolean("deleted")).
+					revision(obj.getString("revision")).
+					number(obj.getInt("number"))
+					
+				.build();
+		return acc;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+
+	public String getRevision() {
+		return revision;
+	}
+
+	public void setRevision(String revision) {
+		revision = revision;
+	}
+
+	public int getNumber() {
+		return number;
+	}
+
+	public void setNumber(int number) {
+		this.number = number;
+	}
+}

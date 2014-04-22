@@ -260,6 +260,8 @@ public class Product {
 					obj.put("articleTexts", texts.get(0).toJSON());
 				}
 			}
+			
+			System.out.println("jString"+obj.toString());
 			return obj;
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -282,6 +284,7 @@ public class Product {
 			altsector.post();
 		if (assortment != null && assortment.getUuid() == null)
 			assortment.post();
+		
 		return CloudLink.getConnector().postData(DataType.product,
 				this.toJSON());
 	}
