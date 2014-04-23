@@ -244,9 +244,9 @@ public class Product {
 					for (Product_Code code : codes) {
 						array.put(code.toJSON());
 					}
-					obj.put("codes", array);
+					obj.put("articleCodes", array);
 				} else {
-					obj.put("codes", codes.get(0).toJSON());
+					obj.put("articleCodes", codes.get(0).toJSON());
 				}
 			}
 			if (!texts.isEmpty()) {
