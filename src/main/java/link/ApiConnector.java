@@ -117,6 +117,7 @@ public class ApiConnector
 			response.append(inputLine);
 		}
 		in.close();
+		System.out.println("APICON:GET -> Type:"+type.getReference()+" JSON="+response.toString());
 		return response;
 
 	}
@@ -184,6 +185,7 @@ public class ApiConnector
 				out.close();
 			if (con.getResponseCode() == 200)
 			{
+				System.out.println("APICON:POST -> Type:"+type.getReference()+" JSON="+obj.toString());
 				con.disconnect(); // Disconnect
 				return true;
 			}

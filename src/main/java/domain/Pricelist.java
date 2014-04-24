@@ -86,11 +86,11 @@ public class Pricelist
 
 	public boolean post() throws IOException
 	{
-		boolean result = CloudLink.getConnector().postData(DataType.price, this.toJSON());
+		boolean result = CloudLink.getConnector().postData(DataType.priceList, this.toJSON());
 		if (number != 0)
-			uuid = CloudLink.getUUIDByNumber(DataType.price, String.valueOf(number));
+			uuid = CloudLink.getUUIDByNumber(DataType.priceList, String.valueOf(number));
 		else
-			uuid = CloudLink.getUUIDByName(DataType.price, name);
+			uuid = CloudLink.getUUIDByName(DataType.priceList, name);
 		return result;
 	}
 

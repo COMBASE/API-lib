@@ -73,27 +73,17 @@ public class Sector
 			obj.put("deleted", deleted);
 			if (!taxlist.isEmpty())
 			{
-				if (taxlist.toArray().length > 1)
-				{
-					JSONArray array = new JSONArray();
-					int i = 1;
-					for (Tax tax : taxlist)
-					{
-						JSONObject sub = new JSONObject();
-						sub.put("index", String.valueOf(i));
-						sub.put("tax", tax.getUuid());
-						array.put(sub);
-						i++;
-					}
-					obj.put("items", array);
-				}
-				else
+				JSONArray array = new JSONArray();
+				int i = 1;
+				for (Tax tax : taxlist)
 				{
 					JSONObject sub = new JSONObject();
-					sub.put("index", "1");
-					sub.put("tax", taxlist.get(0).getUuid());
-					obj.put("items", sub);
+					sub.put("index", String.valueOf(i));
+					sub.put("tax", tax.getUuid());
+					array.put(sub);
+					i++;
 				}
+				obj.put("items", array);
 			}
 			return obj;
 		}
@@ -103,20 +93,20 @@ public class Sector
 			return null;
 		}
 	}
-	
-	public static Sector fromJSON(JSONObject obj) throws JSONException {
-		if(obj.has("result") && obj.getString("result")!=null)
-			obj=obj.getJSONObject("result");  
-			
+
+	public static Sector fromJSON(JSONObject obj) throws JSONException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
+
 		obj = obj.getJSONObject("result");
-		Sector sec = new Sector.Builder(obj.getString("name"))
-						.build();
+		Sector sec = new Sector.Builder(obj.getString("name")).build();
 		if (obj.has("number"))
 			sec.setNumber(obj.getInt("number"));
 
 		return sec;
 	}
-	
+
 	public boolean post() throws IOException
 	{
 		if (taxlist != null)

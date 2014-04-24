@@ -91,20 +91,13 @@ public class Tax
 			}
 			if (!rateList.isEmpty())
 			{
-				if (rateList.toArray().length > 1)
+				JSONArray array = new JSONArray();
+				for (Rate ratelem : rateList)
 				{
-					JSONArray array = new JSONArray();
-					for (Rate ratelem : rateList)
-					{
-						JSONObject sub = ratelem.toJSON();
-						array.put(sub);
-					}
-					obj.put("rates", array);
+					JSONObject sub = ratelem.toJSON();
+					array.put(sub);
 				}
-				else
-				{
-					obj.put("rates", rateList.get(0).toJSON());
-				}
+				obj.put("rates", array);
 			}
 			return obj;
 		}

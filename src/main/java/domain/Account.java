@@ -72,7 +72,7 @@ public class Account {
 	}
 
 	public void setRevision(String revision) {
-		revision = revision;
+		this.revision = revision;
 	}
 
 	public int getNumber() {
