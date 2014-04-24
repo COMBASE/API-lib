@@ -14,7 +14,7 @@ import org.codehaus.jettison.json.JSONObject;
 public class Sale {
 	private String name;
 	private boolean deleted;
-	private int revision;
+	private Long revision;
 	private String uuid;
 	private Product article;
 	private Cashier cashier;
@@ -67,7 +67,7 @@ public class Sale {
 	public static class Builder {
 		private String name=null;
 		private boolean deleted = false;
-		private int revision=0;
+		private Long revision=null;
 		private String uuid=null;
 		private Product article=null;
 		private Cashier cashier=null;
@@ -117,7 +117,7 @@ public class Sale {
 			return this;
 		}
 		
-		public Builder revision(int value){
+		public Builder revision(Long value){
 			revision=value;
 			return this;
 		}
@@ -273,7 +273,7 @@ public class Sale {
 				
 		Sale sale = new Sale.Builder(null).
 					deleted(obj.getBoolean("deleted")).
-					revision(obj.getInt("revision")).
+					revision(obj.getLong("revision")).
 					uuid(obj.getString("uuid")).
 					article(prod).
 					cashier(cash).
@@ -333,10 +333,10 @@ public class Sale {
 		this.deleted=deleted;
 	}
 	
-	public int getRevision(){
+	public Long getRevision(){
 		return this.revision;
 	}
-	public void setRevision(int revision){
+	public void setRevision(Long revision){
 		this.revision=revision;
 	}
 	

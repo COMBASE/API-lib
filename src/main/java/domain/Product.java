@@ -246,6 +246,7 @@ public class Product {
 					}
 					obj.put("codes", array);
 				} else {
+					codes.get(0).toJSON();
 					obj.put("codes", codes.get(0).toJSON());
 				}
 			}
@@ -261,7 +262,7 @@ public class Product {
 				}
 			}
 			
-			
+			System.out.println("Prod265 JSONSTRING: "+obj.toString());
 			return obj;
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -284,7 +285,7 @@ public class Product {
 			altsector.post();
 		if (assortment != null && assortment.getUuid() == null)
 			assortment.post();
-		
+				
 		return CloudLink.getConnector().postData(DataType.product,
 				this.toJSON());
 	}

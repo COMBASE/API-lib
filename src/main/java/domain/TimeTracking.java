@@ -12,6 +12,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 public class TimeTracking {
 	private boolean deleted;
+	private Long revision;
 	private String name;
 	private String uuid;
 	private Cashier cashier;
@@ -22,6 +23,7 @@ public class TimeTracking {
 	private TimeTracking(Builder builder) {
 		name = builder.name;
 		deleted=builder.deleted;
+		revision=builder.revision;
 		cashier=builder.cashier;
 		org=builder.org;
 		start=builder.start;
@@ -30,7 +32,8 @@ public class TimeTracking {
 	}
 	public static class Builder {
 		private final String name;
-				
+		
+		private Long revision=null;
 		private boolean deleted = true;
 		private Cashier cashier=null;
 		private String org;
@@ -45,6 +48,11 @@ public class TimeTracking {
 		
 		public Builder deleted(boolean value) {
 			deleted = value;
+			return this;
+		}
+		
+		public Builder revision(Long value){
+			revision=value;
 			return this;
 		}
 		
@@ -80,7 +88,12 @@ public class TimeTracking {
 		ent.setUuid(obj.getString("timeTrackingEntity"));
 		Cashier cash=new Cashier.Builder(null).build();
 		cash.setUuid(obj.getString("cashier"));
-		TimeTracking tTrack = new TimeTracking.Builder(null).deleted(obj.getBoolean("deleted")).start(obj.getLong("start")).timeTrackingentity(ent).cashier(cash)
+		TimeTracking tTrack = new TimeTracking.Builder(null).
+				deleted(obj.getBoolean("deleted")).
+				start(obj.getLong("start")).
+				timeTrackingentity(ent).
+				cashier(cash).
+				revision(obj.getLong("revision"))
 						.build();
 		return tTrack;
 	}
@@ -168,6 +181,10 @@ public class TimeTracking {
 	public TimeTrackingEntities getTimeTrackingEntity(){
 		return this.timeTrackingEntity;
 	}
+	public Long getRevision() {
+		return revision;
+	}
+
 	@Override
 	public String toString() {
 		return name;

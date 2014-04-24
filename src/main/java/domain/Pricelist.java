@@ -63,7 +63,19 @@ public class Pricelist
 			return new Pricelist(this);
 		}
 	}
+	
+	public static Pricelist fromJSON(JSONObject obj) throws JSONException {
+		if(obj.has("result") && obj.getString("result")!=null)
+			obj = obj.getJSONObject("result");
+			
+		Pricelist priceList = new Pricelist.Builder(obj.getString("name"),obj.getString("currency"))
+						.build();
+		if (obj.has("number"))
+			priceList.setNumber(obj.getInt("number"));
 
+		return priceList;
+	}
+	
 	public JSONObject toJSON()
 	{
 		JSONObject obj = new JSONObject();
@@ -86,16 +98,60 @@ public class Pricelist
 
 	public boolean post() throws IOException
 	{
-		boolean result = CloudLink.getConnector().postData(DataType.price, this.toJSON());
+		boolean result = CloudLink.getConnector().postData(DataType.priceList, this.toJSON());
 		if (number != 0)
-			uuid = CloudLink.getUUIDByNumber(DataType.price, String.valueOf(number));
+			uuid = CloudLink.getUUIDByNumber(DataType.priceList, String.valueOf(number));
 		else
-			uuid = CloudLink.getUUIDByName(DataType.price, name);
+			uuid = CloudLink.getUUIDByName(DataType.priceList, name);
 		return result;
 	}
 
 	public String getUuid()
 	{
 		return uuid;
+	}
+
+	public int getNumber() {
+		return number;
+	}
+
+	public void setNumber(int number) {
+		this.number = number;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public boolean isNetPrices() {
+		return netPrices;
+	}
+
+	public void setNetPrices(boolean netPrices) {
+		this.netPrices = netPrices;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	public String getUuidOfCurrency() {
+		return uuidOfCurrency;
+	}
+
+	public void setUuidOfCurrency(String uuidOfCurrency) {
+		this.uuidOfCurrency = uuidOfCurrency;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
 	}
 }

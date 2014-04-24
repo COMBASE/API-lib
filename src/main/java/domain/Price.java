@@ -29,7 +29,8 @@ public class Price
 		try
 		{
 			obj.put("priceList", priceList.getUuid());
-			obj.put("validFrom", inputDf.format(validFrom));
+			obj.put("validFrom", 1398290400000l);
+			//obj.put("validFrom", inputDf.format(validFrom));
 			obj.put("value", value);
 			return obj;
 		}
