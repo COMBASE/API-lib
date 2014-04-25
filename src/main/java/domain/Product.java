@@ -1,6 +1,7 @@
 package domain;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -226,6 +227,25 @@ public class Product
 		Product prod = new Product.Builder(obj.getString("name")).build();
 		if (obj.has("number"))
 			prod.setNumber(obj.getInt("number"));
+		if(obj.getString("articleCodes")!="null"){
+			System.out.println("Artikelcodes");
+			JSONArray jACode=new JSONArray();
+			jACode=obj.getJSONArray("articleCodes");
+			JSONObject jCode=new JSONObject();
+			List <Product_Code> codeList=new ArrayList<Product_Code>();
+			Product_Code productCode=null;
+			for(int i=0;i<=jACode.length()-1;i++){
+				jCode= (JSONObject) jACode.get(i);
+				BigDecimal quantity = new BigDecimal(jCode.getDouble("quantity"));
+				productCode=new Product_Code(jCode.getString("code"), quantity);
+				codeList.add(productCode);
+			}
+			prod.setCodes(codeList);
+			
+			
+		}else
+			System.out.println("kein Artikelcode!");
+			
 
 		return prod;
 	}

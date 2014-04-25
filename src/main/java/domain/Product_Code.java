@@ -16,7 +16,7 @@ public class Product_Code
 		this.code = code;
 		this.quantity = quantity;
 	}
-
+	
 	public JSONObject toJSON()
 	{
 		JSONObject obj = new JSONObject();
@@ -31,5 +31,13 @@ public class Product_Code
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	public BigDecimal getQuantity() {
+		return quantity;
+	}
+
+	public String getCode() {
+		return code;
 	}
 }

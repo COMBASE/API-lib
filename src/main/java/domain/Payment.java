@@ -23,7 +23,7 @@ public class Payment {
 	private String receiptNumber;
 	private String serialNumber;
 	private double amount;
-	private long transactionTime;
+	private Long transactionTime;
 	private POS pos;
 	private PaymentMethods paymentMethod;
 	private Currency currency;
@@ -37,6 +37,8 @@ public class Payment {
 		receiptNumber = builder.receiptNumber;
 		manualPrice=builder.manualPrice;
 		itemPrice=builder.itemPrice;
+		amount=builder.amount;
+		transactionTime=builder.transactionTime;
 		itemNumber=builder.itemNumber;
 		netItemPrice=builder.netItemPrice;
 		baseItemPrice=builder.baseItemPrice;
@@ -58,6 +60,8 @@ public class Payment {
 		private Receipt receipt=null;
 		private double itemPrice=0;
 		private int itemNumber=0;
+		private Long transactionTime=null;
+		private double amount=0;
 		private double netItemPrice=0;
 		private double baseItemPrice=0;
 		private String serialNumber=null;
@@ -74,9 +78,19 @@ public class Payment {
 			itemNumber=value;
 			return this;
 		}
+		
+		public Builder amount(double value){
+			amount=value;
+			return this;
+		}
 
 		public Builder deleted(boolean value) {
 			deleted = value;
+			return this;
+		}
+		
+		public Builder transactionTime(Long value){
+			transactionTime=value;
 			return this;
 		}
 		
@@ -184,6 +198,8 @@ public class Payment {
 					deleted(obj.getBoolean("deleted")).
 					revision(obj.getString("revision")).
 					uuid(obj.getString("uuid")).
+					amount(obj.getDouble("amount")).
+					transactionTime(obj.getLong("transactionTime")).
 					cashier(cash).
 					receipt(rec).
 					pos(pos).
@@ -299,11 +315,11 @@ public class Payment {
 		this.amount = amount;
 	}
 
-	public long getTransactionTime() {
+	public Long getTransactionTime() {
 		return transactionTime;
 	}
 
-	public void setTransactionTime(long transactionTime) {
+	public void setTransactionTime(Long transactionTime) {
 		this.transactionTime = transactionTime;
 	}
 
