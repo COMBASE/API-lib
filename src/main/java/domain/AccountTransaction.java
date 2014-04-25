@@ -116,7 +116,9 @@ public class AccountTransaction {
 	
 	public static AccountTransaction fromJSON(JSONObject obj) throws JSONException {
 		if(obj.has("result") && obj.getString("result")!=null)
-			obj=obj.getJSONObject("result"); 
+			obj=obj.getJSONObject("result");
+		
+		System.out.println(obj);
 		Account acc=new Account.Builder().build();
 		acc.setUuid(obj.getString("account"));
 		Receipt rec = new Receipt.Builder().build();
@@ -131,6 +133,7 @@ public class AccountTransaction {
 					receipt(rec).
 					cashier(cash).
 					pos(pos).
+					account(acc).
 					amount(obj.getDouble("amount")).
 					bookingTime(obj.getLong("bookingTime")).
 					receiptIndex(obj.getInt("receiptIndex")).

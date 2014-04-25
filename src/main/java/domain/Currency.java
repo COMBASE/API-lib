@@ -96,7 +96,7 @@ public class Currency {
 	public static Currency fromJSON(JSONObject obj) throws JSONException {
 		if(obj.has("result") && obj.getString("result")!=null)
 			obj=obj.getJSONObject("result"); 
-		Currency cur = new Currency.Builder(name).
+		Currency cur = new Currency.Builder(obj.getString("name")).
 					deleted(obj.getBoolean("deleted")).
 					revision(obj.getString("revision")).
 					uuid(obj.getString("uuid")).

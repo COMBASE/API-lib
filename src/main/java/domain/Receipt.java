@@ -194,6 +194,7 @@ public class Receipt {
 		CustomerGroup cGrp=new CustomerGroup.Builder(null).build();
 		cGrp.setUuid(obj.getString("customerGroup"));
 		Receipt rec = new Receipt.Builder().
+					number(obj.getInt("number")).
 					revision(obj.getInt("revision")).
 					cashier(cash).customerGroup(cGrp).
 					receiptDiscountGrossAmount(obj.getDouble("receiptDiscountGrossAmount"))
