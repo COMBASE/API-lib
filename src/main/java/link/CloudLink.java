@@ -141,7 +141,11 @@ public class CloudLink
 		if (reference == null)
 			return null;
 		try
-		{
+		{	
+			reference=reference.replaceAll("/", "%2F");
+			reference=reference.replaceAll("&", "%26");
+			reference=reference.replaceAll("#", "%23");
+			reference=reference.replaceAll("!", "%21");
 			JSONObject obj = new JSONObject(ApiCon.fetchData(type, "/number/"+reference).toString());
 			if (obj.has("result") && !obj.opt("result").equals(null))
 			{
@@ -154,7 +158,7 @@ public class CloudLink
 		}
 		catch (JSONException e)
 		{
-			e.printStackTrace();
+			return null;
 		}
 		return null;
 	}
@@ -222,7 +226,7 @@ public class CloudLink
 		}
 		catch (JSONException e)
 		{
-			e.printStackTrace();
+			return 0;
 		}
 		return 0;
 	}
