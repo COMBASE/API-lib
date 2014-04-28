@@ -52,6 +52,11 @@ public class CloudLink
 	}
 	public String getJSONByName(DataType type,String reference)throws IOException
 	{
+		reference=reference.replaceAll("/", "%2F");
+		reference=reference.replaceAll("&", "%26");
+		reference=reference.replaceAll("#", "%23");
+		reference=reference.replaceAll("!", "%21");
+		System.out.println("NameString: "+reference);
 		reference="/name/"+reference;
 		return new String(ApiCon.fetchData(type, reference));
 	}
@@ -99,7 +104,11 @@ public class CloudLink
 		if (reference == null)
 			return null;
 		try
-		{
+		{	
+			reference=reference.replaceAll("/", "%2F");
+			reference=reference.replaceAll("&", "%26");
+			reference=reference.replaceAll("#", "%23");
+			reference=reference.replaceAll("!", "%21");
 			JSONObject obj = new JSONObject(ApiCon.fetchData(type, "/name/"+reference).toString());
 			if (obj.has("result") && !obj.opt("result").equals(null))
 			{

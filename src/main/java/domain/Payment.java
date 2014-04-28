@@ -1,6 +1,9 @@
 package domain;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import link.CloudLink;
 
@@ -9,6 +12,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 
 public class Payment {
+	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 	private boolean deleted;
 	private String revision;
 	private String uuid;
@@ -23,7 +27,7 @@ public class Payment {
 	private String receiptNumber;
 	private String serialNumber;
 	private double amount;
-	private Long transactionTime;
+	private Date transactionTime;
 	private POS pos;
 	private PaymentMethods paymentMethod;
 	private Currency currency;
@@ -60,7 +64,7 @@ public class Payment {
 		private Receipt receipt=null;
 		private double itemPrice=0;
 		private int itemNumber=0;
-		private Long transactionTime=null;
+		private Date transactionTime=null;
 		private double amount=0;
 		private double netItemPrice=0;
 		private double baseItemPrice=0;
@@ -89,7 +93,7 @@ public class Payment {
 			return this;
 		}
 		
-		public Builder transactionTime(Long value){
+		public Builder transactionTime(Date value){
 			transactionTime=value;
 			return this;
 		}
@@ -184,6 +188,16 @@ public class Payment {
 	public static Payment fromJSON(JSONObject obj) throws JSONException {
 		if(obj.has("result") && obj.getString("result")!=null)
 			obj=obj.getJSONObject("result"); 
+		
+		//date
+		String date=obj.getString("transactionTime");
+		Date tTime=null;
+		try {
+			tTime = inputDf.parse(date);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
 		Cashier cash=new Cashier.Builder(null).build();
 		cash.setUuid(obj.getString("cashier"));
 		Receipt rec=new Receipt.Builder().build();
@@ -199,7 +213,7 @@ public class Payment {
 					revision(obj.getString("revision")).
 					uuid(obj.getString("uuid")).
 					amount(obj.getDouble("amount")).
-					transactionTime(obj.getLong("transactionTime")).
+					transactionTime(tTime).
 					cashier(cash).
 					receipt(rec).
 					pos(pos).
@@ -315,11 +329,11 @@ public class Payment {
 		this.amount = amount;
 	}
 
-	public Long getTransactionTime() {
+	public Date getTransactionTime() {
 		return transactionTime;
 	}
 
-	public void setTransactionTime(Long transactionTime) {
+	public void setTransactionTime(Date transactionTime) {
 		this.transactionTime = transactionTime;
 	}
 

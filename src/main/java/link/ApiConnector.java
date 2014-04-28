@@ -91,6 +91,7 @@ public class ApiConnector
 		String url;
 		String slash = "";
 		
+		
 		if (!cloudURL.endsWith("/"))
 			slash = "/";
 		

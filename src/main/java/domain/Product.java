@@ -228,7 +228,6 @@ public class Product
 		if (obj.has("number"))
 			prod.setNumber(obj.getInt("number"));
 		if(obj.getString("articleCodes")!="null"){
-			System.out.println("Artikelcodes");
 			JSONArray jACode=new JSONArray();
 			jACode=obj.getJSONArray("articleCodes");
 			JSONObject jCode=new JSONObject();
@@ -243,10 +242,7 @@ public class Product
 			prod.setCodes(codeList);
 			
 			
-		}else
-			System.out.println("kein Artikelcode!");
-			
-
+		}
 		return prod;
 	}
 

@@ -1,6 +1,9 @@
 package domain;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import link.CloudLink;
 
@@ -11,13 +14,14 @@ import org.codehaus.jettison.json.JSONObject;
 
 
 public class TimeTracking {
+	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 	private boolean deleted;
 	private Long revision;
 	private String name;
 	private String uuid;
 	private Cashier cashier;
 	private String org;
-	private long start;
+	private Date start;
 	private TimeTrackingEntities timeTrackingEntity;
 	
 	private TimeTracking(Builder builder) {
@@ -37,7 +41,7 @@ public class TimeTracking {
 		private boolean deleted = true;
 		private Cashier cashier=null;
 		private String org;
-		private long start;
+		private Date start;
 		private TimeTrackingEntities timeTrackingEntity;
 		
 		
@@ -66,7 +70,7 @@ public class TimeTracking {
 			return this;
 		}
 		
-		public Builder start(long value){
+		public Builder start(Date value){
 			start=value;
 			return this;
 		}
@@ -83,14 +87,24 @@ public class TimeTracking {
 	
 	public static TimeTracking fromJSON(JSONObject obj) throws JSONException {
 		if(obj.has("result") && obj.getString("result")!=null)
-			obj=obj.getJSONObject("result"); 		
+			obj=obj.getJSONObject("result"); 
+		
+		//Date
+		String date=obj.getString("start");
+		Date startTime=null;
+		try {
+			startTime = inputDf.parse(date);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
 		TimeTrackingEntities ent=new TimeTrackingEntities.Builder(null).build();
 		ent.setUuid(obj.getString("timeTrackingEntity"));
 		Cashier cash=new Cashier.Builder(null).build();
 		cash.setUuid(obj.getString("cashier"));
 		TimeTracking tTrack = new TimeTracking.Builder(null).
 				deleted(obj.getBoolean("deleted")).
-				start(obj.getLong("start")).
+				start(startTime).
 				timeTrackingentity(ent).
 				cashier(cash).
 				revision(obj.getLong("revision"))
@@ -166,11 +180,11 @@ public class TimeTracking {
 		return this.org;
 	}
 	
-	public void setStart(long start){
+	public void setStart(Date start){
 		this.start=start;
 	}
 	
-	public long getStart(){
+	public Date getStart(){
 		return this.start;
 	}
 	

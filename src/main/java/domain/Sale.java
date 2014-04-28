@@ -1,7 +1,10 @@
 package domain;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import link.CloudLink;
@@ -12,6 +15,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 
 public class Sale {
+	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 	private String name;
 	private boolean deleted;
 	private Long revision;
@@ -19,7 +23,7 @@ public class Sale {
 	private Product article;
 	private Cashier cashier;
 	private CommodityGroup commodityGroup;
-	private long bookingTime;
+	private static Date bookingTime;
 	private String description;
 	private String infoTexts;
 	private Sector sector;
@@ -72,7 +76,7 @@ public class Sale {
 		private Product article=null;
 		private Cashier cashier=null;
 		private CommodityGroup commodityGroup = null;
-		private long bookingTime=0;
+		private Date bookingTime=null;
 		private String description=null;
 		private String infoTexts=null;
 		private Sector sector = null;
@@ -142,7 +146,7 @@ public class Sale {
 			return this;
 		}
 		
-		public Builder bookingTime(long time){
+		public Builder bookingTime(Date time){
 			bookingTime=time;
 			return this;
 		}
@@ -270,7 +274,16 @@ public class Sale {
 		
 		POS pos=new POS.Builder(null).build();
 		pos.setUuid(obj.getString("pos"));
-				
+		
+		//date
+		Date bTime=null;
+		try {
+		String date=obj.getString("bookingTime");
+		bTime = inputDf.parse(date);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
 		Sale sale = new Sale.Builder(null).
 					deleted(obj.getBoolean("deleted")).
 					revision(obj.getLong("revision")).
@@ -278,7 +291,7 @@ public class Sale {
 					article(prod).
 					cashier(cash).
 					commodityGroup(grp).
-					bookingTime(obj.getLong("bookingTime")).
+					bookingTime(bTime).
 					description(obj.getString("description")).
 					infoTexts(obj.getString("infoTexts")).
 					sector(sec).
@@ -368,10 +381,10 @@ public class Sale {
 		this.commodityGroup=grp;
 	}
 	
-	public long getBookingTime(){
+	public Date getBookingTime(){
 		return this.bookingTime;
 	}
-	public void setBookingTime(long bookingTime){
+	public void setBookingTime(Date bookingTime){
 		this.bookingTime=bookingTime;
 	}
 	

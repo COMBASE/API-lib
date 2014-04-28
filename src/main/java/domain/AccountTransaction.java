@@ -1,6 +1,9 @@
 package domain;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import link.CloudLink;
 
@@ -8,7 +11,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 public class AccountTransaction {
-	
+	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 	private boolean deleted;
 	private String revision;
 	private String uuid;
@@ -17,7 +20,7 @@ public class AccountTransaction {
 	private Cashier cashier;
 	private POS pos;
 	private double amount;
-	private long bookingTime;
+	private Date bookingTime;
 	private int receiptIndex;
 	private String description;
 	
@@ -44,7 +47,7 @@ public class AccountTransaction {
 	 private Cashier cashier=null;
 	 private POS pos=null;
 	 private double amount=0;
-	 private long bookingTime=0;
+	 private Date bookingTime=null;
 	 private int receiptIndex=0;
 	 private String description=null;
 	 
@@ -76,7 +79,7 @@ public class AccountTransaction {
 		  amount=value;
 		  return this;
 	 }
-	 public Builder bookingTime(long value){
+	 public Builder bookingTime(Date value){
 		  bookingTime=value;
 		  return this;
 	 }
@@ -118,7 +121,15 @@ public class AccountTransaction {
 		if(obj.has("result") && obj.getString("result")!=null)
 			obj=obj.getJSONObject("result");
 		
-		System.out.println(obj);
+		//date
+		String date=obj.getString("bookingTime");
+		Date bTime=null;
+		try {
+			bTime = inputDf.parse(date);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
 		Account acc=new Account.Builder().build();
 		acc.setUuid(obj.getString("account"));
 		Receipt rec = new Receipt.Builder().build();
@@ -135,7 +146,7 @@ public class AccountTransaction {
 					pos(pos).
 					account(acc).
 					amount(obj.getDouble("amount")).
-					bookingTime(obj.getLong("bookingTime")).
+					bookingTime(bTime).
 					receiptIndex(obj.getInt("receiptIndex")).
 					description(obj.getString("description"))
 				.build();
@@ -212,11 +223,11 @@ public void setAmount(double amount) {
 	this.amount = amount;
 }
 
-public long getBookingTime() {
+public Date getBookingTime() {
 	return bookingTime;
 }
 
-public void setBookingTime(long bookingTime) {
+public void setBookingTime(Date bookingTime) {
 	this.bookingTime = bookingTime;
 }
 
