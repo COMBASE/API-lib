@@ -118,7 +118,7 @@ public class ApiConnector
 			response.append(inputLine);
 		}
 		in.close();
-		//System.out.println("APICON:GET -> Type:"+type.getReference()+" JSON="+response.toString());
+		System.out.println("APICON:GET -> Type:"+type.getReference()+" JSON="+response.toString());
 		return response;
 
 	}
@@ -186,12 +186,14 @@ public class ApiConnector
 				out.close();
 			if (con.getResponseCode() == 200)
 			{
-				//System.out.println("APICON:POST -> Type:"+type.getReference()+" JSON="+obj.toString());
+				System.out.println("APICON:POST -> Type:"+type.getReference()+" JSON="+obj.toString());
 				con.disconnect(); // Disconnect
 				return true;
 			}
 			else
 			{
+				System.out.println("ERR: APICON:POST -> Type:"+type.getReference()+" JSON="+obj.toString());
+
 				con.disconnect(); // Disconnect
 				System.out.println("Error: " + con.getResponseMessage() + ":" +
 					con.getResponseCode());
@@ -208,24 +210,5 @@ public class ApiConnector
 			e.printStackTrace();
 			return false;
 		}
-	}
-
-	/**
-	 * Checks if String is UUID
-	 * 
-	 * @param s
-	 * @return
-	 */
-	private static boolean isUUID(String s)
-	{
-		if (s.length() > 35)
-		{
-			if (s.charAt(8) == '-' && s.charAt(13) == '-' && s.charAt(18) == '-' &&
-				s.charAt(23) == '-')
-			{
-				return true;
-			}
-		}
-		return false;
 	}
 }

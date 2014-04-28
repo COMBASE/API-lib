@@ -97,7 +97,7 @@ public class CloudLink
 	 * @param reference
 	 * @return
 	 */
-	public static String getUUIDByName(DataType type, String reference) throws IOException
+	public static String getUUIDByName(DataType type, String reference)
 	{
 		if (ApiCon == null)
 			System.err.println("Please initiliaze a CloudLink Object first!");
@@ -109,7 +109,15 @@ public class CloudLink
 			reference=reference.replaceAll("&", "%26");
 			reference=reference.replaceAll("#", "%23");
 			reference=reference.replaceAll("!", "%21");
-			JSONObject obj = new JSONObject(ApiCon.fetchData(type, "/name/"+reference).toString());
+			JSONObject obj = null;
+			try
+			{
+				obj = new JSONObject(ApiCon.fetchData(type, "/name/"+reference).toString());
+			}
+			catch (IOException e)
+			{
+				return null;
+			}
 			if (obj.has("result") && !obj.opt("result").equals(null))
 			{
 				obj = obj.getJSONObject("result");
@@ -161,7 +169,7 @@ public class CloudLink
 	 * @return
 	 * @throws IOException
 	 */
-	public static int getNumberByName(DataType type, String reference) throws IOException
+	public static int getNumberByName(DataType type, String reference)
 	{
 		if (ApiCon == null)
 			System.err.println("Please initiliaze a CloudLink Object first!");
@@ -169,7 +177,15 @@ public class CloudLink
 			return 0;
 		try
 		{
-			JSONObject obj = new JSONObject(ApiCon.fetchData(type, "/name/"+reference).toString());
+			JSONObject obj = null;
+			try
+			{
+				obj = new JSONObject(ApiCon.fetchData(type, "/name/"+reference).toString());
+			}
+			catch (IOException e)
+			{
+				return 0;
+			}
 			if (obj.has("result") && !obj.opt("result").equals(null))
 			{
 				obj = obj.getJSONObject("result");
