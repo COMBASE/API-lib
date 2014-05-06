@@ -19,7 +19,7 @@ public class Product
 {
 	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 	private String name;
-	private int number;
+	private String number;
 	private boolean deleted;
 	private boolean activeAssortment;
 	private Date activeAssortmentFrom;
@@ -62,7 +62,7 @@ public class Product
 	public static class Builder
 	{
 		private final String name;
-		private int number = 0;
+		private String number = null;
 		private String uuid = null;
 		private boolean deleted = false;
 		private boolean activeAssortment = false;
@@ -91,7 +91,7 @@ public class Product
 			return this;
 		}
 
-		public Builder number(int value)
+		public Builder number(String value)
 		{
 			number = value;
 			return this;
@@ -227,7 +227,7 @@ public class Product
 
 		Product prod = new Product.Builder(obj.getString("name")).build();
 		if (obj.has("number"))
-			prod.setNumber(obj.getInt("number"));
+			prod.setNumber(obj.getString("number"));
 		if(obj.getString("articleCodes")!="null"){
 			JSONArray jACode=new JSONArray();
 			jACode=obj.getJSONArray("articleCodes");
@@ -253,7 +253,7 @@ public class Product
 		try
 		{
 			obj.put("name", name);
-			if (number != 0)
+			if (!number.isEmpty())
 				obj.put("number", number);
 			obj.put("deleted", deleted);
 			obj.put("activeAssortment", activeAssortment);
@@ -299,6 +299,7 @@ public class Product
 				}
 				obj.put("articleTexts", array);
 			}
+			System.out.println("Product.java @ 302 "+obj);
 			return obj;
 		}
 		catch (JSONException e)
@@ -333,6 +334,7 @@ public class Product
 	
 	/** 
 	 * More optimized post method for uploading several products of the same group, sector, etc. 
+	 * ~MAS
 	 * **/
 	
 	public static boolean post(List<Product> productList){
@@ -341,9 +343,9 @@ public class Product
 		List<Sector> sectorList=new ArrayList<Sector>();
 		List<Pricelist> priceListLists=new ArrayList<Pricelist>();
 		
-		
+		//filling up Pojo lists for...
 		for(int i=0;i<=productList.size()-1;i++){
-			//commodityGroup
+			//...commodityGroup
 			if(grpList.isEmpty())
 				grpList.add(productList.get(i).getCommodityGroup());
 			else{
@@ -357,7 +359,7 @@ public class Product
 				if(dublicate==false)
 					grpList.add(productList.get(i).getCommodityGroup());
 			}
-			//assortment
+			//...assortment
 			if(assortmentList.isEmpty())
 				assortmentList.add(productList.get(i).getAssortment());
 			else{
@@ -372,7 +374,7 @@ public class Product
 					assortmentList.add(productList.get(i).getAssortment());
 			}
 			
-			//Sector
+			//...Sector+AltSector
 			if(sectorList.isEmpty())
 				sectorList.add(productList.get(i).getSector());
 			else{
@@ -387,10 +389,8 @@ public class Product
 					sectorList.add(productList.get(i).getSector());
 			}
 			
-			//AltSector
-			
-			
-			//pricelist
+						
+			//...pricelist
 			for(int j=0;j<=productList.get(i).getPrices().size()-1;j++){
 				if(priceListLists.isEmpty())
 					priceListLists.add(productList.get(i).getPrices().get(j).getPriceList());
@@ -436,8 +436,31 @@ public class Product
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
 		boolean bool=false;
+		
 		for(int i=0;i<=productList.size()-1;i++){
+			//Getting Pojo data for further products having the same grp/sector/etc.
+			for(CommodityGroup grp:grpList){
+				if(grp.getNumber()==productList.get(i).getCommodityGroup().getNumber())
+					productList.get(i).setCommodityGroup(grp);
+			}
+			for(Assortment assort:assortmentList){
+				if(assort.getNumber()==productList.get(i).getAssortment().getNumber())
+					productList.get(i).setAssortment(assort);
+			}
+			for(Sector sector:sectorList){
+				if(sector.getNumber()==productList.get(i).getSector().getNumber())
+					productList.get(i).setSector(sector);
+			}
+			for(Pricelist pricelist:priceListLists){
+				for(Price price:productList.get(i).getPrices()){
+					if(pricelist.getNumber()==productList.get(i).getPrices().get(0).getPriceList().getNumber())
+						productList.get(i).getPrices().get(0).setPriceList(pricelist);
+				}
+			}
+			
+			System.out.println(productList.get(i).toString());
 			bool=CloudLink.getConnector().postData(DataType.product,productList.get(i).toJSON());
 		}
 		return bool;
@@ -453,12 +476,12 @@ public class Product
 		this.name = name;
 	}
 
-	public int getNumber()
+	public String getNumber()
 	{
 		return number;
 	}
 
-	public void setNumber(int number)
+	public void setNumber(String number)
 	{
 		this.number = number;
 	}
@@ -625,7 +648,9 @@ public class Product
 
 	@Override
 	public String toString()
-	{
-		return name;
+	{	
+		String productstr=name+number+commodityGroup.getName()+" "+commodityGroup.getUuid();
+		return productstr;
+		
 	}
 }
