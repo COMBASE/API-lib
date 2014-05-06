@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import link.CloudLink;
@@ -328,6 +329,118 @@ public class Product
 				
 		return CloudLink.getConnector().postData(DataType.product,
 				this.toJSON());
+	}
+	
+	/** 
+	 * More optimized post method for uploading several products of the same group, sector, etc. 
+	 * **/
+	
+	public static boolean post(List<Product> productList){
+		List<CommodityGroup> grpList=new ArrayList<CommodityGroup>();
+		List<Assortment> assortmentList=new ArrayList<Assortment>();
+		List<Sector> sectorList=new ArrayList<Sector>();
+		List<Pricelist> priceListLists=new ArrayList<Pricelist>();
+		
+		
+		for(int i=0;i<=productList.size()-1;i++){
+			//commodityGroup
+			if(grpList.isEmpty())
+				grpList.add(productList.get(i).getCommodityGroup());
+			else{
+			boolean dublicate=false;
+				Iterator<CommodityGroup> it=grpList.iterator();
+				while(it.hasNext()){
+					if(it.next().getNumber()==productList.get(i).getCommodityGroup().getNumber())
+						dublicate=true;
+					
+				}
+				if(dublicate==false)
+					grpList.add(productList.get(i).getCommodityGroup());
+			}
+			//assortment
+			if(assortmentList.isEmpty())
+				assortmentList.add(productList.get(i).getAssortment());
+			else{
+			boolean dublicate=false;
+				Iterator<Assortment> it=assortmentList.iterator();
+				while(it.hasNext()){
+					if(it.next().getUuid()==productList.get(i).getAssortment().getUuid())
+						dublicate=true;
+					
+				}
+				if(dublicate==false)
+					assortmentList.add(productList.get(i).getAssortment());
+			}
+			
+			//Sector
+			if(sectorList.isEmpty())
+				sectorList.add(productList.get(i).getSector());
+			else{
+			boolean dublicate=false;
+				Iterator<Sector> it=sectorList.iterator();
+				while(it.hasNext()){
+					if(it.next().getNumber()==productList.get(i).getSector().getNumber())
+						dublicate=true;
+					
+				}
+				if(dublicate==false)
+					sectorList.add(productList.get(i).getSector());
+			}
+			
+			//AltSector
+			
+			
+			//pricelist
+			for(int j=0;j<=productList.get(i).getPrices().size()-1;j++){
+				if(priceListLists.isEmpty())
+					priceListLists.add(productList.get(i).getPrices().get(j).getPriceList());
+				else{
+				boolean dublicate=false;
+					Iterator<Pricelist> it=priceListLists.iterator();
+					while(it.hasNext()){
+						if(it.next().getNumber()==productList.get(i).getPrices().get(j).getPriceList().getNumber())
+							dublicate=true;
+						
+					}
+					if(dublicate==false)
+						priceListLists.add(productList.get(i).getPrices().get(j).getPriceList());
+				}
+				
+			}
+		}
+		
+	    
+		
+		try {
+			
+			for(int i=0;i<=grpList.size()-1;i++){
+				if ( grpList.get(i) != null && grpList.get(i).getUuid() == null)
+					grpList.get(i).post();	
+			}
+			
+			for(int i=0;i<=assortmentList.size()-1;i++){
+				if ( assortmentList.get(i) != null && assortmentList.get(i).getUuid() == null)
+					assortmentList.get(i).post();
+			}
+			
+			for(int i=0;i<=sectorList.size()-1;i++){
+				if ( sectorList.get(i) != null && sectorList.get(i).getUuid() == null)
+					sectorList.get(i).post();
+			}
+			
+			for(int i=0;i<=priceListLists.size()-1;i++){
+				if ( priceListLists.get(i) != null && priceListLists.get(i).getUuid() == null)
+					priceListLists.get(i).post();
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		boolean bool=false;
+		for(int i=0;i<=productList.size()-1;i++){
+			bool=CloudLink.getConnector().postData(DataType.product,productList.get(i).toJSON());
+		}
+		return bool;
 	}
 
 	public String getName()

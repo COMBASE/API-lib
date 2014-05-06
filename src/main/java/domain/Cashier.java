@@ -31,6 +31,7 @@ public class Cashier {
 		private String firstName=null;
 		private String surName=null;
 		private int loginCode=1; //default login code
+		private String uuid=null;
 		
 		
 		
@@ -62,6 +63,10 @@ public class Cashier {
 			loginCode=value;
 			return this;
 		}
+		public Builder uuid(String value){
+			uuid=value;
+			return this;
+		}
 		
 		public Cashier build() {
 			return new Cashier(this);
@@ -78,7 +83,8 @@ public class Cashier {
 					deleted(obj.getBoolean("deleted")).
 					number(obj.getInt("number")).
 					firstName(obj.getString("firstname")).
-					surName(obj.getString("surname"))
+					surName(obj.getString("surname")).
+					uuid(obj.getString("uuid"))
 				.build();
 		return cash;
 	

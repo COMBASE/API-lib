@@ -9,7 +9,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 public class Currency {
 	private boolean deleted;
-	private static String name;
+	private String name;
 	private int number;
 	private String uuid;
 	private String revision;

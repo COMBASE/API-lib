@@ -12,7 +12,7 @@ public class OrganizationalUnit {
 	private boolean deleted;
 	private int revision;
 	private String uuid;
-	private int number;
+	private String number;
 	private String name;
 	private String parent;
 	//private AssortmentValidities assortmentValidities;
@@ -43,7 +43,7 @@ public class OrganizationalUnit {
 		private boolean deleted=false;
 		private int revision=0;
 		private String uuid=null;
-		private int number=0;
+		private String number=null;
 		private String name=null;
 		private String parent=null;
 		//private AssortmentValidities assortmentValidities;
@@ -71,7 +71,7 @@ public class OrganizationalUnit {
 			return this;
 		} 
 		
-		public Builder number(int value){
+		public Builder number(String value){
 			number=value;
 			return this;
 		}
@@ -104,7 +104,7 @@ public class OrganizationalUnit {
 			obj=obj.getJSONObject("result"); 
 		OrganizationalUnit orgUnit = new OrganizationalUnit.Builder(null).
 					deleted(obj.getBoolean("deleted")).
-					number(obj.getInt("number"))
+					number(obj.getString("number"))
 				.build();
 		return orgUnit;
 	}
@@ -134,10 +134,10 @@ public class OrganizationalUnit {
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
 	}
-	public int getNumber() {
+	public String getNumber() {
 		return number;
 	}
-	public void setNumber(int number) {
+	public void setNumber(String number) {
 		this.number = number;
 	}
 	public String getName() {
