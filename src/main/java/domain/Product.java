@@ -299,7 +299,7 @@ public class Product
 				}
 				obj.put("articleTexts", array);
 			}
-			System.out.println("Product.java @ 302 "+obj);
+			//System.out.println("Product.java @ 302 "+obj);
 			return obj;
 		}
 		catch (JSONException e)
@@ -455,8 +455,8 @@ public class Product
 			}
 			for(Pricelist pricelist:priceListLists){
 				for(Price price:productList.get(i).getPrices()){
-					if(pricelist.getNumber()==productList.get(i).getPrices().get(0).getPriceList().getNumber())
-						productList.get(i).getPrices().get(0).setPriceList(pricelist);
+					if(pricelist.getNumber()==price.getPriceList().getNumber())
+						price.setPriceList(pricelist);
 				}
 			}
 			
