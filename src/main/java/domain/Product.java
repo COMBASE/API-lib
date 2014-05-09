@@ -460,7 +460,7 @@ public class Product
 				}
 			}
 			
-			System.out.println(productList.get(i).toString());
+			//System.out.println(productList.get(i).toString());
 			bool=CloudLink.getConnector().postData(DataType.product,productList.get(i).toJSON());
 		}
 		return bool;
