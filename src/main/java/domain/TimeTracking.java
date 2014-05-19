@@ -16,7 +16,7 @@ import org.codehaus.jettison.json.JSONObject;
 public class TimeTracking {
 	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 	private boolean deleted;
-	private Long revision;
+	private String revision;
 	private String name;
 	private String uuid;
 	private Cashier cashier;
@@ -37,7 +37,7 @@ public class TimeTracking {
 	public static class Builder {
 		private final String name;
 		
-		private Long revision=null;
+		private String revision=null;
 		private boolean deleted = true;
 		private Cashier cashier=null;
 		private String org;
@@ -55,7 +55,7 @@ public class TimeTracking {
 			return this;
 		}
 		
-		public Builder revision(Long value){
+		public Builder revision(String value){
 			revision=value;
 			return this;
 		}
@@ -107,7 +107,7 @@ public class TimeTracking {
 				start(startTime).
 				timeTrackingentity(ent).
 				cashier(cash).
-				revision(obj.getLong("revision"))
+				revision(obj.getString("revision"))
 						.build();
 		return tTrack;
 	}
@@ -195,7 +195,7 @@ public class TimeTracking {
 	public TimeTrackingEntities getTimeTrackingEntity(){
 		return this.timeTrackingEntity;
 	}
-	public Long getRevision() {
+	public String getRevision() {
 		return revision;
 	}
 

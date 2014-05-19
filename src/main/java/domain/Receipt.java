@@ -10,7 +10,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 public class Receipt {
 	private boolean deleted;
-	private int revision;
+	private String revision;
 	private String uuid;
 	private int number;
 	private Cashier cashier;
@@ -62,7 +62,7 @@ public class Receipt {
 	
 	public static class Builder{
 		private boolean deleted=false;
-		private int revision=0;
+		private String revision=null;
 		private int number=0;
 		private Cashier cashier=null;
 		private long creatTime=0;
@@ -92,7 +92,7 @@ public class Receipt {
 			this.deleted=value;
 			return this;
 		}
-		public Builder revision(int value){
+		public Builder revision(String value){
 			this.revision=value;
 			return this;
 		}
@@ -195,7 +195,7 @@ public class Receipt {
 		cGrp.setUuid(obj.getString("customerGroup"));
 		Receipt rec = new Receipt.Builder().
 					number(obj.getInt("number")).
-					revision(obj.getInt("revision")).
+					revision(obj.getString("revision")).
 					cashier(cash).customerGroup(cGrp).
 					receiptDiscountGrossAmount(obj.getDouble("receiptDiscountGrossAmount"))
 				.build();
@@ -217,10 +217,10 @@ public class Receipt {
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	public int getRevision() {
+	public String getRevision() {
 		return revision;
 	}
-	public void setRevision(int revision) {
+	public void setRevision(String revision) {
 		this.revision = revision;
 	}
 	public String getUuid() {

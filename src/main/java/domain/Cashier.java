@@ -84,7 +84,8 @@ public class Cashier {
 					number(obj.getInt("number")).
 					firstName(obj.getString("firstname")).
 					surName(obj.getString("surname")).
-					uuid(obj.getString("uuid"))
+					uuid(obj.getString("uuid")).
+					loginCode(obj.getInt("loginCode"))
 				.build();
 		return cash;
 	

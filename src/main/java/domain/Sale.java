@@ -18,7 +18,7 @@ public class Sale {
 	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 	private String name;
 	private boolean deleted;
-	private Long revision;
+	private String revision;
 	private String uuid;
 	private Product article;
 	private Cashier cashier;
@@ -71,7 +71,7 @@ public class Sale {
 	public static class Builder {
 		private String name=null;
 		private boolean deleted = false;
-		private Long revision=null;
+		private String revision=null;
 		private String uuid=null;
 		private Product article=null;
 		private Cashier cashier=null;
@@ -121,7 +121,7 @@ public class Sale {
 			return this;
 		}
 		
-		public Builder revision(Long value){
+		public Builder revision(String value){
 			revision=value;
 			return this;
 		}
@@ -286,7 +286,7 @@ public class Sale {
 		
 		Sale sale = new Sale.Builder(null).
 					deleted(obj.getBoolean("deleted")).
-					revision(obj.getLong("revision")).
+					revision(obj.getString("revision")).
 					uuid(obj.getString("uuid")).
 					article(prod).
 					cashier(cash).
@@ -346,10 +346,10 @@ public class Sale {
 		this.deleted=deleted;
 	}
 	
-	public Long getRevision(){
+	public String getRevision(){
 		return this.revision;
 	}
-	public void setRevision(Long revision){
+	public void setRevision(String revision){
 		this.revision=revision;
 	}
 	

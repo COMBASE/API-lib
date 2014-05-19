@@ -10,7 +10,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 public class CustomerGroup {
 	private boolean deleted;
-	private int revision;
+	private String revision;
 	private String uuid;
 	private int number;
 	private Pricelist priceGroup;
@@ -27,7 +27,7 @@ public class CustomerGroup {
 	public static class Builder{
 		private String name=null;
 		private boolean deleted=false;
-		private int revision=0;
+		private String revision=null;
 		private int number=0;
 		private Pricelist priceGroup=null;
 		
@@ -38,7 +38,7 @@ public class CustomerGroup {
 			deleted=value;
 			return this;
 		}
-		public Builder revision(int value){
+		public Builder revision(String value){
 			revision=value;
 			return this;
 		}
@@ -90,10 +90,10 @@ public class CustomerGroup {
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	public int getRevision() {
+	public String getRevision() {
 		return revision;
 	}
-	public void setRevision(int revision) {
+	public void setRevision(String revision) {
 		this.revision = revision;
 	}
 	public String getUuid() {

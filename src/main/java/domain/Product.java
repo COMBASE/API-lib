@@ -299,7 +299,7 @@ public class Product
 				}
 				obj.put("articleTexts", array);
 			}
-			//System.out.println("Product.java @ 302 "+obj);
+			System.out.println("Product.java @ 302 "+obj);
 			return obj;
 		}
 		catch (JSONException e)
@@ -461,6 +461,7 @@ public class Product
 			}
 			
 			//System.out.println(productList.get(i).toString());
+			System.out.print("*");
 			bool=CloudLink.getConnector().postData(DataType.product,productList.get(i).toJSON());
 		}
 		return bool;

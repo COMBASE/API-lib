@@ -10,7 +10,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 public class POS {
 	private boolean deleted;
-	private int revision;
+	private String revision;
 	private String uuid;
 	private String number;
 	private int autoLogoutDelay;
@@ -49,7 +49,7 @@ public class POS {
 	
 	public static class Builder {
 		private boolean deleted=false;
-		private int revision=0;
+		private String revision=null;
 		private String uuid=null;
 		private String number=null;
 		private int autoLogoutDelay=0;
@@ -154,10 +154,10 @@ public class POS {
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	public int getRevision() {
+	public String getRevision() {
 		return revision;
 	}
-	public void setRevision(int revision) {
+	public void setRevision(String revision) {
 		this.revision = revision;
 	}
 	public String getUuid() {
