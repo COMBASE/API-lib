@@ -150,8 +150,11 @@ public class ApiConnector
 					uuid = CloudLink.getUUIDByNumber(type, obj.opt("number").toString());
 				else
 				{
-					uuid = CloudLink.getUUIDByName(type, obj.opt("name").toString());
-					nr = CloudLink.getNumberByName(type, obj.opt("name").toString());
+					if (obj.opt("name") != null && obj.opt("name").toString().length() > 0)
+					{
+						uuid = CloudLink.getUUIDByName(type, obj.opt("name").toString());
+						nr = CloudLink.getNumberByName(type, obj.opt("name").toString());
+					}
 				}
 			}
 			if (uuid != null)
