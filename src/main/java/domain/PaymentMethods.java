@@ -18,6 +18,7 @@ public class PaymentMethods {
 	public PaymentMethods(Builder builder){
 		deleted=builder.deleted;
 		revision=builder.revision;
+		uuid=builder.uuid;
 		number=builder.number;
 		name=builder.name;
 	}
@@ -25,6 +26,7 @@ public class PaymentMethods {
 	public static class Builder{
 		private boolean deleted=false;
 		private String revision=null;
+		private String uuid=null;
 		private int number=0;
 		private String name=null;
 		
@@ -37,6 +39,10 @@ public class PaymentMethods {
 		}
 		public Builder revision(String value){
 			revision=value;
+			return this;
+		}
+		public Builder uuid(String value){
+			uuid=value;
 			return this;
 		}
 		public Builder number(int value){
@@ -54,7 +60,8 @@ public class PaymentMethods {
 			
 		PaymentMethods payMeth = new PaymentMethods.Builder(obj.getString("name")).
 							deleted(obj.getBoolean("deleted")).
-							number(obj.getInt("number"))
+							number(obj.getInt("number")).
+							uuid(obj.getString("uuid"))
 						.build();
 		if (obj.has("number"))
 			payMeth.setNumber(obj.getInt("number"));

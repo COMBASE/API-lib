@@ -13,6 +13,7 @@ public class Account {
 	public Account(Builder builder){
 		deleted=builder.deleted;
 		number=builder.number;
+		uuid=builder.uuid;
 	}
 	
 	public static class Builder{
@@ -33,6 +34,10 @@ public class Account {
 			number=value;
 			return this;
 		}
+		public Builder uuid(String value){
+			uuid=value;
+			return this;
+		}
 		public Account build(){
 			return new Account(this);
 		}
@@ -45,7 +50,8 @@ public class Account {
 		Account acc = new Account.Builder().
 					deleted(obj.getBoolean("deleted")).
 					revision(obj.getString("revision")).
-					number(obj.getInt("number"))
+					number(obj.getInt("number")).
+					uuid(obj.getString("uuid"))
 					
 				.build();
 		return acc;
