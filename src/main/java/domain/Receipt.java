@@ -38,6 +38,7 @@ public class Receipt {
 		deleted=builder.deleted;
 		revision=builder.revision;
 		number=builder.number;
+		uuid=builder.uuid;
 		cashier=builder.cashier;
 		creatTime=builder.creatTime;
 		currency=builder.currency;
@@ -64,6 +65,7 @@ public class Receipt {
 		private boolean deleted=false;
 		private String revision=null;
 		private int number=0;
+		private String uuid=null;
 		private Cashier cashier=null;
 		private long creatTime=0;
 		private String currency=null;
@@ -92,6 +94,10 @@ public class Receipt {
 			this.deleted=value;
 			return this;
 		}
+		public Builder uuid(String value){
+			this.uuid=value;
+			return this;
+		}				
 		public Builder revision(String value){
 			this.revision=value;
 			return this;
@@ -197,7 +203,8 @@ public class Receipt {
 					number(obj.getInt("number")).
 					revision(obj.getString("revision")).
 					cashier(cash).customerGroup(cGrp).
-					receiptDiscountGrossAmount(obj.getDouble("receiptDiscountGrossAmount"))
+					receiptDiscountGrossAmount(obj.getDouble("receiptDiscountGrossAmount")).
+					uuid(obj.getString("uuid"))
 				.build();
 		return rec;
 	}

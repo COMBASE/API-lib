@@ -42,6 +42,7 @@ public class POS {
 	private POS(Builder builder) {
 		deleted=builder.deleted;
 		revision=builder.revision;
+		uuid=builder.uuid;
 		number=builder.number;
 		name=builder.name;
 		organizationalUnit=builder.organizationalUnit;
@@ -84,6 +85,11 @@ public class POS {
 		
 		public Builder number(String value){
 			number=value;
+			return this;
+		}
+		
+		public Builder uuid(String value){
+			uuid=value;
 			return this;
 		}
 		
@@ -133,7 +139,8 @@ public class POS {
 		
 		POS pos = new POS.Builder(null).
 				number(obj.getString("number")).
-				organizationalUnit(orgUnit)
+				organizationalUnit(orgUnit).
+				uuid(obj.getString("uuid"))
 					
 					
 					

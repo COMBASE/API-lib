@@ -35,6 +35,7 @@ public class OrganizationalUnit {
 		deleted=builder.deleted;
 		revision=builder.revision;
 		number=builder.number;
+		uuid=builder.uuid;
 		name=builder.name;
 		parent=builder.parent;
 	}
@@ -71,6 +72,11 @@ public class OrganizationalUnit {
 			return this;
 		} 
 		
+		public Builder uuid(String value){
+			uuid=value;
+			return this;
+		}
+		
 		public Builder number(String value){
 			number=value;
 			return this;
@@ -104,7 +110,8 @@ public class OrganizationalUnit {
 			obj=obj.getJSONObject("result"); 
 		OrganizationalUnit orgUnit = new OrganizationalUnit.Builder(null).
 					deleted(obj.getBoolean("deleted")).
-					number(obj.getString("number"))
+					number(obj.getString("number")).
+					uuid(obj.getString("uuid"))
 				.build();
 		return orgUnit;
 	}

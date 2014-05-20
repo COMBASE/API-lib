@@ -19,6 +19,7 @@ public class Cashier {
 	private Cashier(Builder builder) {
 		name = builder.name;
 		deleted=builder.deleted;
+		uuid=builder.uuid;
 		number=builder.number;
 		firstName=builder.firstName;
 		surName=builder.surName;

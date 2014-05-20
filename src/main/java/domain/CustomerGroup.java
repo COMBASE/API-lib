@@ -19,6 +19,7 @@ public class CustomerGroup {
 	private CustomerGroup(Builder builder) {
 		name = builder.name;
 		deleted=builder.deleted;
+		uuid=builder.uuid;
 		revision=builder.revision;
 		number=builder.number;
 		priceGroup=builder.priceGroup;
@@ -28,6 +29,7 @@ public class CustomerGroup {
 		private String name=null;
 		private boolean deleted=false;
 		private String revision=null;
+		private String uuid=null;
 		private int number=0;
 		private Pricelist priceGroup=null;
 		
@@ -36,6 +38,10 @@ public class CustomerGroup {
 		}
 		public Builder deleted(boolean value){
 			deleted=value;
+			return this;
+		}
+		public Builder uuid(String value){
+			uuid=value;
 			return this;
 		}
 		public Builder revision(String value){
@@ -75,7 +81,8 @@ public class CustomerGroup {
 		if(obj.has("result") && obj.getString("result")!=null)
 			obj=obj.getJSONObject("result"); 
 		
-		CustomerGroup custGrp = new CustomerGroup.Builder(obj.getString("name"))
+		CustomerGroup custGrp = new CustomerGroup.Builder(obj.getString("name")).
+				uuid(obj.getString("uuid"))
 				.build();
 		return custGrp;
 	}

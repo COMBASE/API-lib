@@ -225,7 +225,7 @@ public class Product
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
 
-		Product prod = new Product.Builder(obj.getString("name")).build();
+		Product prod = new Product.Builder(obj.getString("name")).uuid(obj.getString("uuid")).build();
 		if (obj.has("number"))
 			prod.setNumber(obj.getString("number"));
 		if(obj.getString("articleCodes")!="null"){
@@ -343,7 +343,7 @@ public class Product
 		List<Sector> sectorList=new ArrayList<Sector>();
 		List<Pricelist> priceListLists=new ArrayList<Pricelist>();
 		
-		//filling up Pojo lists for...
+		//filling up SubPojo lists for...
 		for(int i=0;i<=productList.size()-1;i++){
 			//...commodityGroup
 			if(grpList.isEmpty())
@@ -412,7 +412,7 @@ public class Product
 	    
 		
 		try {
-			
+			//posting all new SubPojos
 			for(int i=0;i<=grpList.size()-1;i++){
 				if ( grpList.get(i) != null && grpList.get(i).getUuid() == null)
 					grpList.get(i).post();	
@@ -440,7 +440,7 @@ public class Product
 		boolean bool=false;
 		
 		for(int i=0;i<=productList.size()-1;i++){
-			//Getting Pojo data for further products having the same grp/sector/etc.
+			//Getting Pojo data for every next product having the same grp/sector/etc like the first.
 			for(CommodityGroup grp:grpList){
 				if(grp.getNumber()==productList.get(i).getCommodityGroup().getNumber())
 					productList.get(i).setCommodityGroup(grp);
@@ -461,6 +461,7 @@ public class Product
 			}
 			
 			//System.out.println(productList.get(i).toString());
+			//post all products
 			System.out.print("*");
 			bool=CloudLink.getConnector().postData(DataType.product,productList.get(i).toJSON());
 		}
