@@ -12,7 +12,7 @@ public class Receipt {
 	private boolean deleted;
 	private String revision;
 	private String uuid;
-	private int number;
+	private String number;
 	private Cashier cashier;
 	private long creatTime;
 	private String currency;
@@ -64,7 +64,7 @@ public class Receipt {
 	public static class Builder{
 		private boolean deleted=false;
 		private String revision=null;
-		private int number=0;
+		private String number=null;
 		private String uuid=null;
 		private Cashier cashier=null;
 		private long creatTime=0;
@@ -102,7 +102,7 @@ public class Receipt {
 			this.revision=value;
 			return this;
 		}
-		public Builder number(int value){
+		public Builder number(String value){
 			this.number=value;
 			return this;
 		}
@@ -200,7 +200,7 @@ public class Receipt {
 		CustomerGroup cGrp=new CustomerGroup.Builder(null).build();
 		cGrp.setUuid(obj.getString("customerGroup"));
 		Receipt rec = new Receipt.Builder().
-					number(obj.getInt("number")).
+					number(obj.getString("number")).
 					revision(obj.getString("revision")).
 					cashier(cash).customerGroup(cGrp).
 					receiptDiscountGrossAmount(obj.getDouble("receiptDiscountGrossAmount")).
@@ -236,10 +236,10 @@ public class Receipt {
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
 	}
-	public int getNumber() {
+	public String getNumber() {
 		return number;
 	}
-	public void setNumber(int number) {
+	public void setNumber(String number) {
 		this.number = number;
 	}
 	public Cashier getCashier() {

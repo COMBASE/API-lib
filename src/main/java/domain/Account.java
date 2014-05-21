@@ -8,7 +8,7 @@ public class Account {
 	private boolean deleted;
 	private String uuid;
 	private String revision;
-	private int number;
+	private String number;
 	
 	public Account(Builder builder){
 		deleted=builder.deleted;
@@ -20,7 +20,7 @@ public class Account {
 		private boolean deleted=false;
 		private String uuid=null;
 		private String revision=null;
-		private int number=0;
+		private String number=null;
 		
 		public Builder deleted(boolean value){
 			deleted=value;
@@ -30,7 +30,7 @@ public class Account {
 			revision=value;
 			return this;
 		}
-		public Builder number(int value){
+		public Builder number(String value){
 			number=value;
 			return this;
 		}
@@ -50,7 +50,7 @@ public class Account {
 		Account acc = new Account.Builder().
 					deleted(obj.getBoolean("deleted")).
 					revision(obj.getString("revision")).
-					number(obj.getInt("number")).
+					number(obj.getString("number")).
 					uuid(obj.getString("uuid"))
 					
 				.build();
@@ -81,11 +81,11 @@ public class Account {
 		this.revision = revision;
 	}
 
-	public int getNumber() {
+	public String getNumber() {
 		return number;
 	}
 
-	public void setNumber(int number) {
+	public void setNumber(String number) {
 		this.number = number;
 	}
 }
