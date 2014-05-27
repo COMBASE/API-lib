@@ -110,7 +110,8 @@ public class POS {
 			obj.put("deleted", deleted);
 			obj.put("revision", revision);
 			obj.put("uuid", uuid);
-			obj.put("number", number);
+			if (number!=null)
+				obj.put("number", number);
 			
 			
 			if (organizationalUnit != null)

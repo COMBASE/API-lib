@@ -179,7 +179,8 @@ public class Customer {
 			obj.put("deleted", deleted);
 			obj.put("uuid", uuid);
 			obj.put("revision", revision);
-			obj.put("number", number);
+			if (number!=null)
+				obj.put("number", number);
 			if (customerGroup != null)
 				obj.put("customerGroup", customerGroup.getUuid());
 			obj.put("firstName", firstName);

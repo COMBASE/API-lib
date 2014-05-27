@@ -13,7 +13,7 @@ import org.codehaus.jettison.json.JSONObject;
 public class Tax
 {
 	private String name;
-	private int number;
+	private String number;
 	private boolean deleted;
 	private boolean included;
 	private EconomicZone economicZone;
@@ -33,7 +33,7 @@ public class Tax
 	public static class Builder
 	{
 		private final String name;
-		private int number = 0;
+		private String number = null;
 		private final EconomicZone economicZone;
 		private boolean deleted = false;
 		private boolean included = false;
@@ -45,7 +45,7 @@ public class Tax
 			this.economicZone = zone;
 		}
 
-		public Builder number(int value)
+		public Builder number(String value)
 		{
 			number = value;
 			return this;
@@ -81,7 +81,7 @@ public class Tax
 		try
 		{
 			obj.put("name", name);
-			if (number != 0)
+			if (number!=null)
 				obj.put("number", number);
 			obj.put("deleted", deleted);
 			obj.put("included", included);
@@ -115,7 +115,7 @@ public class Tax
 			economicZone.post();
 		}
 		boolean result = CloudLink.getConnector().postData(DataType.tax, this.toJSON());
-		if (number != 0)
+		if (!number.equalsIgnoreCase("0"))
 			uuid = CloudLink.getUUIDByNumber(DataType.tax, String.valueOf(number));
 		else
 			uuid = CloudLink.getUUIDByName(DataType.tax, name);

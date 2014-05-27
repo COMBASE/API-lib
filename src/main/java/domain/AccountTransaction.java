@@ -13,8 +13,9 @@ import org.codehaus.jettison.json.JSONObject;
 public class AccountTransaction {
 	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 	private boolean deleted;
-	private String revision;
 	private String uuid;
+	private String revision;
+	
 	private Account account; 
 	private Receipt receipt;
 	private Cashier cashier;
@@ -28,6 +29,7 @@ public class AccountTransaction {
 	private AccountTransaction(Builder builder){
 		revision=builder.revision;
 		deleted=builder.deleted;
+		uuid=builder.uuid;
 		account=builder.account;
 		receipt=builder.receipt;
 		cashier=builder.cashier;
@@ -59,6 +61,12 @@ public class AccountTransaction {
 		 deleted=value;
 		 return this;
 	 }
+	 
+	 public Builder uuid(String value){
+		 uuid=value;
+		 return this;
+	 }
+	 
 	 public Builder account(Account acc){
 		  account=acc;
 		  return this;

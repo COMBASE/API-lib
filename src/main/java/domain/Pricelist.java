@@ -10,7 +10,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 public class Pricelist
 {
-	private int number;
+	private String number;
 	private String name;
 	private boolean netPrices;
 	private boolean deleted;
@@ -29,7 +29,7 @@ public class Pricelist
 	public static class Builder
 	{
 		private final String name;
-		private int number = 0;
+		private String number = null;
 		private final String uuidOfCurrency;
 		private boolean deleted = false;
 		private boolean netPrices = false;
@@ -40,7 +40,7 @@ public class Pricelist
 			this.uuidOfCurrency = uuidOfCurrency;
 		}
 
-		public Builder number(int value)
+		public Builder number(String value)
 		{
 			number = value;
 			return this;
@@ -71,7 +71,7 @@ public class Pricelist
 		Pricelist priceList = new Pricelist.Builder(obj.getString("name"),obj.getString("currency"))
 						.build();
 		if (obj.has("number"))
-			priceList.setNumber(obj.getInt("number"));
+			priceList.setNumber(obj.getString("number"));
 
 		return priceList;
 	}
@@ -82,7 +82,7 @@ public class Pricelist
 		try
 		{
 			obj.put("name", name);
-			if (number != 0)
+			if (number!=null)
 				obj.put("number", number);
 			obj.put("deleted", deleted);
 			obj.put("netPrices", netPrices);
@@ -99,7 +99,7 @@ public class Pricelist
 	public boolean post() throws IOException
 	{
 		boolean result = CloudLink.getConnector().postData(DataType.priceList, this.toJSON());
-		if (number != 0)
+		if (number!=null)
 			uuid = CloudLink.getUUIDByNumber(DataType.priceList, String.valueOf(number));
 		else
 			uuid = CloudLink.getUUIDByName(DataType.priceList, name);
@@ -111,11 +111,11 @@ public class Pricelist
 		return uuid;
 	}
 
-	public int getNumber() {
+	public String getNumber() {
 		return number;
 	}
 
-	public void setNumber(int number) {
+	public void setNumber(String number) {
 		this.number = number;
 	}
 

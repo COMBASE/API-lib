@@ -94,7 +94,8 @@ public class OrganizationalUnit {
 			obj.put("deleted", deleted);
 			obj.put("revision", revision);
 			obj.put("uuid", uuid);
-			obj.put("number", number);
+			if (number!=null)
+				obj.put("number", number);
 			
 			//Dependencies to existence of other objects
 			

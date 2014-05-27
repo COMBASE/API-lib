@@ -1,16 +1,12 @@
 package domain;
 
-import java.io.IOException;
-
-import link.CloudLink;
-
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 public class Currency {
 	private boolean deleted;
 	private String name;
-	private int number;
+	private String number;
 	private String uuid;
 	private String revision;
 	private String symbol;
@@ -31,7 +27,7 @@ public class Currency {
 	public static class Builder {
 		private boolean deleted = false;
 		private String name = null;
-		private int number = 0;
+		private String number = null;
 		private String uuid = null;
 		private String revision = null;
 		private String symbol = null;
@@ -45,7 +41,7 @@ public class Currency {
 			deleted = value;
 			return this;
 		}
-		public Builder number(int value) {
+		public Builder number(String value) {
 			number = value;
 			return this;
 		}
@@ -81,7 +77,8 @@ public class Currency {
 			obj.put("revision", revision);
 			obj.put("uuid", uuid);
 			obj.put("name",name);
-			obj.put("number",number);
+			if (number!=null)
+				obj.put("number",number);
 			obj.put("symbol",symbol);
 			obj.put("key",key);
 			obj.put("centName",centName);
@@ -100,20 +97,23 @@ public class Currency {
 					deleted(obj.getBoolean("deleted")).
 					revision(obj.getString("revision")).
 					uuid(obj.getString("uuid")).
-					number(obj.getInt("number")).
+					number(obj.getString("number")).
 					symbol(obj.getString("symbol")).
 					key(obj.getString("key")).
 					centName(obj.getString("centName"))
 				.build();
 		return cur;
 	}
-	
-	public boolean post() throws IOException {
+	/**
+	 * Currency upload nicht API-gestützt
+	 * 
+	 */
+	/*public boolean post() throws IOException {
 		
 		return CloudLink.getConnector().postData(DataType.currency,
 				this.toJSON());
 		
-	}
+	}*/
 	
 	public boolean isDeleted() {
 		return deleted;
@@ -131,11 +131,11 @@ public class Currency {
 		this.name = name;
 	}
 
-	public int getNumber() {
+	public String getNumber() {
 		return number;
 	}
 
-	public void setNumber(int number) {
+	public void setNumber(String number) {
 		this.number = number;
 	}
 

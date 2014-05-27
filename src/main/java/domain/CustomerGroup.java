@@ -12,7 +12,7 @@ public class CustomerGroup {
 	private boolean deleted;
 	private String revision;
 	private String uuid;
-	private int number;
+	private String number;
 	private Pricelist priceGroup;
 	private String name;
 	
@@ -30,7 +30,7 @@ public class CustomerGroup {
 		private boolean deleted=false;
 		private String revision=null;
 		private String uuid=null;
-		private int number=0;
+		private String number=null;
 		private Pricelist priceGroup=null;
 		
 		public Builder(String name) {
@@ -48,7 +48,7 @@ public class CustomerGroup {
 			revision=value;
 			return this;
 		}
-		public Builder number(int value){
+		public Builder number(String value){
 			number=value;
 			return this;
 		}
@@ -68,6 +68,8 @@ public class CustomerGroup {
 			obj.put("revision", revision);
 			obj.put("uuid", uuid);
 			obj.put("name", name);
+			if (number!=null)
+				obj.put("number", number);
 						
 			return obj;
 		} catch (JSONException e) {
@@ -109,10 +111,10 @@ public class CustomerGroup {
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
 	}
-	public int getNumber() {
+	public String getNumber() {
 		return number;
 	}
-	public void setNumber(int number) {
+	public void setNumber(String number) {
 		this.number = number;
 	}
 	public Pricelist getPriceGroup() {

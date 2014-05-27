@@ -7,7 +7,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 
@@ -100,7 +99,7 @@ public class ApiConnector
 		
 		URL obj;
 		obj = new URL(url);
-		URLConnection con;
+		HttpURLConnection con;
 		if (cloudURL.contains("https"))
 		{
 			setupConnection();
@@ -110,6 +109,12 @@ public class ApiConnector
 		{
 			con = (HttpURLConnection)obj.openConnection();
 		}
+		con.setRequestMethod("GET");
+		con.setDoOutput(true);
+		con.setConnectTimeout(10000);
+		con.setReadTimeout(10000);
+		con.setRequestProperty("Content-Type", "application/json");
+		con.connect();
 		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
 		String inputLine;
 		StringBuffer response = new StringBuffer();
@@ -118,8 +123,21 @@ public class ApiConnector
 			response.append(inputLine);
 		}
 		in.close();
-		//System.out.println("APICON:GET -> Type:"+type.getReference()+" JSON="+response.toString());
-		return response;
+		if (con.getResponseCode() == 200)
+		{
+			System.out.println("APICON:POST -> Type:"+type.getReference()+" JSON="+obj.toString());
+			con.disconnect(); // Disconnect
+			return response;
+		}
+		else
+		{
+			System.out.println("ERR: APICON:POST -> Type:"+type.getReference()+" JSON="+obj.toString());
+
+			con.disconnect(); // Disconnect
+			System.out.println("Error: " + con.getResponseMessage() + ":" +
+				con.getResponseCode());
+			return null;
+		}
 
 	}
 
@@ -177,7 +195,6 @@ public class ApiConnector
 			con.setDoOutput(true);
 			con.setConnectTimeout(10000);
 			con.setReadTimeout(10000);
-			con.setUseCaches(false);
 			con.setRequestProperty("Content-Type", "application/json");
 			con.connect();
 

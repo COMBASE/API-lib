@@ -11,7 +11,7 @@ public class PaymentMethods {
 	private boolean deleted;
 	private String revision;
 	private String uuid;
-	private int number;
+	private String number;
 	private String name;
 	
 	//ctor of PaymentMethods
@@ -27,7 +27,7 @@ public class PaymentMethods {
 		private boolean deleted=false;
 		private String revision=null;
 		private String uuid=null;
-		private int number=0;
+		private String number=null;
 		private String name=null;
 		
 		public Builder(String name){
@@ -45,7 +45,7 @@ public class PaymentMethods {
 			uuid=value;
 			return this;
 		}
-		public Builder number(int value){
+		public Builder number(String value){
 			number=value;
 			return this;
 		}
@@ -60,11 +60,11 @@ public class PaymentMethods {
 			
 		PaymentMethods payMeth = new PaymentMethods.Builder(obj.getString("name")).
 							deleted(obj.getBoolean("deleted")).
-							number(obj.getInt("number")).
+							number(obj.getString("number")).
 							uuid(obj.getString("uuid"))
 						.build();
 		if (obj.has("number"))
-			payMeth.setNumber(obj.getInt("number"));
+			payMeth.setNumber(obj.getString("number"));
 
 		return payMeth;
 	}
@@ -73,7 +73,7 @@ public class PaymentMethods {
 		JSONObject obj = new JSONObject();
 		try {
 			obj.put("name", name);
-			if (number != 0)
+			if (number!=null)
 				obj.put("number", number);
 			obj.put("deleted", deleted);
 			return obj;
@@ -111,11 +111,11 @@ public class PaymentMethods {
 		this.uuid = uuid;
 	}
 
-	public int getNumber() {
+	public String getNumber() {
 		return number;
 	}
 
-	public void setNumber(int number) {
+	public void setNumber(String number) {
 		this.number = number;
 	}
 

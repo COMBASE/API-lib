@@ -185,6 +185,8 @@ public class Receipt {
 			obj.put("deleted", deleted);
 			obj.put("revision", revision);
 			obj.put("uuid", uuid);
+			if (number!=null)
+				obj.put("number", number);
 						
 			return obj;
 		} catch (JSONException e) {

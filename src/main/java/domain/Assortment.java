@@ -9,11 +9,15 @@ import org.codehaus.jettison.json.JSONObject;
 
 public class Assortment
 {
-	private int number;
-	private String name;
-	private String description;
 	private boolean deleted;
-	private String uuid = null;
+	private String uuid;
+	private String revision;
+	private String number;
+	private String name;
+	
+	private String description;
+	
+	
 
 	private Assortment(Builder builder)
 	{
@@ -26,7 +30,7 @@ public class Assortment
 	public static class Builder
 	{
 		private final String name;
-		private int number = 0;
+		private String number = null;
 		private String description;
 		private boolean deleted;
 
@@ -35,7 +39,7 @@ public class Assortment
 			this.name = name;
 		}
 
-		public Builder number(int value)
+		public Builder number(String value)
 		{
 			number = value;
 			return this;
@@ -65,7 +69,7 @@ public class Assortment
 		try
 		{
 			obj.put("name", name);
-			if (number != 0)
+			if (number!=null)
 				obj.put("number", number);
 			obj.put("deleted", deleted);
 			obj.put("description", description);
@@ -81,7 +85,7 @@ public class Assortment
 	public boolean post() throws IOException
 	{
 		boolean result = CloudLink.getConnector().postData(DataType.assortment, this.toJSON());
-		if (number != 0)
+		if (number!=null)
 			uuid = CloudLink.getUUIDByNumber(DataType.assortment, String.valueOf(number));
 		else			
 			uuid = CloudLink.getUUIDByName(DataType.assortment, name);
@@ -93,11 +97,11 @@ public class Assortment
 		return uuid;
 	}
 
-	public int getNumber() {
+	public String getNumber() {
 		return number;
 	}
 
-	public void setNumber(int number) {
+	public void setNumber(String number) {
 		this.number = number;
 	}
 
