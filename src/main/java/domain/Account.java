@@ -9,6 +9,13 @@ public class Account {
 	private String uuid;
 	private String revision;
 	private String number;
+	private String name;
+	
+	private String type;
+	private boolean requiresSerialNumber;
+	
+	
+	
 	
 	public Account(Builder builder){
 		deleted=builder.deleted;
@@ -21,6 +28,9 @@ public class Account {
 		private String uuid=null;
 		private String revision=null;
 		private String number=null;
+		private String name=null;
+		private String type=null;
+		private boolean requiresSerialNumber=false;
 		
 		public Builder deleted(boolean value){
 			deleted=value;
@@ -38,6 +48,18 @@ public class Account {
 			uuid=value;
 			return this;
 		}
+		public Builder name(String value){
+			name=value;
+			return this;
+		}
+		public Builder type(String value){
+			type=value;
+			return this;
+		}
+		public Builder requiresSerialNumber(boolean value){
+			requiresSerialNumber=value;
+			return this;
+		}
 		public Account build(){
 			return new Account(this);
 		}
@@ -51,8 +73,10 @@ public class Account {
 					deleted(obj.getBoolean("deleted")).
 					revision(obj.getString("revision")).
 					number(obj.getString("number")).
-					uuid(obj.getString("uuid"))
-					
+					uuid(obj.getString("uuid")).
+					name(obj.getString("name")).
+					type(obj.getString("type")).
+					requiresSerialNumber(obj.getBoolean("requiresSerialNumber"))
 				.build();
 		return acc;
 	}
@@ -87,5 +111,29 @@ public class Account {
 
 	public void setNumber(String number) {
 		this.number = number;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public boolean isRequiresSerialNumber() {
+		return requiresSerialNumber;
+	}
+
+	public void setRequiresSerialNumber(boolean requiresSerialNumber) {
+		this.requiresSerialNumber = requiresSerialNumber;
 	}
 }

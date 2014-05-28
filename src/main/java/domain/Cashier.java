@@ -11,7 +11,7 @@ public class Cashier {
 	private boolean deleted;
 	private String name;
 	private String uuid;
-	private int number;
+	private String number;
 	private String firstName;
 	private String surName;
 	private int loginCode;
@@ -27,7 +27,7 @@ public class Cashier {
 	}
 	public static class Builder {
 		private final String name;
-		private int number = 0;
+		private String number = null;
 		private boolean deleted = false;
 		private String firstName=null;
 		private String surName=null;
@@ -41,7 +41,7 @@ public class Cashier {
 			this.name = name;
 		}
 		
-		public Builder number(int value) {
+		public Builder number(String value) {
 			number = value;
 			return this;
 		}
@@ -82,7 +82,7 @@ public class Cashier {
 		
 		Cashier cash = new Cashier.Builder(null).
 					deleted(obj.getBoolean("deleted")).
-					number(obj.getInt("number")).
+					number(obj.getString("number")).
 					firstName(obj.getString("firstname")).
 					surName(obj.getString("surname")).
 					uuid(obj.getString("uuid")).
@@ -101,7 +101,8 @@ public class Cashier {
 			obj.put("name", name);
 			obj.put("deleted", deleted);
 			obj.put("uuid", uuid);
-			obj.put("number", number);
+			if (number!=null)
+				obj.put("number", number);
 			obj.put("firstName", firstName);
 			obj.put("surName", surName);
 			
@@ -142,11 +143,11 @@ public class Cashier {
 		return this.uuid;
 	}
 	
-	public void setNumber(int number){
+	public void setNumber(String number){
 		this.number=number;
 	}
 	
-	public int getNumber(){
+	public String getNumber(){
 		return this.number;
 	}
 	

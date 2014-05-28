@@ -11,7 +11,7 @@ import org.codehaus.jettison.json.JSONObject;
 public class EconomicZone
 {
 	private String name;
-	private int number = 0;
+	private String number = null;
 	private String uuid = null;
 
 	public EconomicZone(String name)
@@ -19,7 +19,7 @@ public class EconomicZone
 		this.name = name;
 	}
 
-	public EconomicZone(int number, String name)
+	public EconomicZone(String number, String name)
 	{
 		this.number = number;
 		this.name = name;
@@ -31,7 +31,7 @@ public class EconomicZone
 		try
 		{
 			obj.put("name", name);
-			if (number != 0)
+			if (number!=null)
 				obj.put("number", number);
 			return obj;
 		}
@@ -45,7 +45,7 @@ public class EconomicZone
 	public boolean post() throws IOException
 	{
 		boolean result = CloudLink.getConnector().postData(DataType.economicZone, this.toJSON());
-		if (number != 0)
+		if (number!=null)
 			uuid = CloudLink.getUUIDByNumber(DataType.economicZone, String.valueOf(number));
 		else
 			uuid = CloudLink.getUUIDByName(DataType.economicZone, name);

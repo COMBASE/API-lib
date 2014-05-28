@@ -253,7 +253,7 @@ public class Product
 		try
 		{
 			obj.put("name", name);
-			if (!number.isEmpty())
+			if (number!=null)
 				obj.put("number", number);
 			obj.put("deleted", deleted);
 			obj.put("activeAssortment", activeAssortment);

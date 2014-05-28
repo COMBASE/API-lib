@@ -13,7 +13,7 @@ import org.codehaus.jettison.json.JSONObject;
 public class Sector
 {
 	private String name;
-	private int number;
+	private String number;
 	private List<Tax> taxlist;
 	private boolean deleted;
 	private String uuid = null;
@@ -29,7 +29,7 @@ public class Sector
 	public static class Builder
 	{
 		private final String name;
-		private int number = 0;
+		private String number = null;
 		private boolean deleted = false;
 		private List<Tax> taxlist = new ArrayList<Tax>();
 
@@ -38,7 +38,7 @@ public class Sector
 			this.name = name;
 		}
 
-		public Builder number(int value)
+		public Builder number(String value)
 		{
 			number = value;
 			return this;
@@ -68,7 +68,7 @@ public class Sector
 		try
 		{
 			obj.put("name", name);
-			if (number != 0)
+			if (number!=null)
 				obj.put("number", number);
 			obj.put("deleted", deleted);
 			if (!taxlist.isEmpty())
@@ -102,7 +102,7 @@ public class Sector
 		obj = obj.getJSONObject("result");
 		Sector sec = new Sector.Builder(obj.getString("name")).build();
 		if (obj.has("number"))
-			sec.setNumber(obj.getInt("number"));
+			sec.setNumber(obj.getString("number"));
 
 		return sec;
 	}
@@ -118,7 +118,7 @@ public class Sector
 			}
 		}
 		boolean result = CloudLink.getConnector().postData(DataType.sector, this.toJSON());
-		if (number != 0)
+		if(!number.equalsIgnoreCase("0"))
 			uuid = CloudLink.getUUIDByNumber(DataType.sector, String.valueOf(number));
 		else
 			uuid = CloudLink.getUUIDByName(DataType.sector, name);
@@ -140,12 +140,12 @@ public class Sector
 		this.name = name;
 	}
 
-	public int getNumber()
+	public String getNumber()
 	{
 		return number;
 	}
 
-	public void setNumber(int number)
+	public void setNumber(String number)
 	{
 		this.number = number;
 	}

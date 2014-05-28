@@ -12,7 +12,7 @@ public class TimeTrackingEntities {
 	private String name;
 	//originControlling
 	private String uuid;
-	private int number;
+	private String number;
 	private boolean paidTime;
 	
 	private TimeTrackingEntities(Builder builder) {
@@ -25,7 +25,7 @@ public class TimeTrackingEntities {
 	}
 	public static class Builder {
 		private String name;
-		private int number = 0;
+		private String number = null;
 		private boolean deleted = false;
 		private boolean paidTime;
 		private String uuid;
@@ -36,7 +36,7 @@ public class TimeTrackingEntities {
 			this.name = name;
 		}
 		
-		public Builder number(int value) {
+		public Builder number(String value) {
 			number = value;
 			return this;
 		}
@@ -68,7 +68,7 @@ public class TimeTrackingEntities {
 							Builder(obj.getString("name")).
 							deleted(obj.getBoolean("deleted")).
 							uuid(obj.getString("uuid")).
-							number(obj.getInt("number")).
+							number(obj.getString("number")).
 							paidTime(obj.getBoolean("paidTime"))
 				.build();
 		return tTrackE;
@@ -80,7 +80,8 @@ public class TimeTrackingEntities {
 			obj.put("name", name);
 			obj.put("deleted", deleted);
 			obj.put("uuid", uuid);
-			obj.put("number", number);
+			if (number!=null)
+				obj.put("number", number);
 			obj.put("paidTime", paidTime);
 			return obj;
 		} catch (JSONException e) {
@@ -119,11 +120,11 @@ public class TimeTrackingEntities {
 		return this.uuid;
 	}
 	
-	public void setNumber(int number){
+	public void setNumber(String number){
 		this.number=number;
 	}
 	
-	public int getNumber(){
+	public String getNumber(){
 		return this.number;
 	}
 	

@@ -9,7 +9,7 @@ import org.codehaus.jettison.json.JSONObject;
 public class InfoText
 {
 	private String text;
-	private int number = 0;
+	private String number = null;
 	private InfoTextType type;
 
 	public InfoText(String text, InfoTextType type)
@@ -18,7 +18,7 @@ public class InfoText
 		this.type = type;
 	}
 
-	public InfoText(int number, String text, InfoTextType type)
+	public InfoText(String number, String text, InfoTextType type)
 	{
 		this.number = number;
 		this.text = text;
@@ -31,7 +31,7 @@ public class InfoText
 		{
 			JSONObject obj = new JSONObject();
 			obj.put("text", text);
-			if (number != 0)
+			if (number!=null)
 				obj.put("number", number);
 			obj.put("type", type.name());
 			return obj;
