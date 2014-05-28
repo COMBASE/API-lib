@@ -16,6 +16,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -209,6 +210,70 @@ public class ApiConnector
 			return false;
 		}
 		catch (JSONException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	/**
+	 * saves a JSONArray in the Cloud
+	 * 
+	 * @param type
+	 * @param obj
+	 * @return
+	 */
+	public boolean postData(DataType type, JSONArray obj)
+	{
+		String slash = "";
+		if (!cloudURL.endsWith("/"))
+			slash = "/";
+		String url = cloudURL + slash + token + "/" + type.getReference() + "/saveAll/";
+		try
+		{
+			URL posturl = new URL(url);
+			HttpURLConnection con;
+			if (cloudURL.contains("https"))
+			{
+				setupConnection();
+				con = (HttpsURLConnection)posturl.openConnection();
+			}
+			else
+			{
+				con = (HttpURLConnection)posturl.openConnection();
+			}
+			con.setRequestMethod("POST");
+			con.setDoOutput(true);
+			con.setConnectTimeout(10000);
+			con.setReadTimeout(10000);
+			con.setUseCaches(false);
+			con.setRequestProperty("Content-Type", "application/json");
+			con.connect();
+
+			OutputStream out = con.getOutputStream();
+			OutputStreamWriter wr = new OutputStreamWriter(out, "UTF-8");
+			wr.write(obj.toString());
+			wr.flush();
+			wr.close();
+			if (out != null)
+				out.close();
+			if (con.getResponseCode() == 200)
+			{
+				System.out.println("APICON:POST -> Type:"+type.getReference()+" JSON="+obj.toString());
+				con.disconnect(); // Disconnect
+				return true;
+			}
+			else
+			{
+				System.out.println("ERR: APICON:POST -> Type:"+type.getReference()+" JSON="+obj.toString());
+
+				con.disconnect(); // Disconnect
+				System.out.println("Error: " + con.getResponseMessage() + ":" +
+					con.getResponseCode());
+				return false;
+			}
+		}
+		catch (IOException e)
 		{
 			e.printStackTrace();
 			return false;
