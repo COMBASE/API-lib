@@ -337,7 +337,7 @@ public class Product
 	 * ~MAS
 	 * **/
 	
-	public static boolean post(List<Product> productList){
+	public static boolean postNew(List<Product> productList){
 		
 		Date date1=new Date();
 		
@@ -479,6 +479,156 @@ public class Product
 		}//end for
 		//post all products
 		bool=CloudLink.getConnector().postData(DataType.product,jProdArray);
+		Date date2=new Date();
+		System.out.println("start: "+date1);
+		System.out.println("end: "+date2);
+		return bool;
+	}
+	
+	/** 
+	 * More optimized post method for uploading several products of the same group, sector, etc. 
+	 * ~MAS
+	 * **/
+	
+	public static boolean post(List<Product> productList){
+		
+		Date date1=new Date();
+		
+		
+		JSONArray jProdArray=new JSONArray();
+		JSONObject jProdObject=new JSONObject();
+		HashSet<CommodityGroup> grpList=new HashSet<CommodityGroup>();
+		HashSet<Assortment> assortmentList=new HashSet<Assortment>();
+		HashSet<Sector> sectorList=new HashSet<Sector>();
+		HashSet<Pricelist> priceListLists=new HashSet<Pricelist>();
+		
+		//filling up SubPojo lists for...
+		for(int i=0;i<=productList.size()-1;i++){
+			//...commodityGroup
+			if(grpList.isEmpty())
+				grpList.add(productList.get(i).getCommodityGroup());
+			else{
+			boolean dublicate=false;
+				Iterator<CommodityGroup> it=grpList.iterator();
+				while(it.hasNext()){
+					if(it.next().hashCode()==productList.get(i).getCommodityGroup().hashCode())
+						dublicate=true;
+					
+				}
+				if(dublicate==false)
+					grpList.add(productList.get(i).getCommodityGroup());
+			}
+			
+			//...assortment
+			if(assortmentList.isEmpty())
+				assortmentList.add(productList.get(i).getAssortment());
+			else{
+			boolean dublicate=false;
+				Iterator<Assortment> it=assortmentList.iterator();
+				while(it.hasNext()){
+					if(it.next().hashCode()==productList.get(i).getAssortment().hashCode())
+						dublicate=true;
+					
+				}
+				if(dublicate==false)
+					assortmentList.add(productList.get(i).getAssortment());
+			}
+			
+			//...Sector+AltSector
+			if(sectorList.isEmpty())
+				sectorList.add(productList.get(i).getSector());
+			else{
+			boolean dublicate=false;
+				Iterator<Sector> it=sectorList.iterator();
+				while(it.hasNext()){
+					if(it.next().hashCode()==productList.get(i).getSector().hashCode())
+						dublicate=true;
+					
+				}
+				if(dublicate==false)
+					sectorList.add(productList.get(i).getSector());
+			}
+			
+						
+			//...pricelist
+			for(int j=0;j<=productList.get(i).getPrices().size()-1;j++){
+				if(priceListLists.isEmpty())
+					priceListLists.add(productList.get(i).getPrices().get(j).getPriceList());
+				else{
+				boolean dublicate=false;
+					Iterator<Pricelist> it=priceListLists.iterator();
+					while(it.hasNext()){
+						if(it.next().hashCode()==productList.get(i).getPrices().get(j).getPriceList().hashCode())
+							dublicate=true;
+						
+					}
+					if(dublicate==false)
+						priceListLists.add(productList.get(i).getPrices().get(j).getPriceList());
+				}
+				
+			}
+		}
+		
+	    
+		
+		try {
+			//posting all new SubPojos
+			Iterator<CommodityGroup> grpListIter=grpList.iterator();
+			while(grpListIter.hasNext()){
+				CommodityGroup grp=grpListIter.next();
+				if ( grp != null && grp.getUuid() == null)
+					grp.post();	
+			}
+			Iterator<Assortment> assortmentListIter=assortmentList.iterator();
+			while(assortmentListIter.hasNext()){
+				Assortment assort=assortmentListIter.next();
+				if ( assort != null && assort.getUuid() == null)
+					assort.post();
+			}
+			Iterator<Sector> sectorListIter=sectorList.iterator();
+			while(sectorListIter.hasNext()){
+				Sector sec=sectorListIter.next();
+				if ( sec != null && sec.getUuid() == null)
+					sec.post();
+			}
+			Iterator<Pricelist> priceListListsIter=priceListLists.iterator();
+			while(priceListListsIter.hasNext()){
+				Pricelist priceL=priceListListsIter.next();
+				if ( priceL != null && priceL.getUuid() == null)
+					priceL.post();
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		boolean bool=false;
+		
+		for(int i=0;i<=productList.size()-1;i++){
+			//Getting Pojo data for every next product having the same grp/sector/etc like the first.
+			for(CommodityGroup grp:grpList){
+				if(grp.getNumber()==productList.get(i).getCommodityGroup().getNumber())
+					productList.get(i).setCommodityGroup(grp);
+			}
+			for(Assortment assort:assortmentList){
+				if(assort.getNumber()==productList.get(i).getAssortment().getNumber())
+					productList.get(i).setAssortment(assort);
+			}
+			for(Sector sector:sectorList){
+				if(sector.getNumber()==productList.get(i).getSector().getNumber())
+					productList.get(i).setSector(sector);
+			}
+			for(Pricelist pricelist:priceListLists){
+				for(Price price:productList.get(i).getPrices()){
+					if(pricelist.getNumber()==price.getPriceList().getNumber())
+						price.setPriceList(pricelist);
+				}
+			}
+			//fill up JSONArray
+			bool=CloudLink.getConnector().postData(DataType.product,productList.get(i).toJSON());
+			System.out.print("*");
+			
+		}//end for
 		Date date2=new Date();
 		System.out.println("start: "+date1);
 		System.out.println("end: "+date2);
