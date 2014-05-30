@@ -325,6 +325,34 @@ public class POS {
 		StringbloyalDeviceKey = stringbloyalDeviceKey;
 	}
 	
-	
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		
+		result = prime * result + ((this.number == null) ? 0 : this.number.hashCode());
+		result = prime * result + ((this.uuid == null) ? 0 : this.uuid.hashCode());
+		result = prime * result + ((this.revision == null) ? 0 : this.revision.hashCode());
+		result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
+		result = prime * result + ((this.automaticEndOfDayIntervalStr == null) ? 0 : this.automaticEndOfDayIntervalStr.hashCode());
+		result = prime * result + ((this.automaticPaymentFinalization == null) ? 0 : this.automaticPaymentFinalization.hashCode());
+		result = prime * result + ((this.customerDisplayOfflineText == null) ? 0 : this.customerDisplayOfflineText.hashCode());
+		result = prime * result + ((this.customerDisplayOnlineText == null) ? 0 : this.customerDisplayOnlineText.hashCode());
+		result = prime * result + ((this.distributerCode == null) ? 0 : this.distributerCode.hashCode());
+		result = prime * result + ((this.friendsbonusIdentification == null) ? 0 : this.friendsbonusIdentification.hashCode());
+		result = prime * result + ((this.friendsbonusSecret == null) ? 0 : this.friendsbonusSecret.hashCode());
+		result = prime * result + ((this.secret == null) ? 0 : this.secret.hashCode());
+		result = prime * result + ((this.StringbloyalDeviceKey == null) ? 0 : this.StringbloyalDeviceKey.hashCode());
+		result = prime * result + ((this.systemHash == null) ? 0 : this.systemHash.hashCode());
+		result = prime * result + ((this.defaultCustomerGroup == null) ? 0 : this.defaultCustomerGroup.hashCode());
+		result = prime * result + ((this.defaultPaymentMethod == null) ? 0 : this.defaultPaymentMethod.hashCode());
+		result = prime * result + ((this.organizationalUnit == null) ? 0 : this.organizationalUnit.hashCode());
+		
+		
+		
+
+		return result;
+	}
 	
 }

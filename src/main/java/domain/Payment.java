@@ -353,5 +353,29 @@ public class Payment {
 		this.paymentMethod = paymentMethod;
 	}
 	
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		
+		result = prime * result + ((this.itemSequence == null) ? 0 : this.itemSequence.hashCode());
+		result = prime * result + ((this.uuid == null) ? 0 : this.uuid.hashCode());
+		result = prime * result + ((this.revision == null) ? 0 : this.revision.hashCode());
+		result = prime * result + ((this.receiptNumber == null) ? 0 : this.receiptNumber.hashCode());
+		result = prime * result + ((this.serialNumber == null) ? 0 : this.serialNumber.hashCode());
+		result = prime * result + ((this.cashier == null) ? 0 : this.cashier.hashCode());
+		result = prime * result + ((this.currency == null) ? 0 : this.currency.hashCode());
+		result = prime * result + ((this.paymentMethod == null) ? 0 : this.paymentMethod.hashCode());
+		result = prime * result + ((this.pos == null) ? 0 : this.pos.hashCode());
+		result = prime * result + ((this.receipt == null) ? 0 : this.receipt.hashCode());
+		result = prime * result + ((this.transactionTime == null) ? 0 : this.transactionTime.hashCode());
+		
+		
+		
+
+		return result;
+	}
+	
 	
 }

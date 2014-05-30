@@ -203,4 +203,25 @@ public class TimeTracking {
 	public String toString() {
 		return name;
 	}
+	
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		
+		result = prime * result + ((this.org == null) ? 0 : this.org.hashCode());
+		result = prime * result + ((this.uuid == null) ? 0 : this.uuid.hashCode());
+		result = prime * result + ((this.revision == null) ? 0 : this.revision.hashCode());
+		result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
+		result = prime * result + ((this.cashier == null) ? 0 : this.cashier.hashCode());
+		result = prime * result + ((this.start == null) ? 0 : this.start.hashCode());
+		result = prime * result + ((this.timeTrackingEntity == null) ? 0 : this.timeTrackingEntity.hashCode());
+		
+		
+		
+		
+
+		return result;
+	}
 }

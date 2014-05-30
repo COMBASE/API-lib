@@ -16,4 +16,6 @@ public enum ProductText_Type
 	{
 		return reference;
 	}
+	
+	
 }

@@ -38,5 +38,19 @@ public class TaxPayments {
 		this.amount = amount;
 	}
 	
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		
+		result = prime * result + ((this.salesTax == null) ? 0 : this.salesTax.hashCode());
+		
+		
+		
+
+		return result;
+	}
+	
 	
 }

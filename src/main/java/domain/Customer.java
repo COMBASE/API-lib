@@ -330,5 +330,30 @@ public class Customer {
 	public void setBirthday(Date birthday) {
 		this.birthday = birthday;
 	}
+	
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		
+		result = prime * result + ((this.number == null) ? 0 : this.number.hashCode());
+		result = prime * result + ((this.uuid == null) ? 0 : this.uuid.hashCode());
+		result = prime * result + ((this.addressLine1 == null) ? 0 : this.addressLine1.hashCode());
+		result = prime * result + ((this.city == null) ? 0 : this.city.hashCode());
+		result = prime * result + ((this.country == null) ? 0 : this.country.hashCode());
+		result = prime * result + ((this.email == null) ? 0 : this.email.hashCode());
+		result = prime * result + ((this.firstName == null) ? 0 : this.firstName.hashCode());
+		result = prime * result + ((this.gender == null) ? 0 : this.gender.hashCode());
+		result = prime * result + ((this.lastName == null) ? 0 : this.lastName.hashCode());
+		result = prime * result + ((this.phone == null) ? 0 : this.phone.hashCode());
+		result = prime * result + ((this.revision == null) ? 0 : this.revision.hashCode());
+		result = prime * result + ((this.zipCode == null) ? 0 : this.zipCode.hashCode());
+		result = prime * result + ((this.birthday == null) ? 0 : this.birthday.hashCode());
+		result = prime * result + ((this.customerGroup == null) ? 0 : this.customerGroup.hashCode());
+		
+
+		return result;
+	}
 
 }

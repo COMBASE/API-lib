@@ -506,5 +506,31 @@ public class Sale {
 		this.taxPayments = taxPayments;
 	}
 	
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		
+		result = prime * result + ((this.description == null) ? 0 : this.description.hashCode());
+		result = prime * result + ((this.uuid == null) ? 0 : this.uuid.hashCode());
+		result = prime * result + ((this.revision == null) ? 0 : this.revision.hashCode());
+		result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
+		result = prime * result + ((this.infoTexts == null) ? 0 : this.infoTexts.hashCode());
+		result = prime * result + ((this.receiptNumber == null) ? 0 : this.receiptNumber.hashCode());
+		result = prime * result + ((this.serialNumber == null) ? 0 : this.serialNumber.hashCode());
+		result = prime * result + ((this.article == null) ? 0 : this.article.hashCode());
+		result = prime * result + ((this.cashier == null) ? 0 : this.cashier.hashCode());
+		result = prime * result + ((this.commodityGroup == null) ? 0 : this.commodityGroup.hashCode());
+		result = prime * result + ((this.pos == null) ? 0 : this.pos.hashCode());
+		result = prime * result + ((this.receipt == null) ? 0 : this.receipt.hashCode());
+		result = prime * result + ((this.sector == null) ? 0 : this.sector.hashCode());
+		
+		
+		
+
+		return result;
+	}
+	
 	
 }

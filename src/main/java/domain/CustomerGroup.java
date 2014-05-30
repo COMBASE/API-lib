@@ -129,4 +129,22 @@ public class CustomerGroup {
 	public void setName(String name) {
 		this.name = name;
 	}
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		
+		result = prime * result + ((this.number == null) ? 0 : this.number.hashCode());
+		result = prime * result + ((this.uuid == null) ? 0 : this.uuid.hashCode());
+		result = prime * result + ((this.revision == null) ? 0 : this.revision.hashCode());
+		result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
+		result = prime * result + ((this.priceGroup == null) ? 0 : this.priceGroup.hashCode());
+		
+		
+		
+
+		return result;
+	}
+	
 }

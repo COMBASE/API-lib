@@ -57,4 +57,18 @@ public class Rate
 		}
 
 	}
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		
+		result = prime * result + ((this.rate == null) ? 0 : this.rate.hashCode());
+		result = prime * result + ((this.validFrom == null) ? 0 : this.validFrom.hashCode());
+		
+		
+		
+
+		return result;
+	}
 }

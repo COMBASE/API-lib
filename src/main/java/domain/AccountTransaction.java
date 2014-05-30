@@ -262,5 +262,24 @@ public Account getAccount() {
 public void setAccount(Account account) {
 	this.account = account;
 }
+@Override
+public int hashCode()
+{
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + ((this.description == null) ? 0 : this.description.hashCode());
+	result = prime * result + ((this.revision == null) ? 0 : this.revision.hashCode());
+	result = prime * result + ((this.uuid == null) ? 0 : this.uuid.hashCode());
+	result = prime * result + ((this.account == null) ? 0 : this.account.hashCode());
+	result = prime * result + ((this.bookingTime == null) ? 0 : this.bookingTime.hashCode());
+	result = prime * result + ((this.cashier == null) ? 0 : this.cashier.hashCode());
+	result = prime * result + ((this.pos == null) ? 0 : this.pos.hashCode());
+	result = prime * result + ((this.receipt == null) ? 0 : this.receipt.hashCode());
+	
+	
+	
+	return result;
+}
+
  
 }

@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -299,7 +300,6 @@ public class Product
 				}
 				obj.put("articleTexts", array);
 			}
-			System.out.println("Product.java @ 302 "+obj);
 			return obj;
 		}
 		catch (JSONException e)
@@ -338,10 +338,16 @@ public class Product
 	 * **/
 	
 	public static boolean post(List<Product> productList){
-		List<CommodityGroup> grpList=new ArrayList<CommodityGroup>();
-		List<Assortment> assortmentList=new ArrayList<Assortment>();
-		List<Sector> sectorList=new ArrayList<Sector>();
-		List<Pricelist> priceListLists=new ArrayList<Pricelist>();
+		
+		Date date1=new Date();
+		
+		
+		JSONArray jProdArray=new JSONArray();
+		JSONObject jProdObject=new JSONObject();
+		HashSet<CommodityGroup> grpList=new HashSet<CommodityGroup>();
+		HashSet<Assortment> assortmentList=new HashSet<Assortment>();
+		HashSet<Sector> sectorList=new HashSet<Sector>();
+		HashSet<Pricelist> priceListLists=new HashSet<Pricelist>();
 		
 		//filling up SubPojo lists for...
 		for(int i=0;i<=productList.size()-1;i++){
@@ -352,13 +358,14 @@ public class Product
 			boolean dublicate=false;
 				Iterator<CommodityGroup> it=grpList.iterator();
 				while(it.hasNext()){
-					if(it.next().getNumber()==productList.get(i).getCommodityGroup().getNumber())
+					if(it.next().hashCode()==productList.get(i).getCommodityGroup().hashCode())
 						dublicate=true;
 					
 				}
 				if(dublicate==false)
 					grpList.add(productList.get(i).getCommodityGroup());
 			}
+			
 			//...assortment
 			if(assortmentList.isEmpty())
 				assortmentList.add(productList.get(i).getAssortment());
@@ -366,7 +373,7 @@ public class Product
 			boolean dublicate=false;
 				Iterator<Assortment> it=assortmentList.iterator();
 				while(it.hasNext()){
-					if(it.next().getUuid()==productList.get(i).getAssortment().getUuid())
+					if(it.next().hashCode()==productList.get(i).getAssortment().hashCode())
 						dublicate=true;
 					
 				}
@@ -381,7 +388,7 @@ public class Product
 			boolean dublicate=false;
 				Iterator<Sector> it=sectorList.iterator();
 				while(it.hasNext()){
-					if(it.next().getNumber()==productList.get(i).getSector().getNumber())
+					if(it.next().hashCode()==productList.get(i).getSector().hashCode())
 						dublicate=true;
 					
 				}
@@ -398,7 +405,7 @@ public class Product
 				boolean dublicate=false;
 					Iterator<Pricelist> it=priceListLists.iterator();
 					while(it.hasNext()){
-						if(it.next().getNumber()==productList.get(i).getPrices().get(j).getPriceList().getNumber())
+						if(it.next().hashCode()==productList.get(i).getPrices().get(j).getPriceList().hashCode())
 							dublicate=true;
 						
 					}
@@ -413,24 +420,29 @@ public class Product
 		
 		try {
 			//posting all new SubPojos
-			for(int i=0;i<=grpList.size()-1;i++){
-				if ( grpList.get(i) != null && grpList.get(i).getUuid() == null)
-					grpList.get(i).post();	
+			Iterator<CommodityGroup> grpListIter=grpList.iterator();
+			while(grpListIter.hasNext()){
+				CommodityGroup grp=grpListIter.next();
+				if ( grp != null && grp.getUuid() == null)
+					grp.post();	
 			}
-			
-			for(int i=0;i<=assortmentList.size()-1;i++){
-				if ( assortmentList.get(i) != null && assortmentList.get(i).getUuid() == null)
-					assortmentList.get(i).post();
+			Iterator<Assortment> assortmentListIter=assortmentList.iterator();
+			while(assortmentListIter.hasNext()){
+				Assortment assort=assortmentListIter.next();
+				if ( assort != null && assort.getUuid() == null)
+					assort.post();
 			}
-			
-			for(int i=0;i<=sectorList.size()-1;i++){
-				if ( sectorList.get(i) != null && sectorList.get(i).getUuid() == null)
-					sectorList.get(i).post();
+			Iterator<Sector> sectorListIter=sectorList.iterator();
+			while(sectorListIter.hasNext()){
+				Sector sec=sectorListIter.next();
+				if ( sec != null && sec.getUuid() == null)
+					sec.post();
 			}
-			
-			for(int i=0;i<=priceListLists.size()-1;i++){
-				if ( priceListLists.get(i) != null && priceListLists.get(i).getUuid() == null)
-					priceListLists.get(i).post();
+			Iterator<Pricelist> priceListListsIter=priceListLists.iterator();
+			while(priceListListsIter.hasNext()){
+				Pricelist priceL=priceListListsIter.next();
+				if ( priceL != null && priceL.getUuid() == null)
+					priceL.post();
 			}
 			
 		} catch (IOException e) {
@@ -459,12 +471,17 @@ public class Product
 						price.setPriceList(pricelist);
 				}
 			}
-			
-			//System.out.println(productList.get(i).toString());
-			//post all products
+			//fill up JSONArray
+			jProdObject=productList.get(i).toJSON();
+			jProdArray.put(jProdObject);
 			System.out.print("*");
-			bool=CloudLink.getConnector().postData(DataType.product,productList.get(i).toJSON());
-		}
+			
+		}//end for
+		//post all products
+		bool=CloudLink.getConnector().postData(DataType.product,jProdArray);
+		Date date2=new Date();
+		System.out.println("start: "+date1);
+		System.out.println("end: "+date2);
 		return bool;
 	}
 
@@ -654,5 +671,28 @@ public class Product
 		String productstr=name+number+commodityGroup.getName()+" "+commodityGroup.getUuid();
 		return productstr;
 		
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		
+		result = prime * result + ((this.number == null) ? 0 : this.number.hashCode());
+		result = prime * result + ((this.uuid == null) ? 0 : this.uuid.hashCode());
+		result = prime * result + ((this.activeAssortmentFrom == null) ? 0 : this.activeAssortmentFrom.hashCode());
+		result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
+		result = prime * result + ((this.altsector == null) ? 0 : this.altsector.hashCode());
+		result = prime * result + ((this.assortment == null) ? 0 : this.assortment.hashCode());
+		result = prime * result + ((this.codes == null) ? 0 : this.codes.hashCode());
+		result = prime * result + ((this.commodityGroup == null) ? 0 : this.commodityGroup.hashCode());
+		//result = prime * result + ((this.prices == null) ? 0 : this.prices.hashCode());
+		result = prime * result + ((this.sector == null) ? 0 : this.sector.hashCode());
+		
+		
+		
+
+		return result;
 	}
 }

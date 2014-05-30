@@ -126,13 +126,13 @@ public class ApiConnector
 		in.close();
 		if (con.getResponseCode() == 200)
 		{
-			System.out.println("APICON:POST -> Type:"+type.getReference()+" JSON="+obj.toString());
+			System.out.println("APICON:GET -> Type:"+type.getReference()+" JSON="+obj.toString());
 			con.disconnect(); // Disconnect
 			return response;
 		}
 		else
 		{
-			System.out.println("ERR: APICON:POST -> Type:"+type.getReference()+" JSON="+obj.toString());
+			System.out.println("ERR: APICON:GET -> Type:"+type.getReference()+" JSON="+obj.toString());
 
 			con.disconnect(); // Disconnect
 			System.out.println("Error: " + con.getResponseMessage() + ":" +
@@ -194,8 +194,8 @@ public class ApiConnector
 			}
 			con.setRequestMethod("POST");
 			con.setDoOutput(true);
-			con.setConnectTimeout(10000);
-			con.setReadTimeout(10000);
+			con.setConnectTimeout(3000000);
+			con.setReadTimeout(3000000);
 			con.setRequestProperty("Content-Type", "application/json");
 			con.connect();
 
@@ -262,8 +262,8 @@ public class ApiConnector
 			}
 			con.setRequestMethod("POST");
 			con.setDoOutput(true);
-			con.setConnectTimeout(10000);
-			con.setReadTimeout(10000);
+			con.setConnectTimeout(3000000);
+			con.setReadTimeout(3000000);
 			con.setUseCaches(false);
 			con.setRequestProperty("Content-Type", "application/json");
 			con.connect();

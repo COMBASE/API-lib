@@ -353,6 +353,26 @@ public class Receipt {
 		this.priceGroup = priceGroup;
 	}
 	
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		
+		result = prime * result + ((this.number == null) ? 0 : this.number.hashCode());
+		result = prime * result + ((this.uuid == null) ? 0 : this.uuid.hashCode());
+		result = prime * result + ((this.revision == null) ? 0 : this.revision.hashCode());
+		result = prime * result + ((this.currency == null) ? 0 : this.currency.hashCode());
+		result = prime * result + ((this.cashier == null) ? 0 : this.cashier.hashCode());
+		result = prime * result + ((this.customerGroup == null) ? 0 : this.customerGroup.hashCode());
+		result = prime * result + ((this.priceGroup == null) ? 0 : this.priceGroup.hashCode());
+		
+		
+		
+
+		return result;
+	}
+	
 	
 	
 }

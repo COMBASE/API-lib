@@ -178,5 +178,20 @@ public class Currency {
 	public void setCentName(String centName) {
 		this.centName = centName;
 	}
+	
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((this.key == null) ? 0 : this.key.hashCode());
+		result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
+		result = prime * result + ((this.number == null) ? 0 : this.number.hashCode());
+		result = prime * result + ((this.uuid == null) ? 0 : this.uuid.hashCode());
+		result = prime * result + ((this.symbol == null) ? 0 : this.symbol.hashCode());
+		result = prime * result + ((this.centName == null) ? 0 : this.centName.hashCode());
+
+		return result;
+	}
 
 }
