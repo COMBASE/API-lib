@@ -84,7 +84,8 @@ public class CustomerGroup {
 			obj=obj.getJSONObject("result"); 
 		
 		CustomerGroup custGrp = new CustomerGroup.Builder(obj.getString("name")).
-				uuid(obj.getString("uuid"))
+				uuid(obj.getString("uuid")).
+				number(obj.getString("number"))
 				.build();
 		return custGrp;
 	}

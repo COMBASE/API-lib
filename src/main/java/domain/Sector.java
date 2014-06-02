@@ -24,6 +24,7 @@ public class Sector
 		number = builder.number;
 		taxlist = builder.taxlist;
 		deleted = builder.deleted;
+		uuid=builder.uuid;
 	}
 
 	public static class Builder
@@ -31,6 +32,7 @@ public class Sector
 		private final String name;
 		private String number = null;
 		private boolean deleted = false;
+		private String uuid=null;
 		private List<Tax> taxlist = new ArrayList<Tax>();
 
 		public Builder(String name)
@@ -43,7 +45,12 @@ public class Sector
 			number = value;
 			return this;
 		}
-
+		
+		public Builder uuid(String value){
+			this.uuid=value;
+			return this;
+		}
+		
 		public Builder deleted(boolean value)
 		{
 			deleted = value;
@@ -99,8 +106,7 @@ public class Sector
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
 
-		obj = obj.getJSONObject("result");
-		Sector sec = new Sector.Builder(obj.getString("name")).build();
+		Sector sec = new Sector.Builder(obj.getString("name")).uuid(obj.getString("uuid")).build();
 		if (obj.has("number"))
 			sec.setNumber(obj.getString("number"));
 

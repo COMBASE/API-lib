@@ -112,8 +112,8 @@ public class ApiConnector
 		}
 		con.setRequestMethod("GET");
 		con.setDoOutput(true);
-		con.setConnectTimeout(10000);
-		con.setReadTimeout(10000);
+		con.setConnectTimeout(5000000);
+		con.setReadTimeout(5000000);
 		con.setRequestProperty("Content-Type", "application/json");
 		con.connect();
 		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
