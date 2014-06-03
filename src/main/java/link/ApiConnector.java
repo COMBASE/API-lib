@@ -9,6 +9,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -28,7 +30,9 @@ import domain.DataType;
  * 
  */
 public class ApiConnector
-{
+{	
+	private final SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+	private Date date=null;
 	private final String cloudURL;
 	private final String token;
 
@@ -126,14 +130,13 @@ public class ApiConnector
 		in.close();
 		if (con.getResponseCode() == 200)
 		{
-			System.out.println("APICON:GET -> Type:"+type.getReference()+" JSON="+obj.toString());
+			System.out.println(df.format(date=new Date())+" APICON:GET -> Type:"+type.getReference()+" JSON="+obj.toString());
 			con.disconnect(); // Disconnect
 			return response;
 		}
 		else
-		{
-			System.out.println("ERR: APICON:GET -> Type:"+type.getReference()+" JSON="+obj.toString());
-
+		{	
+			System.out.println(df.format(date=new Date())+" ERR: APICON:GET -> Type:"+type.getReference()+" JSON="+obj.toString());
 			con.disconnect(); // Disconnect
 			System.out.println("Error: " + con.getResponseMessage() + ":" +
 				con.getResponseCode());
@@ -208,13 +211,13 @@ public class ApiConnector
 				out.close();
 			if (con.getResponseCode() == 200)
 			{
-				System.out.println("APICON:POST -> Type:"+type.getReference()+" JSON="+obj.toString());
+				System.out.println(df.format(date=new Date())+" APICON:POST -> Type:"+type.getReference()+" JSON="+obj.toString());
 				con.disconnect(); // Disconnect
 				return true;
 			}
 			else
 			{
-				System.out.println("ERR: APICON:POST -> Type:"+type.getReference()+" JSON="+obj.toString());
+				System.out.println(df.format(date=new Date())+" ERR: APICON:POST -> Type:"+type.getReference()+" JSON="+obj.toString());
 
 				con.disconnect(); // Disconnect
 				System.out.println("Error: " + con.getResponseMessage() + ":" +
@@ -277,13 +280,13 @@ public class ApiConnector
 				out.close();
 			if (con.getResponseCode() == 200)
 			{
-				System.out.println("APICON:POST -> Type:"+type.getReference()+" JSON="+obj.toString());
+				System.out.println(df.format(date=new Date())+" APICON:POST -> Type:"+type.getReference()+" JSON="+obj.toString());
 				con.disconnect(); // Disconnect
 				return true;
 			}
 			else
 			{
-				System.out.println("ERR: APICON:POST -> Type:"+type.getReference()+" JSON="+obj.toString());
+				System.out.println(df.format(date=new Date())+" ERR: APICON:POST -> Type:"+type.getReference()+" JSON="+obj.toString());
 
 				con.disconnect(); // Disconnect
 				System.out.println("Error: " + con.getResponseMessage() + ":" +

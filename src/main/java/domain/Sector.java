@@ -33,7 +33,7 @@ public class Sector
 		private String number = null;
 		private boolean deleted = false;
 		private String uuid=null;
-		private List<Tax> taxlist = new ArrayList<Tax>();
+		private List<Tax> taxlist = null;
 
 		public Builder(String name)
 		{
@@ -58,7 +58,9 @@ public class Sector
 		}
 
 		public Builder taxlist(Tax t)
-		{
+		{	
+			if(taxlist==null)
+				taxlist=new ArrayList<Tax>();
 			taxlist.add(t);
 			return this;
 		}
@@ -78,7 +80,7 @@ public class Sector
 			if (number!=null)
 				obj.put("number", number);
 			obj.put("deleted", deleted);
-			if (!taxlist.isEmpty())
+			if (taxlist!=null && !taxlist.isEmpty())
 			{
 				JSONArray array = new JSONArray();
 				int i = 1;
