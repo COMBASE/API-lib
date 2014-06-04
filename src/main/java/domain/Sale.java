@@ -297,7 +297,7 @@ public class Sale {
 					sector(sec).
 					receiptNumber(obj.getString("receiptNumber")).
 					receiptIndex(obj.getInt("receiptIndex")).
-					quantity(obj.getInt("quantity")).
+					quantity(obj.getDouble("quantity")).
 					receipt(rec).grossItemPrice(obj.getDouble("grossItemPrice")).
 					pos(pos)
 				.build();
