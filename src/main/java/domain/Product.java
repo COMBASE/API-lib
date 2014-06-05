@@ -624,7 +624,6 @@ public class Product
 						price.setPriceList(pricelist);
 				}
 			}
-			//fill up JSONArray
 			bool=CloudLink.getConnector().postData(DataType.product,productList.get(i).toJSON());
 			System.out.print("*");
 			

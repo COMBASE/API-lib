@@ -31,7 +31,7 @@ public class Receipt {
 	private double receiptDiscountGrossAmount;
 	private double receiptDiscountNetAmount;
 	private double zCount;
-	private double voided;
+	private boolean voided;
 	//private Customer customer;
 	
 	private Receipt(Builder builder){
@@ -84,7 +84,7 @@ public class Receipt {
 		private double receiptDiscountGrossAmount=0;
 		private double receiptDiscountNetAmount=0;
 		private double zCount=0;
-		private double voided=0;
+		private boolean voided=false;
 		//private Customer customer;
 		
 		public Builder(){
@@ -166,7 +166,7 @@ public class Receipt {
 			this.zCount=value;
 			return this;
 		}
-		public Builder voided(double value){
+		public Builder voided(boolean value){
 			this.voided=value;
 			return this;
 		}
@@ -206,6 +206,7 @@ public class Receipt {
 					revision(obj.getString("revision")).
 					cashier(cash).customerGroup(cGrp).
 					receiptDiscountGrossAmount(obj.getDouble("receiptDiscountGrossAmount")).
+					voided(obj.getBoolean("voided")).
 					uuid(obj.getString("uuid"))
 				.build();
 		return rec;
@@ -334,10 +335,10 @@ public class Receipt {
 	public void setzCount(double zCount) {
 		this.zCount = zCount;
 	}
-	public double getVoided() {
+	public boolean getVoided() {
 		return voided;
 	}
-	public void setVoided(double voided) {
+	public void setVoided(boolean voided) {
 		this.voided = voided;
 	}
 	public CustomerGroup getCustomerGroup() {

@@ -15,12 +15,13 @@ public class Pricelist
 	private boolean netPrices;
 	private boolean deleted;
 	private String uuidOfCurrency;
-	private String uuid = null;
+	private String uuid;
 
 	private Pricelist(Builder builder)
 	{
 		name = builder.name;
 		number = builder.number;
+		uuid=builder.uuid;
 		uuidOfCurrency = builder.uuidOfCurrency;
 		deleted = builder.deleted;
 		netPrices = builder.netPrices;
@@ -30,6 +31,7 @@ public class Pricelist
 	{
 		private final String name;
 		private String number = null;
+		private String uuid=null;
 		private final String uuidOfCurrency;
 		private boolean deleted = false;
 		private boolean netPrices = false;
@@ -43,6 +45,11 @@ public class Pricelist
 		public Builder number(String value)
 		{
 			number = value;
+			return this;
+		}
+		
+		public Builder uuid(String value){
+			this.uuid=value;
 			return this;
 		}
 
@@ -68,8 +75,9 @@ public class Pricelist
 		if(obj.has("result") && obj.getString("result")!=null)
 			obj = obj.getJSONObject("result");
 			
-		Pricelist priceList = new Pricelist.Builder(obj.getString("name"),obj.getString("currency"))
-						.build();
+		Pricelist priceList = new Pricelist.Builder(obj.getString("name"),obj.getString("currency")).
+							uuid(obj.getString("uuid"))
+							.build();
 		if (obj.has("number"))
 			priceList.setNumber(obj.getString("number"));
 

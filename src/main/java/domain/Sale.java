@@ -339,7 +339,7 @@ public class Sale {
 		this.name=name;
 	}
 	
-	public boolean getDeleted(){
+	public boolean isDeleted(){
 		return this.deleted;
 	}
 	public void setDeleted(boolean deleted){
