@@ -13,6 +13,8 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import error.ApiNotReachableException;
+
 
 public class Sale {
 	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
@@ -318,7 +320,7 @@ public class Sale {
 		return sale;
 	}
 	
-	public boolean post() throws IOException {
+	public boolean post() throws ApiNotReachableException, IOException {
 		
 		if (commodityGroup != null && commodityGroup.getUuid() == null)
 			commodityGroup.post();

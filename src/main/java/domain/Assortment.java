@@ -1,11 +1,11 @@
 package domain;
 
-import java.io.IOException;
-
 import link.CloudLink;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+
+import error.ApiNotReachableException;
 
 public class Assortment
 {
@@ -82,7 +82,7 @@ public class Assortment
 		}
 	}
 
-	public boolean post() throws IOException
+	public boolean post() throws ApiNotReachableException
 	{
 		boolean result = CloudLink.getConnector().postData(DataType.assortment, this.toJSON());
 		if (number!=null)

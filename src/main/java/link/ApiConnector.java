@@ -22,6 +22,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import domain.DataType;
+import error.ApiNotReachableException;
 
 /**
  * This Class is our Interface to the Cloud
@@ -30,9 +31,9 @@ import domain.DataType;
  * 
  */
 public class ApiConnector
-{	
-	private final SimpleDateFormat df=new SimpleDateFormat("dd-MM-yyyy'T'HH:mm:ss");
-	private Date date=null;
+{
+	private final SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy'T'HH:mm:ss");
+	private Date date = null;
 	private final String cloudURL;
 	private final String token;
 
@@ -44,7 +45,8 @@ public class ApiConnector
 	}
 
 	/**
-	 * trustAllCerts is accepting all Certs in Case we are handling a Https-Connection
+	 * trustAllCerts is accepting all Certs in Case we are handling a
+	 * Https-Connection
 	 */
 	private final static TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager()
 	{
@@ -75,8 +77,7 @@ public class ApiConnector
 			SSLContext sc = SSLContext.getInstance("TLS");
 			sc.init(null, trustAllCerts, new SecureRandom());
 			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -88,10 +89,11 @@ public class ApiConnector
 	 * @param type
 	 * @param reference
 	 * @return
-	 * @throws IOException 
+	 * @throws IOException
 	 */
-	public StringBuffer fetchData(DataType type, String reference) throws IOException
+	public StringBuffer fetchData(DataType type, String reference) throws ApiNotReachableException
 	{	
+		
 		String url;
 		String slash = "";
 		
@@ -101,48 +103,51 @@ public class ApiConnector
 		
 			url = cloudURL + slash + token + "/" + type.getReference() + reference;
 				
+		HttpURLConnection con = null;
 		
-		URL obj;
-		obj = new URL(url);
-		HttpURLConnection con;
-		if (cloudURL.contains("https"))
-		{
-			setupConnection();
-			con = (HttpsURLConnection)obj.openConnection();
+		try {
+			URL obj = new URL(url);
+			if (cloudURL.contains("https"))
+			{
+				setupConnection();
+				con = (HttpsURLConnection)obj.openConnection();
+			}
+			else
+			{
+				con = (HttpURLConnection)obj.openConnection();
+			}
+			con.setRequestMethod("GET");
+			con.setDoOutput(true);
+			con.setConnectTimeout(5000000);
+			con.setReadTimeout(5000000);
+			con.setRequestProperty("Content-Type", "application/json");
+			con.connect();
+			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
+			String inputLine;
+			StringBuffer response = new StringBuffer();
+			while ((inputLine = in.readLine()) != null)
+			{
+				response.append(inputLine);
+			}
+			in.close();
+			if (con.getResponseCode() == 200)
+			{
+				System.out.println(df.format(date=new Date())+" APICON:GET -> Type:"+type.getReference()+" JSON="+obj.toString());
+				return response;
+			}
+			else
+			{	
+				System.out.println(df.format(date=new Date())+" ERR: APICON:GET -> Type:"+type.getReference()+" JSON="+obj.toString());
+				System.out.println("Error: " + con.getResponseMessage() + ":" +	con.getResponseCode());
+				return null;
+			}
+		}catch(IOException e){
+			throw new ApiNotReachableException(url, e);
 		}
-		else
-		{
-			con = (HttpURLConnection)obj.openConnection();
+		finally {
+			if(con != null)
+				con.disconnect();
 		}
-		con.setRequestMethod("GET");
-		con.setDoOutput(true);
-		con.setConnectTimeout(5000000);
-		con.setReadTimeout(5000000);
-		con.setRequestProperty("Content-Type", "application/json");
-		con.connect();
-		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
-		String inputLine;
-		StringBuffer response = new StringBuffer();
-		while ((inputLine = in.readLine()) != null)
-		{
-			response.append(inputLine);
-		}
-		in.close();
-		if (con.getResponseCode() == 200)
-		{
-			System.out.println(df.format(date=new Date())+" APICON:GET -> Type:"+type.getReference()+" JSON="+obj.toString());
-			con.disconnect(); // Disconnect
-			return response;
-		}
-		else
-		{	
-			System.out.println(df.format(date=new Date())+" ERR: APICON:GET -> Type:"+type.getReference()+" JSON="+obj.toString());
-			con.disconnect(); // Disconnect
-			System.out.println("Error: " + con.getResponseMessage() + ":" +
-				con.getResponseCode());
-			return null;
-		}
-
 	}
 
 	/**
@@ -154,7 +159,7 @@ public class ApiConnector
 	 */
 	public boolean postData(DataType type, JSONObject obj)
 	{
-		
+
 		String slash = "";
 		if (!cloudURL.endsWith("/"))
 			slash = "/";
@@ -189,11 +194,11 @@ public class ApiConnector
 			if (cloudURL.contains("https"))
 			{
 				setupConnection();
-				con = (HttpsURLConnection)posturl.openConnection();
+				con = (HttpsURLConnection) posturl.openConnection();
 			}
 			else
 			{
-				con = (HttpURLConnection)posturl.openConnection();
+				con = (HttpURLConnection) posturl.openConnection();
 			}
 			con.setRequestMethod("POST");
 			con.setDoOutput(true);
@@ -211,21 +216,25 @@ public class ApiConnector
 				out.close();
 			if (con.getResponseCode() == 200)
 			{
-				System.out.println(df.format(date=new Date())+" APICON:POST -> Type:"+type.getReference()+" JSON="+obj.toString());
+				System.out.println(df.format(date = new Date()) + " APICON:POST -> Type:" + type.getReference() + " JSON=" + obj.toString());
 				con.disconnect(); // Disconnect
 				return true;
 			}
 			else
 			{
-				System.out.println(df.format(date=new Date())+" ERR: APICON:POST -> Type:"+type.getReference()+" JSON="+obj.toString());
+				System.out.println(df.format(date = new Date()) + " ERR: APICON:POST -> Type:" + type.getReference() + " JSON=" + obj.toString());
 
 				con.disconnect(); // Disconnect
 				System.out.println("Error: " + con.getResponseMessage() + ":" +
-					con.getResponseCode());
+						con.getResponseCode());
 				return false;
 			}
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+			return false;
 		}
-		catch (IOException e)
+		catch(ApiNotReachableException e)
 		{
 			e.printStackTrace();
 			return false;
@@ -236,7 +245,7 @@ public class ApiConnector
 			return false;
 		}
 	}
-	
+
 	/**
 	 * saves a JSONArray in the Cloud
 	 * 
@@ -257,11 +266,11 @@ public class ApiConnector
 			if (cloudURL.contains("https"))
 			{
 				setupConnection();
-				con = (HttpsURLConnection)posturl.openConnection();
+				con = (HttpsURLConnection) posturl.openConnection();
 			}
 			else
 			{
-				con = (HttpURLConnection)posturl.openConnection();
+				con = (HttpURLConnection) posturl.openConnection();
 			}
 			con.setRequestMethod("POST");
 			con.setDoOutput(true);
@@ -280,21 +289,20 @@ public class ApiConnector
 				out.close();
 			if (con.getResponseCode() == 200)
 			{
-				System.out.println(df.format(date=new Date())+" APICON:POST -> Type:"+type.getReference()+" JSON="+obj.toString());
+				System.out.println(df.format(date = new Date()) + " APICON:POST -> Type:" + type.getReference() + " JSON=" + obj.toString());
 				con.disconnect(); // Disconnect
 				return true;
 			}
 			else
 			{
-				System.out.println(df.format(date=new Date())+" ERR: APICON:POST -> Type:"+type.getReference()+" JSON="+obj.toString());
+				System.out.println(df.format(date = new Date()) + " ERR: APICON:POST -> Type:" + type.getReference() + " JSON=" + obj.toString());
 
 				con.disconnect(); // Disconnect
 				System.out.println("Error: " + con.getResponseMessage() + ":" +
-					con.getResponseCode());
+						con.getResponseCode());
 				return false;
 			}
-		}
-		catch (IOException e)
+		} catch (IOException e)
 		{
 			e.printStackTrace();
 			return false;

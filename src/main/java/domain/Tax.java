@@ -10,6 +10,8 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import error.ApiNotReachableException;
+
 public class Tax
 {
 	private String name;
@@ -108,7 +110,7 @@ public class Tax
 		}
 	}
 
-	public boolean post() throws IOException
+	public boolean post() throws IOException, ApiNotReachableException
 	{
 		if (economicZone != null && economicZone.getUuid() == null)
 		{

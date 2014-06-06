@@ -6,6 +6,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import domain.DataType;
+import error.ApiNotReachableException;
 
 /**
  * This is the most important Class of this library you definetely want to
@@ -40,27 +41,27 @@ public class CloudLink {
 	 * @return
 	 * @throws IOException
 	 */
-	public String getJSONByRevision(DataType type, String reference) throws IOException {
+	public String getJSONByRevision(DataType type, String reference) throws ApiNotReachableException {
 		reference = "/updates/" + reference;
 		return new String(ApiCon.fetchData(type, reference));
 	}
 
-	public String getJSONByUuid(DataType type, String reference) throws IOException {
+	public String getJSONByUuid(DataType type, String reference) throws ApiNotReachableException {
 		reference = "/id/" + reference;
 		return new String(ApiCon.fetchData(type, reference));
 	}
 
-	public String getJSONByName(DataType type, String reference) throws IOException {
+	public String getJSONByName(DataType type, String reference) throws ApiNotReachableException {
 		reference = reference.replaceAll("/", "%2F");
 		reference = reference.replaceAll("&", "%26");
 		reference = reference.replaceAll("#", "%23");
 		reference = reference.replaceAll("!", "%21");
-		System.out.println("NameString: " + reference);
+		//System.out.println("NameString: " + reference);
 		reference = "/name/" + reference;
 		return new String(ApiCon.fetchData(type, reference));
 	}
 
-	public String getJSONByNumber(DataType type, String reference) throws IOException {
+	public String getJSONByNumber(DataType type, String reference) throws ApiNotReachableException {
 		reference = "/number/" + reference;
 		return new String(ApiCon.fetchData(type, reference));
 	}
@@ -73,10 +74,25 @@ public class CloudLink {
 	 * @return
 	 * @throws IOException
 	 */
-	public String getJSONByCustomerName(String reference) throws IOException {
+	public String getJSONByCustomerName(String reference) throws ApiNotReachableException {
 		String[] names = reference.split(" ");
 		reference = "/byName/" + names[0] + "/" + names[1];
 		return new String(ApiCon.fetchData(DataType.customer, reference));
+	}
+	/**
+	 * Getting JSONString from Cloud by revision, limit and offset enabling the opportunity to load 
+	 * multible JSONObjects page by page in order to split the Cloud performance demand peak. 
+	 * 
+	 * @param type
+	 * @param revision
+	 * @param limit (number of JSONObejcts per page)
+	 * @param offset (defines the page to be loaded i.e. offset=0 means all objects from 0 to limit)
+	 * @return
+	 * @throws ApiNotReachableException
+	 */
+	public String getJSONByPage(DataType type, String revision,int limit,int offset) throws ApiNotReachableException{
+		String reference="/updates/"+revision+"/"+limit+"/"+offset;
+		return new String(ApiCon.fetchData(type, reference));
 	}
 
 	/**
@@ -122,7 +138,7 @@ public class CloudLink {
 			JSONObject obj = null;
 			try {
 				obj = new JSONObject(ApiCon.fetchData(type, "/name/" + reference).toString());
-			} catch (IOException e) {
+			} catch (ApiNotReachableException e) {
 				return null;
 			}
 			if (obj.has("result") && !obj.opt("result").equals(null)) {
@@ -137,7 +153,7 @@ public class CloudLink {
 		return null;
 	}
 
-	public static String getUUIDByNumber(DataType type, String reference) throws IOException {
+	public static String getUUIDByNumber(DataType type, String reference) throws ApiNotReachableException {
 		if (ApiCon == null)
 			System.err.println("Please initiliaze a CloudLink Object first!");
 		if (reference == null)
@@ -177,7 +193,7 @@ public class CloudLink {
 			JSONObject obj = null;
 			try {
 				obj = new JSONObject(ApiCon.fetchData(type, "/name/" + reference).toString());
-			} catch (IOException e) {
+			} catch (ApiNotReachableException e) {
 				return 0;
 			}
 			if (obj.has("result") && !obj.opt("result").equals(null)) {
@@ -192,7 +208,7 @@ public class CloudLink {
 		return 0;
 	}
 
-	public static int getNumberByUuid(DataType type, String reference) throws IOException {
+	public static int getNumberByUuid(DataType type, String reference) throws ApiNotReachableException {
 		if (ApiCon == null)
 			System.err.println("Please initiliaze a CloudLink Object first!");
 		if (reference == null)

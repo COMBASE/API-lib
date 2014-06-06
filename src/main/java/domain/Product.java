@@ -16,6 +16,8 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import error.ApiNotReachableException;
+
 public class Product
 {
 	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
@@ -309,7 +311,7 @@ public class Product
 		}
 	}
 
-	public boolean post() throws IOException
+	public boolean post() throws IOException, ApiNotReachableException
 	{
 		if (!prices.isEmpty())
 		{
@@ -446,6 +448,8 @@ public class Product
 			}
 			
 		} catch (IOException e) {
+			e.printStackTrace();
+		}catch(ApiNotReachableException e){
 			e.printStackTrace();
 		}
 		
@@ -599,6 +603,8 @@ public class Product
 			}
 			
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch(ApiNotReachableException e){
 			e.printStackTrace();
 		}
 		

@@ -1,11 +1,11 @@
 package domain;
 
-import java.io.IOException;
-
 import link.CloudLink;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+
+import error.ApiNotReachableException;
 
 public class CommodityGroup
 {
@@ -115,7 +115,7 @@ public class CommodityGroup
 		
 	}
 	
-	public boolean post() throws IOException
+	public boolean post() throws ApiNotReachableException
 	{
 		if (parent != null)
 		{

@@ -10,6 +10,8 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import error.ApiNotReachableException;
+
 public class Sector
 {
 	private String name;
@@ -115,7 +117,7 @@ public class Sector
 		return sec;
 	}
 
-	public boolean post() throws IOException
+	public boolean post() throws ApiNotReachableException, IOException
 	{
 		if (taxlist != null)
 		{
