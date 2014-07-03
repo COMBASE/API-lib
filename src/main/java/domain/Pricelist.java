@@ -75,7 +75,7 @@ public class Pricelist
 		if(obj.has("result") && obj.getString("result")!=null)
 			obj = obj.getJSONObject("result");
 			
-		Pricelist priceList = new Pricelist.Builder(obj.getString("name"),obj.getString("currency")).
+		Pricelist priceList = new Pricelist.Builder(obj.getString("name"),obj.getString("currency")).deleted(obj.getBoolean("deleted")).
 							uuid(obj.getString("uuid"))
 							.build();
 		if (obj.has("number"))

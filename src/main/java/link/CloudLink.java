@@ -39,7 +39,7 @@ public class CloudLink {
 	 * @param type
 	 * @param reference
 	 * @return
-	 * @throws IOException
+	 * @throws ApiNotReachableException
 	 */
 	public String getJSONByRevision(DataType type, String reference) throws ApiNotReachableException {
 		reference = "/updates/" + reference;
@@ -72,7 +72,7 @@ public class CloudLink {
 	 * first and last name are necessary divided by a white space
 	 * for a successful
 	 * @return
-	 * @throws IOException
+	 * @throws ApiNotReachableException
 	 */
 	public String getJSONByCustomerName(String reference) throws ApiNotReachableException {
 		String[] names = reference.split(" ");
@@ -80,8 +80,8 @@ public class CloudLink {
 		return new String(ApiCon.fetchData(DataType.customer, reference));
 	}
 	/**
-	 * Getting JSONString from Cloud by revision, limit and offset enabling the opportunity to load 
-	 * multible JSONObjects page by page in order to split the Cloud performance demand peak. 
+	 * Getting JSONString from Cloud by revision, limit and offset offering the opportunity to load 
+	 * multible JSONObjects page by page in order to avoid timeouts on huge databases. 
 	 * 
 	 * @param type
 	 * @param revision

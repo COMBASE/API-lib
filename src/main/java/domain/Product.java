@@ -336,6 +336,9 @@ public class Product
 	
 	/** 
 	 * More optimized post method for uploading several products of the same group, sector, etc. 
+	 * via the new API method allowing to upload up to 150 items at the same time. 
+	 * WARNING: This Method will run into timeout if uploaded amount exceeds a certain limit.
+	 * If you want to upload huge amounts of Items: Use the normal post() methods.
 	 * ~MAS
 	 * **/
 	

@@ -32,7 +32,7 @@ public class Receipt {
 	private double receiptDiscountNetAmount;
 	private double zCount;
 	private boolean voided;
-	//private Customer customer;
+	private Customer customer;
 	
 	private Receipt(Builder builder){
 		deleted=builder.deleted;
@@ -58,7 +58,7 @@ public class Receipt {
 		receiptDiscountNetAmount=builder.receiptDiscountNetAmount;
 		zCount=builder.zCount;
 		voided=builder.voided;
-		//customer=builder.customer;
+		customer=builder.customer;
 	}
 	
 	public static class Builder{
@@ -85,7 +85,7 @@ public class Receipt {
 		private double receiptDiscountNetAmount=0;
 		private double zCount=0;
 		private boolean voided=false;
-		//private Customer customer;
+		private Customer customer=null;
 		
 		public Builder(){
 			
@@ -174,6 +174,10 @@ public class Receipt {
 			this.customerGroup=cGrp;
 			return this;
 		}
+		public Builder customer(Customer cust){
+			this.customer=cust;
+			return this;
+		}
 		public Receipt build(){
 			return new Receipt(this);
 		}
@@ -201,10 +205,12 @@ public class Receipt {
 		cash.setUuid(obj.getString("cashier"));
 		CustomerGroup cGrp=new CustomerGroup.Builder(null).build();
 		cGrp.setUuid(obj.getString("customerGroup"));
+		Customer cust=new Customer.Builder().build();
+		cust.setUuid(obj.getString("customer"));
 		Receipt rec = new Receipt.Builder().
 					number(obj.getString("number")).
 					revision(obj.getString("revision")).
-					cashier(cash).customerGroup(cGrp).
+					cashier(cash).customerGroup(cGrp).customer(cust).
 					receiptDiscountGrossAmount(obj.getDouble("receiptDiscountGrossAmount")).
 					voided(obj.getBoolean("voided")).
 					uuid(obj.getString("uuid"))
@@ -346,6 +352,12 @@ public class Receipt {
 	}
 	public void setCustomerGroup(CustomerGroup customerGroup) {
 		this.customerGroup = customerGroup;
+	}
+	public Customer getCustomer() {
+		return customer;
+	}
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
 	}
 	public Pricelist getPriceGroup() {
 		return priceGroup;
