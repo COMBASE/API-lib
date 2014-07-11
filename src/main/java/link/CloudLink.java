@@ -81,7 +81,7 @@ public class CloudLink {
 	}
 	/**
 	 * Getting JSONString from Cloud by revision, limit and offset offering the opportunity to load 
-	 * multible JSONObjects page by page in order to avoid timeouts on huge databases. 
+	 * multiple JSONObjects page by page in order to avoid timeouts on huge database queries. 
 	 * 
 	 * @param type
 	 * @param revision
@@ -90,7 +90,7 @@ public class CloudLink {
 	 * @return
 	 * @throws ApiNotReachableException
 	 */
-	public String getJSONByPage(DataType type, String revision,int limit,int offset) throws ApiNotReachableException{
+	public String getJSONByOffset(DataType type, String revision,int limit,int offset) throws ApiNotReachableException{
 		String reference="/updates/"+revision+"/"+limit+"/"+offset;
 		return new String(ApiCon.fetchData(type, reference));
 	}

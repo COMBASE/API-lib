@@ -494,6 +494,7 @@ public class Product
 	
 	/** 
 	 * More optimized post method for uploading several products of the same group, sector, etc. 
+	 * 				!-STABLE-!
 	 * ~MAS
 	 * **/
 	
