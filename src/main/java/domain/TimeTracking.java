@@ -144,7 +144,7 @@ public class TimeTracking {
 		this.deleted=del;
 	}
 	
-	public boolean getDeleted(){
+	public boolean isDeleted(){
 		return this.deleted;
 	}
 	
