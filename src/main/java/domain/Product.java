@@ -513,6 +513,7 @@ public class Product
 		//filling up SubPojo lists for...
 		for(int i=0;i<=productList.size()-1;i++){
 			//...commodityGroup
+			if(!grpList.contains(null))
 			if(grpList.isEmpty())
 				grpList.add(productList.get(i).getCommodityGroup());
 			else{
@@ -528,6 +529,7 @@ public class Product
 			}
 			
 			//...assortment
+			if(!assortmentList.contains(null))
 			if(assortmentList.isEmpty())
 				assortmentList.add(productList.get(i).getAssortment());
 			else{
@@ -543,6 +545,7 @@ public class Product
 			}
 			
 			//...Sector+AltSector
+			if(!sectorList.contains(null))
 			if(sectorList.isEmpty())
 				sectorList.add(productList.get(i).getSector());
 			else{
@@ -559,6 +562,7 @@ public class Product
 			
 						
 			//...pricelist
+			if(!priceListLists.contains(null))
 			for(int j=0;j<=productList.get(i).getPrices().size()-1;j++){
 				if(priceListLists.isEmpty())
 					priceListLists.add(productList.get(i).getPrices().get(j).getPriceList());
@@ -616,18 +620,22 @@ public class Product
 		
 		for(int i=0;i<=productList.size()-1;i++){
 			//Getting Pojo data for every next product having the same grp/sector/etc like the first.
+			if(!grpList.contains(null))
 			for(CommodityGroup grp:grpList){
 				if(grp.getNumber()==productList.get(i).getCommodityGroup().getNumber())
 					productList.get(i).setCommodityGroup(grp);
 			}
+			if(!assortmentList.contains(null))
 			for(Assortment assort:assortmentList){
 				if(assort.getNumber()==productList.get(i).getAssortment().getNumber())
 					productList.get(i).setAssortment(assort);
 			}
+			if(!sectorList.contains(null))
 			for(Sector sector:sectorList){
 				if(sector.getNumber()==productList.get(i).getSector().getNumber())
 					productList.get(i).setSector(sector);
 			}
+			if(!priceListLists.contains(null))
 			for(Pricelist pricelist:priceListLists){
 				for(Price price:productList.get(i).getPrices()){
 					if(pricelist.getNumber()==price.getPriceList().getNumber())
