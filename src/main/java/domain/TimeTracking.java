@@ -17,7 +17,6 @@ public class TimeTracking {
 	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 	private boolean deleted;
 	private String revision;
-	private String name;
 	private String uuid;
 	private Cashier cashier;
 	private String org;
@@ -25,7 +24,6 @@ public class TimeTracking {
 	private TimeTrackingEntities timeTrackingEntity;
 	
 	private TimeTracking(Builder builder) {
-		name = builder.name;
 		deleted=builder.deleted;
 		revision=builder.revision;
 		cashier=builder.cashier;
@@ -35,8 +33,6 @@ public class TimeTracking {
 		
 	}
 	public static class Builder {
-		private final String name;
-		
 		private String revision=null;
 		private boolean deleted = true;
 		private Cashier cashier=null;
@@ -46,8 +42,8 @@ public class TimeTracking {
 		
 		
 		//ctor
-		public Builder(String name) {
-			this.name = name;
+		public Builder() {
+
 		}
 		
 		public Builder deleted(boolean value) {
@@ -102,7 +98,7 @@ public class TimeTracking {
 		ent.setUuid(obj.getString("timeTrackingEntity"));
 		Cashier cash=new Cashier.Builder(null).build();
 		cash.setUuid(obj.getString("cashier"));
-		TimeTracking tTrack = new TimeTracking.Builder(null).
+		TimeTracking tTrack = new TimeTracking.Builder().
 				deleted(obj.getBoolean("deleted")).
 				start(startTime).
 				timeTrackingentity(ent).
@@ -115,7 +111,6 @@ public class TimeTracking {
 	public JSONObject toJSON() {
 		JSONObject obj = new JSONObject();
 		try {
-			obj.put("name", name);
 			obj.put("deleted", deleted);
 			obj.put("uuid", uuid);
 			obj.put("cashier", cashier);
@@ -146,14 +141,6 @@ public class TimeTracking {
 	
 	public boolean isDeleted(){
 		return this.deleted;
-	}
-	
-	public void setName(String name){
-		this.name=name;
-	}
-	
-	public String getName(){
-		return this.name;
 	}
 	
 	public void setUuid(String uuid){
@@ -200,11 +187,6 @@ public class TimeTracking {
 	}
 
 	@Override
-	public String toString() {
-		return name;
-	}
-	
-	@Override
 	public int hashCode()
 	{
 		final int prime = 31;
@@ -213,7 +195,6 @@ public class TimeTracking {
 		result = prime * result + ((this.org == null) ? 0 : this.org.hashCode());
 		result = prime * result + ((this.uuid == null) ? 0 : this.uuid.hashCode());
 		result = prime * result + ((this.revision == null) ? 0 : this.revision.hashCode());
-		result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
 		result = prime * result + ((this.cashier == null) ? 0 : this.cashier.hashCode());
 		result = prime * result + ((this.start == null) ? 0 : this.start.hashCode());
 		result = prime * result + ((this.timeTrackingEntity == null) ? 0 : this.timeTrackingEntity.hashCode());
