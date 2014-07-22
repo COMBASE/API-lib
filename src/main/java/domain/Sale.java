@@ -18,7 +18,6 @@ import error.ApiNotReachableException;
 
 public class Sale {
 	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
-	private String name;
 	private boolean deleted;
 	private String revision;
 	private String uuid;
@@ -45,7 +44,6 @@ public class Sale {
 	
 	
 	private Sale(Builder builder) {
-		name=builder.name;
 		deleted = builder.deleted;
 		revision = builder.revision;
 		uuid = builder.uuid;
@@ -71,7 +69,6 @@ public class Sale {
 	}
 	
 	public static class Builder {
-		private String name=null;
 		private boolean deleted = false;
 		private String revision=null;
 		private String uuid=null;
@@ -97,8 +94,8 @@ public class Sale {
 		
 		
 
-		public Builder(String name) {
-			this.name = name;
+		public Builder() {
+	
 		}
 		
 		public Builder pos(POS posy){
@@ -226,7 +223,6 @@ public class Sale {
 	public JSONObject toJSON() {
 		JSONObject obj = new JSONObject();
 		try {
-			obj.put("name", name);
 			obj.put("deleted", deleted);
 			obj.put("revision", revision);
 			obj.put("uuid", uuid);
@@ -286,7 +282,7 @@ public class Sale {
 			e.printStackTrace();
 		}
 		
-		Sale sale = new Sale.Builder(null).
+		Sale sale = new Sale.Builder().
 					deleted(obj.getBoolean("deleted")).
 					revision(obj.getString("revision")).
 					uuid(obj.getString("uuid")).
@@ -332,13 +328,6 @@ public class Sale {
 			article.post();
 		return CloudLink.getConnector().postData(DataType.sale,
 				this.toJSON());
-	}
-	
-	public String getName(){
-		return this.name;
-	}
-	public void setName(String name){
-		this.name=name;
 	}
 	
 	public boolean isDeleted(){
@@ -517,7 +506,6 @@ public class Sale {
 		result = prime * result + ((this.description == null) ? 0 : this.description.hashCode());
 		result = prime * result + ((this.uuid == null) ? 0 : this.uuid.hashCode());
 		result = prime * result + ((this.revision == null) ? 0 : this.revision.hashCode());
-		result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
 		result = prime * result + ((this.infoTexts == null) ? 0 : this.infoTexts.hashCode());
 		result = prime * result + ((this.receiptNumber == null) ? 0 : this.receiptNumber.hashCode());
 		result = prime * result + ((this.serialNumber == null) ? 0 : this.serialNumber.hashCode());
