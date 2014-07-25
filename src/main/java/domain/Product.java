@@ -619,26 +619,26 @@ public class Product
 		boolean bool=false;
 		
 		for(int i=0;i<=productList.size()-1;i++){
-			//Getting Pojo data for every next product having the same grp/sector/etc like the first.
+			//putting UUID to subobject Pojo of every next product having the same grp/sector/etc like the first.
 			if(!grpList.contains(null))
 			for(CommodityGroup grp:grpList){
-				if(grp.getNumber()==productList.get(i).getCommodityGroup().getNumber())
+				if(grp.getNumber().equalsIgnoreCase(productList.get(i).getCommodityGroup().getNumber()))
 					productList.get(i).setCommodityGroup(grp);
 			}
 			if(!assortmentList.contains(null))
 			for(Assortment assort:assortmentList){
-				if(assort.getNumber()==productList.get(i).getAssortment().getNumber())
+				if(assort.getNumber().equalsIgnoreCase(productList.get(i).getAssortment().getNumber()))
 					productList.get(i).setAssortment(assort);
 			}
 			if(!sectorList.contains(null))
 			for(Sector sector:sectorList){
-				if(sector.getNumber()==productList.get(i).getSector().getNumber())
+				if(sector.getNumber().equalsIgnoreCase(productList.get(i).getSector().getNumber()))
 					productList.get(i).setSector(sector);
 			}
 			if(!priceListLists.contains(null))
 			for(Pricelist pricelist:priceListLists){
 				for(Price price:productList.get(i).getPrices()){
-					if(pricelist.getNumber()==price.getPriceList().getNumber())
+					if(pricelist.getNumber().equalsIgnoreCase(price.getPriceList().getNumber()))
 						price.setPriceList(pricelist);
 				}
 			}
