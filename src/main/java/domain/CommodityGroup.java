@@ -127,7 +127,7 @@ public class CommodityGroup
 		}
 		boolean result = CloudLink.getConnector().postData(DataType.commodityGroup, this.toJSON());
 		if (number!=null)
-			uuid = CloudLink.getUUIDByNumber(DataType.commodityGroup, String.valueOf(number));
+			uuid = CloudLink.getUUIDByNumber(DataType.commodityGroup, number);
 		else
 			uuid = CloudLink.getUUIDByName(DataType.commodityGroup, name);
 		return result;

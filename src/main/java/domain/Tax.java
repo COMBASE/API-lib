@@ -117,8 +117,8 @@ public class Tax
 			economicZone.post();
 		}
 		boolean result = CloudLink.getConnector().postData(DataType.tax, this.toJSON());
-		if (!number.equalsIgnoreCase("0"))
-			uuid = CloudLink.getUUIDByNumber(DataType.tax, String.valueOf(number));
+		if (number!=null)
+			uuid = CloudLink.getUUIDByNumber(DataType.tax, number);
 		else
 			uuid = CloudLink.getUUIDByName(DataType.tax, name);
 		return result;

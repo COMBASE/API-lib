@@ -186,7 +186,7 @@ public class Payment {
 	}
 	
 	public static Payment fromJSON(JSONObject obj) throws JSONException {
-		if(obj.has("result") && obj.getString("result")!=null)
+		if(obj.has("result") && obj.getString("result").equalsIgnoreCase("null"))
 			obj=obj.getJSONObject("result"); 
 		
 		//date

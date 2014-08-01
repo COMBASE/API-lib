@@ -128,8 +128,8 @@ public class Sector
 			}
 		}
 		boolean result = CloudLink.getConnector().postData(DataType.sector, this.toJSON());
-		if(!number.equalsIgnoreCase("0"))
-			uuid = CloudLink.getUUIDByNumber(DataType.sector, String.valueOf(number));
+		if(number!= null)
+			uuid = CloudLink.getUUIDByNumber(DataType.sector, number);
 		else
 			uuid = CloudLink.getUUIDByName(DataType.sector, name);
 		return result;

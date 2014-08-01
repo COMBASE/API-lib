@@ -341,8 +341,12 @@ public class Product
 	 * If you want to upload huge amounts of Items: Use the normal post() methods.
 	 * ~MAS
 	 * **/
-	
+
 	public static boolean postNew(List<Product> productList){
+		return postNew(productList, true);
+	}
+	
+	public static boolean postNew(List<Product> productList, boolean postSectors){
 		
 		Date date1=new Date();
 		
@@ -437,11 +441,14 @@ public class Product
 				if ( assort != null && assort.getUuid() == null)
 					assort.post();
 			}
-			Iterator<Sector> sectorListIter=sectorList.iterator();
-			while(sectorListIter.hasNext()){
-				Sector sec=sectorListIter.next();
-				if ( sec != null && sec.getUuid() == null)
-					sec.post();
+			if(postSectors)
+			{
+				Iterator<Sector> sectorListIter=sectorList.iterator();
+				while(sectorListIter.hasNext()){
+					Sector sec=sectorListIter.next();
+					if ( sec != null && sec.getUuid() == null)
+						sec.post();
+				}
 			}
 			Iterator<Pricelist> priceListListsIter=priceListLists.iterator();
 			while(priceListListsIter.hasNext()){
@@ -497,8 +504,12 @@ public class Product
 	 * 				!-STABLE-!
 	 * ~MAS
 	 * **/
-	
+
 	public static boolean post(List<Product> productList){
+		return post(productList, true);
+	}
+
+	public static boolean post(List<Product> productList, boolean postSectors){
 		
 		Date date1=new Date();
 		
@@ -576,8 +587,7 @@ public class Product
 					}
 					if(dublicate==false)
 						priceListLists.add(productList.get(i).getPrices().get(j).getPriceList());
-				}
-				
+				}			
 			}
 		}
 		
@@ -597,11 +607,14 @@ public class Product
 				if ( assort != null && assort.getUuid() == null)
 					assort.post();
 			}
-			Iterator<Sector> sectorListIter=sectorList.iterator();
-			while(sectorListIter.hasNext()){
-				Sector sec=sectorListIter.next();
-				if ( sec != null && sec.getUuid() == null)
-					sec.post();
+			if(postSectors)
+			{
+				Iterator<Sector> sectorListIter=sectorList.iterator();
+				while(sectorListIter.hasNext()){
+					Sector sec=sectorListIter.next();
+					if ( sec != null && sec.getUuid() == null)
+						sec.post();
+				}
 			}
 			Iterator<Pricelist> priceListListsIter=priceListLists.iterator();
 			while(priceListListsIter.hasNext()){

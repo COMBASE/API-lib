@@ -108,7 +108,7 @@ public class Pricelist
 	{
 		boolean result = CloudLink.getConnector().postData(DataType.priceList, this.toJSON());
 		if (number!=null)
-			uuid = CloudLink.getUUIDByNumber(DataType.priceList, String.valueOf(number));
+			uuid = CloudLink.getUUIDByNumber(DataType.priceList, number);
 		else
 			uuid = CloudLink.getUUIDByName(DataType.priceList, name);
 		return result;
