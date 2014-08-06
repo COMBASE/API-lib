@@ -4,7 +4,7 @@ package domain;
 public enum ProductText_Type
 {
 	description("ARTICLETEXT_DESCRIPTION"), nutritionals("ARTICLETEXT_NUTRITIONAL_VALUE"), ingredients(
-		"ARTICLETEXT_INGREDIENTS"), allergens("ARTICLETEXT_ALLERGENS");
+		"ARTICLETEXT_INGREDIENTS"), allergens("ARTICLETEXT_ALLERGENS"), receiptDescription("ARTICLETEXT_RECEIPT_TEXT");
 	private final String reference;
 
 	ProductText_Type(String s)

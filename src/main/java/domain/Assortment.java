@@ -30,6 +30,7 @@ public class Assortment
 	public static class Builder
 	{
 		private final String name;
+		private String uuid=null;
 		private String number = null;
 		private String description;
 		private boolean deleted;
@@ -42,6 +43,11 @@ public class Assortment
 		public Builder number(String value)
 		{
 			number = value;
+			return this;
+		}
+		
+		public Builder uuid(String value){
+			uuid=value;
 			return this;
 		}
 
@@ -61,6 +67,23 @@ public class Assortment
 		{
 			return new Assortment(this);
 		}
+	}
+public static Assortment fromJSON(JSONObject obj) throws JSONException {
+		
+		if(obj.has("result") && obj.getString("result")!=null)
+			obj=obj.getJSONObject("result"); 
+			
+		
+		Assortment assortment = new Assortment.Builder(obj.getString("name")).
+					deleted(obj.getBoolean("deleted")).
+					number(obj.getString("number")).
+					uuid(obj.getString("uuid"))
+				.build();
+		return assortment;
+	
+
+
+
 	}
 
 	public JSONObject toJSON()
