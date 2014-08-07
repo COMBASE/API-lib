@@ -20,7 +20,611 @@ import error.ApiNotReachableException;
 
 public class Product
 {
+	public static class Builder
+	{
+		private final String name;
+		private String number = null;
+		private String uuid = null;
+		private boolean deleted = false;
+		private boolean activeAssortment = false;
+		private Date activeAssortmentFrom = null;
+		private int costs = 0;
+		private boolean discountable = true;
+		private boolean priceChangeable = true;
+		private boolean requiresSerialNumber = false;
+		private boolean trackInventory = false;
+		private CommodityGroup commodityGroup = null;
+		private Sector sector = null;
+		private Sector altsector = null;
+		private final List<Price> prices = new ArrayList<Price>();
+		private Assortment assortment = null;
+		private final List<Product_Text> texts = new ArrayList<Product_Text>();
+		private final List<Product_Code> codes = new ArrayList<Product_Code>();
+
+		public Builder(final String name)
+		{
+			this.name = name;
+		}
+
+		public Builder activeAssortment(final boolean value)
+		{
+			activeAssortment = value;
+			return this;
+		}
+
+		public Builder activeAssortmentFrom(final Date value)
+		{
+			activeAssortmentFrom = value;
+			return this;
+		}
+
+		public Builder altsector(final Sector sec)
+		{
+			altsector = sec;
+			return this;
+		}
+
+		public Builder assortment(final Assortment value)
+		{
+			assortment = value;
+			return this;
+		}
+
+		public Product build()
+		{
+			return new Product(this);
+		}
+
+		public Builder codes(final Collection<Product_Code> coll)
+		{
+			for (final Product_Code code : coll)
+			{
+				codes.add(code);
+			}
+			return this;
+		}
+
+		public Builder codes(final Product_Code code)
+		{
+			codes.add(code);
+			return this;
+		}
+
+		public Builder commodityGroup(final CommodityGroup grp)
+		{
+			commodityGroup = grp;
+			return this;
+		}
+
+		public Builder costs(final int i)
+		{
+			costs = i;
+			return this;
+		}
+
+		public Builder deleted(final boolean value)
+		{
+			deleted = value;
+			return this;
+		}
+
+		public Builder discountable(final boolean value)
+		{
+			discountable = value;
+			return this;
+		}
+
+		public Builder number(final String value)
+		{
+			number = value;
+			return this;
+		}
+
+		public Builder priceChangeable(final boolean value)
+		{
+			priceChangeable = value;
+			return this;
+		}
+
+		public Builder prices(final Collection<Price> coll)
+		{
+			for (final Price price : coll)
+			{
+				prices.add(price);
+			}
+			return this;
+		}
+
+		public Builder prices(final Price p)
+		{
+			prices.add(p);
+			return this;
+		}
+
+		public Builder requiresSerialNumber(final boolean value)
+		{
+			requiresSerialNumber = value;
+			return this;
+		}
+
+		public Builder sector(final Sector sec)
+		{
+			sector = sec;
+			return this;
+		}
+
+		public Builder texts(final Collection<Product_Text> coll)
+		{
+			for (final Product_Text text : coll)
+			{
+				texts.add(text);
+			}
+			return this;
+		}
+
+		public Builder texts(final Product_Text text)
+		{
+			texts.add(text);
+			return this;
+		}
+
+		public Builder trackInventory(final boolean value)
+		{
+			trackInventory = value;
+			return this;
+		}
+
+		public Builder uuid(final String value)
+		{
+			uuid = value;
+			return this;
+		}
+	}
+
 	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+
+	public static Product fromJSON(JSONObject obj) throws JSONException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
+
+		final Product prod = new Product.Builder(obj.getString("name")).uuid(obj.getString("uuid"))
+			.build();
+		if (obj.has("number"))
+			prod.setNumber(obj.getString("number"));
+		if (obj.getString("articleCodes") != "null")
+		{
+			JSONArray jACode = new JSONArray();
+			jACode = obj.getJSONArray("articleCodes");
+			JSONObject jCode = new JSONObject();
+			final List<Product_Code> codeList = new ArrayList<Product_Code>();
+			Product_Code productCode = null;
+			for (int i = 0; i <= jACode.length() - 1; i++)
+			{
+				jCode = (JSONObject)jACode.get(i);
+				final BigDecimal quantity = new BigDecimal(jCode.getDouble("quantity"));
+				productCode = new Product_Code(jCode.getString("code"), quantity);
+				codeList.add(productCode);
+			}
+			prod.setCodes(codeList);
+		}
+		if (obj.get("prices") != "null")
+		{
+			final JSONArray jPrices = obj.getJSONArray("prices");
+			final List<Price> prices = new ArrayList<Price>();
+			JSONObject jPrice;
+			for (int i = 0; i <= jPrices.length() - 1; i++)
+			{
+				jPrice = jPrices.getJSONObject(i);
+				final BigDecimal value = new BigDecimal(jPrice.getDouble("value"));
+				final Pricelist pricelist = new Pricelist.PreBuilder(jPrice.getString("priceList")).build();
+				final OrganizationalUnit organizationalUnit = new OrganizationalUnit.PreBuilder(
+					jPrice.getString("organizationalUnit")).build();
+				prices.add(new Price(pricelist, new Date(jPrice.getString("validFrom")), value,
+					organizationalUnit));
+			}
+			prod.setPrices(prices);
+		}
+		return prod;
+	}
+
+	/**
+	 * More optimized post method for uploading several products of the same group, sector, etc.
+	 * !-STABLE-! ~MAS
+	 * **/
+
+	public static boolean post(final List<Product> productList)
+	{
+		return post(productList, true);
+	}
+
+	public static boolean post(final List<Product> productList, final boolean postSectors)
+	{
+
+		final Date date1 = new Date();
+
+
+		final JSONArray jProdArray = new JSONArray();
+		final JSONObject jProdObject = new JSONObject();
+		final HashSet<CommodityGroup> grpList = new HashSet<CommodityGroup>();
+		final HashSet<Assortment> assortmentList = new HashSet<Assortment>();
+		final HashSet<Sector> sectorList = new HashSet<Sector>();
+		final HashSet<Pricelist> priceListLists = new HashSet<Pricelist>();
+
+		// filling up SubPojo lists for...
+		for (int i = 0; i <= productList.size() - 1; i++)
+		{
+			// ...commodityGroup
+			if (!grpList.contains(null))
+				if (grpList.isEmpty())
+					grpList.add(productList.get(i).getCommodityGroup());
+				else
+				{
+					boolean dublicate = false;
+					final Iterator<CommodityGroup> it = grpList.iterator();
+					while (it.hasNext())
+					{
+						if (it.next().hashCode() == productList.get(i)
+							.getCommodityGroup()
+							.hashCode())
+							dublicate = true;
+
+					}
+					if (dublicate == false)
+						grpList.add(productList.get(i).getCommodityGroup());
+				}
+
+			// ...assortment
+			if (!assortmentList.contains(null))
+				if (assortmentList.isEmpty())
+					assortmentList.add(productList.get(i).getAssortment());
+				else
+				{
+					boolean dublicate = false;
+					final Iterator<Assortment> it = assortmentList.iterator();
+					while (it.hasNext())
+					{
+						if (it.next().hashCode() == productList.get(i).getAssortment().hashCode())
+							dublicate = true;
+
+					}
+					if (dublicate == false)
+						assortmentList.add(productList.get(i).getAssortment());
+				}
+
+			// ...Sector+AltSector
+			if (!sectorList.contains(null))
+				if (sectorList.isEmpty())
+					sectorList.add(productList.get(i).getSector());
+				else
+				{
+					boolean dublicate = false;
+					final Iterator<Sector> it = sectorList.iterator();
+					while (it.hasNext())
+					{
+						if (it.next().hashCode() == productList.get(i).getSector().hashCode())
+							dublicate = true;
+
+					}
+					if (dublicate == false)
+						sectorList.add(productList.get(i).getSector());
+				}
+
+
+			// ...pricelist
+			if (!priceListLists.contains(null))
+				for (int j = 0; j <= productList.get(i).getPrices().size() - 1; j++)
+				{
+					if (priceListLists.isEmpty())
+						priceListLists.add(productList.get(i).getPrices().get(j).getPriceList());
+					else
+					{
+						boolean dublicate = false;
+						final Iterator<Pricelist> it = priceListLists.iterator();
+						while (it.hasNext())
+						{
+							if (it.next().hashCode() == productList.get(i)
+								.getPrices()
+								.get(j)
+								.getPriceList()
+								.hashCode())
+								dublicate = true;
+
+						}
+						if (dublicate == false)
+							priceListLists.add(productList.get(i).getPrices().get(j).getPriceList());
+					}
+				}
+		}
+
+
+		try
+		{
+			// posting all new SubPojos
+			final Iterator<CommodityGroup> grpListIter = grpList.iterator();
+			while (grpListIter.hasNext())
+			{
+				final CommodityGroup grp = grpListIter.next();
+				if (grp != null && grp.getUuid() == null)
+					grp.post();
+			}
+			final Iterator<Assortment> assortmentListIter = assortmentList.iterator();
+			while (assortmentListIter.hasNext())
+			{
+				final Assortment assort = assortmentListIter.next();
+				if (assort != null && assort.getUuid() == null)
+					assort.post();
+			}
+			if (postSectors)
+			{
+				final Iterator<Sector> sectorListIter = sectorList.iterator();
+				while (sectorListIter.hasNext())
+				{
+					final Sector sec = sectorListIter.next();
+					if (sec != null && sec.getUuid() == null)
+						sec.post();
+				}
+			}
+			final Iterator<Pricelist> priceListListsIter = priceListLists.iterator();
+			while (priceListListsIter.hasNext())
+			{
+				final Pricelist priceL = priceListListsIter.next();
+				if (priceL != null && priceL.getUuid() == null)
+					priceL.post();
+			}
+
+		}
+		catch (final IOException e)
+		{
+			e.printStackTrace();
+		}
+		catch (final ApiNotReachableException e)
+		{
+			e.printStackTrace();
+		}
+
+		boolean bool = false;
+
+		for (int i = 0; i <= productList.size() - 1; i++)
+		{
+			// putting UUID to subobject Pojo of every next product having the same grp/sector/etc
+// like the first.
+			if (!grpList.contains(null))
+				for (final CommodityGroup grp : grpList)
+				{
+					if (grp.getNumber().equalsIgnoreCase(
+						productList.get(i).getCommodityGroup().getNumber()))
+						productList.get(i).setCommodityGroup(grp);
+				}
+			if (!assortmentList.contains(null))
+				for (final Assortment assort : assortmentList)
+				{
+					if (assort.getNumber().equalsIgnoreCase(
+						productList.get(i).getAssortment().getNumber()))
+						productList.get(i).setAssortment(assort);
+				}
+			if (!sectorList.contains(null))
+				for (final Sector sector : sectorList)
+				{
+					if (sector.getNumber().equalsIgnoreCase(
+						productList.get(i).getSector().getNumber()))
+						productList.get(i).setSector(sector);
+				}
+			if (!priceListLists.contains(null))
+				for (final Pricelist pricelist : priceListLists)
+				{
+					for (final Price price : productList.get(i).getPrices())
+					{
+						if (pricelist.getNumber()
+							.equalsIgnoreCase(price.getPriceList().getNumber()))
+							price.setPriceList(pricelist);
+					}
+				}
+			bool = CloudLink.getConnector().postData(DataType.product, productList.get(i).toJSON());
+			System.out.print("*");
+
+		}// end for
+		final Date date2 = new Date();
+		System.out.println("start: " + date1);
+		System.out.println("end: " + date2);
+		return bool;
+	}
+
+	/**
+	 * More optimized post method for uploading several products of the same group, sector, etc. via
+	 * the new API method allowing to upload up to 150 items at the same time. WARNING: This Method
+	 * will run into timeout if uploaded amount exceeds a certain limit. If you want to upload huge
+	 * amounts of Items: Use the normal post() methods. ~MAS
+	 * **/
+
+	public static boolean postNew(final List<Product> productList)
+	{
+		return postNew(productList, true);
+	}
+
+	public static boolean postNew(final List<Product> productList, final boolean postSectors)
+	{
+
+		final Date date1 = new Date();
+
+
+		final JSONArray jProdArray = new JSONArray();
+		JSONObject jProdObject = new JSONObject();
+		final HashSet<CommodityGroup> grpList = new HashSet<CommodityGroup>();
+		final HashSet<Assortment> assortmentList = new HashSet<Assortment>();
+		final HashSet<Sector> sectorList = new HashSet<Sector>();
+		final HashSet<Pricelist> priceListLists = new HashSet<Pricelist>();
+
+		// filling up SubPojo lists for...
+		for (int i = 0; i <= productList.size() - 1; i++)
+		{
+			// ...commodityGroup
+			if (grpList.isEmpty())
+				grpList.add(productList.get(i).getCommodityGroup());
+			else
+			{
+				boolean dublicate = false;
+				final Iterator<CommodityGroup> it = grpList.iterator();
+				while (it.hasNext())
+				{
+					if (it.next().hashCode() == productList.get(i).getCommodityGroup().hashCode())
+						dublicate = true;
+
+				}
+				if (dublicate == false)
+					grpList.add(productList.get(i).getCommodityGroup());
+			}
+
+			// ...assortment
+			if (assortmentList.isEmpty())
+				assortmentList.add(productList.get(i).getAssortment());
+			else
+			{
+				boolean dublicate = false;
+				final Iterator<Assortment> it = assortmentList.iterator();
+				while (it.hasNext())
+				{
+					if (it.next().hashCode() == productList.get(i).getAssortment().hashCode())
+						dublicate = true;
+
+				}
+				if (dublicate == false)
+					assortmentList.add(productList.get(i).getAssortment());
+			}
+
+			// ...Sector+AltSector
+			if (sectorList.isEmpty())
+				sectorList.add(productList.get(i).getSector());
+			else
+			{
+				boolean dublicate = false;
+				final Iterator<Sector> it = sectorList.iterator();
+				while (it.hasNext())
+				{
+					if (it.next().hashCode() == productList.get(i).getSector().hashCode())
+						dublicate = true;
+
+				}
+				if (dublicate == false)
+					sectorList.add(productList.get(i).getSector());
+			}
+
+
+			// ...pricelist
+			for (int j = 0; j <= productList.get(i).getPrices().size() - 1; j++)
+			{
+				if (priceListLists.isEmpty())
+					priceListLists.add(productList.get(i).getPrices().get(j).getPriceList());
+				else
+				{
+					boolean dublicate = false;
+					final Iterator<Pricelist> it = priceListLists.iterator();
+					while (it.hasNext())
+					{
+						if (it.next().hashCode() == productList.get(i)
+							.getPrices()
+							.get(j)
+							.getPriceList()
+							.hashCode())
+							dublicate = true;
+
+					}
+					if (dublicate == false)
+						priceListLists.add(productList.get(i).getPrices().get(j).getPriceList());
+				}
+
+			}
+		}
+
+
+		try
+		{
+			// posting all new SubPojos
+			final Iterator<CommodityGroup> grpListIter = grpList.iterator();
+			while (grpListIter.hasNext())
+			{
+				final CommodityGroup grp = grpListIter.next();
+				if (grp != null && grp.getUuid() == null)
+					grp.post();
+			}
+			final Iterator<Assortment> assortmentListIter = assortmentList.iterator();
+			while (assortmentListIter.hasNext())
+			{
+				final Assortment assort = assortmentListIter.next();
+				if (assort != null && assort.getUuid() == null)
+					assort.post();
+			}
+			if (postSectors)
+			{
+				final Iterator<Sector> sectorListIter = sectorList.iterator();
+				while (sectorListIter.hasNext())
+				{
+					final Sector sec = sectorListIter.next();
+					if (sec != null && sec.getUuid() == null)
+						sec.post();
+				}
+			}
+			final Iterator<Pricelist> priceListListsIter = priceListLists.iterator();
+			while (priceListListsIter.hasNext())
+			{
+				final Pricelist priceL = priceListListsIter.next();
+				if (priceL != null && priceL.getUuid() == null)
+					priceL.post();
+			}
+
+		}
+		catch (final IOException e)
+		{
+			e.printStackTrace();
+		}
+		catch (final ApiNotReachableException e)
+		{
+			e.printStackTrace();
+		}
+
+		boolean bool = false;
+
+		for (int i = 0; i <= productList.size() - 1; i++)
+		{
+			// Getting Pojo data for every next product having the same grp/sector/etc like the
+// first.
+			for (final CommodityGroup grp : grpList)
+			{
+				if (grp.getNumber() == productList.get(i).getCommodityGroup().getNumber())
+					productList.get(i).setCommodityGroup(grp);
+			}
+			for (final Assortment assort : assortmentList)
+			{
+				if (assort.getNumber() == productList.get(i).getAssortment().getNumber())
+					productList.get(i).setAssortment(assort);
+			}
+			for (final Sector sector : sectorList)
+			{
+				if (sector.getNumber() == productList.get(i).getSector().getNumber())
+					productList.get(i).setSector(sector);
+			}
+			for (final Pricelist pricelist : priceListLists)
+			{
+				for (final Price price : productList.get(i).getPrices())
+				{
+					if (pricelist.getNumber() == price.getPriceList().getNumber())
+						price.setPriceList(pricelist);
+				}
+			}
+			// fill up JSONArray
+			jProdObject = productList.get(i).toJSON();
+			jProdArray.put(jProdObject);
+			System.out.print("*");
+
+		}// end for
+			// post all products
+		bool = CloudLink.getConnector().postData(DataType.product, jProdArray);
+		final Date date2 = new Date();
+		System.out.println("start: " + date1);
+		System.out.println("end: " + date2);
+		return bool;
+	}
+
 	private String name;
 	private String number;
 	private boolean deleted;
@@ -33,14 +637,20 @@ public class Product
 	private boolean trackInventory;
 	private CommodityGroup commodityGroup;
 	private Sector sector;
+
 	private Sector altsector;
+
 	private List<Price> prices;
+
 	private List<Product_Text> texts;
+
 	private Assortment assortment;
+
 	private List<Product_Code> codes;
+
 	private String uuid = null;
 
-	private Product(Builder builder)
+	private Product(final Builder builder)
 	{
 		name = builder.name;
 		number = builder.number;
@@ -62,201 +672,238 @@ public class Product
 		uuid = builder.uuid;
 	}
 
-	public static class Builder
+	public Date getActiveAssortmentFrom()
 	{
-		private final String name;
-		private String number = null;
-		private String uuid = null;
-		private boolean deleted = false;
-		private boolean activeAssortment = false;
-		private Date activeAssortmentFrom = null;
-		private int costs = 0;
-		private boolean discountable = true;
-		private boolean priceChangeable = true;
-		private boolean requiresSerialNumber = false;
-		private boolean trackInventory = false;
-		private CommodityGroup commodityGroup = null;
-		private Sector sector = null;
-		private Sector altsector = null;
-		private List<Price> prices = new ArrayList<Price>();
-		private Assortment assortment = null;
-		private List<Product_Text> texts = new ArrayList<Product_Text>();
-		private List<Product_Code> codes = new ArrayList<Product_Code>();
-
-		public Builder(String name)
-		{
-			this.name = name;
-		}
-
-		public Builder uuid(String value)
-		{
-			uuid = value;
-			return this;
-		}
-
-		public Builder number(String value)
-		{
-			number = value;
-			return this;
-		}
-
-		public Builder deleted(boolean value)
-		{
-			deleted = value;
-			return this;
-		}
-
-		public Builder activeAssortment(boolean value)
-		{
-			activeAssortment = value;
-			return this;
-		}
-
-		public Builder activeAssortmentFrom(Date value)
-		{
-			activeAssortmentFrom = value;
-			return this;
-		}
-
-		public Builder costs(int i)
-		{
-			costs = i;
-			return this;
-		}
-
-		public Builder discountable(boolean value)
-		{
-			discountable = value;
-			return this;
-		}
-
-		public Builder priceChangeable(boolean value)
-		{
-			priceChangeable = value;
-			return this;
-		}
-
-		public Builder requiresSerialNumber(boolean value)
-		{
-			requiresSerialNumber = value;
-			return this;
-		}
-
-		public Builder trackInventory(boolean value)
-		{
-			trackInventory = value;
-			return this;
-		}
-
-		public Builder commodityGroup(CommodityGroup grp)
-		{
-			commodityGroup = grp;
-			return this;
-		}
-
-		public Builder sector(Sector sec)
-		{
-			sector = sec;
-			return this;
-		}
-
-		public Builder altsector(Sector sec)
-		{
-			altsector = sec;
-			return this;
-		}
-
-		public Builder prices(Price p)
-		{
-			prices.add(p);
-			return this;
-		}
-
-		public Builder prices(Collection<Price> coll)
-		{
-			for (Price price : coll)
-			{
-				prices.add(price);
-			}
-			return this;
-		}
-
-		public Builder texts(Product_Text text)
-		{
-			texts.add(text);
-			return this;
-		}
-
-		public Builder texts(Collection<Product_Text> coll)
-		{
-			for (Product_Text text : coll)
-			{
-				texts.add(text);
-			}
-			return this;
-		}
-
-		public Builder assortment(Assortment value)
-		{
-			assortment = value;
-			return this;
-		}
-
-		public Builder codes(Product_Code code)
-		{
-			codes.add(code);
-			return this;
-		}
-
-		public Builder codes(Collection<Product_Code> coll)
-		{
-			for (Product_Code code : coll)
-			{
-				codes.add(code);
-			}
-			return this;
-		}
-
-		public Product build()
-		{
-			return new Product(this);
-		}
+		return activeAssortmentFrom;
 	}
 
-	public static Product fromJSON(JSONObject obj) throws JSONException
+	public Sector getAltsector()
 	{
-		if (obj.has("result") && obj.getString("result") != null)
-			obj = obj.getJSONObject("result");
+		return altsector;
+	}
 
-		Product prod = new Product.Builder(obj.getString("name")).uuid(obj.getString("uuid")).build();
-		if (obj.has("number"))
-			prod.setNumber(obj.getString("number"));
-		if(obj.getString("articleCodes")!="null"){
-			JSONArray jACode=new JSONArray();
-			jACode=obj.getJSONArray("articleCodes");
-			JSONObject jCode=new JSONObject();
-			List <Product_Code> codeList=new ArrayList<Product_Code>();
-			Product_Code productCode=null;
-			for(int i=0;i<=jACode.length()-1;i++){
-				jCode= (JSONObject) jACode.get(i);
-				BigDecimal quantity = new BigDecimal(jCode.getDouble("quantity"));
-				productCode=new Product_Code(jCode.getString("code"), quantity);
-				codeList.add(productCode);
+	public Assortment getAssortment()
+	{
+		return assortment;
+	}
+
+	public List<Product_Code> getCodes()
+	{
+		return codes;
+	}
+
+	public CommodityGroup getCommodityGroup()
+	{
+		return commodityGroup;
+	}
+
+	public int getCosts()
+	{
+		return costs;
+	}
+
+	public String getName()
+	{
+		return name;
+	}
+
+	public String getNumber()
+	{
+		return number;
+	}
+
+	public List<Price> getPrices()
+	{
+		return prices;
+	}
+
+	public Sector getSector()
+	{
+		return sector;
+	}
+
+	public List<Product_Text> getTexts()
+	{
+		return texts;
+	}
+
+	public String getUuid()
+	{
+		return uuid;
+	}
+
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+
+		result = prime * result + ((this.number == null) ? 0 : this.number.hashCode());
+		result = prime * result + ((this.uuid == null) ? 0 : this.uuid.hashCode());
+		result = prime * result +
+			((this.activeAssortmentFrom == null) ? 0 : this.activeAssortmentFrom.hashCode());
+		result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
+		result = prime * result + ((this.altsector == null) ? 0 : this.altsector.hashCode());
+		result = prime * result + ((this.assortment == null) ? 0 : this.assortment.hashCode());
+		result = prime * result + ((this.codes == null) ? 0 : this.codes.hashCode());
+		result = prime * result +
+			((this.commodityGroup == null) ? 0 : this.commodityGroup.hashCode());
+		// result = prime * result + ((this.prices == null) ? 0 : this.prices.hashCode());
+		result = prime * result + ((this.sector == null) ? 0 : this.sector.hashCode());
+
+
+		return result;
+	}
+
+	public boolean isActiveAssortment()
+	{
+		return activeAssortment;
+	}
+
+	public boolean isDeleted()
+	{
+		return deleted;
+	}
+
+	public boolean isDiscountable()
+	{
+		return discountable;
+	}
+
+	public boolean isPriceChangeable()
+	{
+		return priceChangeable;
+	}
+
+	public boolean isRequiresSerialNumber()
+	{
+		return requiresSerialNumber;
+	}
+
+	public boolean isTrackInventory()
+	{
+		return trackInventory;
+	}
+
+	public boolean post() throws IOException, ApiNotReachableException
+	{
+		if (!prices.isEmpty())
+		{
+			for (final Price p : prices)
+			{
+				if (p.getPriceList().getUuid() == null)
+					p.getPriceList().post();
 			}
-			prod.setCodes(codeList);
-			
-			
 		}
-		return prod;
+		if (commodityGroup != null && commodityGroup.getUuid() == null)
+			commodityGroup.post();
+		if (sector != null && sector.getUuid() == null)
+			sector.post();
+		if (altsector != null && altsector.getUuid() == null)
+			altsector.post();
+		if (assortment != null && assortment.getUuid() == null)
+			assortment.post();
+
+		return CloudLink.getConnector().postData(DataType.product, this.toJSON());
+	}
+
+	public void setActiveAssortment(final boolean activeAssortment)
+	{
+		this.activeAssortment = activeAssortment;
+	}
+
+	public void setActiveAssortmentFrom(final Date activeAssortmentFrom)
+	{
+		this.activeAssortmentFrom = activeAssortmentFrom;
+	}
+
+	public void setAltsector(final Sector altsector)
+	{
+		this.altsector = altsector;
+	}
+
+	public void setAssortment(final Assortment assortment)
+	{
+		this.assortment = assortment;
+	}
+
+	public void setCodes(final List<Product_Code> codes)
+	{
+		this.codes = codes;
+	}
+
+	public void setCommodityGroup(final CommodityGroup commodityGroup)
+	{
+		this.commodityGroup = commodityGroup;
+	}
+
+	public void setCosts(final int costs)
+	{
+		this.costs = costs;
+	}
+
+	public void setDeleted(final boolean deleted)
+	{
+		this.deleted = deleted;
+	}
+
+	public void setDiscountable(final boolean discountable)
+	{
+		this.discountable = discountable;
+	}
+
+	public void setName(final String name)
+	{
+		this.name = name;
+	}
+
+	public void setNumber(final String number)
+	{
+		this.number = number;
+	}
+
+	public void setPriceChangeable(final boolean priceChangeable)
+	{
+		this.priceChangeable = priceChangeable;
+	}
+
+	public void setPrices(final List<Price> prices)
+	{
+		this.prices = prices;
+	}
+
+	public void setRequiresSerialNumber(final boolean requiresSerialNumber)
+	{
+		this.requiresSerialNumber = requiresSerialNumber;
+	}
+
+	public void setSector(final Sector sector)
+	{
+		this.sector = sector;
+	}
+
+	public void setTexts(final List<Product_Text> texts)
+	{
+		this.texts = texts;
+	}
+
+	public void setTrackInventory(final boolean trackInventory)
+	{
+		this.trackInventory = trackInventory;
+	}
+
+	public void setUuid(final String uuid)
+	{
+		this.uuid = uuid;
 	}
 
 	public JSONObject toJSON()
 	{
-		JSONObject obj = new JSONObject();
+		final JSONObject obj = new JSONObject();
 		try
 		{
 			obj.put("name", name);
-			if (number!=null)
+			if (number != null)
 				obj.put("number", number);
 			obj.put("deleted", deleted);
 			obj.put("activeAssortment", activeAssortment);
@@ -277,8 +924,8 @@ public class Product
 				obj.put("alternativeSector", altsector.getUuid());
 			if (!prices.isEmpty())
 			{
-				JSONArray array = new JSONArray();
-				for (Price p : prices)
+				final JSONArray array = new JSONArray();
+				for (final Price p : prices)
 				{
 					array.put(p.toJSON());
 				}
@@ -286,8 +933,8 @@ public class Product
 			}
 			if (!codes.isEmpty())
 			{
-				JSONArray array = new JSONArray();
-				for (Product_Code code : codes)
+				final JSONArray array = new JSONArray();
+				for (final Product_Code code : codes)
 				{
 					array.put(code.toJSON());
 				}
@@ -295,8 +942,8 @@ public class Product
 			}
 			if (!texts.isEmpty())
 			{
-				JSONArray array = new JSONArray();
-				for (Product_Text text : texts)
+				final JSONArray array = new JSONArray();
+				for (final Product_Text text : texts)
 				{
 					array.put(text.toJSON());
 				}
@@ -304,575 +951,19 @@ public class Product
 			}
 			return obj;
 		}
-		catch (JSONException e)
+		catch (final JSONException e)
 		{
 			e.printStackTrace();
 			return null;
 		}
 	}
 
-	public boolean post() throws IOException, ApiNotReachableException
-	{
-		if (!prices.isEmpty())
-		{
-			for (Price p : prices)
-			{
-				if (p.getPriceList().getUuid() == null)
-					p.getPriceList().post();
-			}
-		}
-		if (commodityGroup != null && commodityGroup.getUuid() == null)
-			commodityGroup.post();
-		if (sector != null && sector.getUuid() == null)
-			sector.post();
-		if (altsector != null && altsector.getUuid() == null)
-			altsector.post();
-		if (assortment != null && assortment.getUuid() == null)
-			assortment.post();
-				
-		return CloudLink.getConnector().postData(DataType.product,
-				this.toJSON());
-	}
-	
-	/** 
-	 * More optimized post method for uploading several products of the same group, sector, etc. 
-	 * via the new API method allowing to upload up to 150 items at the same time. 
-	 * WARNING: This Method will run into timeout if uploaded amount exceeds a certain limit.
-	 * If you want to upload huge amounts of Items: Use the normal post() methods.
-	 * ~MAS
-	 * **/
-
-	public static boolean postNew(List<Product> productList){
-		return postNew(productList, true);
-	}
-	
-	public static boolean postNew(List<Product> productList, boolean postSectors){
-		
-		Date date1=new Date();
-		
-		
-		JSONArray jProdArray=new JSONArray();
-		JSONObject jProdObject=new JSONObject();
-		HashSet<CommodityGroup> grpList=new HashSet<CommodityGroup>();
-		HashSet<Assortment> assortmentList=new HashSet<Assortment>();
-		HashSet<Sector> sectorList=new HashSet<Sector>();
-		HashSet<Pricelist> priceListLists=new HashSet<Pricelist>();
-		
-		//filling up SubPojo lists for...
-		for(int i=0;i<=productList.size()-1;i++){
-			//...commodityGroup
-			if(grpList.isEmpty())
-				grpList.add(productList.get(i).getCommodityGroup());
-			else{
-			boolean dublicate=false;
-				Iterator<CommodityGroup> it=grpList.iterator();
-				while(it.hasNext()){
-					if(it.next().hashCode()==productList.get(i).getCommodityGroup().hashCode())
-						dublicate=true;
-					
-				}
-				if(dublicate==false)
-					grpList.add(productList.get(i).getCommodityGroup());
-			}
-			
-			//...assortment
-			if(assortmentList.isEmpty())
-				assortmentList.add(productList.get(i).getAssortment());
-			else{
-			boolean dublicate=false;
-				Iterator<Assortment> it=assortmentList.iterator();
-				while(it.hasNext()){
-					if(it.next().hashCode()==productList.get(i).getAssortment().hashCode())
-						dublicate=true;
-					
-				}
-				if(dublicate==false)
-					assortmentList.add(productList.get(i).getAssortment());
-			}
-			
-			//...Sector+AltSector
-			if(sectorList.isEmpty())
-				sectorList.add(productList.get(i).getSector());
-			else{
-			boolean dublicate=false;
-				Iterator<Sector> it=sectorList.iterator();
-				while(it.hasNext()){
-					if(it.next().hashCode()==productList.get(i).getSector().hashCode())
-						dublicate=true;
-					
-				}
-				if(dublicate==false)
-					sectorList.add(productList.get(i).getSector());
-			}
-			
-						
-			//...pricelist
-			for(int j=0;j<=productList.get(i).getPrices().size()-1;j++){
-				if(priceListLists.isEmpty())
-					priceListLists.add(productList.get(i).getPrices().get(j).getPriceList());
-				else{
-				boolean dublicate=false;
-					Iterator<Pricelist> it=priceListLists.iterator();
-					while(it.hasNext()){
-						if(it.next().hashCode()==productList.get(i).getPrices().get(j).getPriceList().hashCode())
-							dublicate=true;
-						
-					}
-					if(dublicate==false)
-						priceListLists.add(productList.get(i).getPrices().get(j).getPriceList());
-				}
-				
-			}
-		}
-		
-	    
-		
-		try {
-			//posting all new SubPojos
-			Iterator<CommodityGroup> grpListIter=grpList.iterator();
-			while(grpListIter.hasNext()){
-				CommodityGroup grp=grpListIter.next();
-				if ( grp != null && grp.getUuid() == null)
-					grp.post();	
-			}
-			Iterator<Assortment> assortmentListIter=assortmentList.iterator();
-			while(assortmentListIter.hasNext()){
-				Assortment assort=assortmentListIter.next();
-				if ( assort != null && assort.getUuid() == null)
-					assort.post();
-			}
-			if(postSectors)
-			{
-				Iterator<Sector> sectorListIter=sectorList.iterator();
-				while(sectorListIter.hasNext()){
-					Sector sec=sectorListIter.next();
-					if ( sec != null && sec.getUuid() == null)
-						sec.post();
-				}
-			}
-			Iterator<Pricelist> priceListListsIter=priceListLists.iterator();
-			while(priceListListsIter.hasNext()){
-				Pricelist priceL=priceListListsIter.next();
-				if ( priceL != null && priceL.getUuid() == null)
-					priceL.post();
-			}
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}catch(ApiNotReachableException e){
-			e.printStackTrace();
-		}
-		
-		boolean bool=false;
-		
-		for(int i=0;i<=productList.size()-1;i++){
-			//Getting Pojo data for every next product having the same grp/sector/etc like the first.
-			for(CommodityGroup grp:grpList){
-				if(grp.getNumber()==productList.get(i).getCommodityGroup().getNumber())
-					productList.get(i).setCommodityGroup(grp);
-			}
-			for(Assortment assort:assortmentList){
-				if(assort.getNumber()==productList.get(i).getAssortment().getNumber())
-					productList.get(i).setAssortment(assort);
-			}
-			for(Sector sector:sectorList){
-				if(sector.getNumber()==productList.get(i).getSector().getNumber())
-					productList.get(i).setSector(sector);
-			}
-			for(Pricelist pricelist:priceListLists){
-				for(Price price:productList.get(i).getPrices()){
-					if(pricelist.getNumber()==price.getPriceList().getNumber())
-						price.setPriceList(pricelist);
-				}
-			}
-			//fill up JSONArray
-			jProdObject=productList.get(i).toJSON();
-			jProdArray.put(jProdObject);
-			System.out.print("*");
-			
-		}//end for
-		//post all products
-		bool=CloudLink.getConnector().postData(DataType.product,jProdArray);
-		Date date2=new Date();
-		System.out.println("start: "+date1);
-		System.out.println("end: "+date2);
-		return bool;
-	}
-	
-	/** 
-	 * More optimized post method for uploading several products of the same group, sector, etc. 
-	 * 				!-STABLE-!
-	 * ~MAS
-	 * **/
-
-	public static boolean post(List<Product> productList){
-		return post(productList, true);
-	}
-
-	public static boolean post(List<Product> productList, boolean postSectors){
-		
-		Date date1=new Date();
-		
-		
-		JSONArray jProdArray=new JSONArray();
-		JSONObject jProdObject=new JSONObject();
-		HashSet<CommodityGroup> grpList=new HashSet<CommodityGroup>();
-		HashSet<Assortment> assortmentList=new HashSet<Assortment>();
-		HashSet<Sector> sectorList=new HashSet<Sector>();
-		HashSet<Pricelist> priceListLists=new HashSet<Pricelist>();
-		
-		//filling up SubPojo lists for...
-		for(int i=0;i<=productList.size()-1;i++){
-			//...commodityGroup
-			if(!grpList.contains(null))
-			if(grpList.isEmpty())
-				grpList.add(productList.get(i).getCommodityGroup());
-			else{
-			boolean dublicate=false;
-				Iterator<CommodityGroup> it=grpList.iterator();
-				while(it.hasNext()){
-					if(it.next().hashCode()==productList.get(i).getCommodityGroup().hashCode())
-						dublicate=true;
-					
-				}
-				if(dublicate==false)
-					grpList.add(productList.get(i).getCommodityGroup());
-			}
-			
-			//...assortment
-			if(!assortmentList.contains(null))
-			if(assortmentList.isEmpty())
-				assortmentList.add(productList.get(i).getAssortment());
-			else{
-			boolean dublicate=false;
-				Iterator<Assortment> it=assortmentList.iterator();
-				while(it.hasNext()){
-					if(it.next().hashCode()==productList.get(i).getAssortment().hashCode())
-						dublicate=true;
-					
-				}
-				if(dublicate==false)
-					assortmentList.add(productList.get(i).getAssortment());
-			}
-			
-			//...Sector+AltSector
-			if(!sectorList.contains(null))
-			if(sectorList.isEmpty())
-				sectorList.add(productList.get(i).getSector());
-			else{
-			boolean dublicate=false;
-				Iterator<Sector> it=sectorList.iterator();
-				while(it.hasNext()){
-					if(it.next().hashCode()==productList.get(i).getSector().hashCode())
-						dublicate=true;
-					
-				}
-				if(dublicate==false)
-					sectorList.add(productList.get(i).getSector());
-			}
-			
-						
-			//...pricelist
-			if(!priceListLists.contains(null))
-			for(int j=0;j<=productList.get(i).getPrices().size()-1;j++){
-				if(priceListLists.isEmpty())
-					priceListLists.add(productList.get(i).getPrices().get(j).getPriceList());
-				else{
-				boolean dublicate=false;
-					Iterator<Pricelist> it=priceListLists.iterator();
-					while(it.hasNext()){
-						if(it.next().hashCode()==productList.get(i).getPrices().get(j).getPriceList().hashCode())
-							dublicate=true;
-						
-					}
-					if(dublicate==false)
-						priceListLists.add(productList.get(i).getPrices().get(j).getPriceList());
-				}			
-			}
-		}
-		
-	    
-		
-		try {
-			//posting all new SubPojos
-			Iterator<CommodityGroup> grpListIter=grpList.iterator();
-			while(grpListIter.hasNext()){
-				CommodityGroup grp=grpListIter.next();
-				if ( grp != null && grp.getUuid() == null)
-					grp.post();	
-			}
-			Iterator<Assortment> assortmentListIter=assortmentList.iterator();
-			while(assortmentListIter.hasNext()){
-				Assortment assort=assortmentListIter.next();
-				if ( assort != null && assort.getUuid() == null)
-					assort.post();
-			}
-			if(postSectors)
-			{
-				Iterator<Sector> sectorListIter=sectorList.iterator();
-				while(sectorListIter.hasNext()){
-					Sector sec=sectorListIter.next();
-					if ( sec != null && sec.getUuid() == null)
-						sec.post();
-				}
-			}
-			Iterator<Pricelist> priceListListsIter=priceListLists.iterator();
-			while(priceListListsIter.hasNext()){
-				Pricelist priceL=priceListListsIter.next();
-				if ( priceL != null && priceL.getUuid() == null)
-					priceL.post();
-			}
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch(ApiNotReachableException e){
-			e.printStackTrace();
-		}
-		
-		boolean bool=false;
-		
-		for(int i=0;i<=productList.size()-1;i++){
-			//putting UUID to subobject Pojo of every next product having the same grp/sector/etc like the first.
-			if(!grpList.contains(null))
-			for(CommodityGroup grp:grpList){
-				if(grp.getNumber().equalsIgnoreCase(productList.get(i).getCommodityGroup().getNumber()))
-					productList.get(i).setCommodityGroup(grp);
-			}
-			if(!assortmentList.contains(null))
-			for(Assortment assort:assortmentList){
-				if(assort.getNumber().equalsIgnoreCase(productList.get(i).getAssortment().getNumber()))
-					productList.get(i).setAssortment(assort);
-			}
-			if(!sectorList.contains(null))
-			for(Sector sector:sectorList){
-				if(sector.getNumber().equalsIgnoreCase(productList.get(i).getSector().getNumber()))
-					productList.get(i).setSector(sector);
-			}
-			if(!priceListLists.contains(null))
-			for(Pricelist pricelist:priceListLists){
-				for(Price price:productList.get(i).getPrices()){
-					if(pricelist.getNumber().equalsIgnoreCase(price.getPriceList().getNumber()))
-						price.setPriceList(pricelist);
-				}
-			}
-			bool=CloudLink.getConnector().postData(DataType.product,productList.get(i).toJSON());
-			System.out.print("*");
-			
-		}//end for
-		Date date2=new Date();
-		System.out.println("start: "+date1);
-		System.out.println("end: "+date2);
-		return bool;
-	}
-
-	public String getName()
-	{
-		return name;
-	}
-
-	public void setName(String name)
-	{
-		this.name = name;
-	}
-
-	public String getNumber()
-	{
-		return number;
-	}
-
-	public void setNumber(String number)
-	{
-		this.number = number;
-	}
-
-	public boolean isDeleted()
-	{
-		return deleted;
-	}
-
-	public void setDeleted(boolean deleted)
-	{
-		this.deleted = deleted;
-	}
-
-	public boolean isActiveAssortment()
-	{
-		return activeAssortment;
-	}
-
-	public void setActiveAssortment(boolean activeAssortment)
-	{
-		this.activeAssortment = activeAssortment;
-	}
-
-	public Date getActiveAssortmentFrom()
-	{
-		return activeAssortmentFrom;
-	}
-
-	public void setActiveAssortmentFrom(Date activeAssortmentFrom)
-	{
-		this.activeAssortmentFrom = activeAssortmentFrom;
-	}
-
-	public int getCosts()
-	{
-		return costs;
-	}
-
-	public void setCosts(int costs)
-	{
-		this.costs = costs;
-	}
-
-	public boolean isDiscountable()
-	{
-		return discountable;
-	}
-
-	public void setDiscountable(boolean discountable)
-	{
-		this.discountable = discountable;
-	}
-
-	public boolean isPriceChangeable()
-	{
-		return priceChangeable;
-	}
-
-	public void setPriceChangeable(boolean priceChangeable)
-	{
-		this.priceChangeable = priceChangeable;
-	}
-
-	public boolean isRequiresSerialNumber()
-	{
-		return requiresSerialNumber;
-	}
-
-	public void setRequiresSerialNumber(boolean requiresSerialNumber)
-	{
-		this.requiresSerialNumber = requiresSerialNumber;
-	}
-
-	public boolean isTrackInventory()
-	{
-		return trackInventory;
-	}
-
-	public void setTrackInventory(boolean trackInventory)
-	{
-		this.trackInventory = trackInventory;
-	}
-
-	public CommodityGroup getCommodityGroup()
-	{
-		return commodityGroup;
-	}
-
-	public void setCommodityGroup(CommodityGroup commodityGroup)
-	{
-		this.commodityGroup = commodityGroup;
-	}
-
-	public Sector getSector()
-	{
-		return sector;
-	}
-
-	public void setSector(Sector sector)
-	{
-		this.sector = sector;
-	}
-
-	public Sector getAltsector()
-	{
-		return altsector;
-	}
-
-	public void setAltsector(Sector altsector)
-	{
-		this.altsector = altsector;
-	}
-
-	public List<Price> getPrices()
-	{
-		return prices;
-	}
-
-	public void setPrices(List<Price> prices)
-	{
-		this.prices = prices;
-	}
-
-	public List<Product_Text> getTexts()
-	{
-		return texts;
-	}
-
-	public void setTexts(List<Product_Text> texts)
-	{
-		this.texts = texts;
-	}
-
-	public Assortment getAssortment()
-	{
-		return assortment;
-	}
-
-	public void setAssortment(Assortment assortment)
-	{
-		this.assortment = assortment;
-	}
-
-	public List<Product_Code> getCodes()
-	{
-		return codes;
-	}
-
-	public void setCodes(List<Product_Code> codes)
-	{
-		this.codes = codes;
-	}
-
-	public String getUuid()
-	{
-		return uuid;
-	}
-
-	public void setUuid(String uuid)
-	{
-		this.uuid = uuid;
-	}
-
 	@Override
 	public String toString()
-	{	
-		String productstr=name+number+commodityGroup.getName()+" "+commodityGroup.getUuid();
-		return productstr;
-		
-	}
-	
-	@Override
-	public int hashCode()
 	{
-		final int prime = 31;
-		int result = 1;
-		
-		result = prime * result + ((this.number == null) ? 0 : this.number.hashCode());
-		result = prime * result + ((this.uuid == null) ? 0 : this.uuid.hashCode());
-		result = prime * result + ((this.activeAssortmentFrom == null) ? 0 : this.activeAssortmentFrom.hashCode());
-		result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
-		result = prime * result + ((this.altsector == null) ? 0 : this.altsector.hashCode());
-		result = prime * result + ((this.assortment == null) ? 0 : this.assortment.hashCode());
-		result = prime * result + ((this.codes == null) ? 0 : this.codes.hashCode());
-		result = prime * result + ((this.commodityGroup == null) ? 0 : this.commodityGroup.hashCode());
-		//result = prime * result + ((this.prices == null) ? 0 : this.prices.hashCode());
-		result = prime * result + ((this.sector == null) ? 0 : this.sector.hashCode());
-		
-		
-		
+		final String productstr = name + number + commodityGroup.getName() + " " +
+			commodityGroup.getUuid();
+		return productstr;
 
-		return result;
 	}
 }
