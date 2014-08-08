@@ -13,8 +13,8 @@ public class Price
 	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 	private Pricelist priceList;
 	private final Date validFrom;
-	private final BigDecimal value;
-	private final OrganizationalUnit organizationalUnit;
+	private BigDecimal value;
+	private OrganizationalUnit organizationalUnit;
 
 	public Price(final Pricelist priceList, final Date validFrom, final BigDecimal value,
 		final OrganizationalUnit organizationalUnit)
@@ -34,7 +34,8 @@ public class Price
 			obj.put("priceList", priceList.getUuid());
 			obj.put("validFrom", inputDf.format(validFrom));
 			obj.put("value", value);
-			obj.put("organizationalUnit", organizationalUnit.getUuid());
+			if (organizationalUnit != null)
+				obj.put("organizationalUnit", organizationalUnit.getUuid());
 			return obj;
 		}
 		catch (final JSONException e)
@@ -52,6 +53,26 @@ public class Price
 	public void setPriceList(final Pricelist priceList)
 	{
 		this.priceList = priceList;
+	}
+
+	public BigDecimal getValue()
+	{
+		return value;
+	}
+
+	public OrganizationalUnit getOrganizationalUnit()
+	{
+		return organizationalUnit;
+	}
+
+	public void setValue(final BigDecimal value)
+	{
+		this.value = value;
+	}
+
+	public void setOrganizationalUnit(final OrganizationalUnit organizationalUnit)
+	{
+		this.organizationalUnit = organizationalUnit;
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package domain;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -218,10 +219,22 @@ public class Product
 				jPrice = jPrices.getJSONObject(i);
 				final BigDecimal value = new BigDecimal(jPrice.getDouble("value"));
 				final Pricelist pricelist = new Pricelist.PreBuilder(jPrice.getString("priceList")).build();
-				final OrganizationalUnit organizationalUnit = new OrganizationalUnit.PreBuilder(
-					jPrice.getString("organizationalUnit")).build();
-				prices.add(new Price(pricelist, new Date(jPrice.getString("validFrom")), value,
-					organizationalUnit));
+				final Object orgUnit = jPrice.get("organizationalUnit");
+				OrganizationalUnit organizationalUnit = null;
+				if (orgUnit != null)
+					organizationalUnit = new OrganizationalUnit.PreBuilder(
+						jPrice.getString("organizationalUnit")).build();
+				Date date = new Date();
+				try
+				{
+					date = inputDf.parse(jPrice.getString("validFrom"));
+				}
+				catch (final ParseException e)
+				{
+					e.printStackTrace();
+				}
+
+				prices.add(new Price(pricelist, date, value, organizationalUnit));
 			}
 			prod.setPrices(prices);
 		}
@@ -234,11 +247,6 @@ public class Product
 	 * **/
 
 	public static boolean post(final List<Product> productList)
-	{
-		return post(productList, true);
-	}
-
-	public static boolean post(final List<Product> productList, final boolean postSectors)
 	{
 
 		final Date date1 = new Date();
@@ -355,16 +363,15 @@ public class Product
 				if (assort != null && assort.getUuid() == null)
 					assort.post();
 			}
-			if (postSectors)
+
+			final Iterator<Sector> sectorListIter = sectorList.iterator();
+			while (sectorListIter.hasNext())
 			{
-				final Iterator<Sector> sectorListIter = sectorList.iterator();
-				while (sectorListIter.hasNext())
-				{
-					final Sector sec = sectorListIter.next();
-					if (sec != null && sec.getUuid() == null)
-						sec.post();
-				}
+				final Sector sec = sectorListIter.next();
+				if (sec != null && sec.getUuid() == null)
+					sec.post();
 			}
+
 			final Iterator<Pricelist> priceListListsIter = priceListLists.iterator();
 			while (priceListListsIter.hasNext())
 			{
@@ -415,8 +422,9 @@ public class Product
 				{
 					for (final Price price : productList.get(i).getPrices())
 					{
-						if (pricelist.getNumber()
-							.equalsIgnoreCase(price.getPriceList().getNumber()))
+						if (pricelist.getNumber() != null &&
+							pricelist.getNumber()
+								.equalsIgnoreCase(price.getPriceList().getNumber()))
 							price.setPriceList(pricelist);
 					}
 				}
@@ -438,11 +446,6 @@ public class Product
 	 * **/
 
 	public static boolean postNew(final List<Product> productList)
-	{
-		return postNew(productList, true);
-	}
-
-	public static boolean postNew(final List<Product> productList, final boolean postSectors)
 	{
 
 		final Date date1 = new Date();
@@ -554,16 +557,15 @@ public class Product
 				if (assort != null && assort.getUuid() == null)
 					assort.post();
 			}
-			if (postSectors)
+
+			final Iterator<Sector> sectorListIter = sectorList.iterator();
+			while (sectorListIter.hasNext())
 			{
-				final Iterator<Sector> sectorListIter = sectorList.iterator();
-				while (sectorListIter.hasNext())
-				{
-					final Sector sec = sectorListIter.next();
-					if (sec != null && sec.getUuid() == null)
-						sec.post();
-				}
+				final Sector sec = sectorListIter.next();
+				if (sec != null && sec.getUuid() == null)
+					sec.post();
 			}
+
 			final Iterator<Pricelist> priceListListsIter = priceListLists.iterator();
 			while (priceListListsIter.hasNext())
 			{
@@ -902,9 +904,12 @@ public class Product
 		final JSONObject obj = new JSONObject();
 		try
 		{
+
 			obj.put("name", name);
 			if (number != null)
 				obj.put("number", number);
+			if (uuid != null)
+				obj.put("uuid", uuid);
 			obj.put("deleted", deleted);
 			obj.put("activeAssortment", activeAssortment);
 			if (activeAssortmentFrom != null)
@@ -936,7 +941,8 @@ public class Product
 				final JSONArray array = new JSONArray();
 				for (final Product_Code code : codes)
 				{
-					array.put(code.toJSON());
+					if (!code.getCode().equalsIgnoreCase(""))
+						array.put(code.toJSON());
 				}
 				obj.put("articleCodes", array);
 			}
