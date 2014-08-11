@@ -1,4 +1,5 @@
 package domain;
+
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,7 +17,8 @@ import org.codehaus.jettison.json.JSONObject;
 import error.ApiNotReachableException;
 
 
-public class Sale {
+public class Sale
+{
 	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 	private boolean deleted;
 	private String revision;
@@ -24,14 +26,14 @@ public class Sale {
 	private Product article;
 	private Cashier cashier;
 	private CommodityGroup commodityGroup;
-	private static Date bookingTime;
+	private Date bookingTime;
 	private String description;
 	private String infoTexts;
 	private Sector sector;
 	private String receiptNumber;
 	private int receiptIndex;
 	private double quantity;
-	private POS pos;  
+	private POS pos;
 	private Receipt receipt;
 	private double manualPrice;
 	private double itemPrice;
@@ -40,10 +42,10 @@ public class Sale {
 	private double baseItemPrice;
 	private String serialNumber;
 	private List<TaxPayments> taxPayments;
-	
-	
-	
-	private Sale(Builder builder) {
+
+
+	private Sale(final Builder builder)
+	{
 		deleted = builder.deleted;
 		revision = builder.revision;
 		uuid = builder.uuid;
@@ -57,183 +59,211 @@ public class Sale {
 		receiptNumber = builder.receiptNumber;
 		receiptIndex = builder.receiptIndex;
 		quantity = builder.quantity;
-		receipt= builder.receipt;
-		manualPrice=builder.manualPrice;
-		itemPrice=builder.itemPrice;
-		grossItemPrice=builder.grossItemPrice;
-		netItemPrice=builder.netItemPrice;
-		baseItemPrice=builder.baseItemPrice;
-		serialNumber=builder.serialNumber;
-		pos=builder.pos;
-		taxPayments=builder.taxPayments;
+		receipt = builder.receipt;
+		manualPrice = builder.manualPrice;
+		itemPrice = builder.itemPrice;
+		grossItemPrice = builder.grossItemPrice;
+		netItemPrice = builder.netItemPrice;
+		baseItemPrice = builder.baseItemPrice;
+		serialNumber = builder.serialNumber;
+		pos = builder.pos;
+		taxPayments = builder.taxPayments;
 	}
-	
-	public static class Builder {
-		private boolean deleted = false;
-		private String revision=null;
-		private String uuid=null;
-		private Product article=null;
-		private Cashier cashier=null;
-		private CommodityGroup commodityGroup = null;
-		private Date bookingTime=null;
-		private String description=null;
-		private String infoTexts=null;
-		private Sector sector = null;
-		private String receiptNumber=null;
-		private int receiptIndex=0;
-		private double quantity=0;
-		private Receipt receipt=null;
-		private double manualPrice=0;
-		private double itemPrice=0;
-		private double grossItemPrice=0;
-		private double netItemPrice=0;
-		private double baseItemPrice=0;
-		private String serialNumber=null;
-		private POS pos;
-		private List<TaxPayments> taxPayments=new ArrayList<TaxPayments>();
-		
-		
 
-		public Builder() {
-	
+	public static class Builder
+	{
+		private boolean deleted = false;
+		private String revision = null;
+		private String uuid = null;
+		private Product article = null;
+		private Cashier cashier = null;
+		private CommodityGroup commodityGroup = null;
+		private Date bookingTime = null;
+		private String description = null;
+		private String infoTexts = null;
+		private Sector sector = null;
+		private String receiptNumber = null;
+		private int receiptIndex = 0;
+		private double quantity = 0;
+		private Receipt receipt = null;
+		private double manualPrice = 0;
+		private double itemPrice = 0;
+		private double grossItemPrice = 0;
+		private double netItemPrice = 0;
+		private double baseItemPrice = 0;
+		private String serialNumber = null;
+		private POS pos;
+		private final List<TaxPayments> taxPayments = new ArrayList<TaxPayments>();
+
+
+		public Builder()
+		{
+
 		}
-		
-		public Builder pos(POS posy){
-			pos=posy;
+
+		public Builder pos(final POS posy)
+		{
+			pos = posy;
 			return this;
 		}
-		
-		public Builder taxPayments(TaxPayments taxPayment){
+
+		public Builder taxPayments(final TaxPayments taxPayment)
+		{
 			taxPayments.add(taxPayment);
 			return this;
 		}
-		
-		public Builder taxPayments(Collection<TaxPayments> coll){
-			for (TaxPayments taxPay : coll) {
+
+		public Builder taxPayments(final Collection<TaxPayments> coll)
+		{
+			for (final TaxPayments taxPay : coll)
+			{
 				taxPayments.add(taxPay);
 			}
 			return this;
 		}
-		
-		public Builder deleted(boolean value) {
+
+		public Builder deleted(final boolean value)
+		{
 			deleted = value;
 			return this;
 		}
-		
-		public Builder revision(String value){
-			revision=value;
+
+		public Builder revision(final String value)
+		{
+			revision = value;
 			return this;
 		}
-		
-		public Builder uuid(String value){
-			uuid=value;
+
+		public Builder uuid(final String value)
+		{
+			uuid = value;
 			return this;
 		}
-		
-		public Builder article(Product prod){
-			article=prod;
+
+		public Builder article(final Product prod)
+		{
+			article = prod;
 			return this;
 		}
-		
-		public Builder cashier(Cashier cash){
-			cashier=cash;
+
+		public Builder cashier(final Cashier cash)
+		{
+			cashier = cash;
 			return this;
 		}
-		
-		public Builder commodityGroup(CommodityGroup grp){
-			commodityGroup=grp;
+
+		public Builder commodityGroup(final CommodityGroup grp)
+		{
+			commodityGroup = grp;
 			return this;
 		}
-		
-		public Builder bookingTime(Date time){
-			bookingTime=time;
+
+		public Builder bookingTime(final Date time)
+		{
+			bookingTime = time;
 			return this;
 		}
-		
-		public Builder description(String txt){
-			description=txt;
+
+		public Builder description(final String txt)
+		{
+			description = txt;
 			return this;
 		}
-		
-		public Builder infoTexts(String txt){
-			infoTexts=txt;
+
+		public Builder infoTexts(final String txt)
+		{
+			infoTexts = txt;
 			return this;
 		}
-		
-		public Builder sector(Sector sec){
-			sector=sec;
+
+		public Builder sector(final Sector sec)
+		{
+			sector = sec;
 			return this;
 		}
-		
-		public Builder receiptNumber(String value){
-			receiptNumber=value;
+
+		public Builder receiptNumber(final String value)
+		{
+			receiptNumber = value;
 			return this;
 		}
-		
-		public Builder receiptIndex(int value){
-			receiptIndex=value;
+
+		public Builder receiptIndex(final int value)
+		{
+			receiptIndex = value;
 			return this;
 		}
-		
-		public Builder quantity(double value){
-			quantity=value;
+
+		public Builder quantity(final double value)
+		{
+			quantity = value;
 			return this;
 		}
-		
-		public Builder receipt(Receipt rec){
-			this.receipt=rec;
+
+		public Builder receipt(final Receipt rec)
+		{
+			this.receipt = rec;
 			return this;
 		}
-		
-		public Builder manualPrice(double value){
-			manualPrice=value;
+
+		public Builder manualPrice(final double value)
+		{
+			manualPrice = value;
 			return this;
 		}
-		
-		public Builder itemPrice(double value){
-			itemPrice=value;
+
+		public Builder itemPrice(final double value)
+		{
+			itemPrice = value;
 			return this;
 		}
-		
-		public Builder grossItemPrice(double value){
-			grossItemPrice=value;
+
+		public Builder grossItemPrice(final double value)
+		{
+			grossItemPrice = value;
 			return this;
 		}
-		
-		public Builder netItemPrice(double value){
-			netItemPrice=value;
+
+		public Builder netItemPrice(final double value)
+		{
+			netItemPrice = value;
 			return this;
 		}
-		
-		public Builder baseItemPrice(double value){
-			baseItemPrice=value;
+
+		public Builder baseItemPrice(final double value)
+		{
+			baseItemPrice = value;
 			return this;
 		}
-		
-		public Builder serialNumber(String value){
-			serialNumber=value;
+
+		public Builder serialNumber(final String value)
+		{
+			serialNumber = value;
 			return this;
 		}
-		
-		public Sale build(){
+
+		public Sale build()
+		{
 			return new Sale(this);
 		}
 	}
-	
-	public JSONObject toJSON() {
-		JSONObject obj = new JSONObject();
-		try {
+
+	public JSONObject toJSON()
+	{
+		final JSONObject obj = new JSONObject();
+		try
+		{
 			obj.put("deleted", deleted);
 			obj.put("revision", revision);
 			obj.put("uuid", uuid);
 			obj.put("bookingTime", bookingTime);
-			obj.put("description",description);
-			obj.put("infoTexts",infoTexts);
+			obj.put("description", description);
+			obj.put("infoTexts", infoTexts);
 			obj.put("sector", sector);
 			obj.put("receiptNumber", receiptNumber);
 			obj.put("receiptIndex", receiptIndex);
 			obj.put("quantity", quantity);
-			
+
 			if (cashier != null)
 				obj.put("cashier", cashier.getUuid());
 			if (article != null)
@@ -242,82 +272,92 @@ public class Sale {
 				obj.put("commodityGroup", commodityGroup.getUuid());
 			if (sector != null)
 				obj.put("sector", sector.getUuid());
-			
+
 			return obj;
-		} catch (JSONException e) {
+		}
+		catch (final JSONException e)
+		{
 			e.printStackTrace();
 			return null;
 		}
 	}
-	
-	public static Sale fromJSON(JSONObject obj) throws JSONException {
-		if(obj.has("result") && obj.getString("result")!=null)
-			obj=obj.getJSONObject("result");
-		
-		
-		Product prod=new Product.Builder(null).build();
+
+	public static Sale fromJSON(JSONObject obj) throws JSONException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
+
+
+		final Product prod = new Product.Builder(null).build();
 		prod.setUuid(obj.getString("article"));
-		
-		Cashier cash=new Cashier.Builder(null).build();
+
+		final Cashier cash = new Cashier.Builder(null).build();
 		cash.setUuid(obj.getString("cashier"));
-		
-		CommodityGroup grp=new CommodityGroup.Builder(null).build();
+
+		final CommodityGroup grp = new CommodityGroup.Builder(null).build();
 		grp.setUuid(obj.getString("commodityGroup"));
-		
-		Sector sec=new Sector.Builder(null).build();
+
+		final Sector sec = new Sector.Builder(null).build();
 		sec.setUuid(obj.getString("sector"));
-		
-		Receipt rec=new Receipt.Builder().build();
+
+		final Receipt rec = new Receipt.Builder().build();
 		rec.setUuid(obj.getString("receipt"));
-		
-		POS pos=new POS.Builder(null).build();
+
+		final POS pos = new POS.Builder(null).build();
 		pos.setUuid(obj.getString("pos"));
-		
-		//date
-		Date bTime=null;
-		try {
-		String date=obj.getString("bookingTime");
-		bTime = inputDf.parse(date);
-		} catch (ParseException e) {
+
+		// date
+		Date bTime = null;
+		try
+		{
+			final String date = obj.getString("bookingTime");
+			bTime = inputDf.parse(date);
+		}
+		catch (final ParseException e)
+		{
 			e.printStackTrace();
 		}
-		
-		Sale sale = new Sale.Builder().
-					deleted(obj.getBoolean("deleted")).
-					revision(obj.getString("revision")).
-					uuid(obj.getString("uuid")).
-					article(prod).
-					cashier(cash).
-					commodityGroup(grp).
-					bookingTime(bTime).
-					description(obj.getString("description")).
-					infoTexts(obj.getString("infoTexts")).
-					sector(sec).
-					receiptNumber(obj.getString("receiptNumber")).
-					receiptIndex(obj.getInt("receiptIndex")).
-					quantity(obj.getDouble("quantity")).
-					receipt(rec).grossItemPrice(obj.getDouble("grossItemPrice")).
-					pos(pos)
-				.build();
-		
-		JSONArray jTax=new JSONArray();
-		jTax=obj.getJSONArray("taxPayments");
-		if(!jTax.isNull(0)){
-			for(int i=0;i<=jTax.length()-1;i++){
-				JSONObject tax=new JSONObject();
-				tax=jTax.getJSONObject(i);
-				TaxPayments taxO=new TaxPayments(tax.getString("salesTax"),tax.getDouble("currentTaxRate"),tax.getDouble("amount"));
-				List<TaxPayments> taxL=new ArrayList<TaxPayments>();
+
+		final Sale sale = new Sale.Builder().deleted(obj.getBoolean("deleted"))
+			.revision(obj.getString("revision"))
+			.uuid(obj.getString("uuid"))
+			.article(prod)
+			.cashier(cash)
+			.commodityGroup(grp)
+			.bookingTime(bTime)
+			.description(obj.getString("description"))
+			.infoTexts(obj.getString("infoTexts"))
+			.sector(sec)
+			.receiptNumber(obj.getString("receiptNumber"))
+			.receiptIndex(obj.getInt("receiptIndex"))
+			.quantity(obj.getDouble("quantity"))
+			.receipt(rec)
+			.grossItemPrice(obj.getDouble("grossItemPrice"))
+			.pos(pos)
+			.build();
+
+		JSONArray jTax = new JSONArray();
+		jTax = obj.getJSONArray("taxPayments");
+		if (!jTax.isNull(0))
+		{
+			for (int i = 0; i <= jTax.length() - 1; i++)
+			{
+				JSONObject tax = new JSONObject();
+				tax = jTax.getJSONObject(i);
+				final TaxPayments taxO = new TaxPayments(tax.getString("salesTax"),
+					tax.getDouble("currentTaxRate"), tax.getDouble("amount"));
+				final List<TaxPayments> taxL = new ArrayList<TaxPayments>();
 				taxL.add(taxO);
 				sale.setTaxPayments(taxL);
 			}
 		}
-		
+
 		return sale;
 	}
-	
-	public boolean post() throws ApiNotReachableException, IOException {
-		
+
+	public boolean post() throws ApiNotReachableException, IOException
+	{
+
 		if (commodityGroup != null && commodityGroup.getUuid() == null)
 			commodityGroup.post();
 		if (sector != null && sector.getUuid() == null)
@@ -326,201 +366,258 @@ public class Sale {
 			cashier.post();
 		if (article != null && article.getUuid() == null)
 			article.post();
-		return CloudLink.getConnector().postData(DataType.sale,
-				this.toJSON());
-	}
-	
-	public boolean isDeleted(){
-		return this.deleted;
-	}
-	public void setDeleted(boolean deleted){
-		this.deleted=deleted;
-	}
-	
-	public String getRevision(){
-		return this.revision;
-	}
-	public void setRevision(String revision){
-		this.revision=revision;
-	}
-	
-	public String getUuid(){
-		return this.uuid;
-	}
-	public void setUuid(String uuid){
-		this.uuid=uuid;
-	}
-	
-	public Product getArticle(){
-		return this.article;
-	}
-	public void setArticle(Product article){
-		this.article=article;
-	}
-	
-	public Cashier getCashier(){
-		return this.cashier;
-	}
-	public void setCashier(Cashier cashier){
-		this.cashier=cashier;
-	}
-	
-	public CommodityGroup getCommodityGroup(){
-		return this.commodityGroup;
-	}
-	public void setCommodityGroup(CommodityGroup grp){
-		this.commodityGroup=grp;
-	}
-	
-	public Date getBookingTime(){
-		return this.bookingTime;
-	}
-	public void setBookingTime(Date bookingTime){
-		this.bookingTime=bookingTime;
-	}
-	
-	public String getDescription(){
-		return this.description;
-	}
-	public void setDescription(String txt){
-		this.description=txt;
-	}
-	
-	public String getInfoTexts(){
-		return this.infoTexts;
-	}
-	public void setInfoTexts(String infoTexts){
-		this.infoTexts=infoTexts;
-	}
-	
-	public Sector getSector(){
-		return this.sector;
-	}
-	public void setSector(Sector sec){
-		this.sector=sec;
-	}
-	
-	public String getReceiptNumber(){
-		return this.receiptNumber;
-	}
-	public void setReceiptNumber(String number){
-		this.receiptNumber=number;
-	}
-	
-	public int getReceiptIndex(){
-		return this.receiptIndex;
-	}
-	public void setReceiptIndex(int index){
-		this.receiptIndex=index;
-	}
-	
-	public double getQuantity(){
-		return this.quantity;
-	}
-	public void setQuantity(int quant){
-		this.quantity=quant;
+		return CloudLink.getConnector().postData(DataType.sale, this.toJSON());
 	}
 
-	public Receipt getReceipt() {
+	public boolean isDeleted()
+	{
+		return this.deleted;
+	}
+
+	public void setDeleted(final boolean deleted)
+	{
+		this.deleted = deleted;
+	}
+
+	public String getRevision()
+	{
+		return this.revision;
+	}
+
+	public void setRevision(final String revision)
+	{
+		this.revision = revision;
+	}
+
+	public String getUuid()
+	{
+		return this.uuid;
+	}
+
+	public void setUuid(final String uuid)
+	{
+		this.uuid = uuid;
+	}
+
+	public Product getArticle()
+	{
+		return this.article;
+	}
+
+	public void setArticle(final Product article)
+	{
+		this.article = article;
+	}
+
+	public Cashier getCashier()
+	{
+		return this.cashier;
+	}
+
+	public void setCashier(final Cashier cashier)
+	{
+		this.cashier = cashier;
+	}
+
+	public CommodityGroup getCommodityGroup()
+	{
+		return this.commodityGroup;
+	}
+
+	public void setCommodityGroup(final CommodityGroup grp)
+	{
+		this.commodityGroup = grp;
+	}
+
+	public Date getBookingTime()
+	{
+		return this.bookingTime;
+	}
+
+	public void setBookingTime(final Date bookingTime)
+	{
+		this.bookingTime = bookingTime;
+	}
+
+	public String getDescription()
+	{
+		return this.description;
+	}
+
+	public void setDescription(final String txt)
+	{
+		this.description = txt;
+	}
+
+	public String getInfoTexts()
+	{
+		return this.infoTexts;
+	}
+
+	public void setInfoTexts(final String infoTexts)
+	{
+		this.infoTexts = infoTexts;
+	}
+
+	public Sector getSector()
+	{
+		return this.sector;
+	}
+
+	public void setSector(final Sector sec)
+	{
+		this.sector = sec;
+	}
+
+	public String getReceiptNumber()
+	{
+		return this.receiptNumber;
+	}
+
+	public void setReceiptNumber(final String number)
+	{
+		this.receiptNumber = number;
+	}
+
+	public int getReceiptIndex()
+	{
+		return this.receiptIndex;
+	}
+
+	public void setReceiptIndex(final int index)
+	{
+		this.receiptIndex = index;
+	}
+
+	public double getQuantity()
+	{
+		return this.quantity;
+	}
+
+	public void setQuantity(final int quant)
+	{
+		this.quantity = quant;
+	}
+
+	public Receipt getReceipt()
+	{
 		return receipt;
 	}
 
-	public void setReceipt(Receipt receipt) {
+	public void setReceipt(final Receipt receipt)
+	{
 		this.receipt = receipt;
 	}
 
-	public double getManualPrice() {
+	public double getManualPrice()
+	{
 		return manualPrice;
 	}
 
-	public void setManualPrice(double manualPrice) {
+	public void setManualPrice(final double manualPrice)
+	{
 		this.manualPrice = manualPrice;
 	}
 
-	public double getItemPrice() {
+	public double getItemPrice()
+	{
 		return itemPrice;
 	}
 
-	public void setItemPrice(double itemPrice) {
+	public void setItemPrice(final double itemPrice)
+	{
 		this.itemPrice = itemPrice;
 	}
 
-	public double getGrossItemPrice() {
+	public double getGrossItemPrice()
+	{
 		return grossItemPrice;
 	}
 
-	public void setGrossItemPrice(double grossItemPrice) {
+	public void setGrossItemPrice(final double grossItemPrice)
+	{
 		this.grossItemPrice = grossItemPrice;
 	}
 
-	public double getNetItemPrice() {
+	public double getNetItemPrice()
+	{
 		return netItemPrice;
 	}
 
-	public void setNetItemPrice(double netItemPrice) {
+	public void setNetItemPrice(final double netItemPrice)
+	{
 		this.netItemPrice = netItemPrice;
 	}
 
-	public double getBaseItemPrice() {
+	public double getBaseItemPrice()
+	{
 		return baseItemPrice;
 	}
 
-	public void setBaseItemPrice(double baseItemPrice) {
+	public void setBaseItemPrice(final double baseItemPrice)
+	{
 		this.baseItemPrice = baseItemPrice;
 	}
 
-	public String getSerialNumber() {
+	public String getSerialNumber()
+	{
 		return serialNumber;
 	}
 
-	public void setSerialNumber(String serialNumber) {
+	public void setSerialNumber(final String serialNumber)
+	{
 		this.serialNumber = serialNumber;
 	}
 
-	public void setQuantity(double quantity) {
+	public void setQuantity(final double quantity)
+	{
 		this.quantity = quantity;
 	}
 
-	public POS getPos() {
+	public POS getPos()
+	{
 		return pos;
 	}
 
-	public void setPos(POS pos) {
+	public void setPos(final POS pos)
+	{
 		this.pos = pos;
 	}
 
-	public List<TaxPayments> getTaxPayments() {
+	public List<TaxPayments> getTaxPayments()
+	{
 		return taxPayments;
 	}
 
-	public void setTaxPayments(List<TaxPayments> taxPayments) {
+	public void setTaxPayments(final List<TaxPayments> taxPayments)
+	{
 		this.taxPayments = taxPayments;
 	}
-	
+
 	@Override
 	public int hashCode()
 	{
 		final int prime = 31;
 		int result = 1;
-		
+
 		result = prime * result + ((this.description == null) ? 0 : this.description.hashCode());
 		result = prime * result + ((this.uuid == null) ? 0 : this.uuid.hashCode());
 		result = prime * result + ((this.revision == null) ? 0 : this.revision.hashCode());
 		result = prime * result + ((this.infoTexts == null) ? 0 : this.infoTexts.hashCode());
-		result = prime * result + ((this.receiptNumber == null) ? 0 : this.receiptNumber.hashCode());
+		result = prime * result +
+			((this.receiptNumber == null) ? 0 : this.receiptNumber.hashCode());
 		result = prime * result + ((this.serialNumber == null) ? 0 : this.serialNumber.hashCode());
 		result = prime * result + ((this.article == null) ? 0 : this.article.hashCode());
 		result = prime * result + ((this.cashier == null) ? 0 : this.cashier.hashCode());
-		result = prime * result + ((this.commodityGroup == null) ? 0 : this.commodityGroup.hashCode());
+		result = prime * result +
+			((this.commodityGroup == null) ? 0 : this.commodityGroup.hashCode());
 		result = prime * result + ((this.pos == null) ? 0 : this.pos.hashCode());
 		result = prime * result + ((this.receipt == null) ? 0 : this.receipt.hashCode());
 		result = prime * result + ((this.sector == null) ? 0 : this.sector.hashCode());
-		
-		
-		
+
 
 		return result;
 	}
-	
-	
+
+
 }

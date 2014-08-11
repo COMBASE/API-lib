@@ -84,20 +84,21 @@ public class OrganizationalUnit
 		private String number = null;
 		private String name = null;
 		private final String parent = null;
+
 		// private AssortmentValidities assortmentValidities;
 		// private AdressInformation adressInformation;
-		private final Pricelist priceGroup = null;
-		// private OrderingSources orderingSources;
-		private final String storageSpace = null;
-		private final String salesArea = null;
-		private final boolean mondayOpen = false;
-		private final boolean tuesdayOpen = false;
-		private final boolean wednesdayOpen = false;
-		private final boolean thursdayOpen = false;
-		private final boolean fridayOpen = false;
-		private final boolean saturdayOpen = false;
-		private final boolean sundayOpen = false;
-		private final boolean hasChildren = false;
+// private final Pricelist priceGroup = null;
+// private OrderingSources orderingSources;
+// private final String storageSpace = null;
+// private final String salesArea = null;
+// private final boolean mondayOpen = false;
+// private final boolean tuesdayOpen = false;
+// private final boolean wednesdayOpen = false;
+// private final boolean thursdayOpen = false;
+// private final boolean fridayOpen = false;
+// private final boolean saturdayOpen = false;
+// private final boolean sundayOpen = false;
+// private final boolean hasChildren = false;
 
 		// usw...
 
