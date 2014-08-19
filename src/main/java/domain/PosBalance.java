@@ -21,7 +21,7 @@ public class PosBalance
 	private Date createTime;
 	private Date finishTime;
 	private Collection<ItemSummary> itemSummaries;
-	private double balanceAttempts;
+	private int balanceAttempts;
 	private double expectedTotal;
 	private double actualTotal;
 
@@ -50,7 +50,7 @@ public class PosBalance
 		private Date createTime = null;
 		private Date finishTime = null;
 		private Collection<ItemSummary> itemSummaries = null;
-		private double balanceAttempts = 0;
+		private int balanceAttempts = 0;
 		private double expectedTotal = 0;
 		private double actualTotal = 0;
 
@@ -281,13 +281,13 @@ public class PosBalance
 	}
 
 
-	public double getBalanceAttempts()
+	public int getBalanceAttempts()
 	{
 		return balanceAttempts;
 	}
 
 
-	public void setBalanceAttempts(final double balanceAttempts)
+	public void setBalanceAttempts(final int balanceAttempts)
 	{
 		this.balanceAttempts = balanceAttempts;
 	}

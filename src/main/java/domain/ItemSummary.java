@@ -3,6 +3,12 @@ package domain;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+/**
+ * used by domain.PosBalance
+ * 
+ * @author mas
+ * 
+ */
 public class ItemSummary
 {
 	private PaymentMethods paymentMethod;
@@ -61,8 +67,10 @@ public class ItemSummary
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
 
-		final PaymentMethods paymentMethods = new PaymentMethods.Builder(null).uuid(
-			obj.getString("paymentMethod")).build();
+		final PaymentMethods paymentMethods = new PaymentMethods.Builder(
+			obj.getString("paymentMethodName")).uuid(obj.getString("paymentMethod"))
+			.number(obj.getString("paymentMethodNr"))
+			.build();
 
 		final ItemSummary itemSummary = new ItemSummary.Builder().absoluteDifference(
 			obj.getDouble("absoluteDifference"))

@@ -9,7 +9,8 @@ public enum DataType
 		"payments"), paymentMethod("paymentMethods"), priceList("priceLists"), product("products"), receipt(
 		"receipts"), sale("sales"), sector("sectors"), stockorder("stockorders"), supplier(
 		"suppliers"), tag("tags"), tax("taxes"), timeTrackingEntity("timeTrackingEntities"), timeTracking(
-		"timeTrackings"), user("users"), pos("pos"), fullReceipt("fullReceipts");
+		"timeTrackings"), user("users"), pos("pos"), fullReceipt("fullReceipts"), posBalance(
+		"posBalances");
 	private final String reference;
 
 	DataType(final String s)
