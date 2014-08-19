@@ -217,13 +217,9 @@ public class Product
 			for (int i = 0; i <= jPrices.length() - 1; i++)
 			{
 				jPrice = jPrices.getJSONObject(i);
+
 				final BigDecimal value = new BigDecimal(jPrice.getDouble("value"));
 				final Pricelist pricelist = new Pricelist.PreBuilder(jPrice.getString("priceList")).build();
-				final Object orgUnit = jPrice.get("organizationalUnit");
-				OrganizationalUnit organizationalUnit = null;
-				if (orgUnit != null)
-					organizationalUnit = new OrganizationalUnit.PreBuilder(
-						jPrice.getString("organizationalUnit")).build();
 				Date date = new Date();
 				try
 				{
@@ -233,8 +229,19 @@ public class Product
 				{
 					e.printStackTrace();
 				}
+				if (jPrice.has("organizationalUnit"))
+				{
+					final Object orgUnit = jPrice.get("organizationalUnit");
+					OrganizationalUnit organizationalUnit = null;
+					if (orgUnit != null)
+						organizationalUnit = new OrganizationalUnit.PreBuilder(
+							jPrice.getString("organizationalUnit")).build();
 
-				prices.add(new Price(pricelist, date, value, organizationalUnit));
+
+					prices.add(new Price(pricelist, date, value, organizationalUnit));
+				}
+				else
+					prices.add(new Price(pricelist, date, value));
 			}
 			prod.setPrices(prices);
 		}
@@ -252,8 +259,8 @@ public class Product
 		final Date date1 = new Date();
 
 
-		final JSONArray jProdArray = new JSONArray();
-		final JSONObject jProdObject = new JSONObject();
+// final JSONArray jProdArray = new JSONArray();
+// final JSONObject jProdObject = new JSONObject();
 		final HashSet<CommodityGroup> grpList = new HashSet<CommodityGroup>();
 		final HashSet<Assortment> assortmentList = new HashSet<Assortment>();
 		final HashSet<Sector> sectorList = new HashSet<Sector>();

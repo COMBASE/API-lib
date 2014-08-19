@@ -26,6 +26,21 @@ public class Price
 		this.organizationalUnit = organizationalUnit;
 	}
 
+	/**
+	 * old contructor
+	 * 
+	 * @param priceList
+	 * @param validFrom
+	 * @param value
+	 */
+	public Price(final Pricelist priceList, final Date validFrom, final BigDecimal value)
+	{
+		super();
+		this.priceList = priceList;
+		this.validFrom = validFrom;
+		this.value = value;
+	}
+
 	public JSONObject toJSON()
 	{
 		final JSONObject obj = new JSONObject();

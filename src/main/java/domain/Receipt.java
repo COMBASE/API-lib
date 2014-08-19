@@ -8,7 +8,8 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 
-public class Receipt {
+public class Receipt
+{
 	private boolean deleted;
 	private String revision;
 	private String uuid;
@@ -20,7 +21,8 @@ public class Receipt {
 	private long finishTime;
 	private long modifiedTime;
 	private int orderNumber;
-	//private Pos pos;
+	private POS pos;
+	private OrganizationalUnit organizationalUnit;
 	private Pricelist priceGroup;
 	private double grossTotalAmount;
 	private double netTotalAmount;
@@ -33,359 +35,546 @@ public class Receipt {
 	private double zCount;
 	private boolean voided;
 	private Customer customer;
-	
-	private Receipt(Builder builder){
-		deleted=builder.deleted;
-		revision=builder.revision;
-		number=builder.number;
-		uuid=builder.uuid;
-		cashier=builder.cashier;
-		creatTime=builder.creatTime;
-		currency=builder.currency;
-		customerGroup=builder.customerGroup;
-		finishTime=builder.finishTime;
-		modifiedTime=builder.modifiedTime;
-		orderNumber=builder.orderNumber;
-		//pos=builder.pos;
-		priceGroup=builder.priceGroup;
-		grossTotalAmount=builder.grossTotalAmount;
-		netTotalAmount=builder.netTotalAmount;
-		taxAmount=builder.taxAmount;
-		grossRevenueAmount=builder.grossRevenueAmount;
-		netRevenueAmount=builder.netRevenueAmount;
-		receiptDiscountAmount=builder.receiptDiscountAmount;
-		receiptDiscountGrossAmount=builder.receiptDiscountGrossAmount;
-		receiptDiscountNetAmount=builder.receiptDiscountNetAmount;
-		zCount=builder.zCount;
-		voided=builder.voided;
-		customer=builder.customer;
+
+	private Receipt(final Builder builder)
+	{
+		deleted = builder.deleted;
+		revision = builder.revision;
+		number = builder.number;
+		uuid = builder.uuid;
+		cashier = builder.cashier;
+		creatTime = builder.creatTime;
+		currency = builder.currency;
+		customerGroup = builder.customerGroup;
+		finishTime = builder.finishTime;
+		modifiedTime = builder.modifiedTime;
+		orderNumber = builder.orderNumber;
+		pos = builder.pos;
+		organizationalUnit = builder.organizationalUnit;
+		priceGroup = builder.priceGroup;
+		grossTotalAmount = builder.grossTotalAmount;
+		netTotalAmount = builder.netTotalAmount;
+		taxAmount = builder.taxAmount;
+		grossRevenueAmount = builder.grossRevenueAmount;
+		netRevenueAmount = builder.netRevenueAmount;
+		receiptDiscountAmount = builder.receiptDiscountAmount;
+		receiptDiscountGrossAmount = builder.receiptDiscountGrossAmount;
+		receiptDiscountNetAmount = builder.receiptDiscountNetAmount;
+		zCount = builder.zCount;
+		voided = builder.voided;
+		customer = builder.customer;
 	}
-	
-	public static class Builder{
-		private boolean deleted=false;
-		private String revision=null;
-		private String number=null;
-		private String uuid=null;
-		private Cashier cashier=null;
-		private long creatTime=0;
-		private String currency=null;
-		private CustomerGroup customerGroup=null;
-		private long finishTime=0;
-		private long modifiedTime=0;
-		private int orderNumber=0;
-		//private Pos pos;
-		private Pricelist priceGroup=null;
-		private double grossTotalAmount=0;
-		private double netTotalAmount=0;
-		private double taxAmount=0;
-		private double grossRevenueAmount=0;
-		private double netRevenueAmount=0;
-		private double receiptDiscountAmount=0;
-		private double receiptDiscountGrossAmount=0;
-		private double receiptDiscountNetAmount=0;
-		private double zCount=0;
-		private boolean voided=false;
-		private Customer customer=null;
-		
-		public Builder(){
-			
+
+	public static class Builder
+	{
+		private boolean deleted = false;
+		private String revision = null;
+		private String number = null;
+		private String uuid = null;
+		private Cashier cashier = null;
+		private long creatTime = 0;
+		private String currency = null;
+		private CustomerGroup customerGroup = null;
+		private long finishTime = 0;
+		private long modifiedTime = 0;
+		private int orderNumber = 0;
+		private POS pos = null;
+		private OrganizationalUnit organizationalUnit = null;
+		private final Pricelist priceGroup = null;
+		private double grossTotalAmount = 0;
+		private double netTotalAmount = 0;
+		private double taxAmount = 0;
+		private double grossRevenueAmount = 0;
+		private double netRevenueAmount = 0;
+		private double receiptDiscountAmount = 0;
+		private double receiptDiscountGrossAmount = 0;
+		private double receiptDiscountNetAmount = 0;
+		private double zCount = 0;
+		private boolean voided = false;
+		private Customer customer = null;
+
+		public Builder()
+		{
+
 		}
-		public Builder deleted(boolean value){
-			this.deleted=value;
+
+		public Builder deleted(final boolean value)
+		{
+			this.deleted = value;
 			return this;
 		}
-		public Builder uuid(String value){
-			this.uuid=value;
-			return this;
-		}				
-		public Builder revision(String value){
-			this.revision=value;
+
+		public Builder uuid(final String value)
+		{
+			this.uuid = value;
 			return this;
 		}
-		public Builder number(String value){
-			this.number=value;
+
+		public Builder revision(final String value)
+		{
+			this.revision = value;
 			return this;
 		}
-		public Builder cashier(Cashier cash){
-			this.cashier=cash;
+
+		public Builder number(final String value)
+		{
+			this.number = value;
 			return this;
 		}
-		public Builder creatTime(long value){
-			this.creatTime=value;
+
+		public Builder cashier(final Cashier cash)
+		{
+			this.cashier = cash;
 			return this;
 		}
-		public Builder currency(String value){
-			this.currency=value;
+
+		public Builder creatTime(final long value)
+		{
+			this.creatTime = value;
 			return this;
 		}
-		public Builder finishTime(long value){
-			this.finishTime=value;
+
+		public Builder currency(final String value)
+		{
+			this.currency = value;
 			return this;
 		}
-		public Builder modifiedTime(long value){
-			this.modifiedTime=value;
+
+		public Builder finishTime(final long value)
+		{
+			this.finishTime = value;
 			return this;
 		}
-		public Builder orderNumber(int value){
-			this.orderNumber=value;
+
+		public Builder modifiedTime(final long value)
+		{
+			this.modifiedTime = value;
 			return this;
 		}
-		public Builder grossTotalAmount(double value){
-			this.grossTotalAmount=value;
+
+		public Builder orderNumber(final int value)
+		{
+			this.orderNumber = value;
 			return this;
 		}
-		public Builder netTotalAmount(double value){
-			this.netTotalAmount=value;
+
+		public Builder grossTotalAmount(final double value)
+		{
+			this.grossTotalAmount = value;
 			return this;
 		}
-		public Builder taxAmount(double value){
-			this.taxAmount=value;
+
+		public Builder netTotalAmount(final double value)
+		{
+			this.netTotalAmount = value;
 			return this;
 		}
-		public Builder grossRevnueAmount(double value){
-			this.grossRevenueAmount=value;
+
+		public Builder taxAmount(final double value)
+		{
+			this.taxAmount = value;
 			return this;
 		}
-		public Builder netRevenueAmount(double value){
-			this.netRevenueAmount=value;
+
+		public Builder pos(final POS pos)
+		{
+			this.pos = pos;
 			return this;
 		}
-		public Builder receiptDiscountAmount(double value){
-			this.receiptDiscountAmount=value;
+
+		public Builder organizationalUnit(final OrganizationalUnit organizationalUnit)
+		{
+			this.organizationalUnit = organizationalUnit;
 			return this;
 		}
-		public Builder receiptDiscountGrossAmount(double value){
-			this.receiptDiscountGrossAmount=value;
+
+		public Builder grossRevenueAmount(final double value)
+		{
+			this.grossRevenueAmount = value;
 			return this;
 		}
-		public Builder receiptDiscountNetAmount(double value){
-			this.receiptDiscountNetAmount=value;
+
+		public Builder netRevenueAmount(final double value)
+		{
+			this.netRevenueAmount = value;
 			return this;
 		}
-		public Builder zCount(double value){
-			this.zCount=value;
+
+		public Builder receiptDiscountAmount(final double value)
+		{
+			this.receiptDiscountAmount = value;
 			return this;
 		}
-		public Builder voided(boolean value){
-			this.voided=value;
+
+		public Builder receiptDiscountGrossAmount(final double value)
+		{
+			this.receiptDiscountGrossAmount = value;
 			return this;
 		}
-		public Builder customerGroup(CustomerGroup cGrp){
-			this.customerGroup=cGrp;
+
+		public Builder receiptDiscountNetAmount(final double value)
+		{
+			this.receiptDiscountNetAmount = value;
 			return this;
 		}
-		public Builder customer(Customer cust){
-			this.customer=cust;
+
+		public Builder zCount(final double value)
+		{
+			this.zCount = value;
 			return this;
 		}
-		public Receipt build(){
+
+		public Builder voided(final boolean value)
+		{
+			this.voided = value;
+			return this;
+		}
+
+		public Builder customerGroup(final CustomerGroup cGrp)
+		{
+			this.customerGroup = cGrp;
+			return this;
+		}
+
+		public Builder customer(final Customer cust)
+		{
+			this.customer = cust;
+			return this;
+		}
+
+		public Receipt build()
+		{
 			return new Receipt(this);
 		}
 	}
-	
-	public JSONObject toJSON() {
-		JSONObject obj = new JSONObject();
-		try {
+
+	public JSONObject toJSON()
+	{
+		final JSONObject obj = new JSONObject();
+		try
+		{
 			obj.put("deleted", deleted);
 			obj.put("revision", revision);
 			obj.put("uuid", uuid);
-			if (number!=null)
+			if (number != null)
 				obj.put("number", number);
-						
+
 			return obj;
-		} catch (JSONException e) {
+		}
+		catch (final JSONException e)
+		{
 			e.printStackTrace();
 			return null;
 		}
 	}
-	public static Receipt fromJSON(JSONObject obj) throws JSONException {
-		if(obj.has("result") && obj.getString("result")!=null)
-			obj=obj.getJSONObject("result"); 
-		Cashier cash=new Cashier.Builder(null).build();
+
+	public static Receipt fromJSON(JSONObject obj) throws JSONException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
+		final Cashier cash = new Cashier.Builder(null).build();
 		cash.setUuid(obj.getString("cashier"));
-		CustomerGroup cGrp=new CustomerGroup.Builder(null).build();
+		final CustomerGroup cGrp = new CustomerGroup.Builder(null).build();
 		cGrp.setUuid(obj.getString("customerGroup"));
-		Customer cust=new Customer.Builder().build();
+		final Customer cust = new Customer.Builder().build();
 		cust.setUuid(obj.getString("customer"));
-		Receipt rec = new Receipt.Builder().
-					number(obj.getString("number")).
-					revision(obj.getString("revision")).
-					cashier(cash).customerGroup(cGrp).customer(cust).
-					receiptDiscountGrossAmount(obj.getDouble("receiptDiscountGrossAmount")).
-					voided(obj.getBoolean("voided")).
-					uuid(obj.getString("uuid"))
-				.build();
+		final Receipt rec = new Receipt.Builder().number(obj.getString("number"))
+			.revision(obj.getString("revision"))
+			.cashier(cash)
+			.customerGroup(cGrp)
+			.customer(cust)
+			.receiptDiscountGrossAmount(obj.getDouble("receiptDiscountGrossAmount"))
+			.voided(obj.getBoolean("voided"))
+			.uuid(obj.getString("uuid"))
+			.grossTotalAmount(obj.getDouble("grossTotalAmount"))
+			.netTotalAmount(obj.getDouble("netTotalAmount"))
+			.taxAmount(obj.getDouble("taxAmount"))
+			.grossRevenueAmount(obj.getDouble("grossRevenueAmount"))
+			.netRevenueAmount(obj.getDouble("netRevenueAmount"))
+			.receiptDiscountAmount(obj.getDouble("receiptDiscountAmount"))
+			.receiptDiscountGrossAmount(obj.getDouble("receiptDiscountGrossAmount"))
+			.receiptDiscountNetAmount(obj.getDouble("receiptDiscountNetAmount"))
+			.build();
 		return rec;
 	}
-	
-	public boolean post() throws IOException {
-		
+
+	public boolean post() throws IOException
+	{
+
 		if (cashier != null && cashier.getUuid() == null)
 			cashier.post();
-		
-		return CloudLink.getConnector().postData(DataType.receipt,
-				this.toJSON());
+
+		return CloudLink.getConnector().postData(DataType.receipt, this.toJSON());
 	}
-	
-	public boolean isDeleted() {
+
+	public boolean isDeleted()
+	{
 		return deleted;
 	}
-	public void setDeleted(boolean deleted) {
+
+	public void setDeleted(final boolean deleted)
+	{
 		this.deleted = deleted;
 	}
-	public String getRevision() {
+
+	public String getRevision()
+	{
 		return revision;
 	}
-	public void setRevision(String revision) {
+
+	public void setRevision(final String revision)
+	{
 		this.revision = revision;
 	}
-	public String getUuid() {
+
+	public String getUuid()
+	{
 		return uuid;
 	}
-	public void setUuid(String uuid) {
+
+	public void setUuid(final String uuid)
+	{
 		this.uuid = uuid;
 	}
-	public String getNumber() {
+
+	public String getNumber()
+	{
 		return number;
 	}
-	public void setNumber(String number) {
+
+	public void setNumber(final String number)
+	{
 		this.number = number;
 	}
-	public Cashier getCashier() {
+
+	public Cashier getCashier()
+	{
 		return cashier;
 	}
-	public void setCashier(Cashier cashier) {
+
+	public void setCashier(final Cashier cashier)
+	{
 		this.cashier = cashier;
 	}
-	public long getCreatTime() {
+
+	public long getCreatTime()
+	{
 		return creatTime;
 	}
-	public void setCreatTime(long creatTime) {
+
+	public void setCreatTime(final long creatTime)
+	{
 		this.creatTime = creatTime;
 	}
-	public String getCurrency() {
+
+	public String getCurrency()
+	{
 		return currency;
 	}
-	public void setCurrency(String currency) {
+
+	public void setCurrency(final String currency)
+	{
 		this.currency = currency;
 	}
-	public long getFinishTime() {
+
+	public long getFinishTime()
+	{
 		return finishTime;
 	}
-	public void setFinishTime(long finishTime) {
+
+	public void setFinishTime(final long finishTime)
+	{
 		this.finishTime = finishTime;
 	}
-	public long getModifiedTime() {
+
+	public long getModifiedTime()
+	{
 		return modifiedTime;
 	}
-	public void setModifiedTime(long modifiedTime) {
+
+	public void setModifiedTime(final long modifiedTime)
+	{
 		this.modifiedTime = modifiedTime;
 	}
-	public int getOrderNumber() {
+
+	public int getOrderNumber()
+	{
 		return orderNumber;
 	}
-	public void setOrderNumber(int orderNumber) {
+
+	public void setOrderNumber(final int orderNumber)
+	{
 		this.orderNumber = orderNumber;
 	}
-	public double getGrossTotalAmount() {
+
+	public double getGrossTotalAmount()
+	{
 		return grossTotalAmount;
 	}
-	public void setGrossTotalAmount(double grossTotalAmount) {
+
+	public void setGrossTotalAmount(final double grossTotalAmount)
+	{
 		this.grossTotalAmount = grossTotalAmount;
 	}
-	public double getNetTotalAmount() {
+
+	public double getNetTotalAmount()
+	{
 		return netTotalAmount;
 	}
-	public void setNetTotalAmount(double netTotalAmount) {
+
+	public void setNetTotalAmount(final double netTotalAmount)
+	{
 		this.netTotalAmount = netTotalAmount;
 	}
-	public double getTaxAmount() {
+
+	public double getTaxAmount()
+	{
 		return taxAmount;
 	}
-	public void setTaxAmount(double taxAmount) {
+
+	public void setTaxAmount(final double taxAmount)
+	{
 		this.taxAmount = taxAmount;
 	}
-	public double getGrossRevenueAmount() {
+
+	public double getGrossRevenueAmount()
+	{
 		return grossRevenueAmount;
 	}
-	public void setGrossRevenueAmount(double grossRevenueAmount) {
+
+	public void setGrossRevenueAmount(final double grossRevenueAmount)
+	{
 		this.grossRevenueAmount = grossRevenueAmount;
 	}
-	public double getNetRevenueAmount() {
+
+	public double getNetRevenueAmount()
+	{
 		return netRevenueAmount;
 	}
-	public void setNetRevenueAmount(double netRevenueAmount) {
+
+	public void setNetRevenueAmount(final double netRevenueAmount)
+	{
 		this.netRevenueAmount = netRevenueAmount;
 	}
-	public double getReceiptDiscountAmount() {
+
+	public double getReceiptDiscountAmount()
+	{
 		return receiptDiscountAmount;
 	}
-	public void setReceiptDiscountAmount(double receiptDiscountAmount) {
+
+	public void setReceiptDiscountAmount(final double receiptDiscountAmount)
+	{
 		this.receiptDiscountAmount = receiptDiscountAmount;
 	}
-	public double getReceiptDiscountGrossAmount() {
+
+	public double getReceiptDiscountGrossAmount()
+	{
 		return receiptDiscountGrossAmount;
 	}
-	public void setReceiptDiscountGrossAmount(double receiptDiscountGrossAmount) {
+
+	public void setReceiptDiscountGrossAmount(final double receiptDiscountGrossAmount)
+	{
 		this.receiptDiscountGrossAmount = receiptDiscountGrossAmount;
 	}
-	public double getReceiptDiscountNetAmount() {
+
+	public double getReceiptDiscountNetAmount()
+	{
 		return receiptDiscountNetAmount;
 	}
-	public void setReceiptDiscountNetAmount(double receiptDiscountNetAmount) {
+
+	public void setReceiptDiscountNetAmount(final double receiptDiscountNetAmount)
+	{
 		this.receiptDiscountNetAmount = receiptDiscountNetAmount;
 	}
-	public double getzCount() {
+
+	public double getzCount()
+	{
 		return zCount;
 	}
-	public void setzCount(double zCount) {
+
+	public void setzCount(final double zCount)
+	{
 		this.zCount = zCount;
 	}
-	public boolean getVoided() {
+
+	public boolean getVoided()
+	{
 		return voided;
 	}
-	public void setVoided(boolean voided) {
+
+	public void setVoided(final boolean voided)
+	{
 		this.voided = voided;
 	}
-	public CustomerGroup getCustomerGroup() {
+
+	public CustomerGroup getCustomerGroup()
+	{
 		return customerGroup;
 	}
-	public void setCustomerGroup(CustomerGroup customerGroup) {
+
+	public void setCustomerGroup(final CustomerGroup customerGroup)
+	{
 		this.customerGroup = customerGroup;
 	}
-	public Customer getCustomer() {
+
+	public Customer getCustomer()
+	{
 		return customer;
 	}
-	public void setCustomer(Customer customer) {
+
+	public void setCustomer(final Customer customer)
+	{
 		this.customer = customer;
 	}
-	public Pricelist getPriceGroup() {
+
+	public Pricelist getPriceGroup()
+	{
 		return priceGroup;
 	}
-	public void setPriceGroup(Pricelist priceGroup) {
+
+	public void setPriceGroup(final Pricelist priceGroup)
+	{
 		this.priceGroup = priceGroup;
 	}
-	
+
+	public POS getPos()
+	{
+		return pos;
+	}
+
+	public void setPos(final POS pos)
+	{
+		this.pos = pos;
+	}
+
+	public OrganizationalUnit getOrganizationalUnit()
+	{
+		return organizationalUnit;
+	}
+
+	public void setOrganizationalUnit(final OrganizationalUnit organizationalUnit)
+	{
+		this.organizationalUnit = organizationalUnit;
+	}
+
 	@Override
 	public int hashCode()
 	{
 		final int prime = 31;
 		int result = 1;
-		
+
 		result = prime * result + ((this.number == null) ? 0 : this.number.hashCode());
 		result = prime * result + ((this.uuid == null) ? 0 : this.uuid.hashCode());
 		result = prime * result + ((this.revision == null) ? 0 : this.revision.hashCode());
 		result = prime * result + ((this.currency == null) ? 0 : this.currency.hashCode());
 		result = prime * result + ((this.cashier == null) ? 0 : this.cashier.hashCode());
-		result = prime * result + ((this.customerGroup == null) ? 0 : this.customerGroup.hashCode());
+		result = prime * result +
+			((this.customerGroup == null) ? 0 : this.customerGroup.hashCode());
 		result = prime * result + ((this.priceGroup == null) ? 0 : this.priceGroup.hashCode());
-		
-		
-		
+
 
 		return result;
 	}
-	
-	
-	
+
+
 }

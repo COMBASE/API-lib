@@ -332,6 +332,9 @@ public class Sale
 			.receiptIndex(obj.getInt("receiptIndex"))
 			.quantity(obj.getDouble("quantity"))
 			.receipt(rec)
+			.itemPrice(obj.getDouble("itemPrice"))
+			.netItemPrice(obj.getDouble("netItemPrice"))
+			.baseItemPrice(obj.getDouble("baseItemPrice"))
 			.grossItemPrice(obj.getDouble("grossItemPrice"))
 			.pos(pos)
 			.build();
