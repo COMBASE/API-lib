@@ -24,6 +24,7 @@ public class PosBalance
 	private int balanceAttempts;
 	private double expectedTotal;
 	private double actualTotal;
+	private int zCount;
 
 	public PosBalance(final Builder builder)
 	{
@@ -38,6 +39,7 @@ public class PosBalance
 		this.balanceAttempts = builder.balanceAttempts;
 		this.expectedTotal = builder.expectedTotal;
 		this.actualTotal = builder.actualTotal;
+		this.zCount = builder.zCount;
 	}
 
 	public static class Builder
@@ -53,6 +55,7 @@ public class PosBalance
 		private int balanceAttempts = 0;
 		private double expectedTotal = 0;
 		private double actualTotal = 0;
+		private int zCount = 0;
 
 		public Builder deleted(final boolean value)
 		{
@@ -126,6 +129,12 @@ public class PosBalance
 			return this;
 		}
 
+		public Builder zCount(final int value)
+		{
+			this.zCount = value;
+			return this;
+		}
+
 		public PosBalance build()
 		{
 			return new PosBalance(this);
@@ -140,6 +149,7 @@ public class PosBalance
 
 		final Collection<ItemSummary> itemSummaryObjs = new ArrayList<ItemSummary>();
 		final JSONArray itemSummaries = obj.getJSONArray("itemSummaries");
+
 		for (int i = 0; i <= itemSummaries.length() - 1; i++)
 		{
 			final JSONObject itemSummary = itemSummaries.getJSONObject(i);
@@ -176,7 +186,7 @@ public class PosBalance
 			.balanceAttempts(obj.getInt("balanceAttempts"))
 			.expectedTotal(obj.getDouble("expectedTotal"))
 			.actualTotal(obj.getDouble("actualTotal"))
-
+			.zCount(obj.getInt("zCount"))
 			.build();
 
 
@@ -314,5 +324,15 @@ public class PosBalance
 	public void setActualTotal(final double actualTotal)
 	{
 		this.actualTotal = actualTotal;
+	}
+
+	public int getzCount()
+	{
+		return zCount;
+	}
+
+	public void setzCount(final int zCount)
+	{
+		this.zCount = zCount;
 	}
 }

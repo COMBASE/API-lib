@@ -21,6 +21,7 @@ public class FullReceipt
 		this.accountTransaction = builder.accountTransaction;
 		this.payment = builder.payment;
 		this.sale = builder.sale;
+
 	}
 
 	public static class Builder
@@ -29,6 +30,7 @@ public class FullReceipt
 		private Collection<AccountTransaction> accountTransaction;
 		private Collection<Payment> payment;
 		private Collection<Sale> sale;
+
 
 		public Builder()
 		{
@@ -100,11 +102,6 @@ public class FullReceipt
 			.number(jReceipt.getString("posNr"))
 			.build();
 		receipt.setPos(pos);
-
-		final Cashier cashier = new Cashier.Builder(null).uuid(jReceipt.getString("cashier"))
-			.number("1337")
-			.build();
-		receipt.setCashier(cashier);
 
 		final OrganizationalUnit organizationalUnit = new OrganizationalUnit.Builder(null).uuid(
 			jReceipt.getString("organizationalUnit"))
