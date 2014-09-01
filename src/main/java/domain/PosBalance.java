@@ -335,4 +335,11 @@ public class PosBalance
 	{
 		this.zCount = zCount;
 	}
+
+	@Override
+	public boolean equals(final Object obj)
+	{
+
+		return obj.hashCode() == this.hashCode();
+	}
 }

@@ -14,7 +14,7 @@ public class Rate
 	private BigDecimal rate;
 	private Date validFrom;
 
-	public Rate(BigDecimal rate, Date validFrom)
+	public Rate(final BigDecimal rate, final Date validFrom)
 	{
 		super();
 		this.rate = rate;
@@ -26,7 +26,7 @@ public class Rate
 		return rate;
 	}
 
-	public void setRate(BigDecimal rate)
+	public void setRate(final BigDecimal rate)
 	{
 		this.rate = rate;
 	}
@@ -36,7 +36,7 @@ public class Rate
 		return validFrom;
 	}
 
-	public void setValidFrom(Date validFrom)
+	public void setValidFrom(final Date validFrom)
 	{
 		this.validFrom = validFrom;
 	}
@@ -45,29 +45,35 @@ public class Rate
 	{
 		try
 		{
-			JSONObject obj = new JSONObject();
+			final JSONObject obj = new JSONObject();
 			obj.put("rate", rate.toString());
 			obj.put("validFrom", inputDf.format(validFrom));
 			return obj;
 		}
-		catch (JSONException e)
+		catch (final JSONException e)
 		{
 			e.printStackTrace();
 			return null;
 		}
 
 	}
+
+	@Override
+	public boolean equals(final Object obj)
+	{
+
+		return obj.hashCode() == this.hashCode();
+	}
+
 	@Override
 	public int hashCode()
 	{
 		final int prime = 31;
 		int result = 1;
-		
+
 		result = prime * result + ((this.rate == null) ? 0 : this.rate.hashCode());
 		result = prime * result + ((this.validFrom == null) ? 0 : this.validFrom.hashCode());
-		
-		
-		
+
 
 		return result;
 	}

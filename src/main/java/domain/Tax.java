@@ -14,15 +14,15 @@ import error.ApiNotReachableException;
 
 public class Tax
 {
-	private String name;
-	private String number;
-	private boolean deleted;
-	private boolean included;
-	private EconomicZone economicZone;
-	private List<Rate> rateList;
+	private final String name;
+	private final String number;
+	private final boolean deleted;
+	private final boolean included;
+	private final EconomicZone economicZone;
+	private final List<Rate> rateList;
 	private String uuid = null;
 
-	private Tax(Builder builder)
+	private Tax(final Builder builder)
 	{
 		name = builder.name;
 		number = builder.number;
@@ -39,33 +39,33 @@ public class Tax
 		private final EconomicZone economicZone;
 		private boolean deleted = false;
 		private boolean included = false;
-		private List<Rate> rateList = new ArrayList<Rate>();
+		private final List<Rate> rateList = new ArrayList<Rate>();
 
-		public Builder(String name, EconomicZone zone)
+		public Builder(final String name, final EconomicZone zone)
 		{
 			this.name = name;
 			this.economicZone = zone;
 		}
 
-		public Builder number(String value)
+		public Builder number(final String value)
 		{
 			number = value;
 			return this;
 		}
 
-		public Builder deleted(boolean value)
+		public Builder deleted(final boolean value)
 		{
 			deleted = value;
 			return this;
 		}
 
-		public Builder included(boolean value)
+		public Builder included(final boolean value)
 		{
 			included = value;
 			return this;
 		}
 
-		public Builder rateList(Rate rate)
+		public Builder rateList(final Rate rate)
 		{
 			rateList.add(rate);
 			return this;
@@ -79,11 +79,11 @@ public class Tax
 
 	public JSONObject toJSON()
 	{
-		JSONObject obj = new JSONObject();
+		final JSONObject obj = new JSONObject();
 		try
 		{
 			obj.put("name", name);
-			if (number!=null)
+			if (number != null)
 				obj.put("number", number);
 			obj.put("deleted", deleted);
 			obj.put("included", included);
@@ -93,17 +93,17 @@ public class Tax
 			}
 			if (!rateList.isEmpty())
 			{
-				JSONArray array = new JSONArray();
-				for (Rate ratelem : rateList)
+				final JSONArray array = new JSONArray();
+				for (final Rate ratelem : rateList)
 				{
-					JSONObject sub = ratelem.toJSON();
+					final JSONObject sub = ratelem.toJSON();
 					array.put(sub);
 				}
 				obj.put("rates", array);
 			}
 			return obj;
 		}
-		catch (JSONException e)
+		catch (final JSONException e)
 		{
 			e.printStackTrace();
 			return null;
@@ -116,8 +116,8 @@ public class Tax
 		{
 			economicZone.post();
 		}
-		boolean result = CloudLink.getConnector().postData(DataType.tax, this.toJSON());
-		if (number!=null)
+		final boolean result = CloudLink.getConnector().postData(DataType.tax, this.toJSON());
+		if (number != null)
 			uuid = CloudLink.getUUIDByNumber(DataType.tax, number);
 		else
 			uuid = CloudLink.getUUIDByName(DataType.tax, name);
@@ -128,21 +128,25 @@ public class Tax
 	{
 		return uuid;
 	}
-	
+
+	@Override
+	public boolean equals(final Object obj)
+	{
+
+		return obj.hashCode() == this.hashCode();
+	}
+
 	@Override
 	public int hashCode()
 	{
 		final int prime = 31;
 		int result = 1;
-		
+
 		result = prime * result + ((this.number == null) ? 0 : this.number.hashCode());
 		result = prime * result + ((this.uuid == null) ? 0 : this.uuid.hashCode());
 		result = prime * result + ((this.economicZone == null) ? 0 : this.economicZone.hashCode());
 		result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
-		
-		
-		
-		
+
 
 		return result;
 	}

@@ -7,51 +7,58 @@ import org.codehaus.jettison.json.JSONObject;
 
 public class Product_Code
 {
-	private BigDecimal quantity;
-	private String code;
+	private final BigDecimal quantity;
+	private final String code;
 
-	public Product_Code(String code, BigDecimal quantity)
+	public Product_Code(final String code, final BigDecimal quantity)
 	{
 		super();
 		this.code = code;
 		this.quantity = quantity;
 	}
-	
+
 	public JSONObject toJSON()
 	{
-		JSONObject obj = new JSONObject();
+		final JSONObject obj = new JSONObject();
 		try
 		{
 			obj.put("code", code);
 			obj.put("quantity", quantity);
 			return obj;
 		}
-		catch (JSONException e)
+		catch (final JSONException e)
 		{
 			e.printStackTrace();
 			return null;
 		}
 	}
 
-	public BigDecimal getQuantity() {
+	public BigDecimal getQuantity()
+	{
 		return quantity;
 	}
 
-	public String getCode() {
+	public String getCode()
+	{
 		return code;
 	}
-	
+
+	@Override
+	public boolean equals(final Object obj)
+	{
+
+		return obj.hashCode() == this.hashCode();
+	}
+
 	@Override
 	public int hashCode()
 	{
 		final int prime = 31;
 		int result = 1;
-		
+
 		result = prime * result + ((this.quantity == null) ? 0 : this.quantity.hashCode());
 		result = prime * result + ((this.code == null) ? 0 : this.code.hashCode());
-		
-		
-		
+
 
 		return result;
 	}

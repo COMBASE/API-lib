@@ -11,53 +11,62 @@ public class Assortment
 {
 	private boolean deleted;
 	private String uuid;
-	private String revision;
+	private final String revision;
 	private String number;
 	private String name;
-	
-	private String description;
-	
-	
 
-	private Assortment(Builder builder)
+	private String description;
+
+
+	private Assortment(final Builder builder)
 	{
 		number = builder.number;
 		name = builder.name;
 		description = builder.description;
 		deleted = builder.deleted;
+		uuid = builder.uuid;
+		revision = builder.revision;
 	}
 
 	public static class Builder
 	{
 		private final String name;
-		private String uuid=null;
+		private String uuid = null;
 		private String number = null;
 		private String description;
 		private boolean deleted;
+		private String revision;
 
-		public Builder(String name)
+		public Builder(final String name)
 		{
 			this.name = name;
 		}
 
-		public Builder number(String value)
+		public Builder revision(final String value)
+		{
+			this.revision = value;
+			return this;
+		}
+
+		public Builder number(final String value)
 		{
 			number = value;
 			return this;
 		}
-		
-		public Builder uuid(String value){
-			uuid=value;
+
+		public Builder uuid(final String value)
+		{
+			uuid = value;
 			return this;
 		}
 
-		public Builder deleted(boolean value)
+		public Builder deleted(final boolean value)
 		{
 			deleted = value;
 			return this;
 		}
 
-		public Builder description(String desc)
+		public Builder description(final String desc)
 		{
 			description = desc;
 			return this;
@@ -68,37 +77,37 @@ public class Assortment
 			return new Assortment(this);
 		}
 	}
-public static Assortment fromJSON(JSONObject obj) throws JSONException {
-		
-		if(obj.has("result") && obj.getString("result")!=null)
-			obj=obj.getJSONObject("result"); 
-			
-		
-		Assortment assortment = new Assortment.Builder(obj.getString("name")).
-					deleted(obj.getBoolean("deleted")).
-					number(obj.getString("number")).
-					uuid(obj.getString("uuid"))
-				.build();
-		return assortment;
-	
 
+	public static Assortment fromJSON(JSONObject obj) throws JSONException
+	{
+
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
+
+
+		final Assortment assortment = new Assortment.Builder(obj.getString("name")).deleted(
+			obj.getBoolean("deleted"))
+			.number(obj.getString("number"))
+			.uuid(obj.getString("uuid"))
+			.build();
+		return assortment;
 
 
 	}
 
 	public JSONObject toJSON()
 	{
-		JSONObject obj = new JSONObject();
+		final JSONObject obj = new JSONObject();
 		try
 		{
 			obj.put("name", name);
-			if (number!=null)
+			if (number != null)
 				obj.put("number", number);
 			obj.put("deleted", deleted);
 			obj.put("description", description);
 			return obj;
 		}
-		catch (JSONException e)
+		catch (final JSONException e)
 		{
 			e.printStackTrace();
 			return null;
@@ -107,10 +116,11 @@ public static Assortment fromJSON(JSONObject obj) throws JSONException {
 
 	public boolean post() throws ApiNotReachableException
 	{
-		boolean result = CloudLink.getConnector().postData(DataType.assortment, this.toJSON());
-		if (number!=null)
+		final boolean result = CloudLink.getConnector()
+			.postData(DataType.assortment, this.toJSON());
+		if (number != null)
 			uuid = CloudLink.getUUIDByNumber(DataType.assortment, number);
-		else			
+		else
 			uuid = CloudLink.getUUIDByName(DataType.assortment, name);
 		return result;
 	}
@@ -120,42 +130,63 @@ public static Assortment fromJSON(JSONObject obj) throws JSONException {
 		return uuid;
 	}
 
-	public String getNumber() {
+	public String getNumber()
+	{
 		return number;
 	}
 
-	public void setNumber(String number) {
+	public void setNumber(final String number)
+	{
 		this.number = number;
 	}
 
-	public String getName() {
+	public String getName()
+	{
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(final String name)
+	{
 		this.name = name;
 	}
 
-	public String getDescription() {
+	public String getDescription()
+	{
 		return description;
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(final String description)
+	{
 		this.description = description;
 	}
 
-	public boolean isDeleted() {
+	public boolean isDeleted()
+	{
 		return deleted;
 	}
 
-	public void setDeleted(boolean deleted) {
+	public void setDeleted(final boolean deleted)
+	{
 		this.deleted = deleted;
 	}
 
-	public void setUuid(String uuid) {
+	public void setUuid(final String uuid)
+	{
 		this.uuid = uuid;
 	}
-	
+
+	public String getRevision()
+	{
+		return revision;
+	}
+
+	@Override
+	public boolean equals(final Object obj)
+	{
+
+		return obj.hashCode() == this.hashCode();
+	}
+
 	@Override
 	public int hashCode()
 	{
@@ -164,7 +195,7 @@ public static Assortment fromJSON(JSONObject obj) throws JSONException {
 		result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
 		result = prime * result + ((this.number == null) ? 0 : this.number.hashCode());
 		result = prime * result + ((this.uuid == null) ? 0 : this.uuid.hashCode());
-		
+
 		return result;
 	}
 }

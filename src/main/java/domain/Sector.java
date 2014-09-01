@@ -17,16 +17,16 @@ public class Sector
 	private String name;
 	private String number;
 	private List<Tax> taxlist;
-	private boolean deleted;
+	private final boolean deleted;
 	private String uuid = null;
 
-	private Sector(Builder builder)
+	private Sector(final Builder builder)
 	{
 		name = builder.name;
 		number = builder.number;
 		taxlist = builder.taxlist;
 		deleted = builder.deleted;
-		uuid=builder.uuid;
+		uuid = builder.uuid;
 	}
 
 	public static class Builder
@@ -34,35 +34,36 @@ public class Sector
 		private final String name;
 		private String number = null;
 		private boolean deleted = false;
-		private String uuid=null;
+		private String uuid = null;
 		private List<Tax> taxlist = null;
 
-		public Builder(String name)
+		public Builder(final String name)
 		{
 			this.name = name;
 		}
 
-		public Builder number(String value)
+		public Builder number(final String value)
 		{
 			number = value;
 			return this;
 		}
-		
-		public Builder uuid(String value){
-			this.uuid=value;
+
+		public Builder uuid(final String value)
+		{
+			this.uuid = value;
 			return this;
 		}
-		
-		public Builder deleted(boolean value)
+
+		public Builder deleted(final boolean value)
 		{
 			deleted = value;
 			return this;
 		}
 
-		public Builder taxlist(Tax t)
-		{	
-			if(taxlist==null)
-				taxlist=new ArrayList<Tax>();
+		public Builder taxlist(final Tax t)
+		{
+			if (taxlist == null)
+				taxlist = new ArrayList<Tax>();
 			taxlist.add(t);
 			return this;
 		}
@@ -75,20 +76,20 @@ public class Sector
 
 	public JSONObject toJSON()
 	{
-		JSONObject obj = new JSONObject();
+		final JSONObject obj = new JSONObject();
 		try
 		{
 			obj.put("name", name);
-			if (number!=null)
+			if (number != null)
 				obj.put("number", number);
 			obj.put("deleted", deleted);
-			if (taxlist!=null && !taxlist.isEmpty())
+			if (taxlist != null && !taxlist.isEmpty())
 			{
-				JSONArray array = new JSONArray();
+				final JSONArray array = new JSONArray();
 				int i = 1;
-				for (Tax tax : taxlist)
+				for (final Tax tax : taxlist)
 				{
-					JSONObject sub = new JSONObject();
+					final JSONObject sub = new JSONObject();
 					sub.put("index", String.valueOf(i));
 					sub.put("tax", tax.getUuid());
 					array.put(sub);
@@ -98,7 +99,7 @@ public class Sector
 			}
 			return obj;
 		}
-		catch (JSONException e)
+		catch (final JSONException e)
 		{
 			e.printStackTrace();
 			return null;
@@ -110,7 +111,8 @@ public class Sector
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
 
-		Sector sec = new Sector.Builder(obj.getString("name")).uuid(obj.getString("uuid")).build();
+		final Sector sec = new Sector.Builder(obj.getString("name")).uuid(obj.getString("uuid"))
+			.build();
 		if (obj.has("number"))
 			sec.setNumber(obj.getString("number"));
 
@@ -121,14 +123,14 @@ public class Sector
 	{
 		if (taxlist != null)
 		{
-			for (Tax tax : taxlist)
+			for (final Tax tax : taxlist)
 			{
 				if (tax.getUuid() == null)
 					tax.post();
 			}
 		}
-		boolean result = CloudLink.getConnector().postData(DataType.sector, this.toJSON());
-		if(number!= null)
+		final boolean result = CloudLink.getConnector().postData(DataType.sector, this.toJSON());
+		if (number != null)
 			uuid = CloudLink.getUUIDByNumber(DataType.sector, number);
 		else
 			uuid = CloudLink.getUUIDByName(DataType.sector, name);
@@ -145,7 +147,7 @@ public class Sector
 		return name;
 	}
 
-	public void setName(String name)
+	public void setName(final String name)
 	{
 		this.name = name;
 	}
@@ -155,7 +157,7 @@ public class Sector
 		return number;
 	}
 
-	public void setNumber(String number)
+	public void setNumber(final String number)
 	{
 		this.number = number;
 	}
@@ -165,16 +167,23 @@ public class Sector
 		return taxlist;
 	}
 
-	public void setTaxlist(List<Tax> taxlist)
+	public void setTaxlist(final List<Tax> taxlist)
 	{
 		this.taxlist = taxlist;
 	}
 
-	public void setUuid(String uuid)
+	public void setUuid(final String uuid)
 	{
 		this.uuid = uuid;
 	}
-	
+
+	@Override
+	public boolean equals(final Object obj)
+	{
+
+		return obj.hashCode() == this.hashCode();
+	}
+
 	@Override
 	public int hashCode()
 	{

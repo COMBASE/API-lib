@@ -3,7 +3,8 @@ package domain;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-public class Currency {
+public class Currency
+{
 	private boolean deleted;
 	private String name;
 	private String number;
@@ -13,18 +14,20 @@ public class Currency {
 	private String key;
 	private String centName;
 
-	private Currency(Builder builder){
-		deleted=builder.deleted;
-		name=builder.name;
-		number=builder.number;
-		uuid=builder.uuid;
-		revision=builder.revision;
-		symbol=builder.symbol;
-		key=builder.key;
-		centName=builder.centName;
+	private Currency(final Builder builder)
+	{
+		deleted = builder.deleted;
+		name = builder.name;
+		number = builder.number;
+		uuid = builder.uuid;
+		revision = builder.revision;
+		symbol = builder.symbol;
+		key = builder.key;
+		centName = builder.centName;
 	}
 
-	public static class Builder {
+	public static class Builder
+	{
 		private boolean deleted = false;
 		private String name = null;
 		private String number = null;
@@ -33,152 +36,199 @@ public class Currency {
 		private String symbol = null;
 		private String key = null;
 		private String centName = null;
-		
-		public Builder(String name){
-			this.name=name;
+
+		public Builder(final String name)
+		{
+			this.name = name;
 		}
-		public Builder deleted(boolean value) {
+
+		public Builder deleted(final boolean value)
+		{
 			deleted = value;
 			return this;
 		}
-		public Builder number(String value) {
+
+		public Builder number(final String value)
+		{
 			number = value;
 			return this;
 		}
-		public Builder uuid(String value) {
+
+		public Builder uuid(final String value)
+		{
 			uuid = value;
 			return this;
 		}
-		public Builder revision(String value) {
+
+		public Builder revision(final String value)
+		{
 			revision = value;
 			return this;
 		}
-		public Builder symbol(String value) {
+
+		public Builder symbol(final String value)
+		{
 			symbol = value;
 			return this;
 		}
-		public Builder key(String value) {
+
+		public Builder key(final String value)
+		{
 			key = value;
 			return this;
 		}
-		public Builder centName(String value) {
-			 centName = value;
+
+		public Builder centName(final String value)
+		{
+			centName = value;
 			return this;
 		}
-		public Currency build(){
+
+		public Currency build()
+		{
 			return new Currency(this);
 		}
 	}
-	
-	public JSONObject toJSON() {
-		JSONObject obj = new JSONObject();
-		try {
+
+	public JSONObject toJSON()
+	{
+		final JSONObject obj = new JSONObject();
+		try
+		{
 			obj.put("deleted", deleted);
 			obj.put("revision", revision);
 			obj.put("uuid", uuid);
-			obj.put("name",name);
-			if (number!=null)
-				obj.put("number",number);
-			obj.put("symbol",symbol);
-			obj.put("key",key);
-			obj.put("centName",centName);
-			
+			obj.put("name", name);
+			if (number != null)
+				obj.put("number", number);
+			obj.put("symbol", symbol);
+			obj.put("key", key);
+			obj.put("centName", centName);
+
 			return obj;
-		} catch (JSONException e) {
+		}
+		catch (final JSONException e)
+		{
 			e.printStackTrace();
 			return null;
 		}
 	}
-	
-	public static Currency fromJSON(JSONObject obj) throws JSONException {
-		if(obj.has("result") && obj.getString("result")!=null)
-			obj=obj.getJSONObject("result"); 
-		Currency cur = new Currency.Builder(obj.getString("name")).
-					deleted(obj.getBoolean("deleted")).
-					revision(obj.getString("revision")).
-					uuid(obj.getString("uuid")).
-					number(obj.getString("number")).
-					symbol(obj.getString("symbol")).
-					key(obj.getString("key")).
-					centName(obj.getString("centName"))
-				.build();
+
+	public static Currency fromJSON(JSONObject obj) throws JSONException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
+		final Currency cur = new Currency.Builder(obj.getString("name")).deleted(
+			obj.getBoolean("deleted"))
+			.revision(obj.getString("revision"))
+			.uuid(obj.getString("uuid"))
+			.number(obj.getString("number"))
+			.symbol(obj.getString("symbol"))
+			.key(obj.getString("key"))
+			.centName(obj.getString("centName"))
+			.build();
 		return cur;
 	}
+
 	/**
 	 * Currency upload nicht API-gestützt
 	 * 
 	 */
-	/*public boolean post() throws IOException {
-		
-		return CloudLink.getConnector().postData(DataType.currency,
-				this.toJSON());
-		
-	}*/
-	
-	public boolean isDeleted() {
+	/*
+	 * public boolean post() throws IOException {
+	 * 
+	 * return CloudLink.getConnector().postData(DataType.currency, this.toJSON());
+	 * 
+	 * }
+	 */
+
+	public boolean isDeleted()
+	{
 		return deleted;
 	}
 
-	public void setDeleted(boolean deleted) {
+	public void setDeleted(final boolean deleted)
+	{
 		this.deleted = deleted;
 	}
 
-	public String getName() {
+	public String getName()
+	{
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(final String name)
+	{
 		this.name = name;
 	}
 
-	public String getNumber() {
+	public String getNumber()
+	{
 		return number;
 	}
 
-	public void setNumber(String number) {
+	public void setNumber(final String number)
+	{
 		this.number = number;
 	}
 
-	public String getUuid() {
+	public String getUuid()
+	{
 		return uuid;
 	}
 
-	public void setUuid(String uuid) {
+	public void setUuid(final String uuid)
+	{
 		this.uuid = uuid;
 	}
 
-	public String getRevision() {
+	public String getRevision()
+	{
 		return revision;
 	}
 
-	public void setRevision(String revision) {
+	public void setRevision(final String revision)
+	{
 		this.revision = revision;
 	}
 
-	public String getSymbol() {
+	public String getSymbol()
+	{
 		return symbol;
 	}
 
-	public void setSymbol(String symbol) {
+	public void setSymbol(final String symbol)
+	{
 		this.symbol = symbol;
 	}
 
-	public String getKey() {
+	public String getKey()
+	{
 		return key;
 	}
 
-	public void setKey(String key) {
+	public void setKey(final String key)
+	{
 		this.key = key;
 	}
 
-	public String getCentName() {
+	public String getCentName()
+	{
 		return centName;
 	}
 
-	public void setCentName(String centName) {
+	public void setCentName(final String centName)
+	{
 		this.centName = centName;
 	}
-	
+
+	@Override
+	public boolean equals(final Object obj)
+	{
+
+		return obj.hashCode() == this.hashCode();
+	}
+
 	@Override
 	public int hashCode()
 	{

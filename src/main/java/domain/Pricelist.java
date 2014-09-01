@@ -239,4 +239,11 @@ public class Pricelist
 			return null;
 		}
 	}
+
+	@Override
+	public boolean equals(final Object obj)
+	{
+
+		return obj.hashCode() == this.hashCode();
+	}
 }

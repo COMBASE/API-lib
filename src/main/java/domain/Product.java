@@ -267,89 +267,31 @@ public class Product
 		final HashSet<Pricelist> priceListLists = new HashSet<Pricelist>();
 
 		// filling up SubPojo lists for...
-		for (int i = 0; i <= productList.size() - 1; i++)
+		for (int i = 0; i < productList.size(); i++)
 		{
-			// ...commodityGroup
-			if (!grpList.contains(null))
-				if (grpList.isEmpty())
-					grpList.add(productList.get(i).getCommodityGroup());
-				else
-				{
-					boolean dublicate = false;
-					final Iterator<CommodityGroup> it = grpList.iterator();
-					while (it.hasNext())
-					{
-						if (it.next().hashCode() == productList.get(i)
-							.getCommodityGroup()
-							.hashCode())
-							dublicate = true;
+			final Product product = productList.get(i);
 
-					}
-					if (dublicate == false)
-						grpList.add(productList.get(i).getCommodityGroup());
-				}
+			// ...commodityGroup
+			if (product.getCommodityGroup() != null)
+				grpList.add(productList.get(i).getCommodityGroup());
+
 
 			// ...assortment
-			if (!assortmentList.contains(null))
-				if (assortmentList.isEmpty())
-					assortmentList.add(productList.get(i).getAssortment());
-				else
-				{
-					boolean dublicate = false;
-					final Iterator<Assortment> it = assortmentList.iterator();
-					while (it.hasNext())
-					{
-						if (it.next().hashCode() == productList.get(i).getAssortment().hashCode())
-							dublicate = true;
+			if (product.getAssortment() != null)
+				assortmentList.add(productList.get(i).getAssortment());
 
-					}
-					if (dublicate == false)
-						assortmentList.add(productList.get(i).getAssortment());
-				}
 
 			// ...Sector+AltSector
-			if (!sectorList.contains(null))
-				if (sectorList.isEmpty())
-					sectorList.add(productList.get(i).getSector());
-				else
-				{
-					boolean dublicate = false;
-					final Iterator<Sector> it = sectorList.iterator();
-					while (it.hasNext())
-					{
-						if (it.next().hashCode() == productList.get(i).getSector().hashCode())
-							dublicate = true;
-
-					}
-					if (dublicate == false)
-						sectorList.add(productList.get(i).getSector());
-				}
+			if (product.getSector() != null)
+				sectorList.add(productList.get(i).getSector());
 
 
 			// ...pricelist
-			if (!priceListLists.contains(null))
-				for (int j = 0; j <= productList.get(i).getPrices().size() - 1; j++)
-				{
-					if (priceListLists.isEmpty())
-						priceListLists.add(productList.get(i).getPrices().get(j).getPriceList());
-					else
-					{
-						boolean dublicate = false;
-						final Iterator<Pricelist> it = priceListLists.iterator();
-						while (it.hasNext())
-						{
-							if (it.next().hashCode() == productList.get(i)
-								.getPrices()
-								.get(j)
-								.getPriceList()
-								.hashCode())
-								dublicate = true;
-
-						}
-						if (dublicate == false)
-							priceListLists.add(productList.get(i).getPrices().get(j).getPriceList());
-					}
-				}
+			for (int j = 0; j < product.getPrices().size(); j++)
+			{
+				if (product.getPrices().get(j).getPriceList() != null)
+					priceListLists.add(productList.get(i).getPrices().get(j).getPriceList());
+			}
 		}
 
 
@@ -969,6 +911,13 @@ public class Product
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	@Override
+	public boolean equals(final Object obj)
+	{
+
+		return obj.hashCode() == this.hashCode();
 	}
 
 	@Override

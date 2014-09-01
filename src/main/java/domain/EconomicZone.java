@@ -10,16 +10,16 @@ import error.ApiNotReachableException;
 
 public class EconomicZone
 {
-	private String name;
+	private final String name;
 	private String number = null;
 	private String uuid = null;
 
-	public EconomicZone(String name)
+	public EconomicZone(final String name)
 	{
 		this.name = name;
 	}
 
-	public EconomicZone(String number, String name)
+	public EconomicZone(final String number, final String name)
 	{
 		this.number = number;
 		this.name = name;
@@ -27,15 +27,15 @@ public class EconomicZone
 
 	public JSONObject toJSON()
 	{
-		JSONObject obj = new JSONObject();
+		final JSONObject obj = new JSONObject();
 		try
 		{
 			obj.put("name", name);
-			if (number!=null)
+			if (number != null)
 				obj.put("number", number);
 			return obj;
 		}
-		catch (JSONException e)
+		catch (final JSONException e)
 		{
 			e.printStackTrace();
 			return null;
@@ -44,8 +44,9 @@ public class EconomicZone
 
 	public boolean post() throws ApiNotReachableException
 	{
-		boolean result = CloudLink.getConnector().postData(DataType.economicZone, this.toJSON());
-		if (number!=null)
+		final boolean result = CloudLink.getConnector().postData(DataType.economicZone,
+			this.toJSON());
+		if (number != null)
 			uuid = CloudLink.getUUIDByNumber(DataType.economicZone, number);
 		else
 			uuid = CloudLink.getUUIDByName(DataType.economicZone, name);
@@ -56,21 +57,26 @@ public class EconomicZone
 	{
 		return uuid;
 	}
-	
+
+	@Override
+	public boolean equals(final Object obj)
+	{
+
+		return obj.hashCode() == this.hashCode();
+	}
+
 	@Override
 	public int hashCode()
 	{
 		final int prime = 31;
 		int result = 1;
-		
+
 		result = prime * result + ((this.number == null) ? 0 : this.number.hashCode());
 		result = prime * result + ((this.uuid == null) ? 0 : this.uuid.hashCode());
 		result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
-		
-		
-		
+
 
 		return result;
 	}
-	
+
 }

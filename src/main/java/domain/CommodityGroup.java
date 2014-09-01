@@ -17,7 +17,7 @@ public class CommodityGroup
 	private String uuid;
 	private CommodityGroup parent;
 
-	private CommodityGroup(Builder builder)
+	private CommodityGroup(final Builder builder)
 	{
 		name = builder.name;
 		number = builder.number;
@@ -36,36 +36,36 @@ public class CommodityGroup
 		private String key = null;
 		private CommodityGroup parent = null;
 
-		public Builder(String name)
+		public Builder(final String name)
 		{
 			this.name = name;
 		}
 
-		public Builder number(String value)
+		public Builder number(final String value)
 		{
 			number = value;
 			return this;
 		}
 
-		public Builder deleted(boolean value)
+		public Builder deleted(final boolean value)
 		{
 			deleted = value;
 			return this;
 		}
 
-		public Builder hasChildren(boolean value)
+		public Builder hasChildren(final boolean value)
 		{
 			hasChildren = value;
 			return this;
 		}
 
-		public Builder key(String s)
+		public Builder key(final String s)
 		{
 			key = s;
 			return this;
 		}
 
-		public Builder parent(CommodityGroup group)
+		public Builder parent(final CommodityGroup group)
 		{
 			parent = group;
 			return this;
@@ -79,11 +79,11 @@ public class CommodityGroup
 
 	public JSONObject toJSON()
 	{
-		JSONObject obj = new JSONObject();
+		final JSONObject obj = new JSONObject();
 		try
 		{
 			obj.put("name", name);
-			if (number!=null)
+			if (number != null)
 				obj.put("number", number);
 			obj.put("deleted", deleted);
 			obj.put("hasChildren", hasChildren);
@@ -93,28 +93,26 @@ public class CommodityGroup
 				obj.put("parentCommodityGroup", parent.getUuid());
 			return obj;
 		}
-		catch (JSONException e)
+		catch (final JSONException e)
 		{
 			e.printStackTrace();
 			return null;
 		}
 	}
-	
-	public static CommodityGroup fromJSON(JSONObject obj) throws JSONException {
-		if(obj.has("result") && obj.getString("result")!=null)
+
+	public static CommodityGroup fromJSON(JSONObject obj) throws JSONException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
-		CommodityGroup grp = new CommodityGroup.Builder(obj.getString("name"))
-						.build();
+		final CommodityGroup grp = new CommodityGroup.Builder(obj.getString("name")).build();
 		if (obj.has("number"))
 			grp.setNumber(obj.getString("number"));
-		
-		return grp;
-			
-		
 
-		
+		return grp;
+
+
 	}
-	
+
 	public boolean post() throws ApiNotReachableException
 	{
 		if (parent != null)
@@ -125,8 +123,9 @@ public class CommodityGroup
 				parent.post();
 			}
 		}
-		boolean result = CloudLink.getConnector().postData(DataType.commodityGroup, this.toJSON());
-		if (number!=null)
+		final boolean result = CloudLink.getConnector().postData(DataType.commodityGroup,
+			this.toJSON());
+		if (number != null)
 			uuid = CloudLink.getUUIDByNumber(DataType.commodityGroup, number);
 		else
 			uuid = CloudLink.getUUIDByName(DataType.commodityGroup, name);
@@ -138,7 +137,7 @@ public class CommodityGroup
 		return uuid;
 	}
 
-	public void setUuid(String uuid)
+	public void setUuid(final String uuid)
 	{
 		this.uuid = uuid;
 	}
@@ -153,7 +152,7 @@ public class CommodityGroup
 		return name;
 	}
 
-	public void setName(String name)
+	public void setName(final String name)
 	{
 		this.name = name;
 	}
@@ -163,7 +162,7 @@ public class CommodityGroup
 		return deleted;
 	}
 
-	public void setDeleted(boolean deleted)
+	public void setDeleted(final boolean deleted)
 	{
 		this.deleted = deleted;
 	}
@@ -173,7 +172,7 @@ public class CommodityGroup
 		return hasChildren;
 	}
 
-	public void setHasChildren(boolean hasChildren)
+	public void setHasChildren(final boolean hasChildren)
 	{
 		this.hasChildren = hasChildren;
 	}
@@ -183,7 +182,7 @@ public class CommodityGroup
 		return key;
 	}
 
-	public void setKey(String key)
+	public void setKey(final String key)
 	{
 		this.key = key;
 	}
@@ -193,17 +192,24 @@ public class CommodityGroup
 		return parent;
 	}
 
-	public void setParent(CommodityGroup parent)
+	public void setParent(final CommodityGroup parent)
 	{
 		this.parent = parent;
 	}
 
-	public void setNumber(String number)
+	public void setNumber(final String number)
 	{
 		this.number = number;
 	}
-	
-	
+
+
+	@Override
+	public boolean equals(final Object obj)
+	{
+
+		return obj.hashCode() == this.hashCode();
+	}
+
 	@Override
 	public int hashCode()
 	{

@@ -246,4 +246,25 @@ public class FullReceipt
 		this.sale.add(sale);
 	}
 
+	@Override
+	public boolean equals(final Object obj)
+	{
+
+		return obj.hashCode() == this.hashCode();
+	}
+
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((this.receipt == null) ? 0 : this.receipt.hashCode());
+		result = prime * result +
+			((this.accountTransaction == null) ? 0 : this.accountTransaction.hashCode());
+		result = prime * result + ((this.payment == null) ? 0 : this.payment.hashCode());
+		result = prime * result + ((this.sale == null) ? 0 : this.sale.hashCode());
+
+		return result;
+	}
+
 }

@@ -7,7 +7,8 @@ import link.CloudLink;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-public class CustomerGroup {
+public class CustomerGroup
+{
 	private boolean deleted;
 	private String revision;
 	private String uuid;
@@ -15,7 +16,8 @@ public class CustomerGroup {
 	private Pricelist priceGroup;
 	private String name;
 
-	private CustomerGroup(Builder builder) {
+	private CustomerGroup(final Builder builder)
+	{
 		name = builder.name;
 		deleted = builder.deleted;
 		uuid = builder.uuid;
@@ -24,7 +26,8 @@ public class CustomerGroup {
 		priceGroup = builder.priceGroup;
 	}
 
-	public static class Builder {
+	public static class Builder
+	{
 		private String name = null;
 		private boolean deleted = false;
 		private String revision = null;
@@ -32,43 +35,52 @@ public class CustomerGroup {
 		private String number = null;
 		private Pricelist priceGroup = null;
 
-		public Builder(String name) {
+		public Builder(final String name)
+		{
 			this.name = name;
 		}
 
-		public Builder deleted(boolean value) {
+		public Builder deleted(final boolean value)
+		{
 			deleted = value;
 			return this;
 		}
 
-		public Builder uuid(String value) {
+		public Builder uuid(final String value)
+		{
 			uuid = value;
 			return this;
 		}
 
-		public Builder revision(String value) {
+		public Builder revision(final String value)
+		{
 			revision = value;
 			return this;
 		}
 
-		public Builder number(String value) {
+		public Builder number(final String value)
+		{
 			number = value;
 			return this;
 		}
 
-		public Builder priceGroup(Pricelist list) {
+		public Builder priceGroup(final Pricelist list)
+		{
 			priceGroup = list;
 			return this;
 		}
 
-		public CustomerGroup build() {
+		public CustomerGroup build()
+		{
 			return new CustomerGroup(this);
 		}
 	}
 
-	public JSONObject toJSON() {
-		JSONObject obj = new JSONObject();
-		try {
+	public JSONObject toJSON()
+	{
+		final JSONObject obj = new JSONObject();
+		try
+		{
 			obj.put("deleted", deleted);
 			obj.put("revision", revision);
 			obj.put("uuid", uuid);
@@ -77,74 +89,97 @@ public class CustomerGroup {
 				obj.put("number", number);
 
 			return obj;
-		} catch (JSONException e) {
+		}
+		catch (final JSONException e)
+		{
 			e.printStackTrace();
 			return null;
 		}
 	}
 
-	public static CustomerGroup fromJSON(JSONObject obj) throws JSONException {
+	public static CustomerGroup fromJSON(JSONObject obj) throws JSONException
+	{
 
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
 
-		CustomerGroup custGrp = new CustomerGroup.Builder(obj.getString("name")).
-				uuid(obj.getString("uuid")).
-				number(obj.getString("number"))
-				.build();
+		final CustomerGroup custGrp = new CustomerGroup.Builder(obj.getString("name")).uuid(
+			obj.getString("uuid"))
+			.number(obj.getString("number"))
+			.build();
 		return custGrp;
 	}
 
-	public boolean post() throws IOException {
+	public boolean post() throws IOException
+	{
 		return CloudLink.getConnector().postData(DataType.customergroup, this.toJSON());
 	}
 
-	public boolean isDeleted() {
+	public boolean isDeleted()
+	{
 		return deleted;
 	}
 
-	public void setDeleted(boolean deleted) {
+	public void setDeleted(final boolean deleted)
+	{
 		this.deleted = deleted;
 	}
 
-	public String getRevision() {
+	public String getRevision()
+	{
 		return revision;
 	}
 
-	public void setRevision(String revision) {
+	public void setRevision(final String revision)
+	{
 		this.revision = revision;
 	}
 
-	public String getUuid() {
+	public String getUuid()
+	{
 		return uuid;
 	}
 
-	public void setUuid(String uuid) {
+	public void setUuid(final String uuid)
+	{
 		this.uuid = uuid;
 	}
 
-	public String getNumber() {
+	public String getNumber()
+	{
 		return number;
 	}
 
-	public void setNumber(String number) {
+	public void setNumber(final String number)
+	{
 		this.number = number;
 	}
 
-	public Pricelist getPriceGroup() {
+	public Pricelist getPriceGroup()
+	{
 		return priceGroup;
 	}
 
-	public void setPriceGroup(Pricelist priceGroup) {
+	public void setPriceGroup(final Pricelist priceGroup)
+	{
 		this.priceGroup = priceGroup;
 	}
 
-	public String getName() {
+	public String getName()
+	{
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(final String name)
+	{
 		this.name = name;
+	}
+
+	@Override
+	public boolean equals(final Object obj)
+	{
+
+		return obj.hashCode() == this.hashCode();
 	}
 
 	@Override

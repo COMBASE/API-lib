@@ -349,6 +349,13 @@ public class OrganizationalUnit
 	}
 
 	@Override
+	public boolean equals(final Object obj)
+	{
+
+		return obj.hashCode() == this.hashCode();
+	}
+
+	@Override
 	public int hashCode()
 	{
 		final int prime = 31;

@@ -10,7 +10,8 @@ import link.CloudLink;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-public class Customer {
+public class Customer
+{
 
 	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 
@@ -31,7 +32,8 @@ public class Customer {
 	private String phone;
 	private Date birthday;
 
-	public Customer(Builder builder) {
+	public Customer(final Builder builder)
+	{
 
 		deleted = builder.deleted;
 		uuid = builder.uuid;
@@ -51,7 +53,8 @@ public class Customer {
 		birthday = builder.birthday;
 	}
 
-	public static class Builder {
+	public static class Builder
+	{
 
 		private boolean deleted = false;
 		private String uuid = null;
@@ -70,116 +73,148 @@ public class Customer {
 		private String phone = null;
 		private Date birthday = null;
 
-		public Builder deleted(boolean value) {
+		public Builder deleted(final boolean value)
+		{
 			deleted = value;
 			return this;
 		}
 
-		public Builder uuid(String uuid) {
+		public Builder uuid(final String uuid)
+		{
 			this.uuid = uuid;
 			return this;
 		}
 
-		public Builder revision(String revision) {
+		public Builder revision(final String revision)
+		{
 			this.revision = revision;
 			return this;
 		}
 
-		public Builder number(String number) {
+		public Builder number(final String number)
+		{
 			this.number = number;
 			return this;
 		}
 
-		public Builder customerGroup(CustomerGroup grp) {
+		public Builder customerGroup(final CustomerGroup grp)
+		{
 			customerGroup = grp;
 			return this;
 		}
 
-		public Builder firstName(String firstName) {
+		public Builder firstName(final String firstName)
+		{
 			this.firstName = firstName;
 			return this;
 		}
 
-		public Builder lastName(String lastName) {
+		public Builder lastName(final String lastName)
+		{
 			this.lastName = lastName;
 			return this;
 		}
 
-		public Builder gender(String gender) {
+		public Builder gender(final String gender)
+		{
 			this.gender = gender;
 			return this;
 		}
 
-		public Builder addressLine1(String addressLine1) {
+		public Builder addressLine1(final String addressLine1)
+		{
 			this.addressLine1 = addressLine1;
 			return this;
 		}
 
-		public Builder city(String city) {
+		public Builder city(final String city)
+		{
 			this.city = city;
 			return this;
 		}
 
-		public Builder zipCode(String zipCode) {
+		public Builder zipCode(final String zipCode)
+		{
 			this.zipCode = zipCode;
 			return this;
 		}
 
-		public Builder country(String country) {
+		public Builder country(final String country)
+		{
 			this.country = country;
 			return this;
 		}
 
-		public Builder email(String email) {
+		public Builder email(final String email)
+		{
 			this.email = email;
 			return this;
 		}
 
-		public Builder phone(String phone) {
+		public Builder phone(final String phone)
+		{
 			this.phone = phone;
 			return this;
 		}
 
-		public Builder birthday(Date value) {
+		public Builder birthday(final Date value)
+		{
 			this.birthday = value;
 			return this;
 		}
 
-		public Customer build() {
+		public Customer build()
+		{
 			return new Customer(this);
 		}
 	}
 
-	public static Customer fromJSON(JSONObject obj) throws JSONException {
+	public static Customer fromJSON(JSONObject obj) throws JSONException
+	{
 
-		if (obj.has("result") && obj.getString("result") != null) {
+		if (obj.has("result") && obj.getString("result") != null)
+		{
 			obj = obj.getJSONObject("result");
 		}
 
-		String sdate = obj.getString("birthday");
+		final String sdate = obj.getString("birthday");
 		Date bdate = null;
-		try {
+		try
+		{
 			if (sdate != "null")
 				bdate = inputDf.parse(sdate);
-		} catch (ParseException e) {
+		}
+		catch (final ParseException e)
+		{
 			e.printStackTrace();
 		}
 
-		Customer cust = new Customer.Builder().uuid(obj.getString("uuid")).number(obj.getString("number")).firstName(obj.getString("firstName"))
-				.lastName(obj.getString("lastName")).email(obj.getString("email")).gender(obj.getString("gender")).zipCode(obj.getString("zipCode"))
-				.addressLine1(obj.getString("addressLine1")).city(obj.getString("city")).country(obj.getString("country"))
-				.phone(obj.getString("phone")).birthday(bdate).build();
+		final Customer cust = new Customer.Builder().uuid(obj.getString("uuid"))
+			.number(obj.getString("number"))
+			.firstName(obj.getString("firstName"))
+			.lastName(obj.getString("lastName"))
+			.email(obj.getString("email"))
+			.gender(obj.getString("gender"))
+			.zipCode(obj.getString("zipCode"))
+			.addressLine1(obj.getString("addressLine1"))
+			.city(obj.getString("city"))
+			.country(obj.getString("country"))
+			.phone(obj.getString("phone"))
+			.birthday(bdate)
+			.build();
 
 		return cust;
 	}
 
-	public JSONObject toJSON() {
-		JSONObject obj = new JSONObject();
-		try {
+	public JSONObject toJSON()
+	{
+		final JSONObject obj = new JSONObject();
+		try
+		{
 			obj.put("deleted", deleted);
 			obj.put("uuid", uuid);
 			obj.put("revision", revision);
-			if (number!=null)
+			if (number != null)
 				obj.put("number", number);
 			if (customerGroup != null)
 				obj.put("customerGroup", customerGroup.getUuid());
@@ -197,13 +232,16 @@ public class Customer {
 				obj.put("birthday", inputDf.format(birthday));
 
 			return obj;
-		} catch (JSONException e) {
+		}
+		catch (final JSONException e)
+		{
 			e.printStackTrace();
 			return null;
 		}
 	}
 
-	public boolean post() throws IOException {
+	public boolean post() throws IOException
+	{
 
 		if (customerGroup != null && customerGroup.getUuid() == null)
 			customerGroup.post();
@@ -211,132 +249,169 @@ public class Customer {
 		return CloudLink.getConnector().postData(DataType.customer, this.toJSON());
 	}
 
-	public boolean isDeleted() {
+	public boolean isDeleted()
+	{
 		return deleted;
 	}
 
-	public void setDeleted(boolean deleted) {
+	public void setDeleted(final boolean deleted)
+	{
 		this.deleted = deleted;
 	}
 
-	public String getUuid() {
+	public String getUuid()
+	{
 		return uuid;
 	}
 
-	public void setUuid(String uuid) {
+	public void setUuid(final String uuid)
+	{
 		this.uuid = uuid;
 	}
 
-	public String getRevision() {
+	public String getRevision()
+	{
 		return revision;
 	}
 
-	public void setRevision(String revision) {
+	public void setRevision(final String revision)
+	{
 		this.revision = revision;
 	}
 
-	public String getFirstName() {
+	public String getFirstName()
+	{
 		return firstName;
 	}
 
-	public void setFirstName(String firstName) {
+	public void setFirstName(final String firstName)
+	{
 		this.firstName = firstName;
 	}
 
-	public String getLastName() {
+	public String getLastName()
+	{
 		return lastName;
 	}
 
-	public void setLastName(String lastName) {
+	public void setLastName(final String lastName)
+	{
 		this.lastName = lastName;
 	}
 
-	public String getGender() {
+	public String getGender()
+	{
 		return gender;
 	}
 
-	public void setGender(String gender) {
+	public void setGender(final String gender)
+	{
 		this.gender = gender;
 	}
 
-	public String getAddressLine1() {
+	public String getAddressLine1()
+	{
 		return addressLine1;
 	}
 
-	public void setAddressLine1(String addressLine1) {
+	public void setAddressLine1(final String addressLine1)
+	{
 		this.addressLine1 = addressLine1;
 	}
 
-	public String getCity() {
+	public String getCity()
+	{
 		return city;
 	}
 
-	public void setCity(String city) {
+	public void setCity(final String city)
+	{
 		this.city = city;
 	}
 
-	public String getZipCode() {
+	public String getZipCode()
+	{
 		return zipCode;
 	}
 
-	public void setZipCode(String zipCode) {
+	public void setZipCode(final String zipCode)
+	{
 		this.zipCode = zipCode;
 	}
 
-	public String getCountry() {
+	public String getCountry()
+	{
 		return country;
 	}
 
-	public void setCountry(String country) {
+	public void setCountry(final String country)
+	{
 		this.country = country;
 	}
 
-	public String getEmail() {
+	public String getEmail()
+	{
 		return email;
 	}
 
-	public void setEmail(String email) {
+	public void setEmail(final String email)
+	{
 		this.email = email;
 	}
 
-	public String getPhone() {
+	public String getPhone()
+	{
 		return phone;
 	}
 
-	public void setPhone(String phone) {
+	public void setPhone(final String phone)
+	{
 		this.phone = phone;
 	}
 
-	public String getNumber() {
+	public String getNumber()
+	{
 		return number;
 	}
 
-	public void setNumber(String number) {
+	public void setNumber(final String number)
+	{
 		this.number = number;
 	}
 
-	public CustomerGroup getCustomerGroup() {
+	public CustomerGroup getCustomerGroup()
+	{
 		return customerGroup;
 	}
 
-	public void setCustomerGroup(CustomerGroup customerGroup) {
+	public void setCustomerGroup(final CustomerGroup customerGroup)
+	{
 		this.customerGroup = customerGroup;
 	}
 
-	public Date getBirthday() {
+	public Date getBirthday()
+	{
 		return birthday;
 	}
 
-	public void setBirthday(Date birthday) {
+	public void setBirthday(final Date birthday)
+	{
 		this.birthday = birthday;
 	}
-	
+
+	@Override
+	public boolean equals(final Object obj)
+	{
+
+		return obj.hashCode() == this.hashCode();
+	}
+
 	@Override
 	public int hashCode()
 	{
 		final int prime = 31;
 		int result = 1;
-		
+
 		result = prime * result + ((this.number == null) ? 0 : this.number.hashCode());
 		result = prime * result + ((this.uuid == null) ? 0 : this.uuid.hashCode());
 		result = prime * result + ((this.addressLine1 == null) ? 0 : this.addressLine1.hashCode());
@@ -350,8 +425,9 @@ public class Customer {
 		result = prime * result + ((this.revision == null) ? 0 : this.revision.hashCode());
 		result = prime * result + ((this.zipCode == null) ? 0 : this.zipCode.hashCode());
 		result = prime * result + ((this.birthday == null) ? 0 : this.birthday.hashCode());
-		result = prime * result + ((this.customerGroup == null) ? 0 : this.customerGroup.hashCode());
-		
+		result = prime * result +
+			((this.customerGroup == null) ? 0 : this.customerGroup.hashCode());
+
 
 		return result;
 	}

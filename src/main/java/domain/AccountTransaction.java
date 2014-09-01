@@ -10,13 +10,14 @@ import link.CloudLink;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-public class AccountTransaction {
+public class AccountTransaction
+{
 	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 	private boolean deleted;
 	private String uuid;
 	private String revision;
-	
-	private Account account; 
+
+	private Account account;
 	private Receipt receipt;
 	private Cashier cashier;
 	private POS pos;
@@ -24,89 +25,114 @@ public class AccountTransaction {
 	private Date bookingTime;
 	private int receiptIndex;
 	private String description;
-	
-	
-	private AccountTransaction(Builder builder){
-		revision=builder.revision;
-		deleted=builder.deleted;
-		uuid=builder.uuid;
-		account=builder.account;
-		receipt=builder.receipt;
-		cashier=builder.cashier;
-		pos=builder.pos;
-		amount=builder.amount;
-		bookingTime=builder.bookingTime;
-		receiptIndex=builder.receiptIndex;
-		description=builder.description;
-	}
- 
- public static class Builder {
-	 private boolean deleted=false;
-	 private String uuid=null;
-	 private String revision=null;
-	 private Account account;
-	 private Receipt receipt=null;
-	 private Cashier cashier=null;
-	 private POS pos=null;
-	 private double amount=0;
-	 private Date bookingTime=null;
-	 private int receiptIndex=0;
-	 private String description=null;
-	 
-	 public Builder revision(String value){
-		 revision=value;
-		 return this;
-	 }
-	 public Builder deleted(boolean value){
-		 deleted=value;
-		 return this;
-	 }
-	 
-	 public Builder uuid(String value){
-		 uuid=value;
-		 return this;
-	 }
-	 
-	 public Builder account(Account acc){
-		  account=acc;
-		  return this;
-	 }
-	 public Builder receipt(Receipt rec){
-		  receipt=rec;
-		  return this;
-	 }
-	 public Builder cashier(Cashier cash){
-		  cashier=cash;
-		  return this;
-	 }
-	 public Builder pos(POS posy){
-		  pos=posy;
-		  return this;
-	 }
-	 public Builder amount(double value){
-		  amount=value;
-		  return this;
-	 }
-	 public Builder bookingTime(Date value){
-		  bookingTime=value;
-		  return this;
-	 }
-	 public Builder receiptIndex(int value){
-		  receiptIndex=value;
-		  return this;
-	 }
-	 public Builder description(String value){
-		  description=value;
-		  return this;
-	 }
-	 public AccountTransaction build(){
-		 return new AccountTransaction(this);
-	 }
- }
 
- public JSONObject toJSON() {
-		JSONObject obj = new JSONObject();
-		try {
+
+	private AccountTransaction(final Builder builder)
+	{
+		revision = builder.revision;
+		deleted = builder.deleted;
+		uuid = builder.uuid;
+		account = builder.account;
+		receipt = builder.receipt;
+		cashier = builder.cashier;
+		pos = builder.pos;
+		amount = builder.amount;
+		bookingTime = builder.bookingTime;
+		receiptIndex = builder.receiptIndex;
+		description = builder.description;
+	}
+
+	public static class Builder
+	{
+		private boolean deleted = false;
+		private String uuid = null;
+		private String revision = null;
+		private Account account;
+		private Receipt receipt = null;
+		private Cashier cashier = null;
+		private POS pos = null;
+		private double amount = 0;
+		private Date bookingTime = null;
+		private int receiptIndex = 0;
+		private String description = null;
+
+		public Builder revision(final String value)
+		{
+			revision = value;
+			return this;
+		}
+
+		public Builder deleted(final boolean value)
+		{
+			deleted = value;
+			return this;
+		}
+
+		public Builder uuid(final String value)
+		{
+			uuid = value;
+			return this;
+		}
+
+		public Builder account(final Account acc)
+		{
+			account = acc;
+			return this;
+		}
+
+		public Builder receipt(final Receipt rec)
+		{
+			receipt = rec;
+			return this;
+		}
+
+		public Builder cashier(final Cashier cash)
+		{
+			cashier = cash;
+			return this;
+		}
+
+		public Builder pos(final POS posy)
+		{
+			pos = posy;
+			return this;
+		}
+
+		public Builder amount(final double value)
+		{
+			amount = value;
+			return this;
+		}
+
+		public Builder bookingTime(final Date value)
+		{
+			bookingTime = value;
+			return this;
+		}
+
+		public Builder receiptIndex(final int value)
+		{
+			receiptIndex = value;
+			return this;
+		}
+
+		public Builder description(final String value)
+		{
+			description = value;
+			return this;
+		}
+
+		public AccountTransaction build()
+		{
+			return new AccountTransaction(this);
+		}
+	}
+
+	public JSONObject toJSON()
+	{
+		final JSONObject obj = new JSONObject();
+		try
+		{
 			obj.put("deleted", deleted);
 			obj.put("revision", revision);
 			obj.put("uuid", uuid);
@@ -119,167 +145,203 @@ public class AccountTransaction {
 			obj.put("receiptIndex", receiptIndex);
 			obj.put("description", description);
 			return obj;
-		} catch (JSONException e) {
+		}
+		catch (final JSONException e)
+		{
 			e.printStackTrace();
 			return null;
 		}
 	}
-	
-	public static AccountTransaction fromJSON(JSONObject obj) throws JSONException {
-		if(obj.has("result") && obj.getString("result")!=null)
-			obj=obj.getJSONObject("result");
-		
-		//date
-		String date=obj.getString("bookingTime");
-		Date bTime=null;
-		try {
+
+	public static AccountTransaction fromJSON(JSONObject obj) throws JSONException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
+
+		// date
+		final String date = obj.getString("bookingTime");
+		Date bTime = null;
+		try
+		{
 			bTime = inputDf.parse(date);
-		} catch (ParseException e) {
+		}
+		catch (final ParseException e)
+		{
 			e.printStackTrace();
 		}
-		
-		Account acc=new Account.Builder().build();
+
+		final Account acc = new Account.Builder().build();
 		acc.setUuid(obj.getString("account"));
-		Receipt rec = new Receipt.Builder().build();
+		final Receipt rec = new Receipt.Builder().build();
 		rec.setUuid(obj.getString("receipt"));
-		Cashier cash =new Cashier.Builder(null).build();
+		final Cashier cash = new Cashier.Builder(null).build();
 		cash.setUuid(obj.getString("cashier"));
-		POS pos=new POS.Builder(null).build();
+		final POS pos = new POS.Builder(null).build();
 		pos.setUuid(obj.getString("pos"));
-		AccountTransaction accT = new AccountTransaction.Builder().
-					deleted(obj.getBoolean("deleted")).
-					revision(obj.getString("revision")).
-					receipt(rec).
-					cashier(cash).
-					pos(pos).
-					account(acc).
-					amount(obj.getDouble("amount")).
-					bookingTime(bTime).
-					receiptIndex(obj.getInt("receiptIndex")).
-					description(obj.getString("description"))
-				.build();
+		final AccountTransaction accT = new AccountTransaction.Builder().deleted(
+			obj.getBoolean("deleted"))
+			.revision(obj.getString("revision"))
+			.receipt(rec)
+			.cashier(cash)
+			.pos(pos)
+			.account(acc)
+			.amount(obj.getDouble("amount"))
+			.bookingTime(bTime)
+			.receiptIndex(obj.getInt("receiptIndex"))
+			.description(obj.getString("description"))
+			.build();
 		return accT;
 	}
-	
-	public boolean post() throws IOException {
-		/*if (account != null && account.getUuid() == null)
-			account.post();*/
+
+	public boolean post() throws IOException
+	{
+		/*
+		 * if (account != null && account.getUuid() == null) account.post();
+		 */
 		if (receipt != null && receipt.getUuid() == null)
 			receipt.post();
 		if (cashier != null && cashier.getUuid() == null)
 			cashier.post();
 		if (pos != null && pos.getUuid() == null)
 			pos.post();
-		return CloudLink.getConnector().postData(DataType.accountTransaction,
-				this.toJSON());
-		
+		return CloudLink.getConnector().postData(DataType.accountTransaction, this.toJSON());
+
 	}
- 
-public String getUuid() {
-	return uuid;
-}
 
-public void setUuid(String uuid) {
-	this.uuid = uuid;
-}
+	public String getUuid()
+	{
+		return uuid;
+	}
 
-public String getRevision() {
-	return revision;
-}
+	public void setUuid(final String uuid)
+	{
+		this.uuid = uuid;
+	}
 
-public void setRevision(String revision) {
-	this.revision = revision;
-}
+	public String getRevision()
+	{
+		return revision;
+	}
 
-public boolean isDeleted() {
-	return deleted;
-}
+	public void setRevision(final String revision)
+	{
+		this.revision = revision;
+	}
 
-public void setDeleted(boolean deleted) {
-	this.deleted = deleted;
-}
+	public boolean isDeleted()
+	{
+		return deleted;
+	}
 
-public Receipt getReceipt() {
-	return receipt;
-}
+	public void setDeleted(final boolean deleted)
+	{
+		this.deleted = deleted;
+	}
 
-public void setReceipt(Receipt receipt) {
-	this.receipt = receipt;
-}
+	public Receipt getReceipt()
+	{
+		return receipt;
+	}
 
-public Cashier getCashier() {
-	return cashier;
-}
+	public void setReceipt(final Receipt receipt)
+	{
+		this.receipt = receipt;
+	}
 
-public void setCashier(Cashier cashier) {
-	this.cashier = cashier;
-}
+	public Cashier getCashier()
+	{
+		return cashier;
+	}
 
-public POS getPos() {
-	return pos;
-}
+	public void setCashier(final Cashier cashier)
+	{
+		this.cashier = cashier;
+	}
 
-public void setPos(POS pos) {
-	this.pos = pos;
-}
+	public POS getPos()
+	{
+		return pos;
+	}
 
-public double getAmount() {
-	return amount;
-}
+	public void setPos(final POS pos)
+	{
+		this.pos = pos;
+	}
 
-public void setAmount(double amount) {
-	this.amount = amount;
-}
+	public double getAmount()
+	{
+		return amount;
+	}
 
-public Date getBookingTime() {
-	return bookingTime;
-}
+	public void setAmount(final double amount)
+	{
+		this.amount = amount;
+	}
 
-public void setBookingTime(Date bookingTime) {
-	this.bookingTime = bookingTime;
-}
+	public Date getBookingTime()
+	{
+		return bookingTime;
+	}
 
-public int getReceiptIndex() {
-	return receiptIndex;
-}
+	public void setBookingTime(final Date bookingTime)
+	{
+		this.bookingTime = bookingTime;
+	}
 
-public void setReceiptIndex(int receiptIndex) {
-	this.receiptIndex = receiptIndex;
-}
+	public int getReceiptIndex()
+	{
+		return receiptIndex;
+	}
 
-public String getDescription() {
-	return description;
-}
+	public void setReceiptIndex(final int receiptIndex)
+	{
+		this.receiptIndex = receiptIndex;
+	}
 
-public void setDescription(String description) {
-	this.description = description;
-}
+	public String getDescription()
+	{
+		return description;
+	}
 
-public Account getAccount() {
-	return account;
-}
+	public void setDescription(final String description)
+	{
+		this.description = description;
+	}
 
-public void setAccount(Account account) {
-	this.account = account;
-}
-@Override
-public int hashCode()
-{
-	final int prime = 31;
-	int result = 1;
-	result = prime * result + ((this.description == null) ? 0 : this.description.hashCode());
-	result = prime * result + ((this.revision == null) ? 0 : this.revision.hashCode());
-	result = prime * result + ((this.uuid == null) ? 0 : this.uuid.hashCode());
-	result = prime * result + ((this.account == null) ? 0 : this.account.hashCode());
-	result = prime * result + ((this.bookingTime == null) ? 0 : this.bookingTime.hashCode());
-	result = prime * result + ((this.cashier == null) ? 0 : this.cashier.hashCode());
-	result = prime * result + ((this.pos == null) ? 0 : this.pos.hashCode());
-	result = prime * result + ((this.receipt == null) ? 0 : this.receipt.hashCode());
-	
-	
-	
-	return result;
-}
+	public Account getAccount()
+	{
+		return account;
+	}
 
- 
+	public void setAccount(final Account account)
+	{
+		this.account = account;
+	}
+
+	@Override
+	public boolean equals(final Object obj)
+	{
+
+		return obj.hashCode() == this.hashCode();
+	}
+
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((this.description == null) ? 0 : this.description.hashCode());
+		result = prime * result + ((this.revision == null) ? 0 : this.revision.hashCode());
+		result = prime * result + ((this.uuid == null) ? 0 : this.uuid.hashCode());
+		result = prime * result + ((this.account == null) ? 0 : this.account.hashCode());
+		result = prime * result + ((this.bookingTime == null) ? 0 : this.bookingTime.hashCode());
+		result = prime * result + ((this.cashier == null) ? 0 : this.cashier.hashCode());
+		result = prime * result + ((this.pos == null) ? 0 : this.pos.hashCode());
+		result = prime * result + ((this.receipt == null) ? 0 : this.receipt.hashCode());
+
+
+		return result;
+	}
+
+
 }

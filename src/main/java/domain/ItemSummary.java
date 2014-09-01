@@ -122,4 +122,11 @@ public class ItemSummary
 	{
 		this.absoluteDifference = absoluteDifference;
 	}
+
+	@Override
+	public boolean equals(final Object obj)
+	{
+
+		return obj.hashCode() == this.hashCode();
+	}
 }
