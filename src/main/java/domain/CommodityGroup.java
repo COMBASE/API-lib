@@ -107,6 +107,9 @@ public class CommodityGroup
 		final CommodityGroup grp = new CommodityGroup.Builder(obj.getString("name")).build();
 		if (obj.has("number"))
 			grp.setNumber(obj.getString("number"));
+		if (obj.has("uuid"))
+			grp.setUuid(obj.getString("uuid"));
+
 
 		return grp;
 
