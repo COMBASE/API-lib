@@ -176,7 +176,7 @@ public class ApiConnector
 		try
 		{
 			String uuid = null;
-			int nr = 0;
+			String nr = null;
 			if (obj.has("uuid") && !obj.opt("uuid").equals(null))
 			{
 				nr = CloudLink.getNumberByUuid(type, obj.opt("uuid").toString());
@@ -196,7 +196,7 @@ public class ApiConnector
 			}
 			if (uuid != null)
 				obj.put("uuid", uuid);
-			if (nr > 0)
+			if (nr != null)
 				obj.put("number", nr);
 			final URL posturl = new URL(url);
 			HttpURLConnection con;

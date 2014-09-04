@@ -1,6 +1,9 @@
 package domain;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import link.CloudLink;
 
@@ -10,12 +13,14 @@ import org.codehaus.jettison.json.JSONObject;
 
 public class Receipt
 {
+
+	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 	private boolean deleted;
 	private String revision;
 	private String uuid;
 	private String number;
 	private Cashier cashier;
-	private long creatTime;
+	private Date creatTime;
 	private String currency;
 	private CustomerGroup customerGroup;
 	private long finishTime;
@@ -72,7 +77,7 @@ public class Receipt
 		private String number = null;
 		private String uuid = null;
 		private Cashier cashier = null;
-		private long creatTime = 0;
+		private Date creatTime = null;
 		private String currency = null;
 		private CustomerGroup customerGroup = null;
 		private long finishTime = 0;
@@ -128,7 +133,7 @@ public class Receipt
 			return this;
 		}
 
-		public Builder creatTime(final long value)
+		public Builder creatTime(final Date value)
 		{
 			this.creatTime = value;
 			return this;
@@ -272,29 +277,41 @@ public class Receipt
 	{
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
+
+
 		final Cashier cash = new Cashier.Builder(null).build();
 		cash.setUuid(obj.getString("cashier"));
 		final CustomerGroup cGrp = new CustomerGroup.Builder(null).build();
 		cGrp.setUuid(obj.getString("customerGroup"));
 		final Customer cust = new Customer.Builder().build();
 		cust.setUuid(obj.getString("customer"));
-		final Receipt rec = new Receipt.Builder().number(obj.getString("number"))
-			.revision(obj.getString("revision"))
-			.cashier(cash)
-			.customerGroup(cGrp)
-			.customer(cust)
-			.receiptDiscountGrossAmount(obj.getDouble("receiptDiscountGrossAmount"))
-			.voided(obj.getBoolean("voided"))
-			.uuid(obj.getString("uuid"))
-			.grossTotalAmount(obj.getDouble("grossTotalAmount"))
-			.netTotalAmount(obj.getDouble("netTotalAmount"))
-			.taxAmount(obj.getDouble("taxAmount"))
-			.grossRevenueAmount(obj.getDouble("grossRevenueAmount"))
-			.netRevenueAmount(obj.getDouble("netRevenueAmount"))
-			.receiptDiscountAmount(obj.getDouble("receiptDiscountAmount"))
-			.receiptDiscountGrossAmount(obj.getDouble("receiptDiscountGrossAmount"))
-			.receiptDiscountNetAmount(obj.getDouble("receiptDiscountNetAmount"))
-			.build();
+		Receipt rec = null;
+		try
+		{
+			rec = new Receipt.Builder().number(obj.getString("number"))
+				.revision(obj.getString("revision"))
+				.cashier(cash)
+				.customerGroup(cGrp)
+				.customer(cust)
+				.receiptDiscountGrossAmount(obj.getDouble("receiptDiscountGrossAmount"))
+				.voided(obj.getBoolean("voided"))
+				.uuid(obj.getString("uuid"))
+				.grossTotalAmount(obj.getDouble("grossTotalAmount"))
+				.netTotalAmount(obj.getDouble("netTotalAmount"))
+				.taxAmount(obj.getDouble("taxAmount"))
+				.grossRevenueAmount(obj.getDouble("grossRevenueAmount"))
+				.netRevenueAmount(obj.getDouble("netRevenueAmount"))
+				.receiptDiscountAmount(obj.getDouble("receiptDiscountAmount"))
+				.receiptDiscountGrossAmount(obj.getDouble("receiptDiscountGrossAmount"))
+				.receiptDiscountNetAmount(obj.getDouble("receiptDiscountNetAmount"))
+				.creatTime(inputDf.parse(obj.getString("createTime")))
+				.build();
+		}
+		catch (final ParseException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return rec;
 	}
 
@@ -357,12 +374,12 @@ public class Receipt
 		this.cashier = cashier;
 	}
 
-	public long getCreatTime()
+	public Date getCreatTime()
 	{
 		return creatTime;
 	}
 
-	public void setCreatTime(final long creatTime)
+	public void setCreatTime(final Date creatTime)
 	{
 		this.creatTime = creatTime;
 	}

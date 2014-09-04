@@ -137,12 +137,19 @@ public class CloudLink
 	 * @param reference
 	 * @return
 	 */
-	public static String getUUIDByName(final DataType type, final String reference)
+	public static String getUUIDByName(final DataType type, String reference)
 	{
 		if (ApiCon == null)
 			System.err.println("Please initiliaze a CloudLink Object first!");
 		if (reference == null)
 			return null;
+
+		reference = reference.replaceAll(" ", "%20");
+		reference = reference.replaceAll("/", "%2F");
+		reference = reference.replaceAll("&", "%26");
+		reference = reference.replaceAll("#", "%23");
+		reference = reference.replaceAll("!", "%21");
+
 		try
 		{
 
@@ -209,12 +216,19 @@ public class CloudLink
 	 * @return
 	 * @throws IOException
 	 */
-	public static int getNumberByName(final DataType type, final String reference)
+	public static String getNumberByName(final DataType type, String reference)
 	{
 		if (ApiCon == null)
 			System.err.println("Please initiliaze a CloudLink Object first!");
 		if (reference == null)
-			return 0;
+			return null;
+
+		reference = reference.replaceAll(" ", "%20");
+		reference = reference.replaceAll("/", "%2F");
+		reference = reference.replaceAll("&", "%26");
+		reference = reference.replaceAll("#", "%23");
+		reference = reference.replaceAll("!", "%21");
+
 		try
 		{
 			JSONObject obj = null;
@@ -226,14 +240,14 @@ public class CloudLink
 			catch (final ApiNotReachableException e)
 			{
 				e.printStackTrace();
-				return 0;
+				return null;
 			}
 			if (obj.has("result") && !obj.opt("result").equals(null))
 			{
 				obj = obj.getJSONObject("result");
 				if (obj.has("number") && !obj.opt("number").equals(null))
 				{
-					return Integer.valueOf(obj.get("number").toString()).intValue();
+					return obj.getString("number");
 				}
 			}
 		}
@@ -241,16 +255,16 @@ public class CloudLink
 		{
 			e.printStackTrace();
 		}
-		return 0;
+		return null;
 	}
 
-	public static int getNumberByUuid(final DataType type, final String reference)
+	public static String getNumberByUuid(final DataType type, final String reference)
 		throws ApiNotReachableException
 	{
 		if (ApiCon == null)
 			System.err.println("Please initiliaze a CloudLink Object first!");
 		if (reference == null)
-			return 0;
+			return null;
 		try
 		{
 			JSONObject obj = new JSONObject(ApiCon.fetchData(type, ReferenceType.number, reference)
@@ -260,15 +274,17 @@ public class CloudLink
 				obj = obj.getJSONObject("result");
 				if (obj.has("number") && !obj.opt("number").equals(null))
 				{
-					return Integer.valueOf(obj.get("number").toString()).intValue();
+					return obj.getString("number");
 				}
 			}
 		}
 		catch (final JSONException e)
 		{
-			return 0;
+			e.printStackTrace();
+			return null;
+
 		}
-		return 0;
+		return null;
 	}
 
 }
