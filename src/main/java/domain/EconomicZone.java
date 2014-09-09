@@ -25,6 +25,16 @@ public class EconomicZone
 		this.name = name;
 	}
 
+	public static EconomicZone fromJson(JSONObject obj) throws JSONException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
+		final EconomicZone economicZone = new EconomicZone(obj.getString("name"),
+			obj.getString("number"));
+		economicZone.setUuid(obj.getString("uuid"));
+		return null;
+	}
+
 	public JSONObject toJSON()
 	{
 		final JSONObject obj = new JSONObject();
@@ -56,6 +66,26 @@ public class EconomicZone
 	public String getUuid()
 	{
 		return uuid;
+	}
+
+	public String getNumber()
+	{
+		return number;
+	}
+
+	public void setNumber(final String number)
+	{
+		this.number = number;
+	}
+
+	public String getName()
+	{
+		return name;
+	}
+
+	public void setUuid(final String uuid)
+	{
+		this.uuid = uuid;
 	}
 
 	@Override

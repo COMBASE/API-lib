@@ -1,6 +1,9 @@
 package domain;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,13 +17,15 @@ import error.ApiNotReachableException;
 
 public class Tax
 {
+	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+
 	private final String name;
 	private final String number;
 	private final boolean deleted;
 	private final boolean included;
 	private final EconomicZone economicZone;
-	private final List<Rate> rateList;
-	private String uuid = null;
+	private List<Rate> rateList;
+	private String uuid;
 
 	private Tax(final Builder builder)
 	{
@@ -30,6 +35,7 @@ public class Tax
 		included = builder.included;
 		economicZone = builder.economicZone;
 		rateList = builder.rateList;
+		uuid = builder.uuid;
 	}
 
 	public static class Builder
@@ -39,7 +45,8 @@ public class Tax
 		private final EconomicZone economicZone;
 		private boolean deleted = false;
 		private boolean included = false;
-		private final List<Rate> rateList = new ArrayList<Rate>();
+		private List<Rate> rateList = new ArrayList<Rate>();
+		private String uuid = null;
 
 		public Builder(final String name, final EconomicZone zone)
 		{
@@ -71,10 +78,48 @@ public class Tax
 			return this;
 		}
 
+		public Builder rateList(final List<Rate> rates)
+		{
+			rateList = rates;
+			return this;
+		}
+
+		public Builder uuid(final String value)
+		{
+			uuid = value;
+			return this;
+		}
+
 		public Tax build()
 		{
 			return new Tax(this);
 		}
+	}
+
+	public static Tax fromJson(JSONObject obj) throws JSONException, ParseException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
+
+		final JSONArray jRates = obj.getJSONArray("rates");
+		final List<Rate> rates = new ArrayList<Rate>();
+
+		for (int i = 0; i < jRates.length(); i++)
+		{
+			final JSONObject jRate = jRates.getJSONObject(i);
+			final Rate rate = new Rate(new BigDecimal(jRate.getString("rate")),
+				inputDf.parse(jRate.getString("validFrom")));
+			rates.add(rate);
+		}
+		final EconomicZone economicZone = new EconomicZone(null);
+		economicZone.setUuid(obj.getString("economicZone"));
+
+		final Tax tax = new Tax.Builder(obj.getString("name"), economicZone).rateList(rates)
+			.uuid(obj.getString("uuid"))
+			.number(obj.getString("number"))
+			.build();
+
+		return tax;
 	}
 
 	public JSONObject toJSON()
@@ -127,6 +172,16 @@ public class Tax
 	public String getUuid()
 	{
 		return uuid;
+	}
+
+	public List<Rate> getRateList()
+	{
+		return rateList;
+	}
+
+	public void setRateList(final List<Rate> rateList)
+	{
+		this.rateList = rateList;
 	}
 
 	@Override

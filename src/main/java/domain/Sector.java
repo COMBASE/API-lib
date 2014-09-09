@@ -1,6 +1,7 @@
 package domain;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,7 +65,14 @@ public class Sector
 		{
 			if (taxlist == null)
 				taxlist = new ArrayList<Tax>();
-			taxlist.add(t);
+			if (t != null)
+				taxlist.add(t);
+			return this;
+		}
+
+		public Builder taxlist(final List<Tax> taxes)
+		{
+			this.taxlist = taxes;
 			return this;
 		}
 
@@ -106,15 +114,26 @@ public class Sector
 		}
 	}
 
-	public static Sector fromJSON(JSONObject obj) throws JSONException
+	public static Sector fromJSON(JSONObject obj) throws JSONException, ParseException
 	{
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
 
+		final JSONArray jTaxItems = obj.getJSONArray("items");
+		Tax tax = null;
+		if (jTaxItems.length() != 0)
+		{
+			final JSONObject jTaxItem = jTaxItems.getJSONObject(0);
+
+			tax = new Tax.Builder(null, null).uuid(jTaxItem.getString("tax")).build();
+		}
+
 		final Sector sec = new Sector.Builder(obj.getString("name")).uuid(obj.getString("uuid"))
+			.taxlist(tax)
 			.build();
 		if (obj.has("number"))
 			sec.setNumber(obj.getString("number"));
+
 
 		return sec;
 	}

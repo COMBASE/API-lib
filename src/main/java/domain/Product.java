@@ -21,6 +21,57 @@ import error.ApiNotReachableException;
 
 public class Product
 {
+	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+
+	private String name;
+	private String number;
+	private boolean deleted;
+	private boolean activeAssortment;
+	private Date activeAssortmentFrom;
+	private int costs;
+	private boolean discountable;
+	private boolean priceChangeable;
+	private boolean requiresSerialNumber;
+	private boolean trackInventory;
+	private CommodityGroup commodityGroup;
+	private Sector sector;
+	private String revision;
+
+	private Sector altsector;
+
+	private List<Price> prices;
+
+	private List<Product_Text> texts;
+
+	private Assortment assortment;
+
+	private List<Product_Code> codes;
+
+	private String uuid = null;
+
+	private Product(final Builder builder)
+	{
+		name = builder.name;
+		number = builder.number;
+		deleted = builder.deleted;
+		activeAssortment = builder.activeAssortment;
+		activeAssortmentFrom = builder.activeAssortmentFrom;
+		costs = builder.costs;
+		discountable = builder.discountable;
+		priceChangeable = builder.priceChangeable;
+		requiresSerialNumber = builder.requiresSerialNumber;
+		trackInventory = builder.trackInventory;
+		commodityGroup = builder.commodityGroup;
+		sector = builder.sector;
+		altsector = builder.altsector;
+		prices = builder.prices;
+		texts = builder.texts;
+		assortment = builder.assortment;
+		codes = builder.codes;
+		uuid = builder.uuid;
+		revision = builder.revision;
+	}
+
 	public static class Builder
 	{
 		private final String name;
@@ -41,6 +92,7 @@ public class Product
 		private Assortment assortment = null;
 		private final List<Product_Text> texts = new ArrayList<Product_Text>();
 		private final List<Product_Code> codes = new ArrayList<Product_Code>();
+		private String revision = null;
 
 		public Builder(final String name)
 		{
@@ -175,6 +227,12 @@ public class Product
 			return this;
 		}
 
+		public Builder revision(final String value)
+		{
+			this.revision = value;
+			return this;
+		}
+
 		public Builder uuid(final String value)
 		{
 			uuid = value;
@@ -182,17 +240,29 @@ public class Product
 		}
 	}
 
-	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
-
 	public static Product fromJSON(JSONObject obj) throws JSONException
 	{
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
 
-		final Product prod = new Product.Builder(obj.getString("name")).uuid(obj.getString("uuid"))
+		final Sector sector = new Sector.Builder(null).uuid(obj.getString("sector")).build();
+		final Sector altSector = new Sector.Builder(null).uuid(obj.getString("alternativeSector"))
 			.build();
+
+		final CommodityGroup commodityGroup = new CommodityGroup.Builder(null).uuid(
+			obj.getString("commodityGroup")).build();
+
+		final Product prod = new Product.Builder(obj.getString("name")).uuid(obj.getString("uuid"))
+			.sector(sector)
+			.deleted(obj.getBoolean("deleted"))
+			.altsector(altSector)
+			.revision(obj.getString("revision"))
+			.commodityGroup(commodityGroup)
+			.build();
+
 		if (obj.has("number"))
 			prod.setNumber(obj.getString("number"));
+
 		if (obj.getString("articleCodes") != "null")
 		{
 			JSONArray jACode = new JSONArray();
@@ -209,6 +279,7 @@ public class Product
 			}
 			prod.setCodes(codeList);
 		}
+
 		if (obj.get("prices") != "null")
 		{
 			final JSONArray jPrices = obj.getJSONArray("prices");
@@ -386,53 +457,6 @@ public class Product
 		System.out.println("start: " + date1);
 		System.out.println("end: " + date2);
 		return bool;
-	}
-
-	private String name;
-	private String number;
-	private boolean deleted;
-	private boolean activeAssortment;
-	private Date activeAssortmentFrom;
-	private int costs;
-	private boolean discountable;
-	private boolean priceChangeable;
-	private boolean requiresSerialNumber;
-	private boolean trackInventory;
-	private CommodityGroup commodityGroup;
-	private Sector sector;
-
-	private Sector altsector;
-
-	private List<Price> prices;
-
-	private List<Product_Text> texts;
-
-	private Assortment assortment;
-
-	private List<Product_Code> codes;
-
-	private String uuid = null;
-
-	private Product(final Builder builder)
-	{
-		name = builder.name;
-		number = builder.number;
-		deleted = builder.deleted;
-		activeAssortment = builder.activeAssortment;
-		activeAssortmentFrom = builder.activeAssortmentFrom;
-		costs = builder.costs;
-		discountable = builder.discountable;
-		priceChangeable = builder.priceChangeable;
-		requiresSerialNumber = builder.requiresSerialNumber;
-		trackInventory = builder.trackInventory;
-		commodityGroup = builder.commodityGroup;
-		sector = builder.sector;
-		altsector = builder.altsector;
-		prices = builder.prices;
-		texts = builder.texts;
-		assortment = builder.assortment;
-		codes = builder.codes;
-		uuid = builder.uuid;
 	}
 
 	public Date getActiveAssortmentFrom()
@@ -658,6 +682,16 @@ public class Product
 	public void setUuid(final String uuid)
 	{
 		this.uuid = uuid;
+	}
+
+	public String getRevision()
+	{
+		return revision;
+	}
+
+	public void setRevision(final String revision)
+	{
+		this.revision = revision;
 	}
 
 	public JSONObject toJSON()

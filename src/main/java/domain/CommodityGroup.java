@@ -25,6 +25,7 @@ public class CommodityGroup
 		hasChildren = builder.hasChildren;
 		key = builder.key;
 		parent = builder.parent;
+		uuid = builder.uuid;
 	}
 
 	public static class Builder
@@ -35,6 +36,7 @@ public class CommodityGroup
 		private boolean hasChildren = false;
 		private String key = null;
 		private CommodityGroup parent = null;
+		private String uuid;
 
 		public Builder(final String name)
 		{
@@ -44,6 +46,12 @@ public class CommodityGroup
 		public Builder number(final String value)
 		{
 			number = value;
+			return this;
+		}
+
+		public Builder uuid(final String value)
+		{
+			uuid = value;
 			return this;
 		}
 
