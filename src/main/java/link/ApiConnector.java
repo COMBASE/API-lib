@@ -18,7 +18,6 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import domain.DataType;
@@ -33,28 +32,14 @@ import error.ApiNotReachableException;
 public class ApiConnector
 {
 	private final SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy'T'HH:mm:ss");
-	private Date date = null;
 	private final String cloudURL;
 	private final String token;
-
-	public ApiConnector(final String cloudURL, final String token)
-	{
-		super();
-		this.cloudURL = cloudURL;
-		this.token = token;
-	}
 
 	/**
 	 * trustAllCerts is accepting all Certs in Case we are handling a Https-Connection
 	 */
 	private final static TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager()
 	{
-		@Override
-		public X509Certificate[] getAcceptedIssuers()
-		{
-			return null;
-		}
-
 		@Override
 		public void checkClientTrusted(final X509Certificate[] certs, final String authType)
 		{
@@ -64,23 +49,19 @@ public class ApiConnector
 		public void checkServerTrusted(final X509Certificate[] certs, final String authType)
 		{
 		}
+
+		@Override
+		public X509Certificate[] getAcceptedIssuers()
+		{
+			return null;
+		}
 	} };
 
-	/**
-	 * applies our low-security Profile to our Connection
-	 */
-	private void setupConnection()
+	public ApiConnector(final String cloudURL, final String token)
 	{
-		try
-		{
-			final SSLContext sc = SSLContext.getInstance("TLS");
-			sc.init(null, trustAllCerts, new SecureRandom());
-			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-		}
-		catch (final Exception e)
-		{
-			e.printStackTrace();
-		}
+		super();
+		this.cloudURL = cloudURL;
+		this.token = token;
 	}
 
 	/**
@@ -135,13 +116,13 @@ public class ApiConnector
 			in.close();
 			if (con.getResponseCode() == 200)
 			{
-				System.out.println(df.format(date = new Date()) + " APICON:GET -> Type:" +
+				System.out.println(df.format(new Date()) + " APICON:GET -> Type:" +
 					type.getReference() + " JSON=" + obj.toString());
 				return response;
 			}
 			else
 			{
-				System.out.println(df.format(date = new Date()) + " ERR: APICON:GET -> Type:" +
+				System.out.println(df.format(new Date()) + " ERR: APICON:GET -> Type:" +
 					type.getReference() + " JSON=" + obj.toString());
 				System.out.println("Error: " + con.getResponseMessage() + ":" +
 					con.getResponseCode());
@@ -156,105 +137,6 @@ public class ApiConnector
 		{
 			if (con != null)
 				con.disconnect();
-		}
-	}
-
-	/**
-	 * saves a JSONObject in the Cloud
-	 * 
-	 * @param type
-	 * @param obj
-	 * @return
-	 */
-	public boolean postData(final DataType type, final JSONObject obj)
-	{
-
-		String slash = "";
-		if (!cloudURL.endsWith("/"))
-			slash = "/";
-		final String url = cloudURL + slash + token + "/" + type.getReference() + "/save/";
-		try
-		{
-			String uuid = null;
-			String nr = null;
-			if (obj.has("uuid") && !obj.opt("uuid").equals(null))
-			{
-				nr = CloudLink.getNumberByUuid(type, obj.opt("uuid").toString());
-			}
-			else
-			{
-				if (obj.has("number") && !obj.opt("number").equals(null))
-					uuid = CloudLink.getUUIDByNumber(type, obj.opt("number").toString());
-				else
-				{
-					if (obj.opt("name") != null && obj.opt("name").toString().length() > 0)
-					{
-						uuid = CloudLink.getUUIDByName(type, obj.opt("name").toString());
-						nr = CloudLink.getNumberByName(type, obj.opt("name").toString());
-					}
-				}
-			}
-			if (uuid != null)
-				obj.put("uuid", uuid);
-			if (nr != null)
-				obj.put("number", nr);
-			final URL posturl = new URL(url);
-			HttpURLConnection con;
-			if (cloudURL.contains("https"))
-			{
-				setupConnection();
-				con = (HttpsURLConnection)posturl.openConnection();
-			}
-			else
-			{
-				con = (HttpURLConnection)posturl.openConnection();
-			}
-			con.setRequestMethod("POST");
-			con.setDoOutput(true);
-			con.setConnectTimeout(3000000);
-			con.setReadTimeout(3000000);
-			con.setRequestProperty("Content-Type", "application/json");
-			con.connect();
-
-			final OutputStream out = con.getOutputStream();
-			final OutputStreamWriter wr = new OutputStreamWriter(out, "UTF-8");
-			wr.write(obj.toString());
-			wr.flush();
-			wr.close();
-			if (out != null)
-				out.close();
-			if (con.getResponseCode() == 200)
-			{
-				System.out.println(df.format(date = new Date()) + " APICON:POST -> Type:" +
-					type.getReference() + " JSON=" + obj.toString());
-				con.disconnect(); // Disconnect
-				return true;
-			}
-			else
-			{
-				System.out.println(df.format(date = new Date()) + " ERR: APICON:POST -> Type:" +
-					type.getReference() + " JSON=" + obj.toString());
-
-				con.disconnect(); // Disconnect
-				System.out.println("Error: " + con.getResponseMessage() + ":" +
-					con.getResponseCode());
-				return false;
-			}
-		}
-		catch (final IOException e)
-		{
-			e.printStackTrace();
-			return false;
-		}
-		catch (final ApiNotReachableException e)
-		{
-			e.printStackTrace();
-			return false;
-		}
-		catch (final JSONException e)
-		{
-			e.printStackTrace();
-			return false;
 		}
 	}
 
@@ -301,14 +183,14 @@ public class ApiConnector
 				out.close();
 			if (con.getResponseCode() == 200)
 			{
-				System.out.println(df.format(date = new Date()) + " APICON:POST -> Type:" +
+				System.out.println(df.format(new Date()) + " APICON:POST -> Type:" +
 					type.getReference() + " JSON=" + obj.toString());
 				con.disconnect(); // Disconnect
 				return true;
 			}
 			else
 			{
-				System.out.println(df.format(date = new Date()) + " ERR: APICON:POST -> Type:" +
+				System.out.println(df.format(new Date()) + " ERR: APICON:POST -> Type:" +
 					type.getReference() + " JSON=" + obj.toString());
 
 				con.disconnect(); // Disconnect
@@ -321,6 +203,89 @@ public class ApiConnector
 		{
 			e.printStackTrace();
 			return false;
+		}
+	}
+
+	/**
+	 * saves a JSONObject in the Cloud
+	 * 
+	 * @param type
+	 * @param obj
+	 * @return
+	 */
+	public boolean postData(final DataType type, final JSONObject obj)
+	{
+
+		String slash = "";
+		if (!cloudURL.endsWith("/"))
+			slash = "/";
+		final String url = cloudURL + slash + token + "/" + type.getReference() + "/save/";
+		try
+		{
+			final URL posturl = new URL(url);
+			HttpURLConnection con;
+			if (cloudURL.contains("https"))
+			{
+				setupConnection();
+				con = (HttpsURLConnection)posturl.openConnection();
+			}
+			else
+			{
+				con = (HttpURLConnection)posturl.openConnection();
+			}
+			con.setRequestMethod("POST");
+			con.setDoOutput(true);
+			con.setConnectTimeout(3000000);
+			con.setReadTimeout(3000000);
+			con.setRequestProperty("Content-Type", "application/json");
+			con.connect();
+
+			final OutputStream out = con.getOutputStream();
+			final OutputStreamWriter wr = new OutputStreamWriter(out, "UTF-8");
+			wr.write(obj.toString());
+			wr.flush();
+			wr.close();
+			if (out != null)
+				out.close();
+			if (con.getResponseCode() == 200)
+			{
+				System.out.println(df.format(new Date()) + " APICON:POST -> Type:" +
+					type.getReference() + " JSON=" + obj.toString());
+				con.disconnect(); // Disconnect
+				return true;
+			}
+			else
+			{
+				System.out.println(df.format(new Date()) + " ERR: APICON:POST -> Type:" +
+					type.getReference() + " JSON=" + obj.toString());
+
+				con.disconnect(); // Disconnect
+				System.out.println("Error: " + con.getResponseMessage() + ":" +
+					con.getResponseCode());
+				return false;
+			}
+		}
+		catch (final IOException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	/**
+	 * applies our low-security Profile to our Connection
+	 */
+	private void setupConnection()
+	{
+		try
+		{
+			final SSLContext sc = SSLContext.getInstance("TLS");
+			sc.init(null, trustAllCerts, new SecureRandom());
+			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+		}
+		catch (final Exception e)
+		{
+			e.printStackTrace();
 		}
 	}
 }
