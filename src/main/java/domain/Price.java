@@ -12,7 +12,7 @@ public class Price
 {
 	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 	private Pricelist priceList;
-	private final Date validFrom;
+	private Date validFrom;
 	private BigDecimal value;
 	private OrganizationalUnit organizationalUnit;
 
@@ -88,6 +88,16 @@ public class Price
 	public void setOrganizationalUnit(final OrganizationalUnit organizationalUnit)
 	{
 		this.organizationalUnit = organizationalUnit;
+	}
+
+	public Date getValidFrom()
+	{
+		return validFrom;
+	}
+
+	public void setValidFrom(final Date validFrom)
+	{
+		this.validFrom = validFrom;
 	}
 
 	@Override
