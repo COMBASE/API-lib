@@ -196,9 +196,13 @@ public class Product
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
 
-		final Sector sector = new Sector.Builder(null).uuid(obj.getString("sector")).build();
-		final Sector altSector = new Sector.Builder(null).uuid(obj.getString("alternativeSector"))
-			.build();
+		final Sector sector = new Sector.Builder(null).build();
+		if (!obj.isNull("sector"))
+			sector.setUuid(obj.getString("sector"));
+
+		final Sector altSector = new Sector.Builder(null).build();
+		if (!obj.isNull("alternativeSector"))
+			altSector.setUuid(obj.getString("alternativeSector"));
 
 		final CommodityGroup commodityGroup = new CommodityGroup.Builder(null).uuid(
 			obj.getString("commodityGroup")).build();
@@ -251,19 +255,16 @@ public class Product
 				{
 					e.printStackTrace();
 				}
-				if (jPrice.has("organizationalUnit"))
+				if (!jPrice.isNull("organizationalUnit"))
 				{
-					final Object orgUnit = jPrice.get("organizationalUnit");
-					OrganizationalUnit organizationalUnit = null;
-					if (orgUnit != null)
-						organizationalUnit = new OrganizationalUnit.PreBuilder(
-							jPrice.getString("organizationalUnit")).build();
-
+					final String orgUnitUuid = jPrice.getString("organizationalUnit");
+					final OrganizationalUnit organizationalUnit = new OrganizationalUnit.PreBuilder(
+						jPrice.getString("organizationalUnit")).build();
 
 					prices.add(new Price(pricelist, date, value, organizationalUnit));
 				}
 				else
-					prices.add(new Price(pricelist, date, value));
+					prices.add(new Price(pricelist, date, value, null));
 			}
 			prod.setPrices(prices);
 		}
@@ -281,7 +282,7 @@ public class Product
 		final Date date1 = new Date();
 
 
-		final JSONArray jProdArray = new JSONArray();
+		JSONArray jProdArray = new JSONArray();
 // final JSONObject jProdObject = new JSONObject();
 		final HashSet<CommodityGroup> grpList = new HashSet<CommodityGroup>();
 		final HashSet<Assortment> assortmentList = new HashSet<Assortment>();
@@ -314,7 +315,7 @@ public class Product
 				if (product.getPrices().get(j).getPriceList() != null)
 					priceListLists.add(productList.get(i).getPrices().get(j).getPriceList());
 			}
-			jProdArray.put(product.toJSON());
+
 		}
 
 
@@ -364,47 +365,20 @@ public class Product
 
 		boolean bool = false;
 
-// for (int i = 0; i <= productList.size() - 1; i++)
-// {
-		// putting UUID to subobject Pojo of every next product having the same grp/sector/etc
-// like the first.
-// for (final CommodityGroup grp : grpList)
-// {
-// if (productList.get(i).getCommodityGroup() != null)
-// if (productList.get(i).getCommodityGroup().getUuid() == null)
-// if (grp.getNumber().equals(
-// productList.get(i).getCommodityGroup().getNumber()))
-// productList.get(i).setCommodityGroup(grp);
-// }
-// if (!assortmentList.contains(null))
-// for (final Assortment assort : assortmentList)
-// {
-// if (assort.getNumber().equalsIgnoreCase(
-// productList.get(i).getAssortment().getNumber()))
-// productList.get(i).setAssortment(assort);
-// }
-// if (!sectorList.contains(null))
-// for (final Sector sector : sectorList)
-// {
-// if (sector.getNumber().equalsIgnoreCase(
-// productList.get(i).getSector().getNumber()))
-// productList.get(i).setSector(sector);
-// }
-// if (!priceListLists.contains(null))
-// for (final Pricelist pricelist : priceListLists)
-// {
-// for (final Price price : productList.get(i).getPrices())
-// {
-// if (pricelist.getNumber() != null &&
-// pricelist.getNumber()
-// .equalsIgnoreCase(price.getPriceList().getNumber()))
-// price.setPriceList(pricelist);
-// }
-// }
-		bool = CloudLink.getConnector().postData(DataType.product, jProdArray);
-// System.out.print("*");
+		int j = 0;
+		int i = 0;
+		while (i < productList.size())
+		{
+			jProdArray = new JSONArray();
+			j = j + limit;
+			while (i < j && i < productList.size())
+			{
+				jProdArray.put(productList.get(i).toJSON());
+				i++;
+			}
+			bool = CloudLink.getConnector().postData(DataType.product, jProdArray);
+		}
 
-// }// end for
 		final Date date2 = new Date();
 		System.out.println("start: " + date1);
 		System.out.println("end: " + date2);

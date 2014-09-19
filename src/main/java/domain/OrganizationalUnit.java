@@ -163,7 +163,7 @@ public class OrganizationalUnit
 	{
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
-		final OrganizationalUnit orgUnit = new OrganizationalUnit.Builder(null).deleted(
+		final OrganizationalUnit orgUnit = new OrganizationalUnit.Builder(obj.getString("name")).deleted(
 			obj.getBoolean("deleted"))
 			.number(obj.getString("number"))
 			.uuid(obj.getString("uuid"))
