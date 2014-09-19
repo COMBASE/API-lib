@@ -21,57 +21,6 @@ import error.ApiNotReachableException;
 
 public class Product
 {
-	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
-
-	private String name;
-	private String number;
-	private boolean deleted;
-	private boolean activeAssortment;
-	private Date activeAssortmentFrom;
-	private int costs;
-	private boolean discountable;
-	private boolean priceChangeable;
-	private boolean requiresSerialNumber;
-	private boolean trackInventory;
-	private CommodityGroup commodityGroup;
-	private Sector sector;
-	private String revision;
-
-	private Sector altsector;
-
-	private List<Price> prices;
-
-	private List<Product_Text> texts;
-
-	private Assortment assortment;
-
-	private List<Product_Code> codes;
-
-	private String uuid = null;
-
-	private Product(final Builder builder)
-	{
-		name = builder.name;
-		number = builder.number;
-		deleted = builder.deleted;
-		activeAssortment = builder.activeAssortment;
-		activeAssortmentFrom = builder.activeAssortmentFrom;
-		costs = builder.costs;
-		discountable = builder.discountable;
-		priceChangeable = builder.priceChangeable;
-		requiresSerialNumber = builder.requiresSerialNumber;
-		trackInventory = builder.trackInventory;
-		commodityGroup = builder.commodityGroup;
-		sector = builder.sector;
-		altsector = builder.altsector;
-		prices = builder.prices;
-		texts = builder.texts;
-		assortment = builder.assortment;
-		codes = builder.codes;
-		uuid = builder.uuid;
-		revision = builder.revision;
-	}
-
 	public static class Builder
 	{
 		private final String name;
@@ -200,6 +149,12 @@ public class Product
 			return this;
 		}
 
+		public Builder revision(final String value)
+		{
+			this.revision = value;
+			return this;
+		}
+
 		public Builder sector(final Sector sec)
 		{
 			sector = sec;
@@ -227,18 +182,14 @@ public class Product
 			return this;
 		}
 
-		public Builder revision(final String value)
-		{
-			this.revision = value;
-			return this;
-		}
-
 		public Builder uuid(final String value)
 		{
 			uuid = value;
 			return this;
 		}
 	}
+
+	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 
 	public static Product fromJSON(JSONObject obj) throws JSONException
 	{
@@ -324,13 +275,13 @@ public class Product
 	 * !-STABLE-! ~MAS
 	 * **/
 
-	public static boolean post(final List<Product> productList)
+	public static boolean postList(final List<Product> productList, final int limit)
 	{
 
 		final Date date1 = new Date();
 
 
-// final JSONArray jProdArray = new JSONArray();
+		final JSONArray jProdArray = new JSONArray();
 // final JSONObject jProdObject = new JSONObject();
 		final HashSet<CommodityGroup> grpList = new HashSet<CommodityGroup>();
 		final HashSet<Assortment> assortmentList = new HashSet<Assortment>();
@@ -363,6 +314,7 @@ public class Product
 				if (product.getPrices().get(j).getPriceList() != null)
 					priceListLists.add(productList.get(i).getPrices().get(j).getPriceList());
 			}
+			jProdArray.put(product.toJSON());
 		}
 
 
@@ -412,9 +364,9 @@ public class Product
 
 		boolean bool = false;
 
-		for (int i = 0; i <= productList.size() - 1; i++)
-		{
-			// putting UUID to subobject Pojo of every next product having the same grp/sector/etc
+// for (int i = 0; i <= productList.size() - 1; i++)
+// {
+		// putting UUID to subobject Pojo of every next product having the same grp/sector/etc
 // like the first.
 // for (final CommodityGroup grp : grpList)
 // {
@@ -449,14 +401,73 @@ public class Product
 // price.setPriceList(pricelist);
 // }
 // }
-			bool = CloudLink.getConnector().postData(DataType.product, productList.get(i).toJSON());
-			System.out.print("*");
+		bool = CloudLink.getConnector().postData(DataType.product, jProdArray);
+// System.out.print("*");
 
-		}// end for
+// }// end for
 		final Date date2 = new Date();
 		System.out.println("start: " + date1);
 		System.out.println("end: " + date2);
 		return bool;
+	}
+
+	private String name;
+	private String number;
+	private boolean deleted;
+	private boolean activeAssortment;
+	private Date activeAssortmentFrom;
+	private int costs;
+	private boolean discountable;
+	private boolean priceChangeable;
+	private boolean requiresSerialNumber;
+	private boolean trackInventory;
+
+	private CommodityGroup commodityGroup;
+
+	private Sector sector;
+
+	private String revision;
+
+	private Sector altsector;
+
+	private List<Price> prices;
+
+	private List<Product_Text> texts;
+
+	private Assortment assortment;
+
+	private List<Product_Code> codes;
+
+	private String uuid = null;
+
+	private Product(final Builder builder)
+	{
+		name = builder.name;
+		number = builder.number;
+		deleted = builder.deleted;
+		activeAssortment = builder.activeAssortment;
+		activeAssortmentFrom = builder.activeAssortmentFrom;
+		costs = builder.costs;
+		discountable = builder.discountable;
+		priceChangeable = builder.priceChangeable;
+		requiresSerialNumber = builder.requiresSerialNumber;
+		trackInventory = builder.trackInventory;
+		commodityGroup = builder.commodityGroup;
+		sector = builder.sector;
+		altsector = builder.altsector;
+		prices = builder.prices;
+		texts = builder.texts;
+		assortment = builder.assortment;
+		codes = builder.codes;
+		uuid = builder.uuid;
+		revision = builder.revision;
+	}
+
+	@Override
+	public boolean equals(final Object obj)
+	{
+
+		return obj.hashCode() == this.hashCode();
 	}
 
 	public Date getActiveAssortmentFrom()
@@ -502,6 +513,11 @@ public class Product
 	public List<Price> getPrices()
 	{
 		return prices;
+	}
+
+	public String getRevision()
+	{
+		return revision;
 	}
 
 	public Sector getSector()
@@ -664,6 +680,11 @@ public class Product
 		this.requiresSerialNumber = requiresSerialNumber;
 	}
 
+	public void setRevision(final String revision)
+	{
+		this.revision = revision;
+	}
+
 	public void setSector(final Sector sector)
 	{
 		this.sector = sector;
@@ -682,16 +703,6 @@ public class Product
 	public void setUuid(final String uuid)
 	{
 		this.uuid = uuid;
-	}
-
-	public String getRevision()
-	{
-		return revision;
-	}
-
-	public void setRevision(final String revision)
-	{
-		this.revision = revision;
 	}
 
 	public JSONObject toJSON()
@@ -757,13 +768,6 @@ public class Product
 			e.printStackTrace();
 			return null;
 		}
-	}
-
-	@Override
-	public boolean equals(final Object obj)
-	{
-
-		return obj.hashCode() == this.hashCode();
 	}
 
 	@Override
