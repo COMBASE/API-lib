@@ -196,6 +196,10 @@ public class Product
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
 
+		final Assortment assortment = new Assortment.Builder(null).build();
+		if (!obj.isNull("assortment"))
+			assortment.setUuid(obj.getString("assortment"));
+
 		final Sector sector = new Sector.Builder(null).build();
 		if (!obj.isNull("sector"))
 			sector.setUuid(obj.getString("sector"));
@@ -213,6 +217,7 @@ public class Product
 			.altsector(altSector)
 			.revision(obj.getString("revision"))
 			.commodityGroup(commodityGroup)
+			.assortment(assortment)
 			.build();
 
 		if (obj.has("number"))
