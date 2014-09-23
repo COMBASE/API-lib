@@ -381,7 +381,7 @@ public class Product
 					{
 						if (group.getNumber().equalsIgnoreCase(
 							product.getCommodityGroup().getNumber()))
-							productList.get(i).setCommodityGroup(group);
+							product.setCommodityGroup(group);
 					}
 
 				// Assortment UUID check
@@ -390,7 +390,7 @@ public class Product
 					{
 						if (assortment.getNumber().equalsIgnoreCase(
 							product.getAssortment().getNumber()))
-							productList.get(i).setAssortment(assortment);
+							product.setAssortment(assortment);
 					}
 
 				// Sector UUID check
@@ -398,7 +398,7 @@ public class Product
 					for (final Sector sector : sectorList)
 					{
 						if (sector.getNumber().equalsIgnoreCase(product.getSector().getNumber()))
-							productList.get(i).setSector(sector);
+							product.setSector(sector);
 					}
 
 				// pricelist
