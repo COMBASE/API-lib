@@ -72,6 +72,20 @@ public class CloudLink
 	}
 
 	/**
+	 * gets jsonstring by Article Code like EAN or GTIN
+	 * 
+	 * @param type
+	 * @param reference
+	 * @return
+	 * @throws ApiNotReachableException
+	 */
+	public String getJSONByCode(final DataType type, final String reference)
+		throws ApiNotReachableException
+	{
+		return new String(ApiCon.fetchData(type, ReferenceType.code, reference));
+	}
+
+	/**
 	 * 
 	 * @param reference
 	 *            first and last name are necessary divided by a white space for a successful

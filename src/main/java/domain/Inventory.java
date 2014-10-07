@@ -1,10 +1,27 @@
 package domain;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
 public class Inventory
 {
+	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+
+	private boolean deleted;
+
+	private String number;
+
+	private Long revision;
+
+	private String uuid;
+
 	private String user;
 
 	private String description;
@@ -14,6 +31,8 @@ public class Inventory
 	private Date createTime;
 
 	private Date processTime;
+
+	private final String inventoryProcedure;
 
 	private Integer automaticBookingDays;
 
@@ -39,6 +58,14 @@ public class Inventory
 
 	public Inventory(final Builder builder)
 	{
+		this.number = builder.number;
+
+		this.uuid = builder.uuid;
+
+		this.deleted = builder.deleted;
+
+		this.revision = builder.revision;
+
 		this.user = builder.user;
 
 		this.description = builder.description;
@@ -48,6 +75,8 @@ public class Inventory
 		this.createTime = builder.createTime;
 
 		this.processTime = builder.processTime;
+
+		this.inventoryProcedure = builder.inventoryProcedure;
 
 		this.automaticBookingDays = builder.automaticBookingDays;
 
@@ -74,6 +103,14 @@ public class Inventory
 
 	public static class Builder
 	{
+		private String number = null;
+
+		private String uuid = null;
+
+		private boolean deleted = false;
+
+		private Long revision = null;
+
 		private String user = null;
 
 		private String description = null;
@@ -83,6 +120,8 @@ public class Inventory
 		private Date createTime = null;
 
 		private Date processTime = null;
+
+		private String inventoryProcedure = null;
 
 		private Integer automaticBookingDays = null;
 
@@ -107,9 +146,33 @@ public class Inventory
 		private Boolean wednesdayInventory = null;
 
 
+		public Builder number(final String value)
+		{
+			this.number = value;
+			return this;
+		}
+
+		public Builder uuid(final String value)
+		{
+			this.uuid = value;
+			return this;
+		}
+
 		public Builder user(final String value)
 		{
 			user = value;
+			return this;
+		}
+
+		public Builder deleted(final boolean value)
+		{
+			deleted = value;
+			return this;
+		}
+
+		public Builder revision(final Long value)
+		{
+			revision = value;
 			return this;
 		}
 
@@ -134,6 +197,12 @@ public class Inventory
 		public Builder processTime(final Date value)
 		{
 			processTime = value;
+			return this;
+		}
+
+		public Builder inventoryProcedure(final String value)
+		{
+			this.inventoryProcedure = value;
 			return this;
 		}
 
@@ -203,6 +272,75 @@ public class Inventory
 			return this;
 		}
 
+		public Inventory build()
+		{
+			return new Inventory(this);
+		}
+	}
+
+	public static Inventory fromJSON(JSONObject jObj) throws JSONException, ParseException
+	{
+
+		if (jObj.has("result") && jObj.getString("result").equalsIgnoreCase("null"))
+			jObj = jObj.getJSONObject("result");
+
+		final List<OrganizationalUnit> organizationalUnits = new ArrayList<OrganizationalUnit>();
+		jObj.getJSONArray("organizationalUnits");
+
+		final Inventory inventory = new Inventory.Builder().deleted(jObj.getBoolean("deleted"))
+			.revision(jObj.getLong("revision"))
+			.uuid(jObj.getString("uuid"))
+			.number(jObj.getString("number"))
+			.user(jObj.getString("user"))
+			.description(jObj.getString("description"))
+			.organizationalUnits(organizationalUnits)
+			.createTime(inputDf.parse(jObj.getString("createTime")))
+			.processTime(inputDf.parse(jObj.getString("processTime")))
+			.inventoryProcedure(jObj.getString("inventoryProcedure"))
+			.build();
+
+		return inventory;
+	}
+
+
+	public String getNumber()
+	{
+		return number;
+	}
+
+	public void setNumber(final String number)
+	{
+		this.number = number;
+	}
+
+	public Long getRevision()
+	{
+		return revision;
+	}
+
+	public void setRevision(final Long revision)
+	{
+		this.revision = revision;
+	}
+
+	public String getUuid()
+	{
+		return uuid;
+	}
+
+	public void setUuid(final String uuid)
+	{
+		this.uuid = uuid;
+	}
+
+	public boolean isDeleted()
+	{
+		return deleted;
+	}
+
+	public void setDeleted(final boolean deleted)
+	{
+		this.deleted = deleted;
 	}
 
 	public String getUser()
@@ -233,6 +371,13 @@ public class Inventory
 	public void setOrganizationalUnits(final List<OrganizationalUnit> organizationalUnits)
 	{
 		this.organizationalUnits = organizationalUnits;
+	}
+
+	public void addOrganizationalUnit(final OrganizationalUnit value)
+	{
+		if (organizationalUnits == null)
+			organizationalUnits = new ArrayList<OrganizationalUnit>();
+		this.organizationalUnits.add(value);
 	}
 
 	public Date getCreateTime()
@@ -363,5 +508,56 @@ public class Inventory
 	public void setWednesdayInventory(final Boolean wednesdayInventory)
 	{
 		this.wednesdayInventory = wednesdayInventory;
+	}
+
+
+	public JSONObject toJSON()
+	{
+		final JSONObject jObj = new JSONObject();
+
+		try
+		{
+			jObj.put("deleted", deleted);
+
+			jObj.put("number", number);
+
+			if (revision != null)
+				jObj.put("revision", revision);
+
+			if (uuid != null)
+				jObj.put("uuid", uuid);
+
+			jObj.put("user", user);
+
+			jObj.put("description", description);
+
+
+			if (organizationalUnits != null && !organizationalUnits.isEmpty())
+			{
+				final JSONArray array = new JSONArray();
+				for (final OrganizationalUnit organizationalUnit : organizationalUnits)
+				{
+					if (organizationalUnit != null)
+						array.put(organizationalUnit.toJSON());
+				}
+				jObj.put("organizationalUnits", array);
+			}
+
+			jObj.put("createTime", createTime);
+
+			jObj.put("processTime", processTime);
+
+
+			jObj.put("inventoryProcedure", inventoryProcedure);
+		}
+		catch (final JSONException e)
+		{
+
+			e.printStackTrace();
+			return null;
+		}
+
+
+		return jObj;
 	}
 }

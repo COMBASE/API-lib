@@ -10,7 +10,8 @@ public enum DataType
 		"receipts"), sale("sales"), sector("sectors"), stockorder("stockorders"), supplier(
 		"suppliers"), tag("tags"), tax("taxes"), timeTrackingEntity("timeTrackingEntities"), timeTracking(
 		"timeTrackings"), user("users"), pos("pos"), fullReceipt("fullReceipts"), posBalance(
-		"posBalances");
+		"posBalances"), inventory("inventories"), inventoryReceipt("inventoryReceipts"), inventoryReceiptItem(
+		"inventoryReceiptItems");
 	private final String reference;
 
 	DataType(final String s)

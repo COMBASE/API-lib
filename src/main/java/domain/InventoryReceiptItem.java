@@ -2,8 +2,13 @@ package domain;
 
 import java.math.BigDecimal;
 
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
 public class InventoryReceiptItem
 {
+	private String uuid;
+
 	private BigDecimal nominalGoods;
 
 	private BigDecimal actualGoods;
@@ -12,10 +17,12 @@ public class InventoryReceiptItem
 
 	private Product article;
 
-	private Receipt receipt;
+	private InventoryReceipt receipt;
 
 	public InventoryReceiptItem(final Builder builder)
 	{
+		this.uuid = builder.uuid;
+
 		this.nominalGoods = builder.nominalGoods;
 
 		this.actualGoods = builder.actualGoods;
@@ -30,6 +37,8 @@ public class InventoryReceiptItem
 	public static class Builder
 	{
 
+		private String uuid = null;
+
 		private BigDecimal nominalGoods = null;
 
 		private BigDecimal actualGoods = null;
@@ -38,11 +47,17 @@ public class InventoryReceiptItem
 
 		private Product article = null;
 
-		private Receipt receipt = null;
+		private InventoryReceipt receipt = null;
 
 		public Builder nominalGoods(final BigDecimal value)
 		{
 			nominalGoods = value;
+			return this;
+		}
+
+		public Builder uuid(final String value)
+		{
+			uuid = value;
 			return this;
 		}
 
@@ -64,11 +79,37 @@ public class InventoryReceiptItem
 			return this;
 		}
 
-		public Builder receipt(final Receipt value)
+		public Builder receipt(final InventoryReceipt value)
 		{
 			receipt = value;
 			return this;
 		}
+
+		public InventoryReceiptItem build()
+		{
+			return new InventoryReceiptItem(this);
+		}
+	}
+
+	public static InventoryReceiptItem fromJson(final JSONObject object) throws JSONException
+	{
+
+		final Product product = new Product.Builder(null).uuid(object.getString("article")).build();
+
+		final InventoryReceipt receipt = new InventoryReceipt.Builder().uuid(
+			object.getString("receipt")).build();
+
+		final InventoryReceiptItem inventoryReceiptItem = new InventoryReceiptItem.Builder().uuid(
+			object.getString("uuid"))
+			.nominalGoods(new BigDecimal(object.getString("nominalGoods")))
+			.actualGoods(new BigDecimal(object.getString("acturalGoods")))
+			.article(product)
+			.differenceReason(object.getString("differenceReason"))
+			.receipt(receipt)
+			.build();
+
+
+		return inventoryReceiptItem;
 	}
 
 	public BigDecimal getNominalGoods()
@@ -111,13 +152,23 @@ public class InventoryReceiptItem
 		this.article = article;
 	}
 
-	public Receipt getReceipt()
+	public InventoryReceipt getReceipt()
 	{
 		return receipt;
 	}
 
-	public void setReceipt(final Receipt receipt)
+	public void setReceipt(final InventoryReceipt receipt)
 	{
 		this.receipt = receipt;
+	}
+
+	public String getUuid()
+	{
+		return uuid;
+	}
+
+	public void setUuid(final String uuid)
+	{
+		this.uuid = uuid;
 	}
 }

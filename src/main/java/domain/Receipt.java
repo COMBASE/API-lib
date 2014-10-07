@@ -23,8 +23,8 @@ public class Receipt
 	private Date creatTime;
 	private String currency;
 	private CustomerGroup customerGroup;
-	private long finishTime;
-	private long modifiedTime;
+	private Date finishTime;
+	private Date modifiedTime;
 	private int orderNumber;
 	private POS pos;
 	private OrganizationalUnit organizationalUnit;
@@ -80,8 +80,8 @@ public class Receipt
 		private Date creatTime = null;
 		private String currency = null;
 		private CustomerGroup customerGroup = null;
-		private long finishTime = 0;
-		private long modifiedTime = 0;
+		private Date finishTime = null;
+		private Date modifiedTime = null;
 		private int orderNumber = 0;
 		private POS pos = null;
 		private OrganizationalUnit organizationalUnit = null;
@@ -145,13 +145,13 @@ public class Receipt
 			return this;
 		}
 
-		public Builder finishTime(final long value)
+		public Builder finishTime(final Date value)
 		{
 			this.finishTime = value;
 			return this;
 		}
 
-		public Builder modifiedTime(final long value)
+		public Builder modifiedTime(final Date value)
 		{
 			this.modifiedTime = value;
 			return this;
@@ -289,6 +289,7 @@ public class Receipt
 		try
 		{
 			rec = new Receipt.Builder().number(obj.getString("number"))
+				.deleted(obj.getBoolean("deleted"))
 				.revision(obj.getString("revision"))
 				.cashier(cash)
 				.customerGroup(cGrp)
@@ -305,11 +306,12 @@ public class Receipt
 				.receiptDiscountGrossAmount(obj.getDouble("receiptDiscountGrossAmount"))
 				.receiptDiscountNetAmount(obj.getDouble("receiptDiscountNetAmount"))
 				.creatTime(inputDf.parse(obj.getString("createTime")))
+				.modifiedTime(inputDf.parse(obj.getString("modifiedTime")))
+				.finishTime(inputDf.parse(obj.getString("finishTime")))
 				.build();
 		}
 		catch (final ParseException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return rec;
@@ -394,22 +396,22 @@ public class Receipt
 		this.currency = currency;
 	}
 
-	public long getFinishTime()
+	public Date getFinishTime()
 	{
 		return finishTime;
 	}
 
-	public void setFinishTime(final long finishTime)
+	public void setFinishTime(final Date finishTime)
 	{
 		this.finishTime = finishTime;
 	}
 
-	public long getModifiedTime()
+	public Date getModifiedTime()
 	{
 		return modifiedTime;
 	}
 
-	public void setModifiedTime(final long modifiedTime)
+	public void setModifiedTime(final Date modifiedTime)
 	{
 		this.modifiedTime = modifiedTime;
 	}

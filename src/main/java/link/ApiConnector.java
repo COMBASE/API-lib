@@ -184,14 +184,14 @@ public class ApiConnector
 			if (con.getResponseCode() == 200)
 			{
 				System.out.println(df.format(new Date()) + " APICON:POST -> Type:" +
-					type.getReference() + " JSON=" + obj.toString());
+					type.getReference());
 				con.disconnect(); // Disconnect
 				return true;
 			}
 			else
 			{
 				System.out.println(df.format(new Date()) + " ERR: APICON:POST -> Type:" +
-					type.getReference() + " JSON=" + obj.toString());
+					type.getReference());
 
 				con.disconnect(); // Disconnect
 				System.out.println("Error: " + con.getResponseMessage() + ":" +

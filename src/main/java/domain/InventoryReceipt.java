@@ -1,9 +1,20 @@
 package domain;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 public class InventoryReceipt
 {
+	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+
+	private String uuid;
+
+	private final String number;
+
 	private Date bookingTime;
 
 	private Cashier cashier;
@@ -26,6 +37,10 @@ public class InventoryReceipt
 
 	public InventoryReceipt(final Builder builder)
 	{
+		this.uuid = builder.uuid;
+
+		this.number = builder.number;
+
 		this.bookingTime = builder.bookingTime;
 
 		this.cashier = builder.cashier;
@@ -49,6 +64,10 @@ public class InventoryReceipt
 
 	public static class Builder
 	{
+		private String uuid = null;
+
+		private String number = null;
+
 		private Date bookingTime = null;
 
 		private Cashier cashier = null;
@@ -72,6 +91,18 @@ public class InventoryReceipt
 		public Builder bookingTime(final Date value)
 		{
 			bookingTime = value;
+			return this;
+		}
+
+		public Builder uuid(final String value)
+		{
+			uuid = value;
+			return this;
+		}
+
+		public Builder number(final String value)
+		{
+			number = value;
 			return this;
 		}
 
@@ -128,6 +159,43 @@ public class InventoryReceipt
 			inventory = value;
 			return this;
 		}
+
+		public InventoryReceipt build()
+		{
+			return new InventoryReceipt(this);
+		}
+	}
+
+	public static InventoryReceipt fromJSON(final JSONObject object) throws JSONException,
+		ParseException
+	{
+		final Cashier cashier = new Cashier.Builder(null).uuid(object.getString("cashier")).build();
+
+		final OrganizationalUnit organizationalUnit = new OrganizationalUnit.Builder(null).uuid(
+			object.getString("organizationalUnit")).build();
+
+		final Inventory inventory = new Inventory.Builder().uuid(object.getString("inventory"))
+			.build();
+
+		final InventoryReceipt inventoryReceipt = new InventoryReceipt.Builder().uuid(
+			object.getString("uuid"))
+			.number(object.getString("number"))
+			.bookingTime(inputDf.parse(object.getString("bookingTime")))
+			.cashier(cashier)
+			.createTime(inputDf.parse(object.getString("createTime")))
+			.description(object.getString("description"))
+			.finishTime(inputDf.parse(object.getString("finishTime")))
+			.organizationalUnit(organizationalUnit)
+			.inventory(inventory)
+			.build();
+
+
+		return inventoryReceipt;
+	}
+
+	public JSONObject toJSON()
+	{
+		return null;
 	}
 
 	public Date getBookingTime()
@@ -228,5 +296,15 @@ public class InventoryReceipt
 	public void setInventory(final Inventory inventory)
 	{
 		this.inventory = inventory;
+	}
+
+	public String getUuid()
+	{
+		return uuid;
+	}
+
+	public void setUuid(final String uuid)
+	{
+		this.uuid = uuid;
 	}
 }
