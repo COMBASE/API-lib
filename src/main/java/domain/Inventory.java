@@ -16,6 +16,9 @@ public class Inventory
 
 	private boolean deleted;
 
+	// needed to adress a certain Inventory object not touching any API relevent keywordfields
+	private String qualifier = null;
+
 	private String number;
 
 	private Long revision;
@@ -559,5 +562,17 @@ public class Inventory
 
 
 		return jObj;
+	}
+
+
+	public String getQualifier()
+	{
+		return qualifier;
+	}
+
+
+	public void setQualifier(final String qualifier)
+	{
+		this.qualifier = qualifier;
 	}
 }

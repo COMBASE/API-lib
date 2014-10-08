@@ -506,6 +506,8 @@ public class Product
 
 	public List<Product_Code> getCodes()
 	{
+		if (codes == null)
+			codes = new ArrayList<Product_Code>();
 		return codes;
 	}
 

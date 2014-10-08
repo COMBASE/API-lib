@@ -9,6 +9,8 @@ public class InventoryReceiptItem
 {
 	private String uuid;
 
+	private boolean deleted;
+
 	private BigDecimal nominalGoods;
 
 	private BigDecimal actualGoods;
@@ -22,6 +24,8 @@ public class InventoryReceiptItem
 	public InventoryReceiptItem(final Builder builder)
 	{
 		this.uuid = builder.uuid;
+
+		this.setDeleted(builder.deleted);
 
 		this.nominalGoods = builder.nominalGoods;
 
@@ -38,6 +42,8 @@ public class InventoryReceiptItem
 	{
 
 		private String uuid = null;
+
+		private boolean deleted = false;
 
 		private BigDecimal nominalGoods = null;
 
@@ -58,6 +64,12 @@ public class InventoryReceiptItem
 		public Builder uuid(final String value)
 		{
 			uuid = value;
+			return this;
+		}
+
+		public Builder deleted(final boolean value)
+		{
+			deleted = value;
 			return this;
 		}
 
@@ -170,5 +182,15 @@ public class InventoryReceiptItem
 	public void setUuid(final String uuid)
 	{
 		this.uuid = uuid;
+	}
+
+	public boolean isDeleted()
+	{
+		return deleted;
+	}
+
+	public void setDeleted(final boolean deleted)
+	{
+		this.deleted = deleted;
 	}
 }
