@@ -21,6 +21,10 @@ public class Account
 		deleted = builder.deleted;
 		number = builder.number;
 		uuid = builder.uuid;
+		name = builder.name;
+		revision = builder.revision;
+		type = builder.type;
+		requiresSerialNumber = builder.requiresSerialNumber;
 	}
 
 	public static class Builder

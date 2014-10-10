@@ -96,7 +96,7 @@ public class Tax
 		}
 	}
 
-	public static Tax fromJson(JSONObject obj) throws JSONException, ParseException
+	public static Tax fromJSON(JSONObject obj) throws JSONException, ParseException
 	{
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");

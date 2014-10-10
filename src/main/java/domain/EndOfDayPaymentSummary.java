@@ -2,6 +2,7 @@ package domain;
 
 import java.math.BigDecimal;
 
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 public class EndOfDayPaymentSummary
@@ -29,9 +30,17 @@ public class EndOfDayPaymentSummary
 		this.amount = amount;
 	}
 
-	public static EndOfDayPaymentSummary fromJSON(final JSONObject jEndOfDayPaymentSummary)
+	public static EndOfDayPaymentSummary fromJSON(final JSONObject obj) throws JSONException
 	{
-		// TODO Auto-generated method stub
-		return null;
+
+		final EndOfDayPaymentSummary paymentSummary = new EndOfDayPaymentSummary();
+
+		final PaymentMethods paymentMethods = new PaymentMethods.Builder(null).uuid(
+			obj.getString("paymentMethod")).build();
+
+		paymentSummary.setPaymentMethods(paymentMethods);
+		paymentSummary.setAmount(new BigDecimal(String.valueOf(obj.getDouble("amount"))));
+
+		return paymentSummary;
 	}
 }

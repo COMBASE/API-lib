@@ -11,7 +11,7 @@ public enum DataType
 		"suppliers"), tag("tags"), tax("taxes"), timeTrackingEntity("timeTrackingEntities"), timeTracking(
 		"timeTrackings"), user("users"), pos("pos"), fullReceipt("fullReceipts"), posBalance(
 		"posBalances"), inventory("inventories"), inventoryReceipt("inventoryReceipts"), inventoryReceiptItem(
-		"inventoryReceiptItems");
+		"inventoryReceiptItems"), endOfDayStatement("endOfDayStatements");
 	private final String reference;
 
 	DataType(final String s)

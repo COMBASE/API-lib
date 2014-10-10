@@ -2,6 +2,7 @@ package domain;
 
 import java.math.BigDecimal;
 
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 public class EndOfDayCommoditygroupSummary
@@ -73,10 +74,25 @@ public class EndOfDayCommoditygroupSummary
 		return serialVersionUID;
 	}
 
-	public static EndOfDayCommoditygroupSummary fromJSON(
-		final JSONObject jEndOfDayCommoditygroupSummary)
+	public static EndOfDayCommoditygroupSummary fromJSON(final JSONObject obj) throws JSONException
 	{
-		// TODO Auto-generated method stub
-		return null;
+
+		final EndOfDayCommoditygroupSummary commoditygroupSummary = new EndOfDayCommoditygroupSummary();
+
+		final CommodityGroup commodityGroup = new CommodityGroup.Builder(null).uuid(
+			obj.getString("commodityGroup")).build();
+
+		commoditygroupSummary.setCommodityGroup(commodityGroup);
+
+		commoditygroupSummary.setDiscountAmount(new BigDecimal(
+			String.valueOf(obj.getDouble("discountAmount"))));
+
+		commoditygroupSummary.setItems(new BigDecimal(String.valueOf(obj.getDouble("items"))));
+
+		commoditygroupSummary.setRevenue(new BigDecimal(String.valueOf(obj.getDouble("revenue"))));
+
+
+		return commoditygroupSummary;
+
 	}
 }

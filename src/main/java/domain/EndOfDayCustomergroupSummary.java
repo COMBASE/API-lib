@@ -2,6 +2,7 @@ package domain;
 
 import java.math.BigDecimal;
 
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 public class EndOfDayCustomergroupSummary
@@ -73,10 +74,24 @@ public class EndOfDayCustomergroupSummary
 		return serialVersionUID;
 	}
 
-	public static EndOfDayCustomergroupSummary fromJSON(
-		final JSONObject jEndOfDayCustomergroupSummary)
+	public static EndOfDayCustomergroupSummary fromJSON(final JSONObject obj) throws JSONException
 	{
-		// TODO Auto-generated method stub
-		return null;
+
+		final EndOfDayCustomergroupSummary customergroupSummary = new EndOfDayCustomergroupSummary();
+
+		final CustomerGroup customerGroup = new CustomerGroup.Builder(null).uuid(
+			obj.getString("customerGroup")).build();
+
+		customergroupSummary.setCustomerGroup(customerGroup);
+
+		customergroupSummary.setDiscountAmount(new BigDecimal(
+			String.valueOf(obj.getDouble("discountAmount"))));
+
+		customergroupSummary.setItems(new BigDecimal(String.valueOf(obj.getDouble("items"))));
+
+		customergroupSummary.setRevenue(new BigDecimal(String.valueOf(obj.getDouble("revenue"))));
+
+		return customergroupSummary;
+
 	}
 }

@@ -1,5 +1,6 @@
 package domain;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,29 +12,29 @@ import org.codehaus.jettison.json.JSONObject;
 
 public class EndOfDayStatement
 {
-	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+	private static SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 
-	private final long revision;
+	private long revision;
 
-	private final String uuid;
+	private String uuid;
 
-	private final boolean deleted;
+	private boolean deleted;
 
-	private final List<EndOfDayAccountSummary> accountSummaries;
+	private List<EndOfDayAccountSummary> accountSummaries;
 
-	private final List<EndOfDayCashierSummary> cashierSummaries;
+	private List<EndOfDayCashierSummary> cashierSummaries;
 
-	private final List<EndOfDayCommoditygroupSummary> commodityGroupSummaries;
+	private List<EndOfDayCommoditygroupSummary> commodityGroupSummaries;
 
-	private final List<EndOfDayCustomergroupSummary> customerGroupSummaries;
+	private List<EndOfDayCustomergroupSummary> customerGroupSummaries;
 
 	private Date finishTime;
 
-	private final List<EndOfDayPaymentSummary> paymentSummaries;
+	private List<EndOfDayPaymentSummary> paymentSummaries;
 
 	private long receiptCount;
 
-	private final List<EndOfDayTaxSummary> taxSummaries;
+	private List<EndOfDayTaxSummary> taxSummaries;
 
 	private long zCount;
 
@@ -181,7 +182,7 @@ public class EndOfDayStatement
 		}
 	}
 
-	public static EndOfDayStatement fromJSON(JSONObject obj) throws JSONException
+	public static EndOfDayStatement fromJSON(JSONObject obj) throws JSONException, ParseException
 	{
 
 		if (obj.has("result") && obj.getString("result") != null)
@@ -199,10 +200,10 @@ public class EndOfDayStatement
 		final List<EndOfDayCustomergroupSummary> customergroupSummaries = new ArrayList<EndOfDayCustomergroupSummary>();
 		EndOfDayCustomergroupSummary customergroupSummary = null;
 
-		final List<EndOfDayPaymentSummary> dayPaymentSummaries = new ArrayList<EndOfDayPaymentSummary>();
+		final List<EndOfDayPaymentSummary> paymentSummaries = new ArrayList<EndOfDayPaymentSummary>();
 		EndOfDayPaymentSummary paymentSummary = null;
 
-		final List<EndOfDayTaxSummary> dayTaxSummaries = new ArrayList<EndOfDayTaxSummary>();
+		final List<EndOfDayTaxSummary> taxSummaries = new ArrayList<EndOfDayTaxSummary>();
 		EndOfDayTaxSummary taxSummary = null;
 
 		// AccountSummaries
@@ -223,6 +224,8 @@ public class EndOfDayStatement
 			{
 				final JSONObject jEndOfDayCashierSummary = jEndOfDayCashierSummaries.getJSONObject(i);
 				cashierSummary = EndOfDayCashierSummary.fromJSON(jEndOfDayCashierSummary);
+				if (cashierSummary != null)
+					cashierSummaries.add(cashierSummary);
 			}
 
 		// CommodityGroup
@@ -232,6 +235,8 @@ public class EndOfDayStatement
 			{
 				final JSONObject jEndOfDayCommoditygroupSummary = jEndOfDayCommoditygroupSummaries.getJSONObject(i);
 				commoditygroupSummary = EndOfDayCommoditygroupSummary.fromJSON(jEndOfDayCommoditygroupSummary);
+				if (endOfDayAccountSummary != null)
+					commoditygroupSummaries.add(commoditygroupSummary);
 			}
 
 		// CustomerGroup
@@ -242,6 +247,8 @@ public class EndOfDayStatement
 				final JSONObject jEndOfDayCustomergroupSummary = jEndOfDayCustomergroupSummaries.getJSONObject(i);
 				customergroupSummary = EndOfDayCustomergroupSummary.fromJSON(jEndOfDayCustomergroupSummary);
 			}
+		if (customergroupSummary != null)
+			customergroupSummaries.add(customergroupSummary);
 
 		// Payment
 		final JSONArray jEndOfDayPaymentSummaries = obj.getJSONArray("paymentSummaries");
@@ -251,6 +258,8 @@ public class EndOfDayStatement
 				final JSONObject jEndOfDayPaymentSummary = jEndOfDayPaymentSummaries.getJSONObject(i);
 				paymentSummary = EndOfDayPaymentSummary.fromJSON(jEndOfDayPaymentSummary);
 			}
+		if (paymentSummary != null)
+			paymentSummaries.add(paymentSummary);
 
 		// Tax
 		final JSONArray jEndOfDayTaxSummaries = obj.getJSONArray("taxSummaries");
@@ -260,13 +269,27 @@ public class EndOfDayStatement
 				final JSONObject jEndOfDayTaxSummary = jEndOfDayTaxSummaries.getJSONObject(i);
 				taxSummary = EndOfDayTaxSummary.fromJSON(jEndOfDayTaxSummary);
 			}
+		if (taxSummary != null)
+			taxSummaries.add(taxSummary);
+
+		// POS
+		final POS pos = new POS.Builder(null).uuid(obj.getString("pos")).build();
 
 
 		final EndOfDayStatement endOfDayStatement = new EndOfDayStatement.Builder().deleted(
 			obj.getBoolean("deleted"))
 			.revision(obj.getLong("revision"))
 			.uuid(obj.getString("uuid"))
+			.finishTime(inputDf.parse(obj.getString("finishTime")))
+			.pos(pos)
+			.receiptCount(obj.getLong("receiptCount"))
+			.zCount(obj.getLong("zCount"))
 			.accountSummaries(endOfDayAccountSummaries)
+			.cashierSummaries(cashierSummaries)
+			.commodityGroupSummaries(commoditygroupSummaries)
+			.customerGroupSummaries(customergroupSummaries)
+			.paymentSummaries(paymentSummaries)
+			.taxSummaries(taxSummaries)
 			.build();
 
 		return endOfDayStatement;
@@ -356,6 +379,83 @@ public class EndOfDayStatement
 	public List<EndOfDayTaxSummary> getTaxSummaries()
 	{
 		return taxSummaries;
+	}
+
+	public static SimpleDateFormat getInputDf()
+	{
+		return inputDf;
+	}
+
+	public static void setInputDf(final SimpleDateFormat inputDf)
+	{
+		EndOfDayStatement.inputDf = inputDf;
+	}
+
+	public void setRevision(final long revision)
+	{
+		this.revision = revision;
+	}
+
+	public void setUuid(final String uuid)
+	{
+		this.uuid = uuid;
+	}
+
+	public void setDeleted(final boolean deleted)
+	{
+		this.deleted = deleted;
+	}
+
+	public void setAccountSummaries(final List<EndOfDayAccountSummary> accountSummaries)
+	{
+		this.accountSummaries = accountSummaries;
+	}
+
+	public void setCashierSummaries(final List<EndOfDayCashierSummary> cashierSummaries)
+	{
+		this.cashierSummaries = cashierSummaries;
+	}
+
+	public void setCommodityGroupSummaries(
+		final List<EndOfDayCommoditygroupSummary> commodityGroupSummaries)
+	{
+		this.commodityGroupSummaries = commodityGroupSummaries;
+	}
+
+	public void setCustomerGroupSummaries(
+		final List<EndOfDayCustomergroupSummary> customerGroupSummaries)
+	{
+		this.customerGroupSummaries = customerGroupSummaries;
+	}
+
+	public void setFinishTime(final Date finishTime)
+	{
+		this.finishTime = finishTime;
+	}
+
+	public void setPaymentSummaries(final List<EndOfDayPaymentSummary> paymentSummaries)
+	{
+		this.paymentSummaries = paymentSummaries;
+	}
+
+	public void setReceiptCount(final long receiptCount)
+	{
+		this.receiptCount = receiptCount;
+	}
+
+	public void setTaxSummaries(final List<EndOfDayTaxSummary> taxSummaries)
+	{
+		this.taxSummaries = taxSummaries;
+	}
+
+	public void setzCount(final long zCount)
+	{
+		this.zCount = zCount;
+	}
+
+	public void setPos(final POS pos)
+	{
+		this.pos = pos;
 	}
 
 }
