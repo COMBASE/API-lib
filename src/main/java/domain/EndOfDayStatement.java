@@ -246,9 +246,10 @@ public class EndOfDayStatement
 			{
 				final JSONObject jEndOfDayCustomergroupSummary = jEndOfDayCustomergroupSummaries.getJSONObject(i);
 				customergroupSummary = EndOfDayCustomergroupSummary.fromJSON(jEndOfDayCustomergroupSummary);
+				if (customergroupSummary != null)
+					customergroupSummaries.add(customergroupSummary);
 			}
-		if (customergroupSummary != null)
-			customergroupSummaries.add(customergroupSummary);
+
 
 		// Payment
 		final JSONArray jEndOfDayPaymentSummaries = obj.getJSONArray("paymentSummaries");
@@ -257,9 +258,10 @@ public class EndOfDayStatement
 			{
 				final JSONObject jEndOfDayPaymentSummary = jEndOfDayPaymentSummaries.getJSONObject(i);
 				paymentSummary = EndOfDayPaymentSummary.fromJSON(jEndOfDayPaymentSummary);
+				if (paymentSummary != null)
+					paymentSummaries.add(paymentSummary);
 			}
-		if (paymentSummary != null)
-			paymentSummaries.add(paymentSummary);
+
 
 		// Tax
 		final JSONArray jEndOfDayTaxSummaries = obj.getJSONArray("taxSummaries");
@@ -268,9 +270,10 @@ public class EndOfDayStatement
 			{
 				final JSONObject jEndOfDayTaxSummary = jEndOfDayTaxSummaries.getJSONObject(i);
 				taxSummary = EndOfDayTaxSummary.fromJSON(jEndOfDayTaxSummary);
+				if (taxSummary != null)
+					taxSummaries.add(taxSummary);
 			}
-		if (taxSummary != null)
-			taxSummaries.add(taxSummary);
+
 
 		// POS
 		final POS pos = new POS.Builder(null).uuid(obj.getString("pos")).build();
