@@ -1,6 +1,7 @@
 package domain;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -9,6 +10,8 @@ import domain.interfaces.HasId;
 
 public abstract class AbstractApiObject implements HasId, Serializable
 {
+
+	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 
 	public static abstract class ApiObjectBuilder<T extends HasId>
 	{
@@ -130,5 +133,10 @@ public abstract class AbstractApiObject implements HasId, Serializable
 	public void setDeleted(final boolean deleted)
 	{
 		this.deleted = deleted;
+	}
+
+	public static SimpleDateFormat getInputdf()
+	{
+		return inputDf;
 	}
 }

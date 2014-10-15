@@ -2,7 +2,6 @@ package domain;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import link.CloudLink;
@@ -10,13 +9,8 @@ import link.CloudLink;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-public class AccountTransaction
+public class AccountTransaction extends AbstractApiObject
 {
-	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
-	private boolean deleted;
-	private String uuid;
-	private String revision;
-
 	private Account account;
 	private Receipt receipt;
 	private Cashier cashier;
@@ -29,9 +23,7 @@ public class AccountTransaction
 
 	private AccountTransaction(final Builder builder)
 	{
-		revision = builder.revision;
-		deleted = builder.deleted;
-		uuid = builder.uuid;
+		super(builder);
 		account = builder.account;
 		receipt = builder.receipt;
 		cashier = builder.cashier;
@@ -42,12 +34,9 @@ public class AccountTransaction
 		description = builder.description;
 	}
 
-	public static class Builder
+	public static class Builder extends ApiObjectBuilder<AccountTransaction>
 	{
-		private boolean deleted = false;
-		private String uuid = null;
-		private String revision = null;
-		private Account account;
+		private Account account = null;
 		private Receipt receipt = null;
 		private Cashier cashier = null;
 		private POS pos = null;
@@ -55,24 +44,6 @@ public class AccountTransaction
 		private Date bookingTime = null;
 		private int receiptIndex = 0;
 		private String description = null;
-
-		public Builder revision(final String value)
-		{
-			revision = value;
-			return this;
-		}
-
-		public Builder deleted(final boolean value)
-		{
-			deleted = value;
-			return this;
-		}
-
-		public Builder uuid(final String value)
-		{
-			uuid = value;
-			return this;
-		}
 
 		public Builder account(final Account acc)
 		{
@@ -122,6 +93,7 @@ public class AccountTransaction
 			return this;
 		}
 
+		@Override
 		public AccountTransaction build()
 		{
 			return new AccountTransaction(this);
@@ -133,10 +105,7 @@ public class AccountTransaction
 		final JSONObject obj = new JSONObject();
 		try
 		{
-			obj.put("deleted", deleted);
-			obj.put("revision", revision);
-			obj.put("uuid", uuid);
-			obj.put("account", account.getUuid());
+			obj.put("account", account.getId());
 			obj.put("receipt", receipt.getUuid());
 			obj.put("cashier", cashier.getUuid());
 			obj.put("pos", pos.getUuid());
@@ -163,34 +132,34 @@ public class AccountTransaction
 		Date bTime = null;
 		try
 		{
-			bTime = inputDf.parse(date);
+			bTime = getInputdf().parse(date);
 		}
 		catch (final ParseException e)
 		{
 			e.printStackTrace();
 		}
 
-		final Account acc = new Account.Builder().build();
-		acc.setUuid(obj.getString("account"));
+		final Account account = new Account.Builder().build();
+		account.setId(obj.getString("account"));
 		final Receipt rec = new Receipt.Builder().build();
 		rec.setUuid(obj.getString("receipt"));
 		final Cashier cash = new Cashier.Builder(null).build();
 		cash.setUuid(obj.getString("cashier"));
 		final POS pos = new POS.Builder(null).build();
 		pos.setUuid(obj.getString("pos"));
-		final AccountTransaction accT = new AccountTransaction.Builder().deleted(
+		final AccountTransaction accountTransaction = new AccountTransaction.Builder().deleted(
 			obj.getBoolean("deleted"))
 			.revision(obj.getString("revision"))
 			.receipt(rec)
 			.cashier(cash)
 			.pos(pos)
-			.account(acc)
+			.account(account)
 			.amount(obj.getDouble("amount"))
 			.bookingTime(bTime)
 			.receiptIndex(obj.getInt("receiptIndex"))
 			.description(obj.getString("description"))
 			.build();
-		return accT;
+		return accountTransaction;
 	}
 
 	public boolean post() throws IOException
@@ -218,6 +187,7 @@ public class AccountTransaction
 		this.uuid = uuid;
 	}
 
+	@Override
 	public String getRevision()
 	{
 		return revision;
@@ -228,11 +198,13 @@ public class AccountTransaction
 		this.revision = revision;
 	}
 
+	@Override
 	public boolean isDeleted()
 	{
 		return deleted;
 	}
 
+	@Override
 	public void setDeleted(final boolean deleted)
 	{
 		this.deleted = deleted;
