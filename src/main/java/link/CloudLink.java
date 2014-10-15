@@ -45,7 +45,7 @@ public class CloudLink
 	public String getJSONByRevision(final DataType type, final String reference)
 		throws ApiNotReachableException
 	{
-		return ApiCon.fetchData(type, ReferenceType.revision, reference);
+		return new String(ApiCon.fetchData(type, ReferenceType.revision, reference));
 	}
 
 	public String getJSONByUuid(final DataType type, final String reference)
@@ -127,7 +127,7 @@ public class CloudLink
 	 * @param obj
 	 * @return
 	 */
-	public String postJSON(final DataType type, final JSONObject obj)
+	public boolean postJSON(final DataType type, final JSONObject obj)
 	{
 		return ApiCon.postData(type, obj);
 	}

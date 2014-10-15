@@ -1,8 +1,6 @@
 package link.json;
 
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 import link.CloudLink;
 
@@ -10,9 +8,7 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import domain.AbstractApiObject.ApiObjectBuilder;
 import domain.DataType;
-import domain.interfaces.HasId;
 import error.ApiNotReachableException;
 
 /**
@@ -22,42 +18,27 @@ import error.ApiNotReachableException;
  * @author mas
  * 
  */
-public abstract class HasIdJsonLoader<T extends HasId>
+public class JsonDownloader implements JsonDownloaderInterface
 {
 
 	private final DataType dataType;
+
 
 	protected CloudLink cloudLink;
 
 	// protected static Logger LOGGER = LoggerFactory.getLogger(JsonDownloader.class);
 
-	// extern gesteuert
 	private int offset = 0;
 
 	private final int limit = 50;
 
-	private final Map<String, T> idCache = new HashMap<String, T>();
-
-	public HasIdJsonLoader(final DataType dataType, final String cloudUrl, final String token)
+	public JsonDownloader(final DataType dataType, final String cloudUrl, final String token)
 	{
 		this.cloudLink = new CloudLink(cloudUrl, token);
 		this.dataType = dataType;
 	}
 
-
-	public abstract ApiObjectBuilder<T> getBuilder();
-
-	public JSONObject toJSON(final T value) throws JSONException
-	{
-		return getBuilder().toJSON(value);
-	}
-
-	public T fromJSON(final JSONObject obj) throws JSONException
-	{
-		return getBuilder().fromJSON(obj);
-	}
-
-	protected JSONArray createJsonArray(final String jStr) throws ApiNotReachableException
+	private JSONArray createJsonArray(final String jStr) throws ApiNotReachableException
 	{
 		try
 		{
@@ -73,7 +54,7 @@ public abstract class HasIdJsonLoader<T extends HasId>
 		}
 	}
 
-	protected JSONObject createJsonObject(final String jStr) throws ApiNotReachableException
+	private JSONObject createJsonObject(final String jStr) throws ApiNotReachableException
 	{
 
 		try
@@ -89,7 +70,23 @@ public abstract class HasIdJsonLoader<T extends HasId>
 		}
 	}
 
+	@Override
+	public JSONObject downloadByName(final String name) throws ApiNotReachableException
+	{
+		final String jStr = cloudLink.getJSONByName(getDataType(), name);
+		final JSONObject jObject = createJsonObject(jStr);
+		return jObject;
+	}
 
+	@Override
+	public JSONObject downloadByNumber(final String number) throws ApiNotReachableException
+	{
+		final String jStr = cloudLink.getJSONByNumber(getDataType(), number);
+		final JSONObject jObject = createJsonObject(jStr);
+		return jObject;
+	}
+
+	@Override
 	public JSONArray downloadAllByOffset(final long revision) throws ApiNotReachableException
 	{
 		final String jStr = cloudLink.getJSONByOffset(getDataType(), Long.toString(revision),
@@ -99,6 +96,7 @@ public abstract class HasIdJsonLoader<T extends HasId>
 		return jArray;
 	}
 
+	@Override
 	public JSONArray downloadByOffset(final long revision) throws ApiNotReachableException
 	{
 		final String jStr = cloudLink.getJSONByOffset(getDataType(), Long.toString(revision),
@@ -110,6 +108,13 @@ public abstract class HasIdJsonLoader<T extends HasId>
 		return jArray;
 	}
 
+	public Iterator<JSONObject> iterator(final long revision) throws ApiNotReachableException
+	{
+		return new CloudResultIterator(this, revision);
+
+	}
+
+	@Override
 	public JSONArray downloadByRevision(final long revision) throws ApiNotReachableException
 	{
 		final String jStr = cloudLink.getJSONByRevision(getDataType(), Long.toString(revision));
@@ -117,42 +122,12 @@ public abstract class HasIdJsonLoader<T extends HasId>
 		return jArray;
 	}
 
-
-	public T downloadByUUID(final String uuid) throws ApiNotReachableException, JSONException
+	@Override
+	public JSONObject downloadByUUID(final String uuid) throws ApiNotReachableException
 	{
-		final T cachedObject = idCache.get(uuid);
-		if (cachedObject != null)
-		{
-			return cachedObject;
-		}
-
 		final String jStr = cloudLink.getJSONByUuid(getDataType(), uuid);
 		final JSONObject jObject = createJsonObject(jStr);
-		final T downloaded = getBuilder().fromJSON(jObject);
-		idCache.put(uuid, downloaded);
-		return downloaded;
-	}
-
-	public T post(final T obj) throws ApiNotReachableException, JSONException
-	{
-		final String result = CloudLink.getConnector().postData(getDataType(), toJSON(obj));
-		final JSONObject jObj = new JSONObject(result);
-		final T ret = fromJSON(jObj);
-		updateCachedObject(ret);
-		return ret;
-	}
-
-
-	public void updateCachedObject(final T obj)
-	{
-		if (obj.getId() != null)
-			idCache.put(obj.getId(), obj);
-	}
-
-	public Iterator<JSONObject> iterator(final long revision) throws ApiNotReachableException
-	{
-		return new CloudResultIterator(this, revision);
-
+		return jObject;
 	}
 
 	protected DataType getDataType()
@@ -170,7 +145,7 @@ public abstract class HasIdJsonLoader<T extends HasId>
 	 * @return
 	 * @throws ApiNotReachableException
 	 */
-	protected JSONArray recursiveOffsetIterator(JSONArray jArray, final int offset,
+	private JSONArray recursiveOffsetIterator(JSONArray jArray, final int offset,
 		final long revision, final int limit) throws ApiNotReachableException
 	{
 
@@ -196,6 +171,4 @@ public abstract class HasIdJsonLoader<T extends HasId>
 		}
 		return jArray;
 	}
-
-
 }
