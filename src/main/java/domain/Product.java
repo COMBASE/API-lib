@@ -44,7 +44,7 @@ public class Product
 		private final List<Price> prices = new ArrayList<Price>();
 		private Assortment assortment = null;
 		private final List<Product_Text> texts = new ArrayList<Product_Text>();
-		private final List<Product_Code> codes = new ArrayList<Product_Code>();
+		private List<Product_Code> codes = null;
 		private String revision = null;
 
 		public Builder(final String name)
@@ -83,6 +83,8 @@ public class Product
 
 		public Builder codes(final Collection<Product_Code> coll)
 		{
+			if (codes == null)
+				codes = new ArrayList<Product_Code>();
 			for (final Product_Code code : coll)
 			{
 				codes.add(code);
@@ -92,6 +94,8 @@ public class Product
 
 		public Builder codes(final Product_Code code)
 		{
+			if (codes == null)
+				codes = new ArrayList<Product_Code>();
 			codes.add(code);
 			return this;
 		}
@@ -773,7 +777,7 @@ public class Product
 				}
 				obj.put("prices", array);
 			}
-			if (!codes.isEmpty())
+			if (codes != null)
 			{
 				final JSONArray array = new JSONArray();
 				for (final Product_Code code : codes)
