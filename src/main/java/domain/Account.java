@@ -1,55 +1,30 @@
 package domain;
 
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 
 public class Account extends AbstractNameAndNumberApiObject
 {
 
 	private String type;
+
 	private boolean requiresSerialNumber;
 
-
-	public Account(final Builder builder)
+	protected static abstract class Init<T extends Init<T>> extends
+		AbstractNameAndNumberApiObject.Init<T>
 	{
-		super(builder);
-		type = builder.type;
-		requiresSerialNumber = builder.requiresSerialNumber;
-	}
+		private String type;
 
-	public static class Builder extends ApiNameAndNumberObjectBuilder<Account>
-	{
-		private String type = null;
-		private boolean requiresSerialNumber = false;
+		private boolean requiresSerialNumber;
 
-		public Builder type(final String value)
+		public T type(final String value)
 		{
-			type = value;
-			return this;
+			this.type = value;
+			return self();
 		}
 
-		public Builder requiresSerialNumber(final boolean value)
+		public T requiresSerialNumber(final boolean value)
 		{
-			requiresSerialNumber = value;
-			return this;
-		}
-
-		@Override
-		public void readJSON(JSONObject obj) throws JSONException
-		{
-			if (obj.has("result") && obj.getString("result") != null)
-				obj = obj.getJSONObject("result");
-
-			type(obj.getString("type"));
-			requiresSerialNumber(obj.getBoolean("requiresSerialNumber"));
-
-			super.readJSON(obj);
-		}
-
-		@Override
-		public void writeJSON(final JSONObject obj, final Account value) throws JSONException
-		{
-			super.writeJSON(obj, value);
+			this.requiresSerialNumber = value;
+			return self();
 		}
 
 		@Override
@@ -57,6 +32,24 @@ public class Account extends AbstractNameAndNumberApiObject
 		{
 			return new Account(this);
 		}
+	}
+
+	public static class Builder extends Init<Builder>
+	{
+
+		@Override
+		protected Builder self()
+		{
+			return this;
+		}
+
+	}
+
+	public Account(final Init<?> init)
+	{
+		super(init);
+		type = init.type;
+		requiresSerialNumber = init.requiresSerialNumber;
 	}
 
 	public String getType()

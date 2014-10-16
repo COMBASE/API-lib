@@ -3,6 +3,8 @@ package domain;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import domain.Assortment.Builder;
+
 public class Currency
 {
 	private boolean deleted;
@@ -13,6 +15,36 @@ public class Currency
 	private String symbol;
 	private String key;
 	private String centName;
+
+	protected static abstract class Init<T extends Init<T>> extends
+		AbstractNameAndNumberApiObject.Init<T>
+	{
+		private String description;
+
+		public T description(final String value)
+		{
+			this.description = value;
+			return self();
+		}
+
+		@Override
+		public Assortment build()
+		{
+			return new Assortment(this);
+		}
+	}
+
+	public static class Builder extends Init<Builder>
+	{
+
+		@Override
+		protected Builder self()
+		{
+
+			return this;
+		}
+
+	}
 
 	private Currency(final Builder builder)
 	{

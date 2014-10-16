@@ -1,47 +1,20 @@
 package domain;
 
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 
 public class Assortment extends AbstractNameAndNumberApiObject
 {
 	private static final long serialVersionUID = 4119884542878721366L;
 	private String description;
 
-
-	private Assortment(final Builder builder)
-	{
-		super(builder);
-		description = builder.description;
-	}
-
-	public static class Builder extends ApiNameAndNumberObjectBuilder<Assortment>
+	protected static abstract class Init<T extends Init<T>> extends
+		AbstractNameAndNumberApiObject.Init<T>
 	{
 		private String description;
 
-		public Builder description(final String desc)
+		public T description(final String value)
 		{
-			description = desc;
-			return this;
-		}
-
-		@Override
-		public void readJSON(JSONObject obj) throws JSONException
-		{
-			if (obj.has("result") && obj.getString("result") != null)
-				obj = obj.getJSONObject("result");
-
-			description(obj.getString("description"));
-
-			super.readJSON(obj);
-		}
-
-		@Override
-		public void writeJSON(final JSONObject obj, final Assortment value) throws JSONException
-		{
-			super.writeJSON(obj, value);
-			obj.put("description", value.getDescription());
-
+			this.description = value;
+			return self();
 		}
 
 		@Override
@@ -49,6 +22,42 @@ public class Assortment extends AbstractNameAndNumberApiObject
 		{
 			return new Assortment(this);
 		}
+	}
+
+	public static class Builder extends Init<Builder>
+	{
+
+		@Override
+		protected Builder self()
+		{
+
+			return this;
+		}
+
+	}
+
+// @Override
+// public void readJSON(JSONObject obj) throws JSONException
+// {
+// if (obj.has("result") && obj.getString("result") != null)
+// obj = obj.getJSONObject("result");
+//
+// description(obj.getString("description"));
+//
+// super.readJSON(obj);
+// }
+//
+// @Override
+// public void writeJSON(final JSONObject obj, final Assortment value) throws JSONException
+// {
+// super.writeJSON(obj, value);
+// obj.put("description", value.getDescription());
+
+
+	private Assortment(final Init<?> init)
+	{
+		super(init);
+		description = init.description;
 	}
 
 	public String getDescription()
@@ -84,7 +93,6 @@ public class Assortment extends AbstractNameAndNumberApiObject
 	public String toString()
 	{
 		final StringBuilder builder = new StringBuilder();
-
 
 		super.toString(builder);
 

@@ -1,49 +1,63 @@
 package domain;
 
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-
-import domain.interfaces.HasId;
 import domain.interfaces.HasNumber;
 
 public abstract class AbstractNumberApiObject extends AbstractApiObject implements HasNumber
 {
 
-	public static abstract class ApiNumberObjectBuilder<T extends HasId & HasNumber> extends
-		ApiObjectBuilder<T>
-	{
-		private String number = null;
-
-		public ApiNumberObjectBuilder<T> number(final String value)
-		{
-			number = value;
-			return this;
-		}
-
-		@Override
-		public void writeJSON(final JSONObject obj, final T value) throws JSONException
-		{
-			super.writeJSON(obj, value);
-			obj.put("number", number);
-
-		}
-
-		@Override
-		public void readJSON(final JSONObject obj) throws JSONException
-		{
-			number(obj.getString("number"));
-			super.readJSON(obj);
-		}
-	}
-
 	private static final long serialVersionUID = -589391620327601920L;
 
 	private String number;
 
-	public AbstractNumberApiObject(final ApiNumberObjectBuilder<? extends HasNumber> builder)
+	protected static abstract class Init<T extends Init<T>> extends AbstractApiObject.Init<T>
 	{
-		super(builder);
-		this.number = builder.number;
+		private String number;
+
+		public T number(final String value)
+		{
+			number = value;
+			return self();
+		}
+
+		@Override
+		public abstract AbstractNumberApiObject build();
+
+	}
+
+	public static abstract class Builder extends Init<Builder>
+	{
+
+		@Override
+		public abstract AbstractNumberApiObject build();
+
+		@Override
+		protected Builder self()
+		{
+			return this;
+		}
+
+	}
+
+// @Override
+// public void writeJSON(final JSONObject obj, final T value) throws JSONException
+// {
+// super.writeJSON(obj, value);
+// obj.put("number", number);
+//
+// }
+//
+// @Override
+// public void readJSON(final JSONObject obj) throws JSONException
+// {
+// number(obj.getString("number"));
+// super.readJSON(obj);
+// }
+
+
+	public AbstractNumberApiObject(final Init<?> init)
+	{
+		super(init);
+		this.number = init.number;
 	}
 
 	@Override
