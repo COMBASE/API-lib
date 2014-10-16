@@ -39,8 +39,9 @@ public class Assortment extends AbstractNameAndNumberApiObject
 		@Override
 		public void writeJSON(final JSONObject obj, final Assortment value) throws JSONException
 		{
-			obj.put("description", value.getDescription());
 			super.writeJSON(obj, value);
+			obj.put("description", value.getDescription());
+
 		}
 
 		@Override
@@ -74,7 +75,7 @@ public class Assortment extends AbstractNameAndNumberApiObject
 
 		result = prime * result + ((this.description == null) ? 0 : this.description.hashCode());
 
-		super.hashCode(result);
+		result = super.hashCode(result);
 
 		return result;
 	}

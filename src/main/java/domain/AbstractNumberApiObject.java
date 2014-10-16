@@ -23,8 +23,9 @@ public abstract class AbstractNumberApiObject extends AbstractApiObject implemen
 		@Override
 		public void writeJSON(final JSONObject obj, final T value) throws JSONException
 		{
-			obj.put("number", number);
 			super.writeJSON(obj, value);
+			obj.put("number", number);
+
 		}
 
 		@Override

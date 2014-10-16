@@ -88,6 +88,7 @@ public abstract class AbstractApiObject implements HasId, Serializable
 		final int prime = 31;
 		result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
 		result = prime * result + ((this.revision == null) ? 0 : this.revision.hashCode());
+		result = prime * result + ((this.deleted) ? 1 : 0);
 
 		return result;
 	}
