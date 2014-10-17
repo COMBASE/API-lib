@@ -112,7 +112,7 @@ public class Tax
 			rates.add(rate);
 		}
 		final EconomicZone economicZone = new EconomicZone(null);
-		economicZone.setUuid(obj.getString("economicZone"));
+		economicZone.setId(obj.getString("economicZone"));
 
 		final Tax tax = new Tax.Builder(obj.getString("name"), economicZone).rateList(rates)
 			.uuid(obj.getString("uuid"))

@@ -1,9 +1,5 @@
 package domain;
 
-import link.CloudLink;
-
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 
 
 public class InfoText
@@ -25,28 +21,28 @@ public class InfoText
 		this.type = type;
 	}
 
-	public JSONObject toJSON()
-	{
-		try
-		{
-			final JSONObject obj = new JSONObject();
-			obj.put("text", text);
-			if (number != null)
-				obj.put("number", number);
-			obj.put("type", type.name());
-			return obj;
-		}
-		catch (final JSONException e)
-		{
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public boolean post()
-	{
-		return CloudLink.getConnector().postData(DataType.infotext, this.toJSON());
-	}
+// public JSONObject toJSON()
+// {
+// try
+// {
+// final JSONObject obj = new JSONObject();
+// obj.put("text", text);
+// if (number != null)
+// obj.put("number", number);
+// obj.put("type", type.name());
+// return obj;
+// }
+// catch (final JSONException e)
+// {
+// e.printStackTrace();
+// return null;
+// }
+// }
+//
+// public boolean post()
+// {
+// return CloudLink.getConnector().postData(DataType.infotext, this.toJSON());
+// }
 
 	@Override
 	public boolean equals(final Object obj)

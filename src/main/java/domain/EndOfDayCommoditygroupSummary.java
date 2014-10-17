@@ -79,7 +79,7 @@ public class EndOfDayCommoditygroupSummary
 
 		final EndOfDayCommoditygroupSummary commoditygroupSummary = new EndOfDayCommoditygroupSummary();
 
-		final CommodityGroup commodityGroup = new CommodityGroup.Builder(null).uuid(
+		final CommodityGroup commodityGroup = new CommodityGroup.Builder().id(
 			obj.getString("commodityGroup")).build();
 
 		commoditygroupSummary.setCommodityGroup(commodityGroup);

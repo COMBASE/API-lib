@@ -8,15 +8,11 @@ import org.codehaus.jettison.json.JSONObject;
 public class EndOfDayAccountSummary
 {
 
-
 	private Account account = null;
-
 
 	public BigDecimal amount = null;
 
-
 	public EndOfDayStatement endOfDayStatement = null;
-
 
 	public BigDecimal transactions = null;
 
@@ -25,7 +21,7 @@ public class EndOfDayAccountSummary
 
 		final EndOfDayAccountSummary endOfDayAccountSummary = new EndOfDayAccountSummary();
 
-		final Account account = new Account.Builder().uuid(obj.getString("account")).build();
+		final Account account = new Account.Builder().id(obj.getString("account")).build();
 
 		endOfDayAccountSummary.setAccount(account);
 

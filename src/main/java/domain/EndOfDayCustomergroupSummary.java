@@ -79,7 +79,7 @@ public class EndOfDayCustomergroupSummary
 
 		final EndOfDayCustomergroupSummary customergroupSummary = new EndOfDayCustomergroupSummary();
 
-		final CustomerGroup customerGroup = new CustomerGroup.Builder(null).uuid(
+		final CustomerGroup customerGroup = new CustomerGroup.Builder().id(
 			obj.getString("customerGroup")).build();
 
 		customergroupSummary.setCustomerGroup(customerGroup);
