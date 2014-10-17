@@ -390,43 +390,44 @@ public class Product
 			{
 				final Product product = productList.get(i);
 
-				// Commoditygroup UUID check
-				if (product.getCommodityGroup().getUuid() == null)
-					for (final CommodityGroup group : grpList)
-					{
-						if (group.getNumber().equalsIgnoreCase(
-							product.getCommodityGroup().getNumber()))
-							product.setCommodityGroup(group);
-					}
-
-				// Assortment UUID check
-				if (product.getAssortment().getUuid() == null)
-					for (final Assortment assortment : assortmentList)
-					{
-						if (assortment.getNumber().equalsIgnoreCase(
-							product.getAssortment().getNumber()))
-							product.setAssortment(assortment);
-					}
-
-				// Sector UUID check
-				if (product.getSector().getUuid() == null)
-					for (final Sector sector : sectorList)
-					{
-						if (sector.getNumber().equalsIgnoreCase(product.getSector().getNumber()))
-							product.setSector(sector);
-					}
-
-				// pricelist
-				for (final Price price : product.getPrices())
-				{
-					if (price.getPriceList().getUuid() == null)
-						for (final Pricelist pricelist : priceListLists)
-						{
-							if (pricelist.getNumber().equalsIgnoreCase(
-								price.getPriceList().getNumber()))
-								price.setPriceList(pricelist);
-						}
-				}
+// // Commoditygroup UUID check
+// if (product.getCommodityGroup() != null &&
+// product.getCommodityGroup().getUuid() == null)
+// for (final CommodityGroup group : grpList)
+// {
+// if (group.getNumber().equalsIgnoreCase(
+// product.getCommodityGroup().getNumber()))
+// product.setCommodityGroup(group);
+// }
+//
+// // Assortment UUID check
+// if (product.getAssortment() != null && product.getAssortment().getUuid() == null)
+// for (final Assortment assortment : assortmentList)
+// {
+// if (assortment.getNumber().equalsIgnoreCase(
+// product.getAssortment().getNumber()))
+// product.setAssortment(assortment);
+// }
+//
+// // Sector UUID check
+// if (product.getSector() != null && product.getSector().getUuid() == null)
+// for (final Sector sector : sectorList)
+// {
+// if (sector.getNumber().equalsIgnoreCase(product.getSector().getNumber()))
+// product.setSector(sector);
+// }
+//
+// // pricelist
+// for (final Price price : product.getPrices())
+// {
+// if (price.getPriceList().getUuid() == null)
+// for (final Pricelist pricelist : priceListLists)
+// {
+// if (pricelist.getNumber().equalsIgnoreCase(
+// price.getPriceList().getNumber()))
+// price.setPriceList(pricelist);
+// }
+// }
 
 				jProdArray.put(productList.get(i).toJSON());
 				i++;
