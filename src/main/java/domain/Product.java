@@ -25,6 +25,37 @@ import error.ApiNotReachableException;
 
 public class Product
 {
+	private String name;
+	private String number;
+	private boolean deleted;
+	private boolean activeAssortment;
+	private Date activeAssortmentFrom;
+	private int costs;
+	private boolean discountable;
+	private boolean priceChangeable;
+	private boolean requiresSerialNumber;
+	private boolean trackInventory;
+
+	private CommodityGroup commodityGroup;
+
+	private Sector sector;
+
+	private String revision;
+
+	private Sector altsector;
+
+	private List<Price> prices;
+
+	private List<Product_Text> texts;
+
+	private Assortment assortment;
+
+	private List<Product_Code> codes;
+
+	private String uuid = null;
+
+	private List<SupplierItemPrice> suppliers;
+
 	public static class Builder
 	{
 		private final String name;
@@ -46,6 +77,7 @@ public class Product
 		private final List<Product_Text> texts = new ArrayList<Product_Text>();
 		private List<Product_Code> codes = null;
 		private String revision = null;
+		private List<SupplierItemPrice> suppliers = null;
 
 		public Builder(final String name)
 		{
@@ -195,6 +227,12 @@ public class Product
 			uuid = value;
 			return this;
 		}
+
+		public Builder supplier(final List<SupplierItemPrice> value)
+		{
+			suppliers = value;
+			return this;
+		}
 	}
 
 	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
@@ -227,6 +265,22 @@ public class Product
 			.commodityGroup(commodityGroup)
 			.assortment(assortment)
 			.build();
+
+		if (obj.getString("supplierItemPrices") != null)
+		{
+			JSONArray jSupplierItemPrices = new JSONArray();
+			jSupplierItemPrices = obj.getJSONArray("supplierItemPrices");
+			JSONObject jSupplierItemPrice = new JSONObject();
+			final List<SupplierItemPrice> supplierItemPrices = new ArrayList<SupplierItemPrice>();
+			for (int i = 0; i < jSupplierItemPrices.length(); i++)
+			{
+				jSupplierItemPrice = jSupplierItemPrices.getJSONObject(i);
+				final SupplierItemPrice supplierItemPrice = SupplierItemPrice.fromJSON(jSupplierItemPrice);
+				supplierItemPrices.add(supplierItemPrice);
+			}
+			prod.setSuppliers(supplierItemPrices);
+		}
+
 
 		if (obj.has("number"))
 			prod.setNumber(obj.getString("number"));
@@ -445,36 +499,7 @@ public class Product
 		System.out.println("end: " + date2);
 	}
 
-	private String name;
-	private String number;
-	private boolean deleted;
-	private boolean activeAssortment;
-	private Date activeAssortmentFrom;
-	private int costs;
-	private boolean discountable;
-	private boolean priceChangeable;
-	private boolean requiresSerialNumber;
-	private boolean trackInventory;
-
-	private CommodityGroup commodityGroup;
-
-	private Sector sector;
-
-	private String revision;
-
-	private Sector altsector;
-
-	private List<Price> prices;
-
-	private List<Product_Text> texts;
-
-	private Assortment assortment;
-
-	private List<Product_Code> codes;
-
-	private String uuid = null;
-
-	private Product(final Builder builder)
+	Product(final Builder builder)
 	{
 		name = builder.name;
 		number = builder.number;
@@ -495,6 +520,7 @@ public class Product
 		codes = builder.codes;
 		uuid = builder.uuid;
 		revision = builder.revision;
+		suppliers = builder.suppliers;
 	}
 
 	@Override
@@ -788,6 +814,18 @@ public class Product
 				}
 				obj.put("articleCodes", array);
 			}
+
+			if (suppliers != null)
+			{
+				final JSONArray array = new JSONArray();
+				for (final SupplierItemPrice supplierItemPrice : suppliers)
+				{
+					array.put(supplierItemPrice.toJSON());
+				}
+				obj.put("supplierItemPrices", array);
+			}
+
+
 			if (!texts.isEmpty())
 			{
 				final JSONArray array = new JSONArray();
@@ -813,5 +851,15 @@ public class Product
 			commodityGroup.getUuid();
 		return productstr;
 
+	}
+
+	public List<SupplierItemPrice> getSuppliers()
+	{
+		return suppliers;
+	}
+
+	public void setSuppliers(final List<SupplierItemPrice> suppliers)
+	{
+		this.suppliers = suppliers;
 	}
 }
