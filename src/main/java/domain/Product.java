@@ -26,14 +26,23 @@ import error.ApiNotReachableException;
 public class Product
 {
 	private String name;
+
 	private String number;
+
 	private boolean deleted;
+
 	private boolean activeAssortment;
+
 	private Date activeAssortmentFrom;
+
 	private int costs;
+
 	private boolean discountable;
+
 	private boolean priceChangeable;
+
 	private boolean requiresSerialNumber;
+
 	private boolean trackInventory;
 
 	private CommodityGroup commodityGroup;
@@ -54,7 +63,7 @@ public class Product
 
 	private String uuid = null;
 
-	private List<SupplierItemPrice> suppliers;
+	private List<SupplierItemPrice> supplierItemPrices;
 
 	public static class Builder
 	{
@@ -77,7 +86,7 @@ public class Product
 		private final List<Product_Text> texts = new ArrayList<Product_Text>();
 		private List<Product_Code> codes = null;
 		private String revision = null;
-		private List<SupplierItemPrice> suppliers = null;
+		private List<SupplierItemPrice> supplierItemPrices = null;
 
 		public Builder(final String name)
 		{
@@ -228,9 +237,9 @@ public class Product
 			return this;
 		}
 
-		public Builder supplier(final List<SupplierItemPrice> value)
+		public Builder supplierItemPrice(final List<SupplierItemPrice> value)
 		{
-			suppliers = value;
+			supplierItemPrices = value;
 			return this;
 		}
 	}
@@ -520,7 +529,7 @@ public class Product
 		codes = builder.codes;
 		uuid = builder.uuid;
 		revision = builder.revision;
-		suppliers = builder.suppliers;
+		supplierItemPrices = builder.supplierItemPrices;
 	}
 
 	@Override
@@ -815,10 +824,10 @@ public class Product
 				obj.put("articleCodes", array);
 			}
 
-			if (suppliers != null)
+			if (supplierItemPrices != null)
 			{
 				final JSONArray array = new JSONArray();
-				for (final SupplierItemPrice supplierItemPrice : suppliers)
+				for (final SupplierItemPrice supplierItemPrice : supplierItemPrices)
 				{
 					array.put(supplierItemPrice.toJSON());
 				}
@@ -855,11 +864,11 @@ public class Product
 
 	public List<SupplierItemPrice> getSuppliers()
 	{
-		return suppliers;
+		return supplierItemPrices;
 	}
 
 	public void setSuppliers(final List<SupplierItemPrice> suppliers)
 	{
-		this.suppliers = suppliers;
+		this.supplierItemPrices = suppliers;
 	}
 }
