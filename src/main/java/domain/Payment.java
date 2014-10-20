@@ -1,22 +1,14 @@
 package domain;
 
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import link.CloudLink;
 
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-
-
-public class Payment
+public class Payment extends AbstractApiObject
 {
-	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
-	private boolean deleted;
-	private String revision;
-	private String uuid;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3413202913572354611L;
 	private Cashier cashier;
 	private int itemNumber;
 	private String itemSequence;
@@ -34,34 +26,8 @@ public class Payment
 	private Currency currency;
 	private final int receiptIndex;
 
-	private Payment(final Builder builder)
+	protected static abstract class Init<T extends Init<T>> extends AbstractApiObject.Init<T>
 	{
-		deleted = builder.deleted;
-		revision = builder.revision;
-		uuid = builder.uuid;
-		cashier = builder.cashier;
-		receipt = builder.receipt;
-		receiptNumber = builder.receiptNumber;
-		manualPrice = builder.manualPrice;
-		itemPrice = builder.itemPrice;
-		amount = builder.amount;
-		transactionTime = builder.transactionTime;
-		itemNumber = builder.itemNumber;
-		netItemPrice = builder.netItemPrice;
-		baseItemPrice = builder.baseItemPrice;
-		serialNumber = builder.serialNumber;
-		itemSequence = builder.itemSequence;
-		pos = builder.pos;
-		currency = builder.currency;
-		paymentMethod = builder.paymentMethod;
-		receiptIndex = builder.receiptIndex;
-	}
-
-	public static class Builder
-	{
-		private boolean deleted = false;
-		private String revision = null;
-		private String uuid = null;
 		private final String itemSequence = null;
 		private Cashier cashier = null;
 		private String receiptNumber = null;
@@ -79,225 +45,210 @@ public class Payment
 		private PaymentMethods paymentMethod = null;
 		private int receiptIndex = 0;
 
-		public Builder pos(final POS posy)
+		public T pos(final POS posy)
 		{
 			pos = posy;
-			return this;
+			return self();
 		}
 
-		public Builder itemNumber(final int value)
+		public T itemNumber(final int value)
 		{
 			itemNumber = value;
-			return this;
+			return self();
 		}
 
-		public Builder amount(final double value)
+		public T amount(final double value)
 		{
 			amount = value;
-			return this;
+			return self();
 		}
 
-		public Builder deleted(final boolean value)
-		{
-			deleted = value;
-			return this;
-		}
 
-		public Builder transactionTime(final Date value)
+		public T transactionTime(final Date value)
 		{
 			transactionTime = value;
-			return this;
+			return self();
 		}
 
-		public Builder revision(final String value)
-		{
-			revision = value;
-			return this;
-		}
-
-		public Builder uuid(final String value)
-		{
-			uuid = value;
-			return this;
-		}
-
-		public Builder cashier(final Cashier cash)
+		public T cashier(final Cashier cash)
 		{
 			cashier = cash;
-			return this;
+			return self();
 		}
 
-		public Builder paymentMethod(final PaymentMethods payMeth)
+		public T paymentMethod(final PaymentMethods payMeth)
 		{
 			paymentMethod = payMeth;
-			return this;
+			return self();
 		}
 
-		public Builder receipt(final Receipt rec)
+		public T receipt(final Receipt rec)
 		{
 			receipt = rec;
-			return this;
+			return self();
 		}
 
-		public Builder receiptNumber(final String value)
+		public T receiptNumber(final String value)
 		{
 			receiptNumber = value;
-			return this;
+			return self();
 		}
 
-		public Builder manualPrice(final double value)
+		public T manualPrice(final double value)
 		{
 			manualPrice = value;
-			return this;
+			return self();
 		}
 
-		public Builder itemPrice(final double value)
+		public T itemPrice(final double value)
 		{
 			itemPrice = value;
-			return this;
+			return self();
 		}
 
-		public Builder netItemPrice(final double value)
+		public T netItemPrice(final double value)
 		{
 			netItemPrice = value;
-			return this;
+			return self();
 		}
 
-		public Builder baseItemPrice(final double value)
+		public T baseItemPrice(final double value)
 		{
 			baseItemPrice = value;
-			return this;
+			return self();
 		}
 
-		public Builder serialNumber(final String value)
+		public T serialNumber(final String value)
 		{
 			serialNumber = value;
-			return this;
+			return self();
 		}
 
-		public Builder currency(final Currency cur)
+		public T currency(final Currency cur)
 		{
 			currency = cur;
-			return this;
+			return self();
 		}
 
-		public Builder receiptIndex(final int value)
+		public T receiptIndex(final int value)
 		{
 			this.receiptIndex = value;
-			return this;
+			return self();
 		}
 
+		@Override
 		public Payment build()
 		{
 			return new Payment(this);
 		}
 	}
 
-	public JSONObject toJSON()
+	public static class Builder extends Init<Builder>
 	{
-		final JSONObject obj = new JSONObject();
-		try
+
+		@Override
+		protected Builder self()
 		{
-			obj.put("deleted", deleted);
-			obj.put("revision", revision);
-			obj.put("uuid", uuid);
-			obj.put("receiptNumber", receiptNumber);
-			obj.put("currency", currency.getUuid());
-
-			if (cashier != null)
-				obj.put("cashier", cashier.getUuid());
-			if (pos != null)
-				obj.put("pos", pos.getUuid());
-
-
-			return obj;
-		}
-		catch (final JSONException e)
-		{
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public static Payment fromJSON(JSONObject obj) throws JSONException
-	{
-		if (obj.has("result") && obj.getString("result").equalsIgnoreCase("null"))
-			obj = obj.getJSONObject("result");
-
-		// date
-		final String date = obj.getString("transactionTime");
-		Date tTime = null;
-		try
-		{
-			tTime = inputDf.parse(date);
-		}
-		catch (final ParseException e)
-		{
-			e.printStackTrace();
+			return this;
 		}
 
-		final Cashier cash = new Cashier.Builder(null).build();
-		cash.setUuid(obj.getString("cashier"));
-		final Receipt rec = new Receipt.Builder().build();
-		rec.setUuid(obj.getString("receipt"));
-		final POS pos = new POS.Builder(null).build();
-		pos.setUuid(obj.getString("pos"));
-		final Currency cur = new Currency.Builder(null).build();
-		cur.setUuid(obj.getString("currency"));
-		final PaymentMethods payMeth = new PaymentMethods.Builder(null).build();
-		payMeth.setUuid(obj.getString("paymentMethod"));
-		final Payment pay = new Payment.Builder().deleted(obj.getBoolean("deleted"))
-			.revision(obj.getString("revision"))
-			.uuid(obj.getString("uuid"))
-			.amount(obj.getDouble("amount"))
-			.transactionTime(tTime)
-			.cashier(cash)
-			.receipt(rec)
-			.pos(pos)
-			.currency(cur)
-			.paymentMethod(payMeth)
-			.build();
-		return pay;
 	}
 
-	public boolean post() throws IOException
+	private Payment(final Init<?> init)
 	{
-
-		if (cashier != null && cashier.getUuid() == null)
-			cashier.post();
-		return CloudLink.getConnector().postData(DataType.sale, this.toJSON());
+		super(init);
+		cashier = init.cashier;
+		receipt = init.receipt;
+		receiptNumber = init.receiptNumber;
+		manualPrice = init.manualPrice;
+		itemPrice = init.itemPrice;
+		amount = init.amount;
+		transactionTime = init.transactionTime;
+		itemNumber = init.itemNumber;
+		netItemPrice = init.netItemPrice;
+		baseItemPrice = init.baseItemPrice;
+		serialNumber = init.serialNumber;
+		itemSequence = init.itemSequence;
+		pos = init.pos;
+		currency = init.currency;
+		paymentMethod = init.paymentMethod;
+		receiptIndex = init.receiptIndex;
 	}
 
+// public JSONObject toJSON()
+// {
+// final JSONObject obj = new JSONObject();
+// try
+// {
+// obj.put("deleted", deleted);
+// obj.put("revision", revision);
+// obj.put("uuid", uuid);
+// obj.put("receiptNumber", receiptNumber);
+// obj.put("currency", currency.getUuid());
+//
+// if (cashier != null)
+// obj.put("cashier", cashier.getUuid());
+// if (pos != null)
+// obj.put("pos", pos.getUuid());
+//
+//
+// return obj;
+// }
+// catch (final JSONException e)
+// {
+// e.printStackTrace();
+// return null;
+// }
+// }
+//
+// public static Payment fromJSON(JSONObject obj) throws JSONException
+// {
+// if (obj.has("result") && obj.getString("result").equalsIgnoreCase("null"))
+// obj = obj.getJSONObject("result");
+//
+// // date
+// final String date = obj.getString("transactionTime");
+// Date tTime = null;
+// try
+// {
+// tTime = inputDf.parse(date);
+// }
+// catch (final ParseException e)
+// {
+// e.printStackTrace();
+// }
+//
+// final Cashier cash = new Cashier.Builder(null).build();
+// cash.setUuid(obj.getString("cashier"));
+// final Receipt rec = new Receipt.Builder().build();
+// rec.setUuid(obj.getString("receipt"));
+// final POS pos = new POS.Builder(null).build();
+// pos.setUuid(obj.getString("pos"));
+// final Currency cur = new Currency.Builder(null).build();
+// cur.setUuid(obj.getString("currency"));
+// final PaymentMethods payMeth = new PaymentMethods.Builder(null).build();
+// payMeth.setUuid(obj.getString("paymentMethod"));
+// final Payment pay = new Payment.Builder().deleted(obj.getBoolean("deleted"))
+// .revision(obj.getString("revision"))
+// .uuid(obj.getString("uuid"))
+// .amount(obj.getDouble("amount"))
+// .transactionTime(tTime)
+// .cashier(cash)
+// .receipt(rec)
+// .pos(pos)
+// .currency(cur)
+// .paymentMethod(payMeth)
+// .build();
+// return pay;
+// }
 
-	public boolean isDeleted()
-	{
-		return deleted;
-	}
-
-	public void setDeleted(final boolean deleted)
-	{
-		this.deleted = deleted;
-	}
-
-	public String getRevision()
-	{
-		return revision;
-	}
-
-	public void setRevision(final String revision)
-	{
-		this.revision = revision;
-	}
-
-	public String getUuid()
-	{
-		return uuid;
-	}
-
-	public void setUuid(final String uuid)
-	{
-		this.uuid = uuid;
-	}
+// public boolean post() throws IOException
+// {
+//
+// if (cashier != null && cashier.getUuid() == null)
+// cashier.post();
+// return CloudLink.getConnector().postData(DataType.sale, this.toJSON());
+// }
 
 	public Cashier getCashier()
 	{
@@ -468,10 +419,6 @@ public class Payment
 		int result = 1;
 
 		result = prime * result + ((this.itemSequence == null) ? 0 : this.itemSequence.hashCode());
-		result = prime * result + ((this.uuid == null) ? 0 : this.uuid.hashCode());
-		result = prime * result + ((this.revision == null) ? 0 : this.revision.hashCode());
-		result = prime * result +
-			((this.receiptNumber == null) ? 0 : this.receiptNumber.hashCode());
 		result = prime * result + ((this.serialNumber == null) ? 0 : this.serialNumber.hashCode());
 		result = prime * result + ((this.cashier == null) ? 0 : this.cashier.hashCode());
 		result = prime * result + ((this.currency == null) ? 0 : this.currency.hashCode());

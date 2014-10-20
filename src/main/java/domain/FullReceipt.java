@@ -111,7 +111,7 @@ public class FullReceipt
 
 		if (!obj.isNull("customer"))
 		{
-			final Customer customer = new Customer.Builder().uuid(jReceipt.getString("customer"))
+			final Customer customer = new Customer.Builder().id(jReceipt.getString("customer"))
 				.number(jReceipt.getString("customerNr"))
 				.zipCode("customerZip")
 				.build();
@@ -129,7 +129,7 @@ public class FullReceipt
 			{
 				final JSONObject jAccountTransaction = jAAccountTransaction.getJSONObject(i);
 				final AccountTransaction accountTransaction = AccountTransaction.fromJSON(jAccountTransaction);
-				final Account account = new Account.Builder().uuid(
+				final Account account = new Account.Builder().id(
 					jAccountTransaction.getString("account"))
 					.number(jAccountTransaction.getString("accountNr"))
 					.name(jAccountTransaction.getString("accountDescription"))
@@ -147,8 +147,7 @@ public class FullReceipt
 			{
 				final JSONObject jPayment = jAPayment.getJSONObject(i);
 				final Payment payment = Payment.fromJSON(jPayment);
-				final Currency currency = new Currency.Builder(null).uuid(
-					jPayment.getString("currency"))
+				final Currency currency = new Currency.Builder().id(jPayment.getString("currency"))
 					.key(jPayment.getString("currencyKey"))
 					.build();
 				payment.setCurrency(currency);
