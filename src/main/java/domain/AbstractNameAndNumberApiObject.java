@@ -1,34 +1,19 @@
 package domain;
 
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
 import domain.interfaces.HasName;
 
-public abstract class AbstractNameAndNumberApiObject extends AbstractNumberApiObject implements
-	HasName
+public abstract class AbstractNameAndNumberApiObject<T extends HasName> extends
+	AbstractNumberApiObject<AbstractNameAndNumberApiObject<T>> implements HasName
 {
-
-	private static final long serialVersionUID = 4379932372164338249L;
-
-	private String name;
-
-	protected static abstract class Init<T extends Init<T>> extends AbstractNumberApiObject.Init<T>
-	{
-		private String name;
-
-		public T name(final String value)
-		{
-			name = value;
-			return self();
-		}
-
-		@Override
-		public abstract AbstractNameAndNumberApiObject build();
-	}
 
 	public static abstract class Builder extends Init<Builder>
 	{
 
 		@Override
-		public abstract AbstractNameAndNumberApiObject build();
+		public abstract AbstractNameAndNumberApiObject<?> build();
 
 		@Override
 		protected Builder self()
@@ -38,32 +23,54 @@ public abstract class AbstractNameAndNumberApiObject extends AbstractNumberApiOb
 
 	}
 
+	protected static abstract class Init<T extends Init<T>> extends AbstractNumberApiObject.Init<T>
+	{
+		private String name;
+
+		@Override
+		public abstract AbstractNameAndNumberApiObject<?> build();
+
+		public T name(final String value)
+		{
+			name = value;
+			return self();
+		}
+	}
+
+	private static final long serialVersionUID = 4379932372164338249L;
+
+	private String name;
+
 	public AbstractNameAndNumberApiObject(final Init<?> init)
 	{
 		super(init);
 		this.name = init.name;
 	}
 
-// @Override
-// public void readJSON(final JSONObject obj) throws JSONException
-// {
-// name(obj.getString("name"));
-// super.readJSON(obj);
-// }
-//
-// @Override
-// public void writeJSON(final JSONObject obj, final T value) throws JSONException
-// {
-// super.writeJSON(obj, value);
-// obj.put("name", value.getName());
-//
-// }
-
-
 	@Override
 	public String getName()
 	{
 		return this.name;
+	}
+
+	@Override
+	protected int hashCode(int result)
+	{
+		super.hashCode(result);
+
+		final int prime = 31;
+		result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
+
+		return result;
+	}
+
+
+	@Override
+	public void readJSON(final JSONObject obj) throws JSONException
+	{
+		super.readJSON(obj);
+		if (obj.has("name") && !obj.get("name").equals(null))
+			setName(obj.getString("name"));
 	}
 
 	@Override
@@ -73,26 +80,22 @@ public abstract class AbstractNameAndNumberApiObject extends AbstractNumberApiOb
 	}
 
 	@Override
-	protected int hashCode(int result)
-	{
-		final int prime = 31;
-		result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
-
-		super.hashCode(result);
-
-		return result;
-	}
-
-	@Override
 	protected StringBuilder toString(final StringBuilder builder)
 	{
-		builder.append("_");
-		builder.append(this.name);
-
 		super.toString(builder);
 
+		if (name != null)
+		{
+			builder.append("_name=");
+			builder.append(this.name);
+		}
 		return builder;
 	}
 
-
+	public void writeJSON(final JSONObject obj, final AbstractNameAndNumberApiObject<T> value)
+		throws JSONException
+	{
+		super.writeJSON(obj, value);
+		obj.put("name", name);
+	}
 }

@@ -1,29 +1,11 @@
 package domain;
 
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
-public class Assortment extends AbstractNameAndNumberApiObject
+
+public class Assortment extends AbstractNameAndNumberApiObject<Assortment>
 {
-	private static final long serialVersionUID = 4119884542878721366L;
-	private String description;
-
-	protected static abstract class Init<T extends Init<T>> extends
-		AbstractNameAndNumberApiObject.Init<T>
-	{
-		private String description;
-
-		public T description(final String value)
-		{
-			this.description = value;
-			return self();
-		}
-
-		@Override
-		public Assortment build()
-		{
-			return new Assortment(this);
-		}
-	}
-
 	public static class Builder extends Init<Builder>
 	{
 
@@ -35,6 +17,27 @@ public class Assortment extends AbstractNameAndNumberApiObject
 		}
 
 	}
+	protected static abstract class Init<T extends Init<T>> extends
+		AbstractNameAndNumberApiObject.Init<T>
+	{
+		private String description;
+
+		@Override
+		public Assortment build()
+		{
+			return new Assortment(this);
+		}
+
+		public T description(final String value)
+		{
+			this.description = value;
+			return self();
+		}
+	}
+
+	private static final long serialVersionUID = 4119884542878721366L;
+
+	private String description;
 
 // @Override
 // public void readJSON(JSONObject obj) throws JSONException
@@ -60,20 +63,26 @@ public class Assortment extends AbstractNameAndNumberApiObject
 		description = init.description;
 	}
 
-	public String getDescription()
-	{
-		return description;
-	}
-
-	public void setDescription(final String description)
-	{
-		this.description = description;
-	}
-
 	@Override
 	public boolean equals(final Object obj)
 	{
 		return obj.hashCode() == this.hashCode();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public AbstractNumberApiObject<AbstractNameAndNumberApiObject<Assortment>> fromJSON(
+		final JSONObject obj) throws JSONException
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getDescription()
+	{
+		return description;
 	}
 
 	@Override
@@ -87,6 +96,23 @@ public class Assortment extends AbstractNameAndNumberApiObject
 		result = super.hashCode(result);
 
 		return result;
+	}
+
+	public void setDescription(final String description)
+	{
+		this.description = description;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public JSONObject toJSON(
+		AbstractNumberApiObject<AbstractNameAndNumberApiObject<Assortment>> value)
+		throws JSONException
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override

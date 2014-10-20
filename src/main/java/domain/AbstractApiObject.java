@@ -3,21 +3,27 @@ package domain;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
 import domain.interfaces.HasId;
 
-public abstract class AbstractApiObject implements HasId, Serializable
+public abstract class AbstractApiObject<T extends AbstractApiObject<?>> implements HasId,
+	Serializable
 {
 
-	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+	public static abstract class Builder extends Init<Builder>
+	{
 
-	private static final long serialVersionUID = 2033325648556071101L;
+		@Override
+		public abstract AbstractApiObject<?> build();
 
-	private String id;
-
-	private Long revision;
-
-	private boolean deleted;
-
+		@Override
+		protected Builder self()
+		{
+			return this;
+		}
+	}
 
 	protected static abstract class Init<T extends Init<T>>
 	{
@@ -25,13 +31,13 @@ public abstract class AbstractApiObject implements HasId, Serializable
 
 		private Long revision;
 
-		private boolean deleted;
+		private Boolean deleted;
 
-		protected abstract T self();
+		public abstract AbstractApiObject<?> build();
 
-		public T revision(final Long value)
+		public T deleted(final Boolean value)
 		{
-			this.revision = value;
+			deleted = value;
 			return self();
 		}
 
@@ -41,55 +47,25 @@ public abstract class AbstractApiObject implements HasId, Serializable
 			return self();
 		}
 
-		public T deleted(final boolean value)
+		public T revision(final Long value)
 		{
-			deleted = value;
+			this.revision = value;
 			return self();
 		}
 
-		public abstract AbstractApiObject build();
+		protected abstract T self();
 	}
 
-// public void readJSON(final JSONObject obj) throws JSONException
-// {
-// id(obj.getString("uuid"));
-// deleted(obj.getBoolean("deleted"));
-// revision(obj.getLong("revision"));
-// }
-//
-// public void writeJSON(final JSONObject obj, final T value) throws JSONException
-// {
-// obj.put("uuid", id);
-// obj.put("deleted", deleted);
-// obj.put("revision", revision);
-// }
-//
-// public T fromJSON(final JSONObject obj) throws JSONException
-// {
-// readJSON(obj);
-// return this.build();
-// }
-//
-// public JSONObject toJSON(final T value) throws JSONException
-// {
-// final JSONObject obj = new JSONObject();
-// writeJSON(obj, value);
-// return obj;
-// }
+	protected static final SimpleDateFormat inputDf = new SimpleDateFormat(
+		"yyyy-MM-dd'T'HH:mm:ssXXX");
 
-	public static abstract class Builder extends Init<Builder>
-	{
+	private static final long serialVersionUID = 2033325648556071101L;
 
-		@Override
-		protected Builder self()
-		{
-			return this;
-		}
+	private String id;
 
-		@Override
-		public abstract AbstractApiObject build();
-	}
+	private Long revision;
 
+	private Boolean deleted;
 
 	public AbstractApiObject(final Init<?> init)
 	{
@@ -99,27 +75,57 @@ public abstract class AbstractApiObject implements HasId, Serializable
 		this.deleted = init.deleted;
 	}
 
-	protected int hashCode(int result)
-	{
-		final int prime = 31;
-		result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-		result = prime * result + ((this.revision == null) ? 0 : this.revision.hashCode());
-		result = prime * result + ((this.deleted) ? 1 : 0);
+	public abstract T fromJSON(final JSONObject obj) throws JSONException;
 
-		return result;
-	}
-
-	protected StringBuilder toString(final StringBuilder builder)
-	{
-		builder.append("_");
-		builder.append(this.revision);
-		return builder;
-	}
+// public AbstractApiObject fromJSON(final JSONObject obj) throws JSONException
+// {
+// readJSON(obj);
+// return this;
+// }
 
 	@Override
 	public String getId()
 	{
 		return id;
+	}
+
+
+	@Override
+	public Long getRevision()
+	{
+		return revision;
+	}
+
+	protected int hashCode(int result)
+	{
+		final int prime = 31;
+		result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
+		result = prime * result + ((this.revision == null) ? 0 : this.revision.hashCode());
+		result = prime * result + ((this.deleted == null) ? 0 : this.deleted.hashCode());
+
+		return result;
+	}
+
+	@Override
+	public Boolean isDeleted()
+	{
+		return deleted;
+	}
+
+	public void readJSON(final JSONObject obj) throws JSONException
+	{
+		if (obj.has("uuid") && !obj.get("uuid").equals(null))
+			setId(obj.getString("uuid"));
+		if (obj.has("deleted") && !obj.get("deleted").equals(null))
+			setDeleted(Boolean.valueOf(obj.getBoolean("deleted")));
+		if (obj.has("revision") && !obj.get("revision").equals(null))
+			setRevision(Long.valueOf(obj.getLong("revision")));
+	}
+
+	@Override
+	public void setDeleted(final Boolean deleted)
+	{
+		this.deleted = deleted;
 	}
 
 	@Override
@@ -129,31 +135,44 @@ public abstract class AbstractApiObject implements HasId, Serializable
 	}
 
 	@Override
-	public Long getRevision()
-	{
-		return revision;
-	}
-
-	@Override
 	public void setRevision(final Long revision)
 	{
 		this.revision = revision;
 	}
 
-	@Override
-	public boolean isDeleted()
+	public abstract JSONObject toJSON(final T value) throws JSONException;
+
+// public JSONObject toJSON(final AbstractApiObject value) throws JSONException
+// {
+// final JSONObject obj = new JSONObject();
+// writeJSON(obj, value);
+// return obj;
+// }
+
+	protected StringBuilder toString(final StringBuilder builder)
 	{
-		return deleted;
+		if (id != null)
+		{
+			builder.append("id=");
+			builder.append(this.id);
+		}
+		if (deleted != null)
+		{
+			builder.append("_deleted=");
+			builder.append(this.deleted);
+		}
+		if (revision != null)
+		{
+			builder.append("_rev=");
+			builder.append(this.revision);
+		}
+		return builder;
 	}
 
-	@Override
-	public void setDeleted(final boolean deleted)
+	public void writeJSON(final JSONObject obj, final T value) throws JSONException
 	{
-		this.deleted = deleted;
-	}
-
-	public static SimpleDateFormat getInputdf()
-	{
-		return inputDf;
+		obj.put("uuid", id);
+		obj.put("deleted", deleted);
+		obj.put("revision", revision);
 	}
 }
