@@ -7,9 +7,9 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import domain.interfaces.HasId;
+import domain.interfaces.HasJSON;
 
-public abstract class AbstractApiObject<T extends AbstractApiObject<?>> implements HasId,
-	Serializable
+public abstract class AbstractApiObject<T extends HasId> implements HasId, Serializable, HasJSON<T>
 {
 
 	public static abstract class Builder extends Init<Builder>
@@ -77,12 +77,6 @@ public abstract class AbstractApiObject<T extends AbstractApiObject<?>> implemen
 
 	public abstract T fromJSON(final JSONObject obj) throws JSONException;
 
-// public AbstractApiObject fromJSON(final JSONObject obj) throws JSONException
-// {
-// readJSON(obj);
-// return this;
-// }
-
 	@Override
 	public String getId()
 	{
@@ -112,6 +106,7 @@ public abstract class AbstractApiObject<T extends AbstractApiObject<?>> implemen
 		return deleted;
 	}
 
+	@Override
 	public void readJSON(final JSONObject obj) throws JSONException
 	{
 		if (obj.has("uuid") && !obj.get("uuid").equals(null))
@@ -140,14 +135,7 @@ public abstract class AbstractApiObject<T extends AbstractApiObject<?>> implemen
 		this.revision = revision;
 	}
 
-	public abstract JSONObject toJSON(final T value) throws JSONException;
-
-// public JSONObject toJSON(final AbstractApiObject value) throws JSONException
-// {
-// final JSONObject obj = new JSONObject();
-// writeJSON(obj, value);
-// return obj;
-// }
+	public abstract JSONObject toJSON() throws JSONException;
 
 	protected StringBuilder toString(final StringBuilder builder)
 	{
@@ -169,10 +157,11 @@ public abstract class AbstractApiObject<T extends AbstractApiObject<?>> implemen
 		return builder;
 	}
 
-	public void writeJSON(final JSONObject obj, final T value) throws JSONException
+	@Override
+	public void writeJSON(final JSONObject obj) throws JSONException
 	{
-		obj.put("uuid", id);
-		obj.put("deleted", deleted);
-		obj.put("revision", revision);
+		obj.put("uuid", getId());
+		obj.put("deleted", isDeleted());
+		obj.put("revision", getRevision());
 	}
 }

@@ -3,10 +3,11 @@ package domain;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import domain.interfaces.HasId;
 import domain.interfaces.HasNumber;
 
-public abstract class AbstractNumberApiObject<T extends AbstractNumberApiObject, HasNumber> extends
-	AbstractApiObject implements HasNumber
+public abstract class AbstractNumberApiObject<T extends HasNumber & HasId> extends
+	AbstractApiObject<T> implements HasNumber
 {
 
 	public static abstract class Builder extends Init<Builder>
@@ -93,10 +94,9 @@ public abstract class AbstractNumberApiObject<T extends AbstractNumberApiObject,
 	}
 
 	@Override
-	public void writeJSON(final JSONObject obj, final AbstractNumberApiObject<T> value)
-		throws JSONException
+	public void writeJSON(final JSONObject obj) throws JSONException
 	{
-		super.writeJSON(obj, value);
-		obj.put("number", number);
+		super.writeJSON(obj);
+		obj.put("number", getNumber());
 	}
 }

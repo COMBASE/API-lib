@@ -12,7 +12,6 @@ public class Assortment extends AbstractNameAndNumberApiObject<Assortment>
 		@Override
 		protected Builder self()
 		{
-
 			return this;
 		}
 
@@ -39,24 +38,6 @@ public class Assortment extends AbstractNameAndNumberApiObject<Assortment>
 
 	private String description;
 
-// @Override
-// public void readJSON(JSONObject obj) throws JSONException
-// {
-// if (obj.has("result") && obj.getString("result") != null)
-// obj = obj.getJSONObject("result");
-//
-// description(obj.getString("description"));
-//
-// super.readJSON(obj);
-// }
-//
-// @Override
-// public void writeJSON(final JSONObject obj, final Assortment value) throws JSONException
-// {
-// super.writeJSON(obj, value);
-// obj.put("description", value.getDescription());
-
-
 	private Assortment(final Init<?> init)
 	{
 		super(init);
@@ -73,11 +54,10 @@ public class Assortment extends AbstractNameAndNumberApiObject<Assortment>
 	 * {@inheritDoc}
 	 */
 	@Override
-	public AbstractNumberApiObject<AbstractNameAndNumberApiObject<Assortment>> fromJSON(
-		final JSONObject obj) throws JSONException
+	public Assortment fromJSON(final JSONObject obj) throws JSONException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		readJSON(obj);
+		return this;
 	}
 
 	public String getDescription()
@@ -98,6 +78,17 @@ public class Assortment extends AbstractNameAndNumberApiObject<Assortment>
 		return result;
 	}
 
+	@Override
+	public void readJSON(JSONObject obj) throws JSONException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
+
+		super.readJSON(obj);
+
+		setDescription(obj.getString("description"));
+	}
+
 	public void setDescription(final String description)
 	{
 		this.description = description;
@@ -107,12 +98,11 @@ public class Assortment extends AbstractNameAndNumberApiObject<Assortment>
 	 * {@inheritDoc}
 	 */
 	@Override
-	public JSONObject toJSON(
-		AbstractNumberApiObject<AbstractNameAndNumberApiObject<Assortment>> value)
-		throws JSONException
+	public JSONObject toJSON() throws JSONException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		final JSONObject obj = new JSONObject();
+		readJSON(obj);
+		return obj;
 	}
 
 	@Override
@@ -123,6 +113,13 @@ public class Assortment extends AbstractNameAndNumberApiObject<Assortment>
 		super.toString(builder);
 
 		return builder.toString();
+	}
+
+	@Override
+	public void writeJSON(final JSONObject obj) throws JSONException
+	{
+		super.writeJSON(obj);
+		obj.put("description", getDescription());
 	}
 
 }
