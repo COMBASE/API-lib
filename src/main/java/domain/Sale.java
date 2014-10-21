@@ -1,28 +1,17 @@
 package domain;
 
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import link.CloudLink;
 
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-
-import error.ApiNotReachableException;
-
-
-public class Sale
+public class Sale extends AbstractApiObject
 {
-	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
-	private boolean deleted;
-	private String revision;
-	private String uuid;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3645926143364056863L;
 	private Product article;
 	private Cashier cashier;
 	private CommodityGroup commodityGroup;
@@ -43,38 +32,8 @@ public class Sale
 	private String serialNumber;
 	private List<TaxPayments> taxPayments;
 
-
-	private Sale(final Builder builder)
+	protected static abstract class Init<T extends Init<T>> extends AbstractApiObject.Init<T>
 	{
-		deleted = builder.deleted;
-		revision = builder.revision;
-		uuid = builder.uuid;
-		article = builder.article;
-		cashier = builder.cashier;
-		commodityGroup = builder.commodityGroup;
-		bookingTime = builder.bookingTime;
-		description = builder.description;
-		infoTexts = builder.infoTexts;
-		sector = builder.sector;
-		receiptNumber = builder.receiptNumber;
-		receiptIndex = builder.receiptIndex;
-		quantity = builder.quantity;
-		receipt = builder.receipt;
-		manualPrice = builder.manualPrice;
-		itemPrice = builder.itemPrice;
-		grossItemPrice = builder.grossItemPrice;
-		netItemPrice = builder.netItemPrice;
-		baseItemPrice = builder.baseItemPrice;
-		serialNumber = builder.serialNumber;
-		pos = builder.pos;
-		taxPayments = builder.taxPayments;
-	}
-
-	public static class Builder
-	{
-		private boolean deleted = false;
-		private String revision = null;
-		private String uuid = null;
 		private Product article = null;
 		private Cashier cashier = null;
 		private CommodityGroup commodityGroup = null;
@@ -95,312 +54,294 @@ public class Sale
 		private POS pos;
 		private final List<TaxPayments> taxPayments = new ArrayList<TaxPayments>();
 
-
-		public Builder()
-		{
-
-		}
-
-		public Builder pos(final POS posy)
+		public T pos(final POS posy)
 		{
 			pos = posy;
-			return this;
+			return self();
 		}
 
-		public Builder taxPayments(final TaxPayments taxPayment)
+		public T taxPayments(final TaxPayments taxPayment)
 		{
 			taxPayments.add(taxPayment);
-			return this;
+			return self();
 		}
 
-		public Builder taxPayments(final Collection<TaxPayments> coll)
+		public T taxPayments(final Collection<TaxPayments> coll)
 		{
 			for (final TaxPayments taxPay : coll)
 			{
 				taxPayments.add(taxPay);
 			}
-			return this;
+			return self();
 		}
 
-		public Builder deleted(final boolean value)
-		{
-			deleted = value;
-			return this;
-		}
-
-		public Builder revision(final String value)
-		{
-			revision = value;
-			return this;
-		}
-
-		public Builder uuid(final String value)
-		{
-			uuid = value;
-			return this;
-		}
-
-		public Builder article(final Product prod)
+		public T article(final Product prod)
 		{
 			article = prod;
-			return this;
+			return self();
 		}
 
-		public Builder cashier(final Cashier cash)
+		public T cashier(final Cashier cash)
 		{
 			cashier = cash;
-			return this;
+			return self();
 		}
 
-		public Builder commodityGroup(final CommodityGroup grp)
+		public T commodityGroup(final CommodityGroup grp)
 		{
 			commodityGroup = grp;
-			return this;
+			return self();
 		}
 
-		public Builder bookingTime(final Date time)
+		public T bookingTime(final Date time)
 		{
 			bookingTime = time;
-			return this;
+			return self();
 		}
 
-		public Builder description(final String txt)
+		public T description(final String txt)
 		{
 			description = txt;
-			return this;
+			return self();
 		}
 
-		public Builder infoTexts(final String txt)
+		public T infoTexts(final String txt)
 		{
 			infoTexts = txt;
-			return this;
+			return self();
 		}
 
-		public Builder sector(final Sector sec)
+		public T sector(final Sector sec)
 		{
 			sector = sec;
-			return this;
+			return self();
 		}
 
-		public Builder receiptNumber(final String value)
+		public T receiptNumber(final String value)
 		{
 			receiptNumber = value;
-			return this;
+			return self();
 		}
 
-		public Builder receiptIndex(final int value)
+		public T receiptIndex(final int value)
 		{
 			receiptIndex = value;
-			return this;
+			return self();
 		}
 
-		public Builder quantity(final double value)
+		public T quantity(final double value)
 		{
 			quantity = value;
-			return this;
+			return self();
 		}
 
-		public Builder receipt(final Receipt rec)
+		public T receipt(final Receipt rec)
 		{
 			this.receipt = rec;
-			return this;
+			return self();
 		}
 
-		public Builder manualPrice(final double value)
+		public T manualPrice(final double value)
 		{
 			manualPrice = value;
-			return this;
+			return self();
 		}
 
-		public Builder itemPrice(final double value)
+		public T itemPrice(final double value)
 		{
 			itemPrice = value;
-			return this;
+			return self();
 		}
 
-		public Builder grossItemPrice(final double value)
+		public T grossItemPrice(final double value)
 		{
 			grossItemPrice = value;
-			return this;
+			return self();
 		}
 
-		public Builder netItemPrice(final double value)
+		public T netItemPrice(final double value)
 		{
 			netItemPrice = value;
-			return this;
+			return self();
 		}
 
-		public Builder baseItemPrice(final double value)
+		public T baseItemPrice(final double value)
 		{
 			baseItemPrice = value;
-			return this;
+			return self();
 		}
 
-		public Builder serialNumber(final String value)
+		public T serialNumber(final String value)
 		{
 			serialNumber = value;
-			return this;
+			return self();
 		}
 
+		@Override
 		public Sale build()
 		{
 			return new Sale(this);
 		}
 	}
 
-	public JSONObject toJSON()
+	public static class Builder extends Init<Builder>
 	{
-		final JSONObject obj = new JSONObject();
-		try
+
+		@Override
+		protected Builder self()
 		{
-			obj.put("deleted", deleted);
-			obj.put("revision", revision);
-			obj.put("uuid", uuid);
-			obj.put("bookingTime", bookingTime);
-			obj.put("description", description);
-			obj.put("infoTexts", infoTexts);
-			obj.put("sector", sector);
-			obj.put("receiptNumber", receiptNumber);
-			obj.put("receiptIndex", receiptIndex);
-			obj.put("quantity", quantity);
-
-			if (cashier != null)
-				obj.put("cashier", cashier.getUuid());
-			if (article != null)
-				obj.put("article", article.getUuid());
-			if (commodityGroup != null)
-				obj.put("commodityGroup", commodityGroup.getUuid());
-			if (sector != null)
-				obj.put("sector", sector.getUuid());
-
-			return obj;
-		}
-		catch (final JSONException e)
-		{
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public static Sale fromJSON(JSONObject obj) throws JSONException
-	{
-		if (obj.has("result") && obj.getString("result") != null)
-			obj = obj.getJSONObject("result");
-
-
-		final Product prod = new Product.Builder(null).build();
-		prod.setUuid(obj.getString("article"));
-
-		final Cashier cash = new Cashier.Builder(null).build();
-		cash.setUuid(obj.getString("cashier"));
-
-		final CommodityGroup grp = new CommodityGroup.Builder(null).build();
-		grp.setUuid(obj.getString("commodityGroup"));
-
-		final Sector sec = new Sector.Builder(null).build();
-		sec.setUuid(obj.getString("sector"));
-
-		final Receipt rec = new Receipt.Builder().build();
-		rec.setUuid(obj.getString("receipt"));
-
-		final POS pos = new POS.Builder(null).build();
-		pos.setUuid(obj.getString("pos"));
-
-		// date
-		Date bTime = null;
-		try
-		{
-			final String date = obj.getString("bookingTime");
-			bTime = inputDf.parse(date);
-		}
-		catch (final ParseException e)
-		{
-			e.printStackTrace();
+			return this;
 		}
 
-		final Sale sale = new Sale.Builder().deleted(obj.getBoolean("deleted"))
-			.revision(obj.getString("revision"))
-			.uuid(obj.getString("uuid"))
-			.article(prod)
-			.cashier(cash)
-			.commodityGroup(grp)
-			.bookingTime(bTime)
-			.description(obj.getString("description"))
-			.infoTexts(obj.getString("infoTexts"))
-			.sector(sec)
-			.receiptNumber(obj.getString("receiptNumber"))
-			.receiptIndex(obj.getInt("receiptIndex"))
-			.quantity(obj.getDouble("quantity"))
-			.receipt(rec)
-			.itemPrice(obj.getDouble("itemPrice"))
-			.netItemPrice(obj.getDouble("netItemPrice"))
-			.baseItemPrice(obj.getDouble("baseItemPrice"))
-			.grossItemPrice(obj.getDouble("grossItemPrice"))
-			.pos(pos)
-			.build();
-
-		JSONArray jTax = new JSONArray();
-		jTax = obj.getJSONArray("taxPayments");
-		if (!jTax.isNull(0))
-		{
-			for (int i = 0; i <= jTax.length() - 1; i++)
-			{
-				JSONObject tax = new JSONObject();
-				tax = jTax.getJSONObject(i);
-				final TaxPayments taxO = new TaxPayments(tax.getString("salesTax"),
-					tax.getDouble("currentTaxRate"), tax.getDouble("amount"));
-				final List<TaxPayments> taxL = new ArrayList<TaxPayments>();
-				taxL.add(taxO);
-				sale.setTaxPayments(taxL);
-			}
-		}
-
-		return sale;
 	}
 
-	public boolean post() throws ApiNotReachableException, IOException
+	private Sale(final Init<?> init)
 	{
-
-		if (commodityGroup != null && commodityGroup.getUuid() == null)
-			commodityGroup.post();
-		if (sector != null && sector.getUuid() == null)
-			sector.post();
-		if (cashier != null && cashier.getUuid() == null)
-			cashier.post();
-		if (article != null && article.getUuid() == null)
-			article.post();
-		return CloudLink.getConnector().postData(DataType.sale, this.toJSON());
+		super(init);
+		article = init.article;
+		cashier = init.cashier;
+		commodityGroup = init.commodityGroup;
+		bookingTime = init.bookingTime;
+		description = init.description;
+		infoTexts = init.infoTexts;
+		sector = init.sector;
+		receiptNumber = init.receiptNumber;
+		receiptIndex = init.receiptIndex;
+		quantity = init.quantity;
+		receipt = init.receipt;
+		manualPrice = init.manualPrice;
+		itemPrice = init.itemPrice;
+		grossItemPrice = init.grossItemPrice;
+		netItemPrice = init.netItemPrice;
+		baseItemPrice = init.baseItemPrice;
+		serialNumber = init.serialNumber;
+		pos = init.pos;
+		taxPayments = init.taxPayments;
 	}
 
-	public boolean isDeleted()
-	{
-		return this.deleted;
-	}
-
-	public void setDeleted(final boolean deleted)
-	{
-		this.deleted = deleted;
-	}
-
-	public String getRevision()
-	{
-		return this.revision;
-	}
-
-	public void setRevision(final String revision)
-	{
-		this.revision = revision;
-	}
-
-	public String getUuid()
-	{
-		return this.uuid;
-	}
-
-	public void setUuid(final String uuid)
-	{
-		this.uuid = uuid;
-	}
+// public JSONObject toJSON()
+// {
+// final JSONObject obj = new JSONObject();
+// try
+// {
+// obj.put("deleted", deleted);
+// obj.put("revision", revision);
+// obj.put("uuid", uuid);
+// obj.put("bookingTime", bookingTime);
+// obj.put("description", description);
+// obj.put("infoTexts", infoTexts);
+// obj.put("sector", sector);
+// obj.put("receiptNumber", receiptNumber);
+// obj.put("receiptIndex", receiptIndex);
+// obj.put("quantity", quantity);
+//
+// if (cashier != null)
+// obj.put("cashier", cashier.getUuid());
+// if (article != null)
+// obj.put("article", article.getUuid());
+// if (commodityGroup != null)
+// obj.put("commodityGroup", commodityGroup.getUuid());
+// if (sector != null)
+// obj.put("sector", sector.getUuid());
+//
+// return obj;
+// }
+// catch (final JSONException e)
+// {
+// e.printStackTrace();
+// return null;
+// }
+// }
+//
+// public static Sale fromJSON(JSONObject obj) throws JSONException
+// {
+// if (obj.has("result") && obj.getString("result") != null)
+// obj = obj.getJSONObject("result");
+//
+//
+// final Product prod = new Product.Builder(null).build();
+// prod.setUuid(obj.getString("article"));
+//
+// final Cashier cash = new Cashier.Builder(null).build();
+// cash.setUuid(obj.getString("cashier"));
+//
+// final CommodityGroup grp = new CommodityGroup.Builder(null).build();
+// grp.setUuid(obj.getString("commodityGroup"));
+//
+// final Sector sec = new Sector.Builder(null).build();
+// sec.setUuid(obj.getString("sector"));
+//
+// final Receipt rec = new Receipt.Builder().build();
+// rec.setUuid(obj.getString("receipt"));
+//
+// final POS pos = new POS.Builder(null).build();
+// pos.setUuid(obj.getString("pos"));
+//
+// // date
+// Date bTime = null;
+// try
+// {
+// final String date = obj.getString("bookingTime");
+// bTime = inputDf.parse(date);
+// }
+// catch (final ParseException e)
+// {
+// e.printStackTrace();
+// }
+//
+// final Sale sale = new Sale.Builder().deleted(obj.getBoolean("deleted"))
+// .revision(obj.getString("revision"))
+// .uuid(obj.getString("uuid"))
+// .article(prod)
+// .cashier(cash)
+// .commodityGroup(grp)
+// .bookingTime(bTime)
+// .description(obj.getString("description"))
+// .infoTexts(obj.getString("infoTexts"))
+// .sector(sec)
+// .receiptNumber(obj.getString("receiptNumber"))
+// .receiptIndex(obj.getInt("receiptIndex"))
+// .quantity(obj.getDouble("quantity"))
+// .receipt(rec)
+// .itemPrice(obj.getDouble("itemPrice"))
+// .netItemPrice(obj.getDouble("netItemPrice"))
+// .baseItemPrice(obj.getDouble("baseItemPrice"))
+// .grossItemPrice(obj.getDouble("grossItemPrice"))
+// .pos(pos)
+// .build();
+//
+// JSONArray jTax = new JSONArray();
+// jTax = obj.getJSONArray("taxPayments");
+// if (!jTax.isNull(0))
+// {
+// for (int i = 0; i <= jTax.length() - 1; i++)
+// {
+// JSONObject tax = new JSONObject();
+// tax = jTax.getJSONObject(i);
+// final TaxPayments taxO = new TaxPayments(tax.getString("salesTax"),
+// tax.getDouble("currentTaxRate"), tax.getDouble("amount"));
+// final List<TaxPayments> taxL = new ArrayList<TaxPayments>();
+// taxL.add(taxO);
+// sale.setTaxPayments(taxL);
+// }
+// }
+//
+// return sale;
+// }
+//
+// public boolean post() throws ApiNotReachableException, IOException
+// {
+//
+// if (commodityGroup != null && commodityGroup.getUuid() == null)
+// commodityGroup.post();
+// if (sector != null && sector.getUuid() == null)
+// sector.post();
+// if (cashier != null && cashier.getUuid() == null)
+// cashier.post();
+// if (article != null && article.getUuid() == null)
+// article.post();
+// return CloudLink.getConnector().postData(DataType.sale, this.toJSON());
+// }
 
 	public Product getArticle()
 	{
@@ -610,9 +551,8 @@ public class Sale
 		final int prime = 31;
 		int result = 1;
 
+		result = super.hashCode(result);
 		result = prime * result + ((this.description == null) ? 0 : this.description.hashCode());
-		result = prime * result + ((this.uuid == null) ? 0 : this.uuid.hashCode());
-		result = prime * result + ((this.revision == null) ? 0 : this.revision.hashCode());
 		result = prime * result + ((this.infoTexts == null) ? 0 : this.infoTexts.hashCode());
 		result = prime * result +
 			((this.receiptNumber == null) ? 0 : this.receiptNumber.hashCode());

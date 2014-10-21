@@ -2,7 +2,6 @@ package domain;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import link.CloudLink;
@@ -13,82 +12,61 @@ import org.codehaus.jettison.json.JSONObject;
 
 public class TimeTracking
 {
-	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
-	private boolean deleted;
-	private final String revision;
-	private String uuid;
-	private Cashier cashier;
-	private String org;
-	private Date start;
-	private TimeTrackingEntities timeTrackingEntity;
+	private final Cashier cashier;
+	private final String org;
+	private final Date start;
+	private final TimeTrackingEntities timeTrackingEntity;
 
-	private TimeTracking(final Builder builder)
+	private TimeTracking(final Init<?> init)
 	{
-		deleted = builder.deleted;
-		revision = builder.revision;
-		cashier = builder.cashier;
-		org = builder.org;
-		start = builder.start;
-		timeTrackingEntity = builder.timeTrackingEntity;
+		cashier = init.cashier;
+		org = init.org;
+		start = init.start;
+		timeTrackingEntity = init.timeTrackingEntity;
 
 	}
 
-	public static class Builder
+	public static abstract class Init<T extends Init<T>> extends AbstractApiObject.Init<T>
 	{
-		private String revision = null;
-		private boolean deleted = true;
 		private Cashier cashier = null;
 		private String org;
 		private Date start;
 		private TimeTrackingEntities timeTrackingEntity;
 
-
-		// ctor
-		public Builder()
-		{
-
-		}
-
-		public Builder deleted(final boolean value)
-		{
-			deleted = value;
-			return this;
-		}
-
-		public Builder revision(final String value)
-		{
-			revision = value;
-			return this;
-		}
-
-		public Builder cashier(final Cashier cash)
+		public T cashier(final Cashier cash)
 		{
 			cashier = cash;
-			return this;
+			return self();
 		}
 
-		public Builder org(final String value)
+		public T org(final String value)
 		{
 			org = value;
-			return this;
+			return self();
 		}
 
-		public Builder start(final Date value)
+		public T start(final Date value)
 		{
 			start = value;
-			return this;
+			return self();
 		}
 
-		public Builder timeTrackingentity(final TimeTrackingEntities entity)
+		public T timeTrackingentity(final TimeTrackingEntities entity)
 		{
 			timeTrackingEntity = entity;
-			return this;
+			return self();
 		}
 
+		@Override
 		public TimeTracking build()
 		{
 			return new TimeTracking(this);
 		}
+	}
+
+	public static class Builder extends Init<Builder>
+	{
+
 	}
 
 	public static TimeTracking fromJSON(JSONObject obj) throws JSONException
