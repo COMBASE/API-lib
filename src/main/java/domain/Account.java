@@ -1,8 +1,12 @@
 package domain;
 
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
-public class Account extends AbstractNameAndNumberApiObject
+
+public class Account extends AbstractNameAndNumberApiObject<Account>
 {
+	private static final long serialVersionUID = 4756810592495231540L;
 
 	private String type;
 
@@ -89,5 +93,20 @@ public class Account extends AbstractNameAndNumberApiObject
 		result = super.hashCode(result);
 
 		return result;
+	}
+
+	@Override
+	public Account fromJSON(final JSONObject obj) throws JSONException
+	{
+		readJSON(obj);
+		return this;
+	}
+
+	@Override
+	public JSONObject toJSON() throws JSONException
+	{
+		final JSONObject obj = new JSONObject();
+		readJSON(obj);
+		return obj;
 	}
 }

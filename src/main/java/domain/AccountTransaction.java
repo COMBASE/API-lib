@@ -2,7 +2,10 @@ package domain;
 
 import java.util.Date;
 
-public class AccountTransaction extends AbstractApiObject
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
+public class AccountTransaction extends AbstractApiObject<Account>
 {
 	private Account account;
 	private Receipt receipt;
@@ -281,6 +284,20 @@ public class AccountTransaction extends AbstractApiObject
 
 
 		return result;
+	}
+
+	@Override
+	public Account fromJSON(final JSONObject obj) throws JSONException
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public JSONObject toJSON() throws JSONException
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

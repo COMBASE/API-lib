@@ -86,7 +86,8 @@ public class Assortment extends AbstractNameAndNumberApiObject<Assortment>
 
 		super.readJSON(obj);
 
-		setDescription(obj.getString("description"));
+		if (obj.has("description") && !obj.get("description").equals(null))
+			setDescription(obj.getString("description"));
 	}
 
 	public void setDescription(final String description)
