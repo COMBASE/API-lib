@@ -2,7 +2,10 @@ package domain;
 
 import java.math.BigDecimal;
 
-public class InventoryReceiptItem extends AbstractApiObject
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
+public class InventoryReceiptItem extends AbstractApiObject<InventoryReceiptItem>
 {
 	/**
 	 * 
@@ -164,5 +167,38 @@ public class InventoryReceiptItem extends AbstractApiObject
 	public void setReceipt(final InventoryReceipt receipt)
 	{
 		this.receipt = receipt;
+	}
+
+	@Override
+	public JSONObject toJSON() throws JSONException
+	{
+		final JSONObject obj = new JSONObject();
+		writeJSON(obj);
+		return obj;
+	}
+
+	@Override
+	public void writeJSON(final JSONObject obj) throws JSONException
+	{
+		super.writeJSON(obj);
+
+	}
+
+	@Override
+	public InventoryReceiptItem fromJSON(final JSONObject obj) throws JSONException
+	{
+		readJSON(obj);
+		return this;
+	}
+
+	@Override
+	public void readJSON(JSONObject obj) throws JSONException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
+
+		super.readJSON(obj);
+
+
 	}
 }

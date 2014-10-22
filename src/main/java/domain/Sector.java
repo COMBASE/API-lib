@@ -3,7 +3,10 @@ package domain;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Sector extends AbstractNameAndNumberApiObject
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
+public class Sector extends AbstractNameAndNumberApiObject<Sector>
 {
 
 	/**
@@ -157,5 +160,38 @@ public class Sector extends AbstractNameAndNumberApiObject
 		result = prime * result + ((this.taxlist == null) ? 0 : this.taxlist.hashCode());
 
 		return result;
+	}
+
+	@Override
+	public JSONObject toJSON() throws JSONException
+	{
+		final JSONObject obj = new JSONObject();
+		writeJSON(obj);
+		return obj;
+	}
+
+	@Override
+	public void writeJSON(final JSONObject obj) throws JSONException
+	{
+		super.writeJSON(obj);
+
+	}
+
+	@Override
+	public Sector fromJSON(final JSONObject obj) throws JSONException
+	{
+		readJSON(obj);
+		return this;
+	}
+
+	@Override
+	public void readJSON(JSONObject obj) throws JSONException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
+
+		super.readJSON(obj);
+
+
 	}
 }

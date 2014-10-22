@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Inventory extends AbstractNumberApiObject
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
+public class Inventory extends AbstractNumberApiObject<Inventory>
 {
 	/**
 	 * 
@@ -532,4 +535,36 @@ public class Inventory extends AbstractNumberApiObject
 		return result;
 	}
 
+	@Override
+	public JSONObject toJSON() throws JSONException
+	{
+		final JSONObject obj = new JSONObject();
+		writeJSON(obj);
+		return obj;
+	}
+
+	@Override
+	public void writeJSON(final JSONObject obj) throws JSONException
+	{
+		super.writeJSON(obj);
+
+	}
+
+	@Override
+	public Inventory fromJSON(final JSONObject obj) throws JSONException
+	{
+		readJSON(obj);
+		return this;
+	}
+
+	@Override
+	public void readJSON(JSONObject obj) throws JSONException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
+
+		super.readJSON(obj);
+
+
+	}
 }

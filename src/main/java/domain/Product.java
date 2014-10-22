@@ -5,8 +5,11 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
-public class Product extends AbstractNameAndNumberApiObject
+
+public class Product extends AbstractNameAndNumberApiObject<Product>
 {
 	/**
 	 * 
@@ -710,5 +713,38 @@ public class Product extends AbstractNameAndNumberApiObject
 		final StringBuilder stringBuilder = new StringBuilder();
 		super.toString(stringBuilder);
 		return stringBuilder.toString();
+	}
+
+	@Override
+	public JSONObject toJSON() throws JSONException
+	{
+		final JSONObject obj = new JSONObject();
+		writeJSON(obj);
+		return obj;
+	}
+
+	@Override
+	public void writeJSON(final JSONObject obj) throws JSONException
+	{
+		super.writeJSON(obj);
+
+	}
+
+	@Override
+	public Product fromJSON(final JSONObject obj) throws JSONException
+	{
+		readJSON(obj);
+		return this;
+	}
+
+	@Override
+	public void readJSON(JSONObject obj) throws JSONException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
+
+		super.readJSON(obj);
+
+
 	}
 }

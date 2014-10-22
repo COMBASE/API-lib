@@ -35,7 +35,7 @@ public class EndOfDayPaymentSummary
 
 		final EndOfDayPaymentSummary paymentSummary = new EndOfDayPaymentSummary();
 
-		final PaymentMethods paymentMethods = new PaymentMethods.Builder(null).uuid(
+		final PaymentMethods paymentMethods = new PaymentMethods.Builder().id(
 			obj.getString("paymentMethod")).build();
 
 		paymentSummary.setPaymentMethods(paymentMethods);

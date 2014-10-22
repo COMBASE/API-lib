@@ -60,7 +60,7 @@ public class EndOfDayTaxSummary
 
 		final EndOfDayTaxSummary taxSummary = new EndOfDayTaxSummary();
 
-		final Tax tax = new Tax.Builder(null, null).uuid(obj.getString("salesTax")).build();
+		final Tax tax = new Tax.Builder().id(obj.getString("salesTax")).build();
 
 		taxSummary.setNetAmount(new BigDecimal(obj.getString("netAmount")));
 		taxSummary.setSalesTax(tax);

@@ -1,7 +1,10 @@
 package domain;
 
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
-public class Cashier extends AbstractNameAndNumberApiObject
+
+public class Cashier extends AbstractNameAndNumberApiObject<Cashier>
 {
 	private static final long serialVersionUID = -229595034107308709L;
 	private final String firstName;
@@ -158,5 +161,38 @@ public class Cashier extends AbstractNameAndNumberApiObject
 		super.toString(builder);
 
 		return builder.toString();
+	}
+
+	@Override
+	public JSONObject toJSON() throws JSONException
+	{
+		final JSONObject obj = new JSONObject();
+		writeJSON(obj);
+		return obj;
+	}
+
+	@Override
+	public void writeJSON(final JSONObject obj) throws JSONException
+	{
+		super.writeJSON(obj);
+
+	}
+
+	@Override
+	public Cashier fromJSON(final JSONObject obj) throws JSONException
+	{
+		readJSON(obj);
+		return this;
+	}
+
+	@Override
+	public void readJSON(JSONObject obj) throws JSONException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
+
+		super.readJSON(obj);
+
+
 	}
 }

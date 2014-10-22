@@ -1,24 +1,25 @@
 package domain;
 
-import java.io.IOException;
-import java.text.ParseException;
 import java.util.Date;
-
-import link.CloudLink;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 
-public class TimeTracking
+public class TimeTracking extends AbstractApiObject<TimeTracking>
 {
-	private final Cashier cashier;
-	private final String org;
-	private final Date start;
-	private final TimeTrackingEntities timeTrackingEntity;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -740149629390934463L;
+	private Cashier cashier;
+	private String org;
+	private Date start;
+	private TimeTrackingEntities timeTrackingEntity;
 
 	private TimeTracking(final Init<?> init)
 	{
+		super(init);
 		cashier = init.cashier;
 		org = init.org;
 		start = init.start;
@@ -67,89 +68,76 @@ public class TimeTracking
 	public static class Builder extends Init<Builder>
 	{
 
-	}
-
-	public static TimeTracking fromJSON(JSONObject obj) throws JSONException
-	{
-		if (obj.has("result") && obj.getString("result") != null)
-			obj = obj.getJSONObject("result");
-
-		// Date
-		final String date = obj.getString("start");
-		Date startTime = null;
-		try
+		@Override
+		protected Builder self()
 		{
-			startTime = inputDf.parse(date);
-		}
-		catch (final ParseException e)
-		{
-			e.printStackTrace();
+			return this;
 		}
 
-		final TimeTrackingEntities ent = new TimeTrackingEntities.Builder(null).build();
-		ent.setUuid(obj.getString("timeTrackingEntity"));
-		final Cashier cash = new Cashier.Builder(null).build();
-		cash.setUuid(obj.getString("cashier"));
-		final TimeTracking tTrack = new TimeTracking.Builder().deleted(obj.getBoolean("deleted"))
-			.start(startTime)
-			.timeTrackingentity(ent)
-			.cashier(cash)
-			.revision(obj.getString("revision"))
-			.build();
-		return tTrack;
 	}
 
-	public JSONObject toJSON()
-	{
-		final JSONObject obj = new JSONObject();
-		try
-		{
-			obj.put("deleted", deleted);
-			obj.put("uuid", uuid);
-			obj.put("cashier", cashier);
-			obj.put("org", org);
-			obj.put("start", start);
-			obj.put("timeTrackingEntity", timeTrackingEntity);
-			return obj;
-		}
-		catch (final JSONException e)
-		{
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public boolean post() throws IOException
-	{
-
-		if (cashier != null && cashier.getUuid() == null)
-			cashier.post();
-		if (timeTrackingEntity != null && timeTrackingEntity.getUuid() == null)
-			timeTrackingEntity.post();
-		return CloudLink.getConnector().postData(DataType.timeTracking, this.toJSON());
-	}
+// public static TimeTracking fromJSON(JSONObject obj) throws JSONException
+// {
+// if (obj.has("result") && obj.getString("result") != null)
+// obj = obj.getJSONObject("result");
+//
+// // Date
+// final String date = obj.getString("start");
+// Date startTime = null;
+// try
+// {
+// startTime = inputDf.parse(date);
+// }
+// catch (final ParseException e)
+// {
+// e.printStackTrace();
+// }
+//
+// final TimeTrackingEntities ent = new TimeTrackingEntities.Builder(null).build();
+// ent.setUuid(obj.getString("timeTrackingEntity"));
+// final Cashier cash = new Cashier.Builder(null).build();
+// cash.setUuid(obj.getString("cashier"));
+// final TimeTracking tTrack = new TimeTracking.Builder().deleted(obj.getBoolean("deleted"))
+// .start(startTime)
+// .timeTrackingentity(ent)
+// .cashier(cash)
+// .revision(obj.getString("revision"))
+// .build();
+// return tTrack;
+// }
+//
+// @Override
+// public JSONObject toJSON()
+// {
+// final JSONObject obj = new JSONObject();
+// try
+// {
+// obj.put("deleted", deleted);
+// obj.put("uuid", uuid);
+// obj.put("cashier", cashier);
+// obj.put("org", org);
+// obj.put("start", start);
+// obj.put("timeTrackingEntity", timeTrackingEntity);
+// return obj;
+// }
+// catch (final JSONException e)
+// {
+// e.printStackTrace();
+// return null;
+// }
+// }
+//
+// public boolean post() throws IOException
+// {
+//
+// if (cashier != null && cashier.getUuid() == null)
+// cashier.post();
+// if (timeTrackingEntity != null && timeTrackingEntity.getUuid() == null)
+// timeTrackingEntity.post();
+// return CloudLink.getConnector().postData(DataType.timeTracking, this.toJSON());
+// }
 
 	// ******************Setter and Getter**********************************************************
-	public void setDeleted(final boolean del)
-	{
-		this.deleted = del;
-	}
-
-	public boolean isDeleted()
-	{
-		return this.deleted;
-	}
-
-	public void setUuid(final String uuid)
-	{
-		this.uuid = uuid;
-	}
-
-	public String getUuid()
-	{
-		return this.uuid;
-	}
-
 	public void setCashier(final Cashier cashier)
 	{
 		this.cashier = cashier;
@@ -190,10 +178,6 @@ public class TimeTracking
 		return this.timeTrackingEntity;
 	}
 
-	public String getRevision()
-	{
-		return revision;
-	}
 
 	@Override
 	public boolean equals(final Object obj)
@@ -209,8 +193,8 @@ public class TimeTracking
 		int result = 1;
 
 		result = prime * result + ((this.org == null) ? 0 : this.org.hashCode());
-		result = prime * result + ((this.uuid == null) ? 0 : this.uuid.hashCode());
-		result = prime * result + ((this.revision == null) ? 0 : this.revision.hashCode());
+
+
 		result = prime * result + ((this.cashier == null) ? 0 : this.cashier.hashCode());
 		result = prime * result + ((this.start == null) ? 0 : this.start.hashCode());
 		result = prime * result +
@@ -218,5 +202,38 @@ public class TimeTracking
 
 
 		return result;
+	}
+
+	@Override
+	public JSONObject toJSON() throws JSONException
+	{
+		final JSONObject obj = new JSONObject();
+		writeJSON(obj);
+		return obj;
+	}
+
+	@Override
+	public void writeJSON(final JSONObject obj) throws JSONException
+	{
+		super.writeJSON(obj);
+
+	}
+
+	@Override
+	public TimeTracking fromJSON(final JSONObject obj) throws JSONException
+	{
+		readJSON(obj);
+		return this;
+	}
+
+	@Override
+	public void readJSON(JSONObject obj) throws JSONException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
+
+		super.readJSON(obj);
+
+
 	}
 }

@@ -96,17 +96,24 @@ public class Account extends AbstractNameAndNumberApiObject<Account>
 	}
 
 	@Override
-	public Account fromJSON(final JSONObject obj) throws JSONException
-	{
-		readJSON(obj);
-		return this;
-	}
-
-	@Override
 	public JSONObject toJSON() throws JSONException
 	{
 		final JSONObject obj = new JSONObject();
-		readJSON(obj);
+		writeJSON(obj);
 		return obj;
+	}
+
+	@Override
+	public void writeJSON(final JSONObject obj) throws JSONException
+	{
+		super.writeJSON(obj);
+
+	}
+
+
+	public static Account fromJSON(final JSONObject obj) throws JSONException
+	{
+		final Account account = new Account.Builder().build();
+		return account;
 	}
 }

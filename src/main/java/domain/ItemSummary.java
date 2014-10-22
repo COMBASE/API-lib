@@ -67,8 +67,9 @@ public class ItemSummary
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
 
-		final PaymentMethods paymentMethods = new PaymentMethods.Builder(
-			obj.getString("paymentMethodName")).uuid(obj.getString("paymentMethod"))
+		final PaymentMethods paymentMethods = new PaymentMethods.Builder().name(
+			obj.getString("paymentMethodName"))
+			.id(obj.getString("paymentMethod"))
 			.number(obj.getString("paymentMethodNr"))
 			.build();
 

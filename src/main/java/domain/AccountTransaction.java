@@ -5,8 +5,9 @@ import java.util.Date;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-public class AccountTransaction extends AbstractApiObject<Account>
+public class AccountTransaction extends AbstractApiObject<AccountTransaction>
 {
+	private static final long serialVersionUID = -6707310291148051948L;
 	private Account account;
 	private Receipt receipt;
 	private Cashier cashier;
@@ -287,17 +288,36 @@ public class AccountTransaction extends AbstractApiObject<Account>
 	}
 
 	@Override
-	public Account fromJSON(final JSONObject obj) throws JSONException
+	public JSONObject toJSON() throws JSONException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		final JSONObject obj = new JSONObject();
+		writeJSON(obj);
+		return obj;
 	}
 
 	@Override
-	public JSONObject toJSON() throws JSONException
+	public void writeJSON(final JSONObject obj) throws JSONException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		super.writeJSON(obj);
+
+	}
+
+	@Override
+	public AccountTransaction fromJSON(final JSONObject obj) throws JSONException
+	{
+		readJSON(obj);
+		return this;
+	}
+
+	@Override
+	public void readJSON(JSONObject obj) throws JSONException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
+
+		super.readJSON(obj);
+
+
 	}
 
 

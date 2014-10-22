@@ -1,9 +1,12 @@
 package domain;
 
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 
-public class Pricelist extends AbstractNameAndNumberApiObject
+public class Pricelist extends AbstractNameAndNumberApiObject<Pricelist>
 {
+	private static final long serialVersionUID = 563916800781375676L;
 	private boolean netPrices;
 	private String uuidOfCurrency;
 
@@ -11,7 +14,7 @@ public class Pricelist extends AbstractNameAndNumberApiObject
 	protected static abstract class Init<T extends Init<T>> extends
 		AbstractNameAndNumberApiObject.Init<T>
 	{
-		private final String uuidOfCurrency = null;
+		private String uuidOfCurrency = null;
 		private boolean netPrices = false;
 
 
@@ -140,5 +143,38 @@ public class Pricelist extends AbstractNameAndNumberApiObject
 	{
 
 		return obj.hashCode() == this.hashCode();
+	}
+
+	@Override
+	public JSONObject toJSON() throws JSONException
+	{
+		final JSONObject obj = new JSONObject();
+		writeJSON(obj);
+		return obj;
+	}
+
+	@Override
+	public void writeJSON(final JSONObject obj) throws JSONException
+	{
+		super.writeJSON(obj);
+
+	}
+
+	@Override
+	public Pricelist fromJSON(final JSONObject obj) throws JSONException
+	{
+		readJSON(obj);
+		return this;
+	}
+
+	@Override
+	public void readJSON(JSONObject obj) throws JSONException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
+
+		super.readJSON(obj);
+
+
 	}
 }

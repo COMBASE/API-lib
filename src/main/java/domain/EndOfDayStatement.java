@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class EndOfDayStatement extends AbstractApiObject
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
+public class EndOfDayStatement extends AbstractApiObject<EndOfDayStatement>
 {
 	/**
 	 * 
@@ -33,12 +36,6 @@ public class EndOfDayStatement extends AbstractApiObject
 
 	protected static abstract class Init<T extends Init<T>> extends AbstractApiObject.Init<T>
 	{
-		private long revision = 0l;
-
-		private String uuid = null;
-
-		private boolean deleted = false;
-
 		private List<EndOfDayAccountSummary> accountSummaries = new ArrayList<EndOfDayAccountSummary>();
 
 		private List<EndOfDayCashierSummary> cashierSummaries = new ArrayList<EndOfDayCashierSummary>();
@@ -58,25 +55,6 @@ public class EndOfDayStatement extends AbstractApiObject
 		private long zCount;
 
 		private POS pos;
-
-		public T revision(final long value)
-		{
-			this.revision = value;
-			return self();
-		}
-
-		public T uuid(final String value)
-		{
-			this.uuid = value;
-			return self();
-		}
-
-		@Override
-		public T deleted(final boolean value)
-		{
-			this.deleted = value;
-			return self();
-		}
 
 		public T accountSummaries(final List<EndOfDayAccountSummary> value)
 		{
@@ -462,6 +440,39 @@ public class EndOfDayStatement extends AbstractApiObject
 
 
 		return result;
+	}
+
+	@Override
+	public JSONObject toJSON() throws JSONException
+	{
+		final JSONObject obj = new JSONObject();
+		writeJSON(obj);
+		return obj;
+	}
+
+	@Override
+	public void writeJSON(final JSONObject obj) throws JSONException
+	{
+		super.writeJSON(obj);
+
+	}
+
+	@Override
+	public EndOfDayStatement fromJSON(final JSONObject obj) throws JSONException
+	{
+		readJSON(obj);
+		return this;
+	}
+
+	@Override
+	public void readJSON(JSONObject obj) throws JSONException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
+
+		super.readJSON(obj);
+
+
 	}
 
 }

@@ -68,14 +68,6 @@ public abstract class AbstractNumberApiObject<T extends HasNumber & HasId> exten
 	}
 
 	@Override
-	public void readJSON(final JSONObject obj) throws JSONException
-	{
-		super.readJSON(obj);
-		if (obj.has("number") && !obj.get("number").equals(null))
-			setNumber(obj.getString("number"));
-	}
-
-	@Override
 	public void setNumber(final String number)
 	{
 		this.number = number;

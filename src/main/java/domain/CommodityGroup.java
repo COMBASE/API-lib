@@ -1,7 +1,10 @@
 package domain;
 
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
-public class CommodityGroup extends AbstractNameAndNumberApiObject
+
+public class CommodityGroup extends AbstractNameAndNumberApiObject<CommodityGroup>
 {
 	private static final long serialVersionUID = -1157923369749796851L;
 	private boolean hasChildren;
@@ -166,5 +169,38 @@ public class CommodityGroup extends AbstractNameAndNumberApiObject
 		result = prime * result + ((this.hasChildren == false) ? 0 : 1);
 
 		return result;
+	}
+
+	@Override
+	public JSONObject toJSON() throws JSONException
+	{
+		final JSONObject obj = new JSONObject();
+		writeJSON(obj);
+		return obj;
+	}
+
+	@Override
+	public void writeJSON(final JSONObject obj) throws JSONException
+	{
+		super.writeJSON(obj);
+
+	}
+
+	@Override
+	public CommodityGroup fromJSON(final JSONObject obj) throws JSONException
+	{
+		readJSON(obj);
+		return this;
+	}
+
+	@Override
+	public void readJSON(JSONObject obj) throws JSONException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
+
+		super.readJSON(obj);
+
+
 	}
 }

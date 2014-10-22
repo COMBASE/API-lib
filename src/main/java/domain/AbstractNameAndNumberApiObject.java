@@ -68,14 +68,6 @@ public abstract class AbstractNameAndNumberApiObject<T extends HasName & HasNumb
 
 
 	@Override
-	public void readJSON(final JSONObject obj) throws JSONException
-	{
-		super.readJSON(obj);
-		if (obj.has("name") && !obj.get("name").equals(null))
-			setName(obj.getString("name"));
-	}
-
-	@Override
 	public void setName(final String name)
 	{
 		this.name = name;

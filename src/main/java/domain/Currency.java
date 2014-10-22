@@ -1,7 +1,10 @@
 package domain;
 
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
-public class Currency extends AbstractNameAndNumberApiObject
+
+public class Currency extends AbstractNameAndNumberApiObject<Currency>
 {
 	/**
 	 * 
@@ -150,6 +153,39 @@ public class Currency extends AbstractNameAndNumberApiObject
 		result = prime * result + ((this.centName == null) ? 0 : this.centName.hashCode());
 
 		return result;
+	}
+
+	@Override
+	public JSONObject toJSON() throws JSONException
+	{
+		final JSONObject obj = new JSONObject();
+		writeJSON(obj);
+		return obj;
+	}
+
+	@Override
+	public void writeJSON(final JSONObject obj) throws JSONException
+	{
+		super.writeJSON(obj);
+
+	}
+
+	@Override
+	public Currency fromJSON(final JSONObject obj) throws JSONException
+	{
+		readJSON(obj);
+		return this;
+	}
+
+	@Override
+	public void readJSON(JSONObject obj) throws JSONException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
+
+		super.readJSON(obj);
+
+
 	}
 
 }

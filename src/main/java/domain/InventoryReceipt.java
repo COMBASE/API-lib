@@ -2,7 +2,10 @@ package domain;
 
 import java.util.Date;
 
-public class InventoryReceipt extends AbstractNumberApiObject
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
+public class InventoryReceipt extends AbstractNumberApiObject<InventoryReceipt>
 {
 	/**
 	 * 
@@ -313,5 +316,38 @@ public class InventoryReceipt extends AbstractNumberApiObject
 		result = prime * result + ((this.inventory == null) ? 0 : this.inventory.hashCode());
 
 		return result;
+	}
+
+	@Override
+	public JSONObject toJSON() throws JSONException
+	{
+		final JSONObject obj = new JSONObject();
+		writeJSON(obj);
+		return obj;
+	}
+
+	@Override
+	public void writeJSON(final JSONObject obj) throws JSONException
+	{
+		super.writeJSON(obj);
+
+	}
+
+	@Override
+	public InventoryReceipt fromJSON(final JSONObject obj) throws JSONException
+	{
+		readJSON(obj);
+		return this;
+	}
+
+	@Override
+	public void readJSON(JSONObject obj) throws JSONException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
+
+		super.readJSON(obj);
+
+
 	}
 }

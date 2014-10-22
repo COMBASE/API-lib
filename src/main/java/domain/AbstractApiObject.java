@@ -75,8 +75,6 @@ public abstract class AbstractApiObject<T extends HasId> implements HasId, Seria
 		this.deleted = init.deleted;
 	}
 
-	public abstract T fromJSON(final JSONObject obj) throws JSONException;
-
 	@Override
 	public String getId()
 	{
@@ -104,17 +102,6 @@ public abstract class AbstractApiObject<T extends HasId> implements HasId, Seria
 	public Boolean isDeleted()
 	{
 		return deleted;
-	}
-
-	@Override
-	public void readJSON(final JSONObject obj) throws JSONException
-	{
-		if (obj.has("uuid") && !obj.get("uuid").equals(null))
-			setId(obj.getString("uuid"));
-		if (obj.has("deleted") && !obj.get("deleted").equals(null))
-			setDeleted(Boolean.valueOf(obj.getBoolean("deleted")));
-		if (obj.has("revision") && !obj.get("revision").equals(null))
-			setRevision(Long.valueOf(obj.getLong("revision")));
 	}
 
 	@Override

@@ -12,7 +12,7 @@ import org.codehaus.jettison.json.JSONObject;
  */
 public interface HasJSON<T>
 {
-	public void readJSON(final JSONObject obj) throws JSONException;
+	// public void readJSON(final JSONObject obj) throws JSONException;
 
 	public void writeJSON(final JSONObject obj) throws JSONException;
 

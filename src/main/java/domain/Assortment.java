@@ -53,12 +53,7 @@ public class Assortment extends AbstractNameAndNumberApiObject<Assortment>
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
-	public Assortment fromJSON(final JSONObject obj) throws JSONException
-	{
-		readJSON(obj);
-		return this;
-	}
+
 
 	public String getDescription()
 	{
@@ -78,33 +73,11 @@ public class Assortment extends AbstractNameAndNumberApiObject<Assortment>
 		return result;
 	}
 
-	@Override
-	public void readJSON(JSONObject obj) throws JSONException
-	{
-		if (obj.has("result") && obj.getString("result") != null)
-			obj = obj.getJSONObject("result");
-
-		super.readJSON(obj);
-
-		if (obj.has("description") && !obj.get("description").equals(null))
-			setDescription(obj.getString("description"));
-	}
-
 	public void setDescription(final String description)
 	{
 		this.description = description;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public JSONObject toJSON() throws JSONException
-	{
-		final JSONObject obj = new JSONObject();
-		readJSON(obj);
-		return obj;
-	}
 
 	@Override
 	public String toString()
@@ -117,10 +90,36 @@ public class Assortment extends AbstractNameAndNumberApiObject<Assortment>
 	}
 
 	@Override
+	public JSONObject toJSON() throws JSONException
+	{
+		final JSONObject obj = new JSONObject();
+		writeJSON(obj);
+		return obj;
+	}
+
+	@Override
 	public void writeJSON(final JSONObject obj) throws JSONException
 	{
 		super.writeJSON(obj);
 		obj.put("description", getDescription());
 	}
 
+	@Override
+	public Assortment fromJSON(final JSONObject obj) throws JSONException
+	{
+		readJSON(obj);
+		return this;
+	}
+
+	@Override
+	public void readJSON(JSONObject obj) throws JSONException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
+
+		super.readJSON(obj);
+
+		if (obj.has("description") && !obj.get("description").equals(null))
+			setDescription(obj.getString("description"));
+	}
 }
