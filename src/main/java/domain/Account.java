@@ -111,9 +111,19 @@ public class Account extends AbstractNameAndNumberApiObject<Account>
 	}
 
 
-	public static Account fromJSON(final JSONObject obj) throws JSONException
+	public static Account fromJSON(JSONObject obj) throws JSONException
 	{
-		final Account account = new Account.Builder().build();
-		return account;
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
+
+		final Account acc = new Account.Builder().deleted(obj.getBoolean("deleted"))
+			.revision(obj.getLong("revision"))
+			.number(obj.getString("number"))
+			.id(obj.getString("uuid"))
+			.name(obj.getString("name"))
+			.type(obj.getString("type"))
+			.requiresSerialNumber(obj.getBoolean("requiresSerialNumber"))
+			.build();
+		return acc;
 	}
 }
