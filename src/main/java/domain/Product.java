@@ -275,7 +275,7 @@ public class Product
 			.assortment(assortment)
 			.build();
 
-		if (obj.getString("supplierItemPrices") != null)
+		if (obj.getString("supplierItemPrices") != "null")
 		{
 			JSONArray jSupplierItemPrices = new JSONArray();
 			jSupplierItemPrices = obj.getJSONArray("supplierItemPrices");
