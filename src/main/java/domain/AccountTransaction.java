@@ -129,45 +129,9 @@ public class AccountTransaction extends AbstractApiObject<AccountTransaction>
 // }
 // }
 
-// public static AccountTransaction fromJSON(JSONObject obj) throws JSONException
-// {
-// if (obj.has("result") && obj.getString("result") != null)
-// obj = obj.getJSONObject("result");
 //
-// // date
-// final String date = obj.getString("bookingTime");
-// Date bTime = null;
-// try
-// {
-// bTime = getInputdf().parse(date);
-// }
-// catch (final ParseException e)
-// {
-// e.printStackTrace();
-// }
 //
-// final Account account = new Account.Builder().build();
-// account.setId(obj.getString("account"));
-// final Receipt rec = new Receipt.Builder().build();
-// rec.setUuid(obj.getString("receipt"));
-// final Cashier cash = new Cashier.Builder(null).build();
-// cash.setUuid(obj.getString("cashier"));
-// final POS pos = new POS.Builder(null).build();
-// pos.setUuid(obj.getString("pos"));
-// final AccountTransaction accountTransaction = new AccountTransaction.Builder().deleted(
-// obj.getBoolean("deleted"))
-// .revision(obj.getString("revision"))
-// .receipt(rec)
-// .cashier(cash)
-// .pos(pos)
-// .account(account)
-// .amount(obj.getDouble("amount"))
-// .bookingTime(bTime)
-// .receiptIndex(obj.getInt("receiptIndex"))
-// .description(obj.getString("description"))
-// .build();
-// return accountTransaction;
-// }
+//
 
 // public boolean post() throws IOException
 // {
@@ -302,22 +266,43 @@ public class AccountTransaction extends AbstractApiObject<AccountTransaction>
 
 	}
 
-	@Override
-	public AccountTransaction fromJSON(final JSONObject obj) throws JSONException
-	{
-		readJSON(obj);
-		return this;
-	}
 
-	@Override
-	public void readJSON(JSONObject obj) throws JSONException
+	public static AccountTransaction fromJSON(JSONObject obj) throws JSONException
 	{
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
 
-		super.readJSON(obj);
+		// date
+		final String date = obj.getString("bookingTime");
+		Date bTime = null;
 
+		bTime = inputDf.parse(date);
 
+		final Account account = new Account.Builder().build();
+		account.setId(obj.getString("account"));
+
+		final Receipt rec = new Receipt.Builder().build();
+		rec.setId(obj.getString("receipt"));
+
+		final Cashier cash = new Cashier.Builder().build();
+		cash.setId(obj.getString("cashier"));
+
+		final POS pos = new POS.Builder().build();
+		pos.setId(obj.getString("pos"));
+
+		final AccountTransaction accountTransaction = new AccountTransaction.Builder().deleted(
+			obj.getBoolean("deleted"))
+			.revision(obj.getLong("revision"))
+			.receipt(rec)
+			.cashier(cash)
+			.pos(pos)
+			.account(account)
+			.amount(obj.getDouble("amount"))
+			.bookingTime(bTime)
+			.receiptIndex(obj.getInt("receiptIndex"))
+			.description(obj.getString("description"))
+			.build();
+		return accountTransaction;
 	}
 
 
