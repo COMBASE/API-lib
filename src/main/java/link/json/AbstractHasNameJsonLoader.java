@@ -6,23 +6,33 @@ import java.util.Map;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import domain.AbstractApiObject.ApiObjectBuilder;
 import domain.DataType;
 import domain.interfaces.HasId;
 import domain.interfaces.HasName;
 import domain.interfaces.HasNumber;
 import error.ApiNotReachableException;
 
-public abstract class HasNameJsonLoader<T extends HasId & HasNumber & HasName> extends
-	HasNumberJsonLoader<T>
+public abstract class AbstractHasNameJsonLoader<T extends HasId & HasNumber & HasName> extends
+	AbstractHasNumberJsonLoader<T>
 {
 
 	private final Map<String, T> nameCache = new HashMap<String, T>();
 
-	public HasNameJsonLoader(final DataType dataType, final String cloudUrl, final String token)
+	public AbstractHasNameJsonLoader(final DataType dataType, final String cloudUrl, final String token)
 	{
 		super(dataType, cloudUrl, token);
-		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public JSONObject appendToJson(final T value) throws JSONException
+	{
+		JSONObject obj = new JSONObject();
+
+		obj = super.appendToJson(value);
+
+		obj.put("name", value.getName());
+
+		return new JSONObject();
 	}
 
 	public T downloadByName(final String name) throws ApiNotReachableException, JSONException
@@ -35,7 +45,7 @@ public abstract class HasNameJsonLoader<T extends HasId & HasNumber & HasName> e
 		final JSONObject jDownloaded = createJsonObject(jStr);
 		if (jDownloaded == null)
 			return null;
-		final T downloaded = getBuilder().fromJSON(jDownloaded);
+		final T downloaded = fromJSON(jDownloaded);
 		nameCache.put(name, downloaded);
 		return downloaded;
 	}
@@ -48,8 +58,4 @@ public abstract class HasNameJsonLoader<T extends HasId & HasNumber & HasName> e
 
 		super.updateCachedObject(obj);
 	}
-
-	@Override
-	public abstract ApiObjectBuilder<T> getBuilder();
-
 }

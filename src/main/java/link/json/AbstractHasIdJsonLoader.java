@@ -10,7 +10,6 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import domain.AbstractApiObject.ApiObjectBuilder;
 import domain.DataType;
 import domain.interfaces.HasId;
 import error.ApiNotReachableException;
@@ -22,7 +21,7 @@ import error.ApiNotReachableException;
  * @author mas
  * 
  */
-public abstract class HasIdJsonLoader<T extends HasId>
+public abstract class AbstractHasIdJsonLoader<T extends HasId>
 {
 
 	private final DataType dataType;
@@ -38,23 +37,27 @@ public abstract class HasIdJsonLoader<T extends HasId>
 
 	private final Map<String, T> idCache = new HashMap<String, T>();
 
-	public HasIdJsonLoader(final DataType dataType, final String cloudUrl, final String token)
+	public AbstractHasIdJsonLoader(final DataType dataType, final String cloudUrl, final String token)
 	{
 		this.cloudLink = new CloudLink(cloudUrl, token);
 		this.dataType = dataType;
 	}
 
 
-	public abstract ApiObjectBuilder<T> getBuilder();
+	public abstract JSONObject toJSON(T value) throws JSONException;
 
-	public JSONObject toJSON(final T value) throws JSONException
-	{
-		return getBuilder().toJSON(value);
-	}
+	public abstract T fromJSON(JSONObject obj) throws JSONException;
 
-	public T fromJSON(final JSONObject obj) throws JSONException
+	public JSONObject appendToJson(final T value) throws JSONException
 	{
-		return getBuilder().fromJSON(obj);
+		final JSONObject obj = new JSONObject();
+
+		obj.put("uuid", value.getId());
+		obj.put("deleted", value.isDeleted());
+		obj.put("revision", value.getRevision());
+
+
+		return new JSONObject();
 	}
 
 	protected JSONArray createJsonArray(final String jStr) throws ApiNotReachableException
@@ -89,7 +92,14 @@ public abstract class HasIdJsonLoader<T extends HasId>
 		}
 	}
 
-
+	/**
+	 * returns an org.jettison.JSONArray of all org.jettison.JSONObjects having the same or greater
+	 * revision than the given one from KORONA.POS Cloud.
+	 * 
+	 * @param revision
+	 * @return
+	 * @throws ApiNotReachableException
+	 */
 	public JSONArray downloadAllByOffset(final long revision) throws ApiNotReachableException
 	{
 		final String jStr = cloudLink.getJSONByOffset(getDataType(), Long.toString(revision),
@@ -99,6 +109,19 @@ public abstract class HasIdJsonLoader<T extends HasId>
 		return jArray;
 	}
 
+	/**
+	 * for proper use you have to ensure that the JSONDownloader Object is kept alive as long you
+	 * haven't got all needed JsonObjects!
+	 * 
+	 * returns an org.jettison.JSONArray of all org.jettison.JSONObjects having the same or greater
+	 * revision than the given one from KORONA.POS Cloud. This method is used to download a certain
+	 * number of JSONObjects procede them and downloader the next amount of JSONOBjects. Each method
+	 * call increases the offset. Ensure to stop looping as this method returns null.
+	 * 
+	 * @param number
+	 * @return JSONArray
+	 * @throws ApiNotReachableException
+	 */
 	public JSONArray downloadByOffset(final long revision) throws ApiNotReachableException
 	{
 		final String jStr = cloudLink.getJSONByOffset(getDataType(), Long.toString(revision),
@@ -110,6 +133,13 @@ public abstract class HasIdJsonLoader<T extends HasId>
 		return jArray;
 	}
 
+	/**
+	 * Returns an org.jettison.JSONArray of all JSONObjects equal or greater than given revision.
+	 * 
+	 * @param number
+	 * @return
+	 * @throws ApiNotReachableException
+	 */
 	public JSONArray downloadByRevision(final long revision) throws ApiNotReachableException
 	{
 		final String jStr = cloudLink.getJSONByRevision(getDataType(), Long.toString(revision));
@@ -117,7 +147,13 @@ public abstract class HasIdJsonLoader<T extends HasId>
 		return jArray;
 	}
 
-
+	/**
+	 * returns the corresponding org.jettison.JSONObject by UUID from KORONA.POS Cloud
+	 * 
+	 * @param number
+	 * @return
+	 * @throws ApiNotReachableException
+	 */
 	public T downloadByUUID(final String uuid) throws ApiNotReachableException, JSONException
 	{
 		final T cachedObject = idCache.get(uuid);
@@ -128,10 +164,11 @@ public abstract class HasIdJsonLoader<T extends HasId>
 
 		final String jStr = cloudLink.getJSONByUuid(getDataType(), uuid);
 		final JSONObject jObject = createJsonObject(jStr);
-		final T downloaded = getBuilder().fromJSON(jObject);
+		final T downloaded = fromJSON(jObject);
 		idCache.put(uuid, downloaded);
 		return downloaded;
 	}
+
 
 	public T post(final T obj) throws ApiNotReachableException, JSONException
 	{

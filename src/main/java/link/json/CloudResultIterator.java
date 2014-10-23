@@ -21,7 +21,7 @@ public class CloudResultIterator implements Iterator<JSONObject>
 
 	private JSONArray buffer;
 	int currentBufferIndex;
-	private final HasIdJsonLoader downloader;
+	private final AbstractHasIdJsonLoader<?> downloader;
 	private final long revision;
 	private boolean emptyData;
 
@@ -32,7 +32,7 @@ public class CloudResultIterator implements Iterator<JSONObject>
 	 * @param revision
 	 * @throws ApiNotReachableException
 	 */
-	public CloudResultIterator(final HasIdJsonLoader jsonDownloader, final long revision)
+	public CloudResultIterator(final AbstractHasIdJsonLoader<?> jsonDownloader, final long revision)
 		throws ApiNotReachableException
 	{
 		this.revision = revision;

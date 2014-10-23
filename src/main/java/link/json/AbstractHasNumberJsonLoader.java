@@ -6,20 +6,31 @@ import java.util.Map;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import domain.AbstractApiObject.ApiObjectBuilder;
 import domain.DataType;
 import domain.interfaces.HasId;
 import domain.interfaces.HasNumber;
 import error.ApiNotReachableException;
 
-public abstract class HasNumberJsonLoader<T extends HasId & HasNumber> extends HasIdJsonLoader<T>
+public abstract class AbstractHasNumberJsonLoader<T extends HasId & HasNumber> extends AbstractHasIdJsonLoader<T>
 {
 
 	private final Map<String, T> numberCache = new HashMap<String, T>();
 
-	public HasNumberJsonLoader(final DataType dataType, final String cloudUrl, final String token)
+	public AbstractHasNumberJsonLoader(final DataType dataType, final String cloudUrl, final String token)
 	{
 		super(dataType, cloudUrl, token);
+	}
+
+	@Override
+	public JSONObject appendToJson(final T value) throws JSONException
+	{
+		JSONObject obj = new JSONObject();
+
+		obj = super.appendToJson(value);
+
+		obj.put("number", value.getNumber());
+
+		return new JSONObject();
 	}
 
 
@@ -40,7 +51,7 @@ public abstract class HasNumberJsonLoader<T extends HasId & HasNumber> extends H
 		final JSONObject jDownloaded = createJsonObject(jStr);
 		if (jDownloaded == null)
 			return null;
-		final T downloaded = getBuilder().fromJSON(jDownloaded);
+		final T downloaded = fromJSON(jDownloaded);
 		numberCache.put(number, downloaded);
 		return downloaded;
 	}
@@ -53,9 +64,4 @@ public abstract class HasNumberJsonLoader<T extends HasId & HasNumber> extends H
 
 		super.updateCachedObject(obj);
 	}
-
-
-	@Override
-	public abstract ApiObjectBuilder<T> getBuilder();
-
 }

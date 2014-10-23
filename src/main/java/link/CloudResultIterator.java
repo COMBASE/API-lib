@@ -2,7 +2,7 @@ package link;
 
 import java.util.Iterator;
 
-import link.json.HasIdJsonLoader;
+import link.json.AbstractHasIdJsonLoader;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -23,7 +23,7 @@ public class CloudResultIterator implements Iterator<JSONObject>
 
 	private JSONArray buffer;
 	int currentBufferIndex;
-	private final HasIdJsonLoader downloader;
+	private final AbstractHasIdJsonLoader downloader;
 	private final long revision;
 	private boolean emptyData;
 
@@ -34,7 +34,7 @@ public class CloudResultIterator implements Iterator<JSONObject>
 	 * @param revision
 	 * @throws ApiNotReachableException
 	 */
-	public CloudResultIterator(final HasIdJsonLoader jsonDownloader, final long revision)
+	public CloudResultIterator(final AbstractHasIdJsonLoader jsonDownloader, final long revision)
 		throws ApiNotReachableException
 	{
 		this.revision = revision;
