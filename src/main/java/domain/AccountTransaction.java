@@ -1,5 +1,6 @@
 package domain;
 
+import java.text.ParseException;
 import java.util.Date;
 
 import org.codehaus.jettison.json.JSONException;
@@ -267,7 +268,7 @@ public class AccountTransaction extends AbstractApiObject<AccountTransaction>
 	}
 
 
-	public static AccountTransaction fromJSON(JSONObject obj) throws JSONException
+	public static AccountTransaction fromJSON(JSONObject obj) throws JSONException, ParseException
 	{
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
