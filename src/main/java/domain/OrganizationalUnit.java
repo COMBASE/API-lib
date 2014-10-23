@@ -82,14 +82,7 @@ public class OrganizationalUnit extends AbstractNameAndNumberApiObject<Organizat
 //
 // public static OrganizationalUnit fromJSON(JSONObject obj) throws JSONException
 // {
-// if (obj.has("result") && obj.getString("result") != null)
-// obj = obj.getJSONObject("result");
-// final OrganizationalUnit orgUnit = new OrganizationalUnit.Builder(obj.getString("name")).deleted(
-// obj.getBoolean("deleted"))
-// .number(obj.getString("number"))
-// .uuid(obj.getString("uuid"))
-// .build();
-// return orgUnit;
+
 // }
 //
 // public boolean post() throws IOException
@@ -258,21 +251,16 @@ public class OrganizationalUnit extends AbstractNameAndNumberApiObject<Organizat
 
 	}
 
-	@Override
-	public OrganizationalUnit fromJSON(final JSONObject obj) throws JSONException
-	{
-		readJSON(obj);
-		return this;
-	}
-
-	@Override
-	public void readJSON(JSONObject obj) throws JSONException
+	public OrganizationalUnit fromJSON(JSONObject obj) throws JSONException
 	{
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
-
-		super.readJSON(obj);
-
-
+		final OrganizationalUnit orgUnit = new OrganizationalUnit.Builder().name(
+			obj.getString("name"))
+			.deleted(obj.getBoolean("deleted"))
+			.number(obj.getString("number"))
+			.id(obj.getString("uuid"))
+			.build();
+		return orgUnit;
 	}
 }

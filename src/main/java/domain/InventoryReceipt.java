@@ -1,5 +1,6 @@
 package domain;
 
+import java.text.ParseException;
 import java.util.Date;
 
 import org.codehaus.jettison.json.JSONException;
@@ -160,28 +161,7 @@ public class InventoryReceipt extends AbstractNumberApiObject<InventoryReceipt>
 // public static InventoryReceipt fromJSON(final JSONObject object) throws JSONException,
 // ParseException
 // {
-// final Cashier cashier = new Cashier.Builder(null).uuid(object.getString("cashier")).build();
-//
-// final OrganizationalUnit organizationalUnit = new OrganizationalUnit.Builder(null).uuid(
-// object.getString("organizationalUnit")).build();
-//
-// final Inventory inventory = new Inventory.Builder().uuid(object.getString("inventory"))
-// .build();
-//
-// final InventoryReceipt inventoryReceipt = new InventoryReceipt.Builder().uuid(
-// object.getString("uuid"))
-// .number(object.getString("number"))
-// .bookingTime(inputDf.parse(object.getString("bookingTime")))
-// .cashier(cashier)
-// .createTime(inputDf.parse(object.getString("createTime")))
-// .description(object.getString("description"))
-// .finishTime(inputDf.parse(object.getString("finishTime")))
-// .organizationalUnit(organizationalUnit)
-// .inventory(inventory)
-// .build();
-//
-//
-// return inventoryReceipt;
+
 // }
 //
 // public JSONObject toJSON()
@@ -333,21 +313,28 @@ public class InventoryReceipt extends AbstractNumberApiObject<InventoryReceipt>
 
 	}
 
-	@Override
-	public InventoryReceipt fromJSON(final JSONObject obj) throws JSONException
+	public InventoryReceipt fromJSON(final JSONObject obj) throws JSONException, ParseException
 	{
-		readJSON(obj);
-		return this;
-	}
+		final Cashier cashier = new Cashier.Builder().id(obj.getString("cashier")).build();
 
-	@Override
-	public void readJSON(JSONObject obj) throws JSONException
-	{
-		if (obj.has("result") && obj.getString("result") != null)
-			obj = obj.getJSONObject("result");
+		final OrganizationalUnit organizationalUnit = new OrganizationalUnit.Builder().id(
+			obj.getString("organizationalUnit")).build();
 
-		super.readJSON(obj);
+		final Inventory inventory = new Inventory.Builder().id(obj.getString("inventory")).build();
+
+		final InventoryReceipt inventoryReceipt = new InventoryReceipt.Builder().id(
+			obj.getString("uuid"))
+			.number(obj.getString("number"))
+			.bookingTime(inputDf.parse(obj.getString("bookingTime")))
+			.cashier(cashier)
+			.createTime(inputDf.parse(obj.getString("createTime")))
+			.description(obj.getString("description"))
+			.finishTime(inputDf.parse(obj.getString("finishTime")))
+			.organizationalUnit(organizationalUnit)
+			.inventory(inventory)
+			.build();
 
 
+		return inventoryReceipt;
 	}
 }

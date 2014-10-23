@@ -544,7 +544,7 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 	}
 
 	@Override
-	public Receipt fromJSON(final JSONObject obj) throws JSONException
+	public static Receipt fromJSON(final JSONObject obj) throws JSONException
 	{
 		readJSON(obj);
 		return this;

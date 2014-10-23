@@ -1,5 +1,6 @@
 package domain;
 
+import java.text.ParseException;
 import java.util.Date;
 
 import org.codehaus.jettison.json.JSONException;
@@ -206,43 +207,7 @@ public class Payment extends AbstractApiObject<Payment>
 //
 // public static Payment fromJSON(JSONObject obj) throws JSONException
 // {
-// if (obj.has("result") && obj.getString("result").equalsIgnoreCase("null"))
-// obj = obj.getJSONObject("result");
-//
-// // date
-// final String date = obj.getString("transactionTime");
-// Date tTime = null;
-// try
-// {
-// tTime = inputDf.parse(date);
-// }
-// catch (final ParseException e)
-// {
-// e.printStackTrace();
-// }
-//
-// final Cashier cash = new Cashier.Builder(null).build();
-// cash.setUuid(obj.getString("cashier"));
-// final Receipt rec = new Receipt.Builder().build();
-// rec.setUuid(obj.getString("receipt"));
-// final POS pos = new POS.Builder(null).build();
-// pos.setUuid(obj.getString("pos"));
-// final Currency cur = new Currency.Builder(null).build();
-// cur.setUuid(obj.getString("currency"));
-// final PaymentMethods payMeth = new PaymentMethods.Builder(null).build();
-// payMeth.setUuid(obj.getString("paymentMethod"));
-// final Payment pay = new Payment.Builder().deleted(obj.getBoolean("deleted"))
-// .revision(obj.getString("revision"))
-// .uuid(obj.getString("uuid"))
-// .amount(obj.getDouble("amount"))
-// .transactionTime(tTime)
-// .cashier(cash)
-// .receipt(rec)
-// .pos(pos)
-// .currency(cur)
-// .paymentMethod(payMeth)
-// .build();
-// return pay;
+
 // }
 
 // public boolean post() throws IOException
@@ -451,21 +416,40 @@ public class Payment extends AbstractApiObject<Payment>
 
 	}
 
-	@Override
-	public Payment fromJSON(final JSONObject obj) throws JSONException
-	{
-		readJSON(obj);
-		return this;
-	}
 
-	@Override
-	public void readJSON(JSONObject obj) throws JSONException
+	public static Payment fromJSON(JSONObject obj) throws JSONException, ParseException
 	{
-		if (obj.has("result") && obj.getString("result") != null)
+		if (obj.has("result") && obj.getString("result").equalsIgnoreCase("null"))
 			obj = obj.getJSONObject("result");
 
-		super.readJSON(obj);
+		// date
+		final String date = obj.getString("transactionTime");
+		Date tTime = null;
+
+		tTime = inputDf.parse(date);
 
 
+		final Cashier cash = new Cashier.Builder().build();
+		cash.setId(obj.getString("cashier"));
+		final Receipt rec = new Receipt.Builder().build();
+		rec.setId(obj.getString("receipt"));
+		final POS pos = new POS.Builder().build();
+		pos.setId(obj.getString("pos"));
+		final Currency cur = new Currency.Builder().build();
+		cur.setId(obj.getString("currency"));
+		final PaymentMethods payMeth = new PaymentMethods.Builder().build();
+		payMeth.setId(obj.getString("paymentMethod"));
+		final Payment pay = new Payment.Builder().deleted(obj.getBoolean("deleted"))
+			.revision(obj.getLong("revision"))
+			.id(obj.getString("uuid"))
+			.amount(obj.getDouble("amount"))
+			.transactionTime(tTime)
+			.cashier(cash)
+			.receipt(rec)
+			.pos(pos)
+			.currency(cur)
+			.paymentMethod(payMeth)
+			.build();
+		return pay;
 	}
 }

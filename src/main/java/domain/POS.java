@@ -39,29 +39,29 @@ public class POS extends AbstractNameAndNumberApiObject<POS>
 	protected static abstract class Init<T extends Init<T>> extends
 		AbstractNameAndNumberApiObject.Init<T>
 	{
-		private final int autoLogoutDelay = 0;
-		private final boolean autoReceiptPrint = false;
+		public T  autoLogoutDelay = 0;
+		public T  autoReceiptPrint = false;
 		private final String customerDisplayOfflineText = null;
 		private final String customerDisplayOnlineText = null;
 		private final String distributerCode = null;
 		private final CustomerGroup defaultCustomerGroup = null;
 		private final Payment defaultPaymentMethod = null;
 		private final EconomicZone economicZone = null;
-		private final boolean forceClosedDrawer = false;
+		public T  forceClosedDrawer = false;
 		private final CustomerGroup friendsBonusCustomerGroup = null;
 		private final String friendsbonusIdentification = null;
 		private final String friendsbonusSecret = null;
-		private final int maxBalanceAttempts = 0;
+		public T  maxBalanceAttempts = 0;
 		private final String name = null;
-		private final boolean orderNumberRequired = false;
+		public T  orderNumberRequired = false;
 		private OrganizationalUnit organizationalUnit = null;
 		// private WareHouse warehous=null;
 		private final String secret = null;
 		private final String systemHash = null;
 		private final String automaticEndOfDayIntervalStr = null;
-		private final boolean centInput = false;
-		private final boolean requirePaymentAmountInput = false;
-		private final boolean kioskMode = false;
+		public T  centInput = false;
+		public T  requirePaymentAmountInput = false;
+		public T  kioskMode = false;
 		private final String automaticPaymentFinalization = null;
 		private final String StringbloyalDeviceKey = null;
 
@@ -70,6 +70,33 @@ public class POS extends AbstractNameAndNumberApiObject<POS>
 			organizationalUnit = orgUnit;
 			return self();
 		}
+		
+		public T  autoLogoutDelay (final String value){this.autoLogoutDelay=value;return self();}
+		public T  autoReceiptPrint(final String value){this.autoReceiptPrint=value;return self();}
+		public T  customerDisplayOfflineText (final String value){this.customerDisplayOfflineText=value;return self();}
+		public T  customerDisplayOnlineText (final String value){this.customerDisplayOnlineText=value;return self();}
+		public T  distributerCode (final String value){this.distributerCode=value;return self();}
+		public T CustomerGroup defaultCustomerGroup (final String value){this.defaultCustomerGroup=value;return self();}
+		public T Payment defaultPaymentMethod (final String value){this.defaultPaymentMethod=value;return self();}
+		public T EconomicZone economicZone (final String value){this.economicZone=value;return self();}
+		public T  forceClosedDrawer (final String value){this.forceClosedDrawer=value;return self();}
+		public T CustomerGroup friendsBonusCustomerGroup (final String value){this.friendsBonusCustomerGroup=value;return self();}
+		public T  friendsbonusIdentification (final String value){this.friendsbonusIdentification=value;return self();}
+		public T  friendsbonusSecret (final String value){this.friendsbonusSecret=value;return self();}
+		public T  maxBalanceAttempts = (String value){this.maxBalanceAttempts=value;return self();}
+		@Override
+		public T  name (final String value){this.name=value;return self();}
+		public T  orderNumberRequired = (String value){this.orderNumberRequired=value;return self();}
+		public T organizationalUnit (final String value){this.organizationalUnit=value;return self();}
+		// private WareHouse warehous=null;
+		public T  secret (final String value){this.secret=value;return self();}
+		public T  systemHash (final String value){this.systemHash=value;return self();}
+		public T  automaticEndOfDayIntervalStr (final String value){this.automaticEndOfDayIntervalStr=value;return self();}
+		public T  centInput (final String value){this.centInput=value;return self();}
+		public T  requirePaymentAmountInput (final String value){this.requirePaymentAmountInput=value;return self();}
+		public T  kioskMode (final String value){this.kioskMode=value;return self();}
+		public T  automaticPaymentFinalization (final String value){this.automaticPaymentFinalization=value;return self();}
+		public T  StringbloyalDeviceKey (final String value){this.StringbloyalDeviceKey=value;return self();}
 
 		@Override
 		public POS build()

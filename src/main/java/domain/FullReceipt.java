@@ -1,6 +1,7 @@
 package domain;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -86,7 +87,7 @@ public class FullReceipt
 		}
 	}
 
-	public static FullReceipt fromJSON(JSONObject obj) throws JSONException
+	public static FullReceipt fromJSON(JSONObject obj) throws JSONException, ParseException
 	{
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
@@ -98,12 +99,12 @@ public class FullReceipt
 		final JSONObject jReceipt = obj.getJSONObject("receipt");
 		final Receipt receipt = Receipt.fromJSON(jReceipt);
 
-		final POS pos = new POS.Builder(null).uuid(jReceipt.getString("pos"))
+		final POS pos = new POS.Builder().id(jReceipt.getString("pos"))
 			.number(jReceipt.getString("posNr"))
 			.build();
 		receipt.setPos(pos);
 
-		final OrganizationalUnit organizationalUnit = new OrganizationalUnit.Builder(null).uuid(
+		final OrganizationalUnit organizationalUnit = new OrganizationalUnit.Builder().id(
 			jReceipt.getString("organizationalUnit"))
 			.number(jReceipt.getString("organizationalUnitNr"))
 			.build();
@@ -151,9 +152,9 @@ public class FullReceipt
 					.key(jPayment.getString("currencyKey"))
 					.build();
 				payment.setCurrency(currency);
-				final PaymentMethods paymentMethods = new PaymentMethods.Builder(
-					jPayment.getString("paymentMethodName")).uuid(
-					jPayment.getString("paymentMethod"))
+				final PaymentMethods paymentMethods = new PaymentMethods.Builder().name(
+					jPayment.getString("paymentMethodName"))
+					.id(jPayment.getString("paymentMethod"))
 					.number(jPayment.getString("paymentMethodNr"))
 					.build();
 				payment.setPaymentMethod(paymentMethods);
@@ -169,10 +170,9 @@ public class FullReceipt
 			{
 				final JSONObject jSale = jASale.getJSONObject(i);
 				final Sale sale = Sale.fromJSON(jSale);
-				final Product product = new Product.Builder(null).number(
-					jSale.getString("articleNr"))
+				final Product product = new Product.Builder().number(jSale.getString("articleNr"))
 					.codes(new Product_Code(jSale.getString("articleEAN"), new BigDecimal(1)))
-					.uuid(jSale.getString("article"))
+					.id(jSale.getString("article"))
 					.build();
 				sale.setArticle(product);
 				fullReceipt.addSale(sale);

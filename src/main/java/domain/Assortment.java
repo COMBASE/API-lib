@@ -104,22 +104,17 @@ public class Assortment extends AbstractNameAndNumberApiObject<Assortment>
 		obj.put("description", getDescription());
 	}
 
-	@Override
-	public Assortment fromJSON(final JSONObject obj) throws JSONException
-	{
-		readJSON(obj);
-		return this;
-	}
-
-	@Override
-	public void readJSON(JSONObject obj) throws JSONException
+	public static Assortment fromJSON(JSONObject obj) throws JSONException
 	{
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
 
-		super.readJSON(obj);
 
-		if (obj.has("description") && !obj.get("description").equals(null))
-			setDescription(obj.getString("description"));
+		final Assortment assortment = new Assortment.Builder().name(obj.getString("name"))
+			.deleted(obj.getBoolean("deleted"))
+			.number(obj.getString("number"))
+			.id(obj.getString("uuid"))
+			.build();
+		return assortment;
 	}
 }

@@ -1,5 +1,6 @@
 package domain;
 
+import java.text.ParseException;
 import java.util.Date;
 
 import org.codehaus.jettison.json.JSONException;
@@ -142,38 +143,7 @@ public class Customer extends AbstractNumberApiObject<Customer>
 // public static Customer fromJSON(JSONObject obj) throws JSONException
 // {
 //
-// if (obj.has("result") && obj.getString("result") != null)
-// {
-// obj = obj.getJSONObject("result");
-// }
 //
-// String sdate = obj.getString("birthday");
-// Date bdate = null;
-// try
-// {
-// if (sdate != "null")
-// bdate = inputDf.parse(sdate);
-// }
-// catch ( ParseException e)
-// {
-// e.printStackTrace();
-// }
-//
-// Customer cust = new Customer.Builder().uuid(obj.getString("uuid"))
-// .number(obj.getString("number"))
-// .firstName(obj.getString("firstName"))
-// .lastName(obj.getString("lastName"))
-// .email(obj.getString("email"))
-// .gender(obj.getString("gender"))
-// .zipCode(obj.getString("zipCode"))
-// .addressLine1(obj.getString("addressLine1"))
-// .city(obj.getString("city"))
-// .country(obj.getString("country"))
-// .phone(obj.getString("phone"))
-// .birthday(bdate)
-// .build();
-//
-// return cust;
 // }
 //
 // public JSONObject toJSON()
@@ -375,21 +345,40 @@ public class Customer extends AbstractNumberApiObject<Customer>
 
 	}
 
-	@Override
-	public Customer fromJSON(final JSONObject obj) throws JSONException
-	{
-		readJSON(obj);
-		return this;
-	}
 
-	@Override
-	public void readJSON(JSONObject obj) throws JSONException
+	public static Customer fromJSON(JSONObject obj) throws JSONException
 	{
 		if (obj.has("result") && obj.getString("result") != null)
+		{
 			obj = obj.getJSONObject("result");
+		}
 
-		super.readJSON(obj);
+		final String sdate = obj.getString("birthday");
+		Date bdate = null;
+		try
+		{
+			if (sdate != "null")
+				bdate = inputDf.parse(sdate);
+		}
+		catch (final ParseException e)
+		{
+			e.printStackTrace();
+		}
 
+		final Customer cust = new Customer.Builder().id(obj.getString("uuid"))
+			.number(obj.getString("number"))
+			.firstName(obj.getString("firstName"))
+			.lastName(obj.getString("lastName"))
+			.email(obj.getString("email"))
+			.gender(obj.getString("gender"))
+			.zipCode(obj.getString("zipCode"))
+			.addressLine1(obj.getString("addressLine1"))
+			.city(obj.getString("city"))
+			.country(obj.getString("country"))
+			.phone(obj.getString("phone"))
+			.birthday(bdate)
+			.build();
 
+		return cust;
 	}
 }

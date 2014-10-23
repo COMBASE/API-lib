@@ -72,19 +72,7 @@ public class CustomerGroup extends AbstractNameAndNumberApiObject<CustomerGroup>
 // public static CustomerGroup fromJSON(JSONObject obj) throws JSONException
 // {
 //
-// if (obj.has("result") && obj.getString("result") != null)
-// obj = obj.getJSONObject("result");
-//
-// final CustomerGroup custGrp = new CustomerGroup.Builder(obj.getString("name")).uuid(
-// obj.getString("uuid"))
-// .number(obj.getString("number"))
-// .build();
-// return custGrp;
-// }
-//
-// public boolean post() throws IOException
-// {
-// return CloudLink.getConnector().postData(DataType.customergroup, this.toJSON());
+
 // }
 
 
@@ -132,21 +120,20 @@ public class CustomerGroup extends AbstractNameAndNumberApiObject<CustomerGroup>
 
 	}
 
-	@Override
-	public CustomerGroup fromJSON(final JSONObject obj) throws JSONException
-	{
-		readJSON(obj);
-		return this;
-	}
-
-	@Override
-	public void readJSON(JSONObject obj) throws JSONException
+	public static CustomerGroup fromJSON(JSONObject obj) throws JSONException
 	{
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
 
-		super.readJSON(obj);
-
-
+		final CustomerGroup custGrp = new CustomerGroup.Builder().name(obj.getString("name"))
+			.id(obj.getString("uuid"))
+			.number(obj.getString("number"))
+			.build();
+		return custGrp;
 	}
+
+// public boolean post() throws IOException
+// {
+// return CloudLink.getConnector().postData(DataType.customergroup, this.toJSON());
+// }
 }

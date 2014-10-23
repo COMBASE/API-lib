@@ -101,22 +101,7 @@ public class InventoryReceiptItem extends AbstractApiObject<InventoryReceiptItem
 // public static InventoryReceiptItem fromJson(final JSONObject object) throws JSONException
 // {
 //
-// final Product product = new Product.Builder(null).uuid(object.getString("article")).build();
-//
-// final InventoryReceipt receipt = new InventoryReceipt.Builder().uuid(
-// object.getString("receipt")).build();
-//
-// final InventoryReceiptItem inventoryReceiptItem = new InventoryReceiptItem.Builder().uuid(
-// object.getString("uuid"))
-// .nominalGoods(new BigDecimal(object.getString("nominalGoods")))
-// .actualGoods(new BigDecimal(object.getString("acturalGoods")))
-// .article(product)
-// .differenceReason(object.getString("differenceReason"))
-// .receipt(receipt)
-// .build();
-//
-//
-// return inventoryReceiptItem;
+
 // }
 
 	public BigDecimal getNominalGoods()
@@ -184,21 +169,23 @@ public class InventoryReceiptItem extends AbstractApiObject<InventoryReceiptItem
 
 	}
 
-	@Override
-	public InventoryReceiptItem fromJSON(final JSONObject obj) throws JSONException
+	public static InventoryReceiptItem fromJSON(final JSONObject obj) throws JSONException
 	{
-		readJSON(obj);
-		return this;
-	}
+		final Product product = new Product.Builder().id(obj.getString("article")).build();
 
-	@Override
-	public void readJSON(JSONObject obj) throws JSONException
-	{
-		if (obj.has("result") && obj.getString("result") != null)
-			obj = obj.getJSONObject("result");
+		final InventoryReceipt receipt = new InventoryReceipt.Builder().id(obj.getString("receipt"))
+			.build();
 
-		super.readJSON(obj);
+		final InventoryReceiptItem inventoryReceiptItem = new InventoryReceiptItem.Builder().id(
+			obj.getString("uuid"))
+			.nominalGoods(new BigDecimal(obj.getString("nominalGoods")))
+			.actualGoods(new BigDecimal(obj.getString("acturalGoods")))
+			.article(product)
+			.differenceReason(obj.getString("differenceReason"))
+			.receipt(receipt)
+			.build();
 
 
+		return inventoryReceiptItem;
 	}
 }

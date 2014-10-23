@@ -88,16 +88,7 @@ public class CommodityGroup extends AbstractNameAndNumberApiObject<CommodityGrou
 
 // public static CommodityGroup fromJSON(JSONObject obj) throws JSONException
 // {
-// if (obj.has("result") && obj.getString("result") != null)
-// obj = obj.getJSONObject("result");
-// final CommodityGroup grp = new CommodityGroup.Builder(obj.getString("name")).build();
-// if (obj.has("number"))
-// grp.setNumber(obj.getString("number"));
-// if (obj.has("uuid"))
-// grp.setUuid(obj.getString("uuid"));
 //
-//
-// return grp;
 //
 //
 // }
@@ -186,21 +177,18 @@ public class CommodityGroup extends AbstractNameAndNumberApiObject<CommodityGrou
 
 	}
 
-	@Override
-	public CommodityGroup fromJSON(final JSONObject obj) throws JSONException
-	{
-		readJSON(obj);
-		return this;
-	}
 
-	@Override
-	public void readJSON(JSONObject obj) throws JSONException
+	public static CommodityGroup fromJSON(JSONObject obj) throws JSONException
 	{
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
+		final CommodityGroup grp = new CommodityGroup.Builder().name(obj.getString("name")).build();
+		if (obj.has("number"))
+			grp.setNumber(obj.getString("number"));
+		if (obj.has("uuid"))
+			grp.setId(obj.getString("uuid"));
 
-		super.readJSON(obj);
 
-
+		return grp;
 	}
 }

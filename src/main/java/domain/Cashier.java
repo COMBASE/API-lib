@@ -178,21 +178,19 @@ public class Cashier extends AbstractNameAndNumberApiObject<Cashier>
 
 	}
 
-	@Override
-	public Cashier fromJSON(final JSONObject obj) throws JSONException
-	{
-		readJSON(obj);
-		return this;
-	}
-
-	@Override
-	public void readJSON(JSONObject obj) throws JSONException
+	public static Cashier fromJSON(JSONObject obj) throws JSONException
 	{
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
 
-		super.readJSON(obj);
 
-
+		final Cashier cash = new Cashier.Builder().deleted(obj.getBoolean("deleted"))
+			.number(obj.getString("number"))
+			.firstName(obj.getString("firstname"))
+			.surName(obj.getString("surname"))
+			.id(obj.getString("uuid"))
+			.loginCode(obj.getInt("loginCode"))
+			.build();
+		return cash;
 	}
 }

@@ -1,5 +1,6 @@
 package domain;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -550,21 +551,28 @@ public class Inventory extends AbstractNumberApiObject<Inventory>
 
 	}
 
-	@Override
-	public Inventory fromJSON(final JSONObject obj) throws JSONException
-	{
-		readJSON(obj);
-		return this;
-	}
 
-	@Override
-	public void readJSON(JSONObject obj) throws JSONException
+	public static Inventory fromJSON(JSONObject obj) throws JSONException, ParseException
 	{
-		if (obj.has("result") && obj.getString("result") != null)
+
+		if (obj.has("result") && obj.getString("result").equalsIgnoreCase("null"))
 			obj = obj.getJSONObject("result");
 
-		super.readJSON(obj);
+		final List<OrganizationalUnit> organizationalUnits = new ArrayList<OrganizationalUnit>();
+		obj.getJSONArray("organizationalUnits");
 
+		final Inventory inventory = new Inventory.Builder().deleted(obj.getBoolean("deleted"))
+			.revision(obj.getLong("revision"))
+			.id(obj.getString("uuid"))
+			.number(obj.getString("number"))
+			.user(obj.getString("user"))
+			.description(obj.getString("description"))
+			.organizationalUnits(organizationalUnits)
+			.createTime(inputDf.parse(obj.getString("createTime")))
+			.processTime(inputDf.parse(obj.getString("processTime")))
+			.inventoryProcedure(obj.getString("inventoryProcedure"))
+			.build();
 
+		return inventory;
 	}
 }

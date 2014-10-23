@@ -50,40 +50,7 @@ public class PaymentMethods extends AbstractNameAndNumberApiObject<PaymentMethod
 
 // public static PaymentMethods fromJSON(JSONObject obj) throws JSONException
 // {
-// if (obj.has("result") && obj.getString("result") != null)
-// obj = obj.getJSONObject("result");
-//
-// final Currency currency = new Currency.Builder(null).uuid(obj.getString("currency"))
-// .build();
-//
-// final PaymentMethods payMeth = new PaymentMethods.Builder(obj.getString("name")).deleted(
-// obj.getBoolean("deleted"))
-// .number(obj.getString("number"))
-// .uuid(obj.getString("uuid"))
-// .currency(currency)
-// .build();
-// if (obj.has("number"))
-// payMeth.setNumber(obj.getString("number"));
-//
-// return payMeth;
-// }
-//
-// public JSONObject toJSON()
-// {
-// final JSONObject obj = new JSONObject();
-// try
-// {
-// obj.put("name", name);
-// if (number != null)
-// obj.put("number", number);
-// obj.put("deleted", deleted);
-// return obj;
-// }
-// catch (final JSONException e)
-// {
-// e.printStackTrace();
-// return null;
-// }
+
 // }
 //
 // public boolean post() throws IOException
@@ -136,21 +103,41 @@ public class PaymentMethods extends AbstractNameAndNumberApiObject<PaymentMethod
 
 	}
 
-	@Override
-	public PaymentMethods fromJSON(final JSONObject obj) throws JSONException
-	{
-		readJSON(obj);
-		return this;
-	}
 
-	@Override
-	public void readJSON(JSONObject obj) throws JSONException
+	public PaymentMethods fromJSON(JSONObject obj) throws JSONException
 	{
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
 
-		super.readJSON(obj);
+		final Currency currency = new Currency.Builder().id(obj.getString("currency")).build();
 
+		final PaymentMethods payMeth = new PaymentMethods.Builder().name(obj.getString("name"))
+			.deleted(obj.getBoolean("deleted"))
+			.number(obj.getString("number"))
+			.id(obj.getString("uuid"))
+			.currency(currency)
+			.build();
+		if (obj.has("number"))
+			payMeth.setNumber(obj.getString("number"));
 
+		return payMeth;
 	}
+
+// public JSONObject toJSON()
+// {
+// final JSONObject obj = new JSONObject();
+// try
+// {
+// obj.put("name", name);
+// if (number != null)
+// obj.put("number", number);
+// obj.put("deleted", deleted);
+// return obj;
+// }
+// catch (final JSONException e)
+// {
+// e.printStackTrace();
+// return null;
+// }
+// }
 }

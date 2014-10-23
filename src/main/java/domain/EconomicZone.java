@@ -39,12 +39,7 @@ public class EconomicZone extends AbstractNameAndNumberApiObject<EconomicZone>
 
 // public static EconomicZone fromJson(JSONObject obj) throws JSONException
 // {
-// if (obj.has("result") && obj.getString("result") != null)
-// obj = obj.getJSONObject("result");
-// final EconomicZone economicZone = new EconomicZone(obj.getString("name"),
-// obj.getString("number"));
-// economicZone.setUuid(obj.getString("uuid"));
-// return null;
+//
 // }
 //
 // public JSONObject toJSON()
@@ -109,21 +104,14 @@ public class EconomicZone extends AbstractNameAndNumberApiObject<EconomicZone>
 
 	}
 
-	@Override
-	public EconomicZone fromJSON(final JSONObject obj) throws JSONException
-	{
-		readJSON(obj);
-		return this;
-	}
-
-	@Override
-	public void readJSON(JSONObject obj) throws JSONException
+	public static EconomicZone fromJSON(JSONObject obj) throws JSONException
 	{
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
-
-		super.readJSON(obj);
-
-
+		final EconomicZone economicZone = new EconomicZone.Builder().name(obj.getString("name"))
+			.number(obj.getString("number"))
+			.id(obj.getString("uuid"))
+			.build();
+		return economicZone;
 	}
 }

@@ -588,7 +588,7 @@ public class Sale extends AbstractApiObject<Sale>
 	}
 
 	@Override
-	public Sale fromJSON(final JSONObject obj) throws JSONException
+	public static Sale fromJSON(final JSONObject obj) throws JSONException
 	{
 		readJSON(obj);
 		return this;

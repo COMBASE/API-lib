@@ -170,22 +170,20 @@ public class Currency extends AbstractNameAndNumberApiObject<Currency>
 
 	}
 
-	@Override
-	public Currency fromJSON(final JSONObject obj) throws JSONException
-	{
-		readJSON(obj);
-		return this;
-	}
 
-	@Override
-	public void readJSON(JSONObject obj) throws JSONException
+	public static Currency fromJSON(JSONObject obj) throws JSONException
 	{
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
-
-		super.readJSON(obj);
-
-
+		final Currency cur = new Currency.Builder().name(obj.getString("name"))
+			.deleted(obj.getBoolean("deleted"))
+			.revision(obj.getLong("revision"))
+			.id(obj.getString("uuid"))
+			.number(obj.getString("number"))
+			.symbol(obj.getString("symbol"))
+			.key(obj.getString("key"))
+			.centName(obj.getString("centName"))
+			.build();
+		return cur;
 	}
-
 }
