@@ -654,7 +654,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 	}
 
 
-	public Product fromJSON(JSONObject obj) throws JSONException
+	public static Product fromJSON(JSONObject obj) throws JSONException
 	{
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");

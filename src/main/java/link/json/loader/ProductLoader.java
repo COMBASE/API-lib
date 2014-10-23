@@ -24,14 +24,18 @@ public class ProductLoader extends AbstractHasNameJsonLoader<Product>
 	@Override
 	public JSONObject toJSON(final Product value) throws JSONException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		final JSONObject obj = super.appendToJson(value);
+
+		// TODO append json
+
+		return obj;
 	}
 
 	@Override
 	public Product fromJSON(final JSONObject obj) throws JSONException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		final Product product = Product.fromJSON(obj);
+
+		return product;
 	}
 }
