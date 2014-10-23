@@ -1,5 +1,6 @@
 package domain;
 
+import java.text.ParseException;
 import java.util.Date;
 
 import org.codehaus.jettison.json.JSONException;
@@ -78,32 +79,7 @@ public class TimeTracking extends AbstractApiObject<TimeTracking>
 
 // public static TimeTracking fromJSON(JSONObject obj) throws JSONException
 // {
-// if (obj.has("result") && obj.getString("result") != null)
-// obj = obj.getJSONObject("result");
-//
-// // Date
-// final String date = obj.getString("start");
-// Date startTime = null;
-// try
-// {
-// startTime = inputDf.parse(date);
-// }
-// catch (final ParseException e)
-// {
-// e.printStackTrace();
-// }
-//
-// final TimeTrackingEntities ent = new TimeTrackingEntities.Builder(null).build();
-// ent.setUuid(obj.getString("timeTrackingEntity"));
-// final Cashier cash = new Cashier.Builder(null).build();
-// cash.setUuid(obj.getString("cashier"));
-// final TimeTracking tTrack = new TimeTracking.Builder().deleted(obj.getBoolean("deleted"))
-// .start(startTime)
-// .timeTrackingentity(ent)
-// .cashier(cash)
-// .revision(obj.getString("revision"))
-// .build();
-// return tTrack;
+
 // }
 //
 // @Override
@@ -219,21 +195,29 @@ public class TimeTracking extends AbstractApiObject<TimeTracking>
 
 	}
 
-	@Override
-	public TimeTracking fromJSON(final JSONObject obj) throws JSONException
-	{
-		readJSON(obj);
-		return this;
-	}
 
-	@Override
-	public void readJSON(JSONObject obj) throws JSONException
+	public TimeTracking fromJSON(JSONObject obj) throws JSONException, ParseException
 	{
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
 
-		super.readJSON(obj);
+		// Date
+		final String date = obj.getString("start");
+		Date startTime = null;
+
+		startTime = inputDf.parse(date);
 
 
+		final TimeTrackingEntities ent = new TimeTrackingEntities.Builder().build();
+		ent.setId(obj.getString("timeTrackingEntity"));
+		final Cashier cash = new Cashier.Builder().build();
+		cash.setId(obj.getString("cashier"));
+		final TimeTracking tTrack = new TimeTracking.Builder().deleted(obj.getBoolean("deleted"))
+			.start(startTime)
+			.timeTrackingentity(ent)
+			.cashier(cash)
+			.revision(obj.getLong("revision"))
+			.build();
+		return tTrack;
 	}
 }

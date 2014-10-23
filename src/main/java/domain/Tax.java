@@ -1,8 +1,11 @@
 package domain;
 
+import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -83,28 +86,7 @@ public class Tax extends AbstractNameAndNumberApiObject<Tax>
 
 // public static Tax fromJSON(JSONObject obj) throws JSONException, ParseException
 // {
-// if (obj.has("result") && obj.getString("result") != null)
-// obj = obj.getJSONObject("result");
-//
-// final JSONArray jRates = obj.getJSONArray("rates");
-// final List<Rate> rates = new ArrayList<Rate>();
-//
-// for (int i = 0; i < jRates.length(); i++)
-// {
-// final JSONObject jRate = jRates.getJSONObject(i);
-// final Rate rate = new Rate(new BigDecimal(jRate.getString("rate")),
-// inputDf.parse(jRate.getString("validFrom")));
-// rates.add(rate);
-// }
-// final EconomicZone economicZone = new EconomicZone(null);
-// economicZone.setId(obj.getString("economicZone"));
-//
-// final Tax tax = new Tax.Builder(obj.getString("name"), economicZone).rateList(rates)
-// .uuid(obj.getString("uuid"))
-// .number(obj.getString("number"))
-// .build();
-//
-// return tax;
+
 // }
 //
 // public JSONObject toJSON()
@@ -224,21 +206,32 @@ public class Tax extends AbstractNameAndNumberApiObject<Tax>
 
 	}
 
-	@Override
-	public Tax fromJSON(final JSONObject obj) throws JSONException
-	{
-		readJSON(obj);
-		return this;
-	}
 
-	@Override
-	public void readJSON(JSONObject obj) throws JSONException
+	public Tax fromJSON(JSONObject obj) throws JSONException, ParseException
 	{
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
 
-		super.readJSON(obj);
+		final JSONArray jRates = obj.getJSONArray("rates");
+		final List<Rate> rates = new ArrayList<Rate>();
 
+		for (int i = 0; i < jRates.length(); i++)
+		{
+			final JSONObject jRate = jRates.getJSONObject(i);
+			final Rate rate = new Rate(new BigDecimal(jRate.getString("rate")),
+				inputDf.parse(jRate.getString("validFrom")));
+			rates.add(rate);
+		}
+		final EconomicZone economicZone = new EconomicZone(null);
+		economicZone.setId(obj.getString("economicZone"));
 
+		final Tax tax = new Tax.Builder().name(obj.getString("name"))
+			.economicZone(economicZone)
+			.rateList(rates)
+			.id(obj.getString("uuid"))
+			.number(obj.getString("number"))
+			.build();
+
+		return tax;
 	}
 }

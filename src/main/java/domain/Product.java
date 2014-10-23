@@ -1,10 +1,13 @@
 package domain;
 
+import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -186,87 +189,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 
 // public static Product fromJSON(JSONObject obj) throws JSONException
 // {
-// if (obj.has("result") && obj.getString("result") != null)
-// obj = obj.getJSONObject("result");
-//
-// final Assortment assortment = new Assortment.Builder(null).build();
-// if (!obj.isNull("assortment"))
-// assortment.setUuid(obj.getString("assortment"));
-//
-// final Sector sector = new Sector.Builder(null).build();
-// if (!obj.isNull("sector"))
-// sector.setUuid(obj.getString("sector"));
-//
-// final Sector altSector = new Sector.Builder(null).build();
-// if (!obj.isNull("alternativeSector"))
-// altSector.setUuid(obj.getString("alternativeSector"));
-//
-// final CommodityGroup commodityGroup = new CommodityGroup.Builder(null).uuid(
-// obj.getString("commodityGroup")).build();
-//
-// final Product prod = new Product.Builder(obj.getString("name")).uuid(obj.getString("uuid"))
-// .sector(sector)
-// .deleted(obj.getBoolean("deleted"))
-// .altsector(altSector)
-// .revision(obj.getString("revision"))
-// .commodityGroup(commodityGroup)
-// .assortment(assortment)
-// .build();
-//
-// if (obj.has("number"))
-// prod.setNumber(obj.getString("number"));
-//
-// if (obj.getString("articleCodes") != "null")
-// {
-// JSONArray jACode = new JSONArray();
-// jACode = obj.getJSONArray("articleCodes");
-// JSONObject jCode = new JSONObject();
-// final List<Product_Code> codeList = new ArrayList<Product_Code>();
-// Product_Code productCode = null;
-// for (int i = 0; i <= jACode.length() - 1; i++)
-// {
-// jCode = (JSONObject)jACode.get(i);
-// final BigDecimal quantity = new BigDecimal(jCode.getDouble("quantity"));
-// productCode = new Product_Code(jCode.getString("code"), quantity);
-// codeList.add(productCode);
-// }
-// prod.setCodes(codeList);
-// }
-//
-// if (obj.get("prices") != "null")
-// {
-// final JSONArray jPrices = obj.getJSONArray("prices");
-// final List<Price> prices = new ArrayList<Price>();
-// JSONObject jPrice;
-// for (int i = 0; i <= jPrices.length() - 1; i++)
-// {
-// jPrice = jPrices.getJSONObject(i);
-//
-// final BigDecimal value = new BigDecimal(jPrice.getDouble("value"));
-// final Pricelist pricelist = new Pricelist.PreBuilder(jPrice.getString("priceList")).build();
-// Date date = new Date();
-// try
-// {
-// date = inputDf.parse(jPrice.getString("validFrom"));
-// }
-// catch (final ParseException e)
-// {
-// e.printStackTrace();
-// }
-// if (!jPrice.isNull("organizationalUnit"))
-// {
-// final String orgUnitUuid = jPrice.getString("organizationalUnit");
-// final OrganizationalUnit organizationalUnit = new OrganizationalUnit.PreBuilder(
-// jPrice.getString("organizationalUnit")).build();
-//
-// prices.add(new Price(pricelist, date, value, organizationalUnit));
-// }
-// else
-// prices.add(new Price(pricelist, date, value, null));
-// }
-// prod.setPrices(prices);
-// }
-// return prod;
+
 // }
 
 	/**
@@ -730,21 +653,92 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 
 	}
 
-	@Override
-	public Product fromJSON(final JSONObject obj) throws JSONException
-	{
-		readJSON(obj);
-		return this;
-	}
 
-	@Override
-	public void readJSON(JSONObject obj) throws JSONException
+	public Product fromJSON(JSONObject obj) throws JSONException
 	{
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
 
-		super.readJSON(obj);
+		final Assortment assortment = new Assortment.Builder().build();
+		if (!obj.isNull("assortment"))
+			assortment.setId(obj.getString("assortment"));
 
+		final Sector sector = new Sector.Builder().build();
+		if (!obj.isNull("sector"))
+			sector.setId(obj.getString("sector"));
 
+		final Sector altSector = new Sector.Builder().build();
+		if (!obj.isNull("alternativeSector"))
+			altSector.setId(obj.getString("alternativeSector"));
+
+		final CommodityGroup commodityGroup = new CommodityGroup.Builder().id(
+			obj.getString("commodityGroup")).build();
+
+		final Product prod = new Product.Builder().name(obj.getString("name"))
+			.id(obj.getString("uuid"))
+			.sector(sector)
+			.deleted(obj.getBoolean("deleted"))
+			.altsector(altSector)
+			.revision(obj.getLong("revision"))
+			.commodityGroup(commodityGroup)
+			.assortment(assortment)
+			.build();
+
+		if (obj.has("number"))
+			prod.setNumber(obj.getString("number"));
+
+		if (obj.getString("articleCodes") != "null")
+		{
+			JSONArray jACode = new JSONArray();
+			jACode = obj.getJSONArray("articleCodes");
+			JSONObject jCode = new JSONObject();
+			final List<Product_Code> codeList = new ArrayList<Product_Code>();
+			Product_Code productCode = null;
+			for (int i = 0; i <= jACode.length() - 1; i++)
+			{
+				jCode = (JSONObject)jACode.get(i);
+				final BigDecimal quantity = new BigDecimal(jCode.getDouble("quantity"));
+				productCode = new Product_Code(jCode.getString("code"), quantity);
+				codeList.add(productCode);
+			}
+			prod.setCodes(codeList);
+		}
+
+		if (obj.get("prices") != "null")
+		{
+			final JSONArray jPrices = obj.getJSONArray("prices");
+			final List<Price> prices = new ArrayList<Price>();
+			JSONObject jPrice;
+			for (int i = 0; i <= jPrices.length() - 1; i++)
+			{
+				jPrice = jPrices.getJSONObject(i);
+
+				final BigDecimal value = new BigDecimal(jPrice.getDouble("value"));
+				final Pricelist pricelist = new Pricelist.Builder().id(
+					jPrice.getString("priceList")).build();
+				Date date = new Date();
+				try
+				{
+					date = inputDf.parse(jPrice.getString("validFrom"));
+				}
+				catch (final ParseException e)
+				{
+					e.printStackTrace();
+				}
+				if (!jPrice.isNull("organizationalUnit"))
+				{
+					final String orgUnitUuid = jPrice.getString("organizationalUnit");
+					final OrganizationalUnit organizationalUnit = new OrganizationalUnit.Builder().id(
+						jPrice.getString("organizationalUnit"))
+						.build();
+
+					prices.add(new Price(pricelist, date, value, organizationalUnit));
+				}
+				else
+					prices.add(new Price(pricelist, date, value, null));
+			}
+			prod.setPrices(prices);
+		}
+		return prod;
 	}
 }

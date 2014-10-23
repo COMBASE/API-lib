@@ -1,5 +1,6 @@
 package domain;
 
+import java.text.ParseException;
 import java.util.Date;
 
 import org.codehaus.jettison.json.JSONException;
@@ -243,40 +244,7 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 //
 // public static Receipt fromJSON(JSONObject obj) throws JSONException
 // {
-// if (obj.has("result") && obj.getString("result") != null)
-// obj = obj.getJSONObject("result");
-//
-//
-// final Cashier cash = new Cashier.Builder(null).build();
-// cash.setUuid(obj.getString("cashier"));
-// final CustomerGroup cGrp = new CustomerGroup.Builder(null).build();
-// cGrp.setUuid(obj.getString("customerGroup"));
-// final Customer cust = new Customer.Builder().build();
-// cust.setUuid(obj.getString("customer"));
-// Receipt rec = null;
-// try
-// {
-// rec = new Receipt.Builder().number(obj.getString("number"))
-// .deleted(obj.getBoolean("deleted"))
-// .revision(obj.getString("revision"))
-// .cashier(cash)
-// .customerGroup(cGrp)
-// .customer(cust)
-// .receiptDiscountGrossAmount(obj.getDouble("receiptDiscountGrossAmount"))
-// .voided(obj.getBoolean("voided"))
-// .uuid(obj.getString("uuid"))
-// .grossTotalAmount(obj.getDouble("grossTotalAmount"))
-// .netTotalAmount(obj.getDouble("netTotalAmount"))
-// .taxAmount(obj.getDouble("taxAmount"))
-// .grossRevenueAmount(obj.getDouble("grossRevenueAmount"))
-// .netRevenueAmount(obj.getDouble("netRevenueAmount"))
-// .receiptDiscountAmount(obj.getDouble("receiptDiscountAmount"))
-// .receiptDiscountGrossAmount(obj.getDouble("receiptDiscountGrossAmount"))
-// .receiptDiscountNetAmount(obj.getDouble("receiptDiscountNetAmount"))
-// .creatTime(inputDf.parse(obj.getString("createTime")))
-// .modifiedTime(inputDf.parse(obj.getString("modifiedTime")))
-// .finishTime(inputDf.parse(obj.getString("finishTime")))
-// .build();
+
 // }
 // catch (final ParseException e)
 // {
@@ -543,21 +511,41 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 
 	}
 
-	@Override
-	public static Receipt fromJSON(final JSONObject obj) throws JSONException
-	{
-		readJSON(obj);
-		return this;
-	}
-
-	@Override
-	public void readJSON(JSONObject obj) throws JSONException
+	public static Receipt fromJSON(JSONObject obj) throws JSONException, ParseException
 	{
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
 
-		super.readJSON(obj);
 
+		final Cashier cash = new Cashier.Builder().build();
+		cash.setId(obj.getString("cashier"));
+		final CustomerGroup cGrp = new CustomerGroup.Builder().build();
+		cGrp.setId(obj.getString("customerGroup"));
+		final Customer cust = new Customer.Builder().build();
+		cust.setId(obj.getString("customer"));
+		Receipt rec = null;
+		rec = new Receipt.Builder().number(obj.getString("number"))
+			.deleted(obj.getBoolean("deleted"))
+			.revision(obj.getLong("revision"))
+			.cashier(cash)
+			.customerGroup(cGrp)
+			.customer(cust)
+			.receiptDiscountGrossAmount(obj.getDouble("receiptDiscountGrossAmount"))
+			.voided(obj.getBoolean("voided"))
+			.id(obj.getString("uuid"))
+			.grossTotalAmount(obj.getDouble("grossTotalAmount"))
+			.netTotalAmount(obj.getDouble("netTotalAmount"))
+			.taxAmount(obj.getDouble("taxAmount"))
+			.grossRevenueAmount(obj.getDouble("grossRevenueAmount"))
+			.netRevenueAmount(obj.getDouble("netRevenueAmount"))
+			.receiptDiscountAmount(obj.getDouble("receiptDiscountAmount"))
+			.receiptDiscountGrossAmount(obj.getDouble("receiptDiscountGrossAmount"))
+			.receiptDiscountNetAmount(obj.getDouble("receiptDiscountNetAmount"))
+			.creatTime(inputDf.parse(obj.getString("createTime")))
+			.modifiedTime(inputDf.parse(obj.getString("modifiedTime")))
+			.finishTime(inputDf.parse(obj.getString("finishTime")))
+			.build();
 
+		return rec;
 	}
 }

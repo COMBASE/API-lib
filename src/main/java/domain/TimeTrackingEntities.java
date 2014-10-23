@@ -49,16 +49,7 @@ public class TimeTrackingEntities extends AbstractNameAndNumberApiObject<TimeTra
 // public static TimeTrackingEntities fromJSON(JSONObject obj) throws JSONException
 // {
 //
-// if (obj.has("result") && obj.getString("result") != null)
-// obj = obj.getJSONObject("result");
-// final TimeTrackingEntities tTrackE = new
-// TimeTrackingEntities.Builder(obj.getString("name")).deleted(
-// obj.getBoolean("deleted"))
-// .uuid(obj.getString("uuid"))
-// .number(obj.getString("number"))
-// .paidTime(obj.getBoolean("paidTime"))
-// .build();
-// return tTrackE;
+
 // }
 //
 // @Override
@@ -142,21 +133,17 @@ public class TimeTrackingEntities extends AbstractNameAndNumberApiObject<TimeTra
 
 	}
 
-	@Override
-	public TimeTrackingEntities fromJSON(final JSONObject obj) throws JSONException
-	{
-		readJSON(obj);
-		return this;
-	}
-
-	@Override
-	public void readJSON(JSONObject obj) throws JSONException
+	public TimeTrackingEntities fromJSON(JSONObject obj) throws JSONException
 	{
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
-
-		super.readJSON(obj);
-
-
+		final TimeTrackingEntities tTrackE = new TimeTrackingEntities.Builder().name(
+			obj.getString("name"))
+			.deleted(obj.getBoolean("deleted"))
+			.id(obj.getString("uuid"))
+			.number(obj.getString("number"))
+			.paidTime(obj.getBoolean("paidTime"))
+			.build();
+		return tTrackE;
 	}
 }

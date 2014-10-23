@@ -39,64 +39,175 @@ public class POS extends AbstractNameAndNumberApiObject<POS>
 	protected static abstract class Init<T extends Init<T>> extends
 		AbstractNameAndNumberApiObject.Init<T>
 	{
-		public T  autoLogoutDelay = 0;
-		public T  autoReceiptPrint = false;
-		private final String customerDisplayOfflineText = null;
-		private final String customerDisplayOnlineText = null;
-		private final String distributerCode = null;
-		private final CustomerGroup defaultCustomerGroup = null;
-		private final Payment defaultPaymentMethod = null;
-		private final EconomicZone economicZone = null;
-		public T  forceClosedDrawer = false;
-		private final CustomerGroup friendsBonusCustomerGroup = null;
-		private final String friendsbonusIdentification = null;
-		private final String friendsbonusSecret = null;
-		public T  maxBalanceAttempts = 0;
-		private final String name = null;
-		public T  orderNumberRequired = false;
+		private final boolean deleted = false;
+		private final String revision = null;
+		private final String uuid = null;
+		private final String number = null;
+		private int autoLogoutDelay = 0;
+		private boolean autoReceiptPrint = false;
+		private String customerDisplayOfflineText = null;
+		private String customerDisplayOnlineText = null;
+		private String distributerCode = null;
+		private CustomerGroup defaultCustomerGroup = null;
+		private Payment defaultPaymentMethod = null;
+		private EconomicZone economicZone = null;
+		private boolean forceClosedDrawer = false;
+		private CustomerGroup friendsBonusCustomerGroup = null;
+		private String friendsbonusIdentification = null;
+		private String friendsbonusSecret = null;
+		private int maxBalanceAttempts = 0;
+		private String name = null;
+		private boolean orderNumberRequired = false;
 		private OrganizationalUnit organizationalUnit = null;
 		// private WareHouse warehous=null;
-		private final String secret = null;
-		private final String systemHash = null;
-		private final String automaticEndOfDayIntervalStr = null;
-		public T  centInput = false;
-		public T  requirePaymentAmountInput = false;
-		public T  kioskMode = false;
-		private final String automaticPaymentFinalization = null;
-		private final String StringbloyalDeviceKey = null;
+		private String secret = null;
+		private String systemHash = null;
+		private String automaticEndOfDayIntervalStr = null;
+		private boolean centInput = false;
+		private boolean requirePaymentAmountInput = false;
+		private boolean kioskMode = false;
+		private final String automaticPaymentization = null;
+		private String StringbloyalDeviceKey = null;
 
 		public T organizationalUnit(final OrganizationalUnit orgUnit)
 		{
 			organizationalUnit = orgUnit;
 			return self();
 		}
-		
-		public T  autoLogoutDelay (final String value){this.autoLogoutDelay=value;return self();}
-		public T  autoReceiptPrint(final String value){this.autoReceiptPrint=value;return self();}
-		public T  customerDisplayOfflineText (final String value){this.customerDisplayOfflineText=value;return self();}
-		public T  customerDisplayOnlineText (final String value){this.customerDisplayOnlineText=value;return self();}
-		public T  distributerCode (final String value){this.distributerCode=value;return self();}
-		public T CustomerGroup defaultCustomerGroup (final String value){this.defaultCustomerGroup=value;return self();}
-		public T Payment defaultPaymentMethod (final String value){this.defaultPaymentMethod=value;return self();}
-		public T EconomicZone economicZone (final String value){this.economicZone=value;return self();}
-		public T  forceClosedDrawer (final String value){this.forceClosedDrawer=value;return self();}
-		public T CustomerGroup friendsBonusCustomerGroup (final String value){this.friendsBonusCustomerGroup=value;return self();}
-		public T  friendsbonusIdentification (final String value){this.friendsbonusIdentification=value;return self();}
-		public T  friendsbonusSecret (final String value){this.friendsbonusSecret=value;return self();}
-		public T  maxBalanceAttempts = (String value){this.maxBalanceAttempts=value;return self();}
+
+		public T autoLogoutDelay(final int value)
+		{
+			this.autoLogoutDelay = value;
+			return self();
+		}
+
+		public T autoReceiptPrint(final boolean value)
+		{
+			this.autoReceiptPrint = value;
+			return self();
+		}
+
+		public T customerDisplayOfflineText(final String value)
+		{
+			this.customerDisplayOfflineText = value;
+			return self();
+		}
+
+		public T customerDisplayOnlineText(final String value)
+		{
+			this.customerDisplayOnlineText = value;
+			return self();
+		}
+
+		public T distributerCode(final String value)
+		{
+			this.distributerCode = value;
+			return self();
+		}
+
+		public T defaultCustomerGroup(final CustomerGroup value)
+		{
+			this.defaultCustomerGroup = value;
+			return self();
+		}
+
+		public T defaultPaymentMethod(final Payment value)
+		{
+			this.defaultPaymentMethod = value;
+			return self();
+		}
+
+		public T economicZone(final EconomicZone value)
+		{
+			this.economicZone = value;
+			return self();
+		}
+
+		public T forceClosedDrawer(final boolean value)
+		{
+			this.forceClosedDrawer = value;
+			return self();
+		}
+
+		public T friendsBonusCustomerGroup(final CustomerGroup value)
+		{
+			this.friendsBonusCustomerGroup = value;
+			return self();
+		}
+
+		public T friendsbonusIdentification(final String value)
+		{
+			this.friendsbonusIdentification = value;
+			return self();
+		}
+
+		public T friendsbonusSecret(final String value)
+		{
+			this.friendsbonusSecret = value;
+			return self();
+		}
+
+		public T maxBalanceAttempts(final int value)
+		{
+			this.maxBalanceAttempts = value;
+			return self();
+		}
+
 		@Override
-		public T  name (final String value){this.name=value;return self();}
-		public T  orderNumberRequired = (String value){this.orderNumberRequired=value;return self();}
-		public T organizationalUnit (final String value){this.organizationalUnit=value;return self();}
+		public T name(final String value)
+		{
+			this.name = value;
+			return self();
+		}
+
+		public T orderNumberRequired(final boolean value)
+		{
+			this.orderNumberRequired = value;
+			return self();
+		}
+
 		// private WareHouse warehous=null;
-		public T  secret (final String value){this.secret=value;return self();}
-		public T  systemHash (final String value){this.systemHash=value;return self();}
-		public T  automaticEndOfDayIntervalStr (final String value){this.automaticEndOfDayIntervalStr=value;return self();}
-		public T  centInput (final String value){this.centInput=value;return self();}
-		public T  requirePaymentAmountInput (final String value){this.requirePaymentAmountInput=value;return self();}
-		public T  kioskMode (final String value){this.kioskMode=value;return self();}
-		public T  automaticPaymentFinalization (final String value){this.automaticPaymentFinalization=value;return self();}
-		public T  StringbloyalDeviceKey (final String value){this.StringbloyalDeviceKey=value;return self();}
+		public T secret(final String value)
+		{
+			this.secret = value;
+			return self();
+		}
+
+		public T systemHash(final String value)
+		{
+			this.systemHash = value;
+			return self();
+		}
+
+		public T automaticEndOfDayIntervalStr(final String value)
+		{
+			this.automaticEndOfDayIntervalStr = value;
+			return self();
+		}
+
+		public T centInput(final boolean value)
+		{
+			this.centInput = value;
+			return self();
+		}
+
+		public T requirePaymentAmountInput(final boolean value)
+		{
+			this.requirePaymentAmountInput = value;
+			return self();
+		}
+
+		public T kioskMode(final boolean value)
+		{
+			this.kioskMode = value;
+			return self();
+		}
+
+		public T StringbloyalDeviceKey(final String value)
+		{
+			this.StringbloyalDeviceKey = value;
+			return self();
+		}
 
 		@Override
 		public POS build()
@@ -157,18 +268,7 @@ public class POS extends AbstractNameAndNumberApiObject<POS>
 //
 // public static POS fromJSON(JSONObject obj) throws JSONException
 // {
-// if (obj.has("result") && obj.getString("result") != null)
-// obj = obj.getJSONObject("result");
-// final OrganizationalUnit orgUnit = new OrganizationalUnit.Builder(null).build();
-// orgUnit.setUuid(obj.getString("organizationalUnit"));
 //
-// final POS pos = new POS.Builder(null).number(obj.getString("number"))
-// .organizationalUnit(orgUnit)
-// .uuid(obj.getString("uuid"))
-//
-//
-// .build();
-// return pos;
 // }
 //
 // public boolean post() throws IOException
@@ -490,21 +590,19 @@ public class POS extends AbstractNameAndNumberApiObject<POS>
 
 	}
 
-	@Override
-	public POS fromJSON(final JSONObject obj) throws JSONException
-	{
-		readJSON(obj);
-		return this;
-	}
-
-	@Override
-	public void readJSON(JSONObject obj) throws JSONException
+	public POS fromJSON(JSONObject obj) throws JSONException
 	{
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
+		final OrganizationalUnit orgUnit = new OrganizationalUnit.Builder().build();
+		orgUnit.setId(obj.getString("organizationalUnit"));
 
-		super.readJSON(obj);
+		final POS pos = new POS.Builder().number(obj.getString("number"))
+			.organizationalUnit(orgUnit)
+			.id(obj.getString("uuid"))
 
 
+			.build();
+		return pos;
 	}
 }

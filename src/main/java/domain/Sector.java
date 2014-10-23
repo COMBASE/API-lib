@@ -3,6 +3,7 @@ package domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -94,26 +95,7 @@ public class Sector extends AbstractNameAndNumberApiObject<Sector>
 //
 // public static Sector fromJSON(JSONObject obj) throws JSONException, ParseException
 // {
-// if (obj.has("result") && obj.getString("result") != null)
-// obj = obj.getJSONObject("result");
-//
-// final JSONArray jTaxItems = obj.getJSONArray("items");
-// Tax tax = null;
-// if (jTaxItems.length() != 0)
-// {
-// final JSONObject jTaxItem = jTaxItems.getJSONObject(0);
-//
-// tax = new Tax.Builder(null, null).uuid(jTaxItem.getString("tax")).build();
-// }
-//
-// final Sector sec = new Sector.Builder(obj.getString("name")).uuid(obj.getString("uuid"))
-// .taxlist(tax)
-// .build();
-// if (obj.has("number"))
-// sec.setNumber(obj.getString("number"));
-//
-//
-// return sec;
+
 // }
 //
 // public boolean post() throws ApiNotReachableException, IOException
@@ -177,21 +159,28 @@ public class Sector extends AbstractNameAndNumberApiObject<Sector>
 
 	}
 
-	@Override
-	public Sector fromJSON(final JSONObject obj) throws JSONException
-	{
-		readJSON(obj);
-		return this;
-	}
-
-	@Override
-	public void readJSON(JSONObject obj) throws JSONException
+	public Sector fromJSON(JSONObject obj) throws JSONException
 	{
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
 
-		super.readJSON(obj);
+		final JSONArray jTaxItems = obj.getJSONArray("items");
+		Tax tax = null;
+		if (jTaxItems.length() != 0)
+		{
+			final JSONObject jTaxItem = jTaxItems.getJSONObject(0);
+
+			tax = new Tax.Builder().id(jTaxItem.getString("tax")).build();
+		}
+
+		final Sector sec = new Sector.Builder().name(obj.getString("name"))
+			.id(obj.getString("uuid"))
+			.taxlist(tax)
+			.build();
+		if (obj.has("number"))
+			sec.setNumber(obj.getString("number"));
 
 
+		return sec;
 	}
 }

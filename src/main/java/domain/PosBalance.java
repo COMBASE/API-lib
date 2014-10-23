@@ -1,8 +1,11 @@
 package domain;
 
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -128,53 +131,7 @@ public class PosBalance extends AbstractApiObject<PosBalance>
 
 // public static PosBalance fromJSON(JSONObject obj) throws JSONException
 // {
-// if (obj.has("result") && obj.getString("result") != null)
-// obj = obj.getJSONObject("result");
-//
-// final Collection<ItemSummary> itemSummaryObjs = new ArrayList<ItemSummary>();
-// final JSONArray itemSummaries = obj.getJSONArray("itemSummaries");
-//
-// for (int i = 0; i <= itemSummaries.length() - 1; i++)
-// {
-// final JSONObject itemSummary = itemSummaries.getJSONObject(i);
-// final ItemSummary itemSummaryObj = ItemSummary.fromJSON(itemSummary);
-// itemSummaryObjs.add(itemSummaryObj);
-// }
-//
-// final POS pos = new POS.Builder(null).uuid(obj.getString("pos")).build();
-// final Cashier cashier = new Cashier.Builder(null).uuid(obj.getString("cashier")).build();
-//
-// // date
-// Date createTimeFormatted = null;
-// Date finishTimeFormatted = null;
-// try
-// {
-// String date = obj.getString("createTime");
-// createTimeFormatted = inputDf.parse(date);
-// date = obj.getString("finishTime");
-// finishTimeFormatted = inputDf.parse(date);
-// }
-// catch (final ParseException e)
-// {
-// e.printStackTrace();
-// }
-//
-// final PosBalance posBalance = new PosBalance.Builder().deleted(obj.getBoolean("deleted"))
-// .revision(obj.getString("revision"))
-// .uuid(obj.getString("uuid"))
-// .pos(pos)
-// .cashier(cashier)
-// .createTime(createTimeFormatted)
-// .finishTime(finishTimeFormatted)
-// .itemSummaries(itemSummaryObjs)
-// .balanceAttempts(obj.getInt("balanceAttempts"))
-// .expectedTotal(obj.getDouble("expectedTotal"))
-// .actualTotal(obj.getDouble("actualTotal"))
-// .zCount(obj.getInt("zCount"))
-// .build();
-//
-//
-// return posBalance;
+
 //
 //
 // }
@@ -330,21 +287,54 @@ public class PosBalance extends AbstractApiObject<PosBalance>
 
 	}
 
-	@Override
-	public PosBalance fromJSON(final JSONObject obj) throws JSONException
-	{
-		readJSON(obj);
-		return this;
-	}
-
-	@Override
-	public void readJSON(JSONObject obj) throws JSONException
+	public PosBalance fromJSON(JSONObject obj) throws JSONException
 	{
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
 
-		super.readJSON(obj);
+		final Collection<ItemSummary> itemSummaryObjs = new ArrayList<ItemSummary>();
+		final JSONArray itemSummaries = obj.getJSONArray("itemSummaries");
+
+		for (int i = 0; i <= itemSummaries.length() - 1; i++)
+		{
+			final JSONObject itemSummary = itemSummaries.getJSONObject(i);
+			final ItemSummary itemSummaryObj = ItemSummary.fromJSON(itemSummary);
+			itemSummaryObjs.add(itemSummaryObj);
+		}
+
+		final POS pos = new POS.Builder().id(obj.getString("pos")).build();
+		final Cashier cashier = new Cashier.Builder().id(obj.getString("cashier")).build();
+
+		// date
+		Date createTimeFormatted = null;
+		Date finishTimeFormatted = null;
+		try
+		{
+			String date = obj.getString("createTime");
+			createTimeFormatted = inputDf.parse(date);
+			date = obj.getString("finishTime");
+			finishTimeFormatted = inputDf.parse(date);
+		}
+		catch (final ParseException e)
+		{
+			e.printStackTrace();
+		}
+
+		final PosBalance posBalance = new PosBalance.Builder().deleted(obj.getBoolean("deleted"))
+			.revision(obj.getLong("revision"))
+			.id(obj.getString("uuid"))
+			.pos(pos)
+			.cashier(cashier)
+			.createTime(createTimeFormatted)
+			.finishTime(finishTimeFormatted)
+			.itemSummaries(itemSummaryObjs)
+			.balanceAttempts(obj.getInt("balanceAttempts"))
+			.expectedTotal(obj.getDouble("expectedTotal"))
+			.actualTotal(obj.getDouble("actualTotal"))
+			.zCount(obj.getInt("zCount"))
+			.build();
 
 
+		return posBalance;
 	}
 }

@@ -57,17 +57,7 @@ public class Pricelist extends AbstractNameAndNumberApiObject<Pricelist>
 
 // public static Pricelist fromJSON(JSONObject obj) throws JSONException
 // {
-// if (obj.has("result") && obj.getString("result") != null)
-// obj = obj.getJSONObject("result");
 //
-// final Pricelist priceList = new Pricelist.Builder(obj.getString("name"),
-// obj.getString("currency")).deleted(obj.getBoolean("deleted"))
-// .uuid(obj.getString("uuid"))
-// .build();
-// if (obj.has("number"))
-// priceList.setNumber(obj.getString("number"));
-//
-// return priceList;
 // }
 
 	public String getUuidOfCurrency()
@@ -160,21 +150,19 @@ public class Pricelist extends AbstractNameAndNumberApiObject<Pricelist>
 
 	}
 
-	@Override
-	public Pricelist fromJSON(final JSONObject obj) throws JSONException
-	{
-		readJSON(obj);
-		return this;
-	}
-
-	@Override
-	public void readJSON(JSONObject obj) throws JSONException
+	public Pricelist fromJSON(JSONObject obj) throws JSONException
 	{
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
 
-		super.readJSON(obj);
+		final Pricelist priceList = new Pricelist.Builder().name(obj.getString("name"))
+			.uuidOfCurrency(obj.getString("currency"))
+			.deleted(obj.getBoolean("deleted"))
+			.id(obj.getString("uuid"))
+			.build();
+		if (obj.has("number"))
+			priceList.setNumber(obj.getString("number"));
 
-
+		return priceList;
 	}
 }
