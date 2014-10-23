@@ -41,6 +41,10 @@ public class Product
 
 	private boolean priceChangeable;
 
+	private BigDecimal basePriceMax;
+
+	private BigDecimal basePriceMin;
+
 	private boolean requiresSerialNumber;
 
 	private boolean trackInventory;
@@ -76,6 +80,8 @@ public class Product
 		private int costs = 0;
 		private boolean discountable = true;
 		private boolean priceChangeable = true;
+		private BigDecimal basePriceMax = new BigDecimal(String.valueOf("9999.99"));
+		private BigDecimal basePriceMin = new BigDecimal(String.valueOf("-9999.99"));
 		private boolean requiresSerialNumber = false;
 		private boolean trackInventory = false;
 		private CommodityGroup commodityGroup = null;
@@ -177,6 +183,18 @@ public class Product
 			return this;
 		}
 
+		public Builder basePriceMax(final BigDecimal value)
+		{
+			basePriceMax = value;
+			return this;
+		}
+
+		public Builder basePriceMin(final BigDecimal value)
+		{
+			basePriceMin = value;
+			return this;
+		}
+
 		public Builder prices(final Collection<Price> coll)
 		{
 			for (final Price price : coll)
@@ -274,6 +292,16 @@ public class Product
 			.commodityGroup(commodityGroup)
 			.assortment(assortment)
 			.build();
+
+		if (obj.getString("basePriceMax") != "null")
+		{
+			prod.setBasePriceMax(new BigDecimal(String.valueOf(obj.getString("basePriceMax"))));
+		}
+
+		if (obj.getString("basePriceMin") != "null")
+		{
+			prod.setBasePriceMin(new BigDecimal(String.valueOf(obj.getString("basePriceMin"))));
+		}
 
 		if (obj.getString("supplierItemPrices") != "null")
 		{
@@ -529,6 +557,8 @@ public class Product
 		codes = builder.codes;
 		uuid = builder.uuid;
 		revision = builder.revision;
+		basePriceMin = builder.basePriceMin;
+		basePriceMax = builder.basePriceMax;
 		supplierItemPrices = builder.supplierItemPrices;
 	}
 
@@ -783,10 +813,8 @@ public class Product
 		{
 
 			obj.put("name", name);
-			if (number != null)
-				obj.put("number", number);
-			if (uuid != null)
-				obj.put("uuid", uuid);
+			obj.put("number", number);
+			obj.put("uuid", uuid);
 			obj.put("deleted", deleted);
 			obj.put("activeAssortment", activeAssortment);
 			if (activeAssortmentFrom != null)
@@ -794,6 +822,8 @@ public class Product
 			obj.put("costs", costs);
 			obj.put("discountable", discountable);
 			obj.put("priceChangeable", priceChangeable);
+			obj.put("basePriceMax", basePriceMax);
+			obj.put("basePriceMin", basePriceMin);
 			obj.put("requiresSerialNumber", requiresSerialNumber);
 			obj.put("trackInventory", trackInventory);
 			if (commodityGroup != null)
@@ -870,5 +900,25 @@ public class Product
 	public void setSuppliers(final List<SupplierItemPrice> suppliers)
 	{
 		this.supplierItemPrices = suppliers;
+	}
+
+	public BigDecimal getBasePriceMax()
+	{
+		return basePriceMax;
+	}
+
+	public void setBasePriceMax(final BigDecimal basePriceMax)
+	{
+		this.basePriceMax = basePriceMax;
+	}
+
+	public BigDecimal getBasePriceMin()
+	{
+		return basePriceMin;
+	}
+
+	public void setBasePriceMin(final BigDecimal basePriceMin)
+	{
+		this.basePriceMin = basePriceMin;
 	}
 }
