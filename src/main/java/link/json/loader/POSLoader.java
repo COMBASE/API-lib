@@ -13,9 +13,9 @@ import domain.POS;
 public class POSLoader extends AbstractHasNameJsonLoader<POS>
 {
 
-	public POSLoader(final DataType dataType, final String cloudUrl, final String token)
+	public POSLoader(final String cloudUrl, final String token)
 	{
-		super(dataType, cloudUrl, token);
+		super(DataType.pos, cloudUrl, token);
 	}
 
 	@Override

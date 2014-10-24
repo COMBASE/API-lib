@@ -13,10 +13,9 @@ import domain.OrganizationalUnit;
 public class OrganizationalUnitLoader extends AbstractHasNameJsonLoader<OrganizationalUnit>
 {
 
-	public OrganizationalUnitLoader(final DataType dataType, final String cloudUrl,
-		final String token)
+	public OrganizationalUnitLoader(final String cloudUrl, final String token)
 	{
-		super(dataType, cloudUrl, token);
+		super(DataType.organizationalUnit, cloudUrl, token);
 	}
 
 	@Override

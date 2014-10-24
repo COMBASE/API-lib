@@ -13,9 +13,9 @@ import domain.DataType;
 public class CommodityGroupLoader extends AbstractHasNameJsonLoader<CommodityGroup>
 {
 
-	public CommodityGroupLoader(final DataType dataType, final String cloudUrl, final String token)
+	public CommodityGroupLoader(final String cloudUrl, final String token)
 	{
-		super(dataType, cloudUrl, token);
+		super(DataType.commodityGroup, cloudUrl, token);
 	}
 
 	@Override

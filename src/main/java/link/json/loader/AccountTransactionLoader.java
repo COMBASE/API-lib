@@ -13,10 +13,9 @@ import domain.DataType;
 public class AccountTransactionLoader extends AbstractHasIdJsonLoader<AccountTransaction>
 {
 
-	public AccountTransactionLoader(final DataType dataType, final String cloudUrl,
-		final String token)
+	public AccountTransactionLoader(final String cloudUrl, final String token)
 	{
-		super(dataType, cloudUrl, token);
+		super(DataType.accountTransaction, cloudUrl, token);
 	}
 
 	@Override

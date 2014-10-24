@@ -27,7 +27,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 	private BigDecimal basePriceMin;
 	private boolean requiresSerialNumber;
 	private boolean trackInventory;
-	private final List<SupplierItemPrice> supplierItemPrices = null;
+	private List<SupplierItemPrice> supplierItemPrices = null;
 
 	private CommodityGroup commodityGroup;
 
@@ -62,6 +62,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		private Assortment assortment = null;
 		private final List<Product_Text> texts = new ArrayList<Product_Text>();
 		private final List<Product_Code> codes = new ArrayList<Product_Code>();
+		private List<SupplierItemPrice> supplierItemPrices = null;
 
 		public T activeAssortment(final boolean value)
 		{
@@ -186,6 +187,20 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 			return self();
 		}
 
+		public T supplierItemPrice(final List<SupplierItemPrice> value)
+		{
+			supplierItemPrices = value;
+			return self();
+		}
+
+		public T supplierItemPrice(final SupplierItemPrice value)
+		{
+			if (supplierItemPrices == null)
+				supplierItemPrices = new ArrayList<SupplierItemPrice>();
+			supplierItemPrices.add(value);
+			return self();
+		}
+
 		@Override
 		public Product build()
 		{
@@ -207,166 +222,6 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 // public static Product fromJSON(JSONObject obj) throws JSONException
 // {
 
-// }
-
-	/**
-	 * More optimized post method for uploading several products of the same group, sector, etc.
-	 * !-STABLE-! ~MAS
-	 * **/
-
-// public static void postList(final List<Product> productList, final int limit)
-// {
-//
-// final Date date1 = new Date();
-// System.out.println("start: " + date1);
-//
-//
-// JSONArray jProdArray = new JSONArray();
-// // final JSONObject jProdObject = new JSONObject();
-// final HashSet<CommodityGroup> grpList = new HashSet<CommodityGroup>();
-// final HashSet<Assortment> assortmentList = new HashSet<Assortment>();
-// final HashSet<Sector> sectorList = new HashSet<Sector>();
-// final HashSet<Pricelist> priceListLists = new HashSet<Pricelist>();
-//
-// // filling up SubPojo lists for...
-// for (int i = 0; i < productList.size(); i++)
-// {
-// final Product product = productList.get(i);
-//
-// // ...commodityGroup
-// if (product.getCommodityGroup() != null)
-// grpList.add(productList.get(i).getCommodityGroup());
-//
-//
-// // ...assortment
-// if (product.getAssortment() != null)
-// assortmentList.add(productList.get(i).getAssortment());
-//
-//
-// // ...Sector+AltSector
-// if (product.getSector() != null)
-// sectorList.add(productList.get(i).getSector());
-//
-//
-// // ...pricelist
-// for (int j = 0; j < product.getPrices().size(); j++)
-// {
-// if (product.getPrices().get(j).getPriceList() != null)
-// priceListLists.add(productList.get(i).getPrices().get(j).getPriceList());
-// }
-//
-// }
-//
-//
-// try
-// {
-// // posting all new SubPojos
-// final Iterator<CommodityGroup> grpListIter = grpList.iterator();
-// while (grpListIter.hasNext())
-// {
-// final CommodityGroup grp = grpListIter.next();
-// if (grp != null && grp.getUuid() == null)
-// grp.post();
-// }
-// final Iterator<Assortment> assortmentListIter = assortmentList.iterator();
-// while (assortmentListIter.hasNext())
-// {
-// final Assortment assort = assortmentListIter.next();
-// if (assort != null && assort.getUuid() == null)
-// assort.post();
-// }
-//
-// final Iterator<Sector> sectorListIter = sectorList.iterator();
-// while (sectorListIter.hasNext())
-// {
-// final Sector sec = sectorListIter.next();
-// if (sec != null && sec.getUuid() == null)
-// sec.post();
-// }
-//
-// final Iterator<Pricelist> priceListListsIter = priceListLists.iterator();
-// while (priceListListsIter.hasNext())
-// {
-// final Pricelist priceL = priceListListsIter.next();
-// if (priceL != null && priceL.getUuid() == null)
-// priceL.post();
-// }
-//
-// }
-// catch (final IOException e)
-// {
-// e.printStackTrace();
-// }
-// catch (final ApiNotReachableException e)
-// {
-// e.printStackTrace();
-// }
-// // Thread Executor init
-// final ExecutorService exec = Executors.newFixedThreadPool(Runtime.getRuntime()
-// .availableProcessors());
-//
-// int offset = 0;
-// int i = 0;
-// while (i < productList.size())
-// {
-// jProdArray = new JSONArray();
-// offset = offset + limit;
-// while (i < offset && i < productList.size())
-// {
-// final Product product = productList.get(i);
-//
-// // Commoditygroup UUID check
-// if (product.getCommodityGroup().getUuid() == null)
-// for (final CommodityGroup group : grpList)
-// {
-// if (group.getNumber().equalsIgnoreCase(
-// product.getCommodityGroup().getNumber()))
-// product.setCommodityGroup(group);
-// }
-//
-// // Assortment UUID check
-// if (product.getAssortment().getUuid() == null)
-// for (final Assortment assortment : assortmentList)
-// {
-// if (assortment.getNumber().equalsIgnoreCase(
-// product.getAssortment().getNumber()))
-// product.setAssortment(assortment);
-// }
-//
-// // Sector UUID check
-// if (product.getSector().getUuid() == null)
-// for (final Sector sector : sectorList)
-// {
-// if (sector.getNumber().equalsIgnoreCase(product.getSector().getNumber()))
-// product.setSector(sector);
-// }
-//
-// // pricelist
-// for (final Price price : product.getPrices())
-// {
-// if (price.getPriceList().getUuid() == null)
-// for (final Pricelist pricelist : priceListLists)
-// {
-// if (pricelist.getNumber().equalsIgnoreCase(
-// price.getPriceList().getNumber()))
-// price.setPriceList(pricelist);
-// }
-// }
-//
-// jProdArray.put(productList.get(i).toJSON());
-// i++;
-// }
-//
-// exec.execute(new PostListThread(jProdArray));
-// // bool = CloudLink.getConnector().postData(DataType.product, jProdArray);
-// }
-// exec.shutdown();
-// while (!exec.isTerminated())
-// {
-// }
-//
-// final Date date2 = new Date();
-// System.out.println("end: " + date2);
 // }
 
 
@@ -660,6 +515,16 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 	public void setBasPriceMin(final BigDecimal basePriceMin)
 	{
 		this.basePriceMin = basePriceMin;
+	}
+
+	public List<SupplierItemPrice> getSupplierItemPrices()
+	{
+		return supplierItemPrices;
+	}
+
+	public void setSupplierItemPrices(final List<SupplierItemPrice> supplierItemPrices)
+	{
+		this.supplierItemPrices = supplierItemPrices;
 	}
 
 	@Override

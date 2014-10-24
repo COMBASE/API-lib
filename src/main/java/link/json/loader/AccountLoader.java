@@ -11,9 +11,9 @@ import domain.DataType;
 public class AccountLoader extends AbstractHasNameJsonLoader<Account>
 {
 
-	public AccountLoader(final DataType dataType, final String cloudUrl, final String token)
+	public AccountLoader(final String cloudUrl, final String token)
 	{
-		super(dataType, cloudUrl, token);
+		super(DataType.account, cloudUrl, token);
 	}
 
 	@Override

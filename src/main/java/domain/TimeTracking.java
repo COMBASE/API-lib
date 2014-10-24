@@ -7,7 +7,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 
-public class TimeTracking extends AbstractApiObject<TimeTracking>
+public class TimeTracking extends AbstractIDApiObject<TimeTracking>
 {
 	/**
 	 * 
@@ -28,7 +28,7 @@ public class TimeTracking extends AbstractApiObject<TimeTracking>
 
 	}
 
-	public static abstract class Init<T extends Init<T>> extends AbstractApiObject.Init<T>
+	public static abstract class Init<T extends Init<T>> extends AbstractIDApiObject.Init<T>
 	{
 		private Cashier cashier = null;
 		private String org;

@@ -13,9 +13,9 @@ import domain.Inventory;
 public class InventoryLoader extends AbstractHasNumberJsonLoader<Inventory>
 {
 
-	public InventoryLoader(final DataType dataType, final String cloudUrl, final String token)
+	public InventoryLoader(final String cloudUrl, final String token)
 	{
-		super(dataType, cloudUrl, token);
+		super(DataType.inventory, cloudUrl, token);
 	}
 
 	@Override

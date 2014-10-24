@@ -13,9 +13,9 @@ import domain.TimeTracking;
 public class TimeTrackingLoader extends AbstractHasIdJsonLoader<TimeTracking>
 {
 
-	public TimeTrackingLoader(final DataType dataType, final String cloudUrl, final String token)
+	public TimeTrackingLoader(final String cloudUrl, final String token)
 	{
-		super(dataType, cloudUrl, token);
+		super(DataType.timeTracking, cloudUrl, token);
 	}
 
 	@Override

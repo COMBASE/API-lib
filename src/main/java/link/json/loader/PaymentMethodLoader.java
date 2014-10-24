@@ -13,9 +13,9 @@ import domain.PaymentMethod;
 public class PaymentMethodLoader extends AbstractHasNameJsonLoader<PaymentMethod>
 {
 
-	public PaymentMethodLoader(final DataType dataType, final String cloudUrl, final String token)
+	public PaymentMethodLoader(final String cloudUrl, final String token)
 	{
-		super(dataType, cloudUrl, token);
+		super(DataType.paymentMethod, cloudUrl, token);
 	}
 
 	@Override

@@ -13,10 +13,9 @@ import domain.EndOfDayStatement;
 public class EndOfDayStatementLoader extends AbstractHasIdJsonLoader<EndOfDayStatement>
 {
 
-	public EndOfDayStatementLoader(final DataType dataType, final String cloudUrl,
-		final String token)
+	public EndOfDayStatementLoader(final String cloudUrl, final String token)
 	{
-		super(dataType, cloudUrl, token);
+		super(DataType.endOfDayStatement, cloudUrl, token);
 	}
 
 	@Override

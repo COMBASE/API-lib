@@ -13,9 +13,9 @@ import domain.Tax;
 public class TaxLoader extends AbstractHasNameJsonLoader<Tax>
 {
 
-	public TaxLoader(final DataType dataType, final String cloudUrl, final String token)
+	public TaxLoader(final String cloudUrl, final String token)
 	{
-		super(dataType, cloudUrl, token);
+		super(DataType.tax, cloudUrl, token);
 	}
 
 	@Override

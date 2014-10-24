@@ -13,10 +13,9 @@ import domain.InventoryReceiptItem;
 public class InventoryReceiptItemLoader extends AbstractHasIdJsonLoader<InventoryReceiptItem>
 {
 
-	public InventoryReceiptItemLoader(final DataType dataType, final String cloudUrl,
-		final String token)
+	public InventoryReceiptItemLoader(final String cloudUrl, final String token)
 	{
-		super(dataType, cloudUrl, token);
+		super(DataType.inventoryReceiptItem, cloudUrl, token);
 	}
 
 	@Override

@@ -1,11 +1,16 @@
 package link.json;
 
 import java.text.ParseException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import link.CloudLink;
+import link.thread.PostListThread;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -191,6 +196,47 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 		final T ret = fromJSON(jObj);
 		updateCache(ret);
 		return ret;
+	}
+
+	public T postList(final List<T> objs, final int limit) throws JSONException
+	{
+		final Date date1 = new Date();
+		System.out.println("start: " + date1);
+
+
+		JSONArray jProdArray = new JSONArray();
+
+
+		// Thread Executor init
+		final ExecutorService exec = Executors.newFixedThreadPool(Runtime.getRuntime()
+			.availableProcessors());
+
+		int offset = 0;
+		int i = 0;
+		while (i < objs.size())
+		{
+			jProdArray = new JSONArray();
+			offset = offset + limit;
+			while (i < offset && i < objs.size())
+			{
+				final T obj = objs.get(i);
+
+				jProdArray.put(toJSON(obj));
+				i++;
+			}
+
+			// TODO return post response result JSONString
+			exec.execute(new PostListThread(jProdArray));
+		}
+		exec.shutdown();
+		while (!exec.isTerminated())
+		{
+		}
+
+		final Date date2 = new Date();
+		System.out.println("end: " + date2);
+
+		return null;
 	}
 
 	/**

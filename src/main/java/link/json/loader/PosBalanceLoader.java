@@ -13,9 +13,9 @@ import domain.PosBalance;
 public class PosBalanceLoader extends AbstractHasIdJsonLoader<PosBalance>
 {
 
-	public PosBalanceLoader(final DataType dataType, final String cloudUrl, final String token)
+	public PosBalanceLoader(final String cloudUrl, final String token)
 	{
-		super(dataType, cloudUrl, token);
+		super(DataType.posBalance, cloudUrl, token);
 	}
 
 	@Override

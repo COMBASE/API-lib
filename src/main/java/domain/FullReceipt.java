@@ -33,11 +33,6 @@ public class FullReceipt
 		private Collection<Sale> sale;
 
 
-		public Builder()
-		{
-
-		}
-
 		public Builder receipt(final Receipt receipt)
 		{
 			this.receipt = receipt;

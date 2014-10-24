@@ -13,10 +13,9 @@ import domain.TimeTrackingEntities;
 public class TimeTrackingEntitiesLoader extends AbstractHasNameJsonLoader<TimeTrackingEntities>
 {
 
-	public TimeTrackingEntitiesLoader(final DataType dataType, final String cloudUrl,
-		final String token)
+	public TimeTrackingEntitiesLoader(final String cloudUrl, final String token)
 	{
-		super(dataType, cloudUrl, token);
+		super(DataType.timeTrackingEntity, cloudUrl, token);
 	}
 
 	@Override

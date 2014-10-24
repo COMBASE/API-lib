@@ -13,9 +13,9 @@ import domain.Sale;
 public class SaleLoader extends AbstractHasIdJsonLoader<Sale>
 {
 
-	public SaleLoader(final DataType dataType, final String cloudUrl, final String token)
+	public SaleLoader(final String cloudUrl, final String token)
 	{
-		super(dataType, cloudUrl, token);
+		super(DataType.sale, cloudUrl, token);
 	}
 
 	@Override

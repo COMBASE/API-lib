@@ -7,7 +7,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 
-public class Payment extends AbstractApiObject<Payment>
+public class Payment extends AbstractIDApiObject<Payment>
 {
 	/**
 	 * 
@@ -30,7 +30,7 @@ public class Payment extends AbstractApiObject<Payment>
 	private Currency currency;
 	private final int receiptIndex;
 
-	protected static abstract class Init<T extends Init<T>> extends AbstractApiObject.Init<T>
+	protected static abstract class Init<T extends Init<T>> extends AbstractIDApiObject.Init<T>
 	{
 		private final String itemSequence = null;
 		private Cashier cashier = null;

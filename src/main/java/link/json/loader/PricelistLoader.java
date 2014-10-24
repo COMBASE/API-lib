@@ -13,9 +13,9 @@ import domain.Pricelist;
 public class PricelistLoader extends AbstractHasNameJsonLoader<Pricelist>
 {
 
-	public PricelistLoader(final DataType dataType, final String cloudUrl, final String token)
+	public PricelistLoader(final String cloudUrl, final String token)
 	{
-		super(dataType, cloudUrl, token);
+		super(DataType.priceList, cloudUrl, token);
 	}
 
 	@Override

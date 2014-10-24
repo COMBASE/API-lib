@@ -13,9 +13,9 @@ import domain.EconomicZone;
 public class EconomicZoneLoader extends AbstractHasNameJsonLoader<EconomicZone>
 {
 
-	public EconomicZoneLoader(final DataType dataType, final String cloudUrl, final String token)
+	public EconomicZoneLoader(final String cloudUrl, final String token)
 	{
-		super(dataType, cloudUrl, token);
+		super(DataType.economicZone, cloudUrl, token);
 	}
 
 	@Override

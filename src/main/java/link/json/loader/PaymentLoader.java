@@ -12,9 +12,9 @@ import domain.Payment;
 
 public class PaymentLoader extends AbstractHasIdJsonLoader<Payment>
 {
-	public PaymentLoader(final DataType dataType, final String cloudUrl, final String token)
+	public PaymentLoader(final String cloudUrl, final String token)
 	{
-		super(dataType, cloudUrl, token);
+		super(DataType.payment, cloudUrl, token);
 	}
 
 	@Override

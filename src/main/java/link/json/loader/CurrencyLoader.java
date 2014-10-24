@@ -13,9 +13,9 @@ import domain.DataType;
 public class CurrencyLoader extends AbstractHasNameJsonLoader<Currency>
 {
 
-	public CurrencyLoader(final DataType dataType, final String cloudUrl, final String token)
+	public CurrencyLoader(final String cloudUrl, final String token)
 	{
-		super(dataType, cloudUrl, token);
+		super(DataType.currency, cloudUrl, token);
 	}
 
 	@Override

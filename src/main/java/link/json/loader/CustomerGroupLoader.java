@@ -13,9 +13,9 @@ import domain.DataType;
 public class CustomerGroupLoader extends AbstractHasNameJsonLoader<CustomerGroup>
 {
 
-	public CustomerGroupLoader(final DataType dataType, final String cloudUrl, final String token)
+	public CustomerGroupLoader(final String cloudUrl, final String token)
 	{
-		super(dataType, cloudUrl, token);
+		super(DataType.customergroup, cloudUrl, token);
 	}
 
 	@Override

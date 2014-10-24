@@ -13,9 +13,9 @@ import domain.Receipt;
 public class ReceiptLoader extends AbstractHasNumberJsonLoader<Receipt>
 {
 
-	public ReceiptLoader(final DataType dataType, final String cloudUrl, final String token)
+	public ReceiptLoader(final String cloudUrl, final String token)
 	{
-		super(dataType, cloudUrl, token);
+		super(DataType.receipt, cloudUrl, token);
 	}
 
 	@Override

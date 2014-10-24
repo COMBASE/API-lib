@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-public class InventoryReceiptItem extends AbstractApiObject<InventoryReceiptItem>
+public class InventoryReceiptItem extends AbstractIDApiObject<InventoryReceiptItem>
 {
 	/**
 	 * 
@@ -22,7 +22,7 @@ public class InventoryReceiptItem extends AbstractApiObject<InventoryReceiptItem
 
 	private InventoryReceipt receipt;
 
-	protected static abstract class Init<T extends Init<T>> extends AbstractApiObject.Init<T>
+	protected static abstract class Init<T extends Init<T>> extends AbstractIDApiObject.Init<T>
 	{
 		private BigDecimal nominalGoods = null;
 

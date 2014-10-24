@@ -13,9 +13,9 @@ import domain.DataType;
 public class CustomerLoader extends AbstractHasNumberJsonLoader<Customer>
 {
 
-	public CustomerLoader(final DataType dataType, final String cloudUrl, final String token)
+	public CustomerLoader(final String cloudUrl, final String token)
 	{
-		super(dataType, cloudUrl, token);
+		super(DataType.customer, cloudUrl, token);
 	}
 
 	@Override

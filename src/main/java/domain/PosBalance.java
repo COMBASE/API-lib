@@ -9,7 +9,7 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-public class PosBalance extends AbstractApiObject<PosBalance>
+public class PosBalance extends AbstractIDApiObject<PosBalance>
 {
 	/**
 	 * 
@@ -25,7 +25,7 @@ public class PosBalance extends AbstractApiObject<PosBalance>
 	private double actualTotal;
 	private int zCount;
 
-	protected static abstract class Init<T extends Init<T>> extends AbstractApiObject.Init<T>
+	protected static abstract class Init<T extends Init<T>> extends AbstractIDApiObject.Init<T>
 	{
 		private POS pos = null;
 		private Cashier cashier = null;

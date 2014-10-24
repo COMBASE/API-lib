@@ -13,9 +13,9 @@ import domain.DataType;
 public class CashierLoader extends AbstractHasNameJsonLoader<Cashier>
 {
 
-	public CashierLoader(final DataType dataType, final String cloudUrl, final String token)
+	public CashierLoader(final String cloudUrl, final String token)
 	{
-		super(dataType, cloudUrl, token);
+		super(DataType.cashier, cloudUrl, token);
 	}
 
 	@Override

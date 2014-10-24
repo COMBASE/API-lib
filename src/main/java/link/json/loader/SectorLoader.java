@@ -13,9 +13,9 @@ import domain.Sector;
 public class SectorLoader extends AbstractHasNameJsonLoader<Sector>
 {
 
-	public SectorLoader(final DataType dataType, final String cloudUrl, final String token)
+	public SectorLoader(final String cloudUrl, final String token)
 	{
-		super(dataType, cloudUrl, token);
+		super(DataType.sector, cloudUrl, token);
 	}
 
 	@Override
