@@ -590,7 +590,7 @@ public class POS extends AbstractNameAndNumberApiObject<POS>
 
 	}
 
-	public POS fromJSON(JSONObject obj) throws JSONException
+	public static POS fromJSON(JSONObject obj) throws JSONException
 	{
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");

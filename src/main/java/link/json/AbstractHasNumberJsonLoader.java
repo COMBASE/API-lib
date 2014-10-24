@@ -1,5 +1,6 @@
 package link.json;
 
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,22 +12,24 @@ import domain.interfaces.HasId;
 import domain.interfaces.HasNumber;
 import error.ApiNotReachableException;
 
-public abstract class AbstractHasNumberJsonLoader<T extends HasId & HasNumber> extends AbstractHasIdJsonLoader<T>
+public abstract class AbstractHasNumberJsonLoader<T extends HasId & HasNumber> extends
+	AbstractHasIdJsonLoader<T>
 {
 
 	private final Map<String, T> numberCache = new HashMap<String, T>();
 
-	public AbstractHasNumberJsonLoader(final DataType dataType, final String cloudUrl, final String token)
+	public AbstractHasNumberJsonLoader(final DataType dataType, final String cloudUrl,
+		final String token)
 	{
 		super(dataType, cloudUrl, token);
 	}
 
 	@Override
-	public JSONObject appendToJson(final T value) throws JSONException
+	public JSONObject appendTheJson(final T value) throws JSONException
 	{
 		JSONObject obj = new JSONObject();
 
-		obj = super.appendToJson(value);
+		obj = super.appendTheJson(value);
 
 		obj.put("number", value.getNumber());
 
@@ -40,8 +43,10 @@ public abstract class AbstractHasNumberJsonLoader<T extends HasId & HasNumber> e
 	 * @return
 	 * @throws ApiNotReachableException
 	 * @throws JSONException
+	 * @throws ParseException
 	 */
-	public T downloadByNumber(final String number) throws ApiNotReachableException, JSONException
+	public T downloadByNumber(final String number) throws ApiNotReachableException, JSONException,
+		ParseException
 	{
 		final T cachedObject = numberCache.get(number);
 		if (cachedObject != null)

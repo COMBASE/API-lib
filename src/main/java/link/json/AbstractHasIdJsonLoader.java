@@ -1,5 +1,6 @@
 package link.json;
 
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -37,7 +38,8 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 
 	private final Map<String, T> idCache = new HashMap<String, T>();
 
-	public AbstractHasIdJsonLoader(final DataType dataType, final String cloudUrl, final String token)
+	public AbstractHasIdJsonLoader(final DataType dataType, final String cloudUrl,
+		final String token)
 	{
 		this.cloudLink = new CloudLink(cloudUrl, token);
 		this.dataType = dataType;
@@ -46,9 +48,9 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 
 	public abstract JSONObject toJSON(T value) throws JSONException;
 
-	public abstract T fromJSON(JSONObject obj) throws JSONException;
+	public abstract T fromJSON(JSONObject obj) throws JSONException, ParseException;
 
-	public JSONObject appendToJson(final T value) throws JSONException
+	public JSONObject appendTheJson(final T value) throws JSONException
 	{
 		final JSONObject obj = new JSONObject();
 
@@ -153,8 +155,10 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	 * @param number
 	 * @return
 	 * @throws ApiNotReachableException
+	 * @throws ParseException
 	 */
-	public T downloadByUUID(final String uuid) throws ApiNotReachableException, JSONException
+	public T downloadByUUID(final String uuid) throws ApiNotReachableException, JSONException,
+		ParseException
 	{
 		final T cachedObject = idCache.get(uuid);
 		if (cachedObject != null)
@@ -170,7 +174,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	}
 
 
-	public T post(final T obj) throws ApiNotReachableException, JSONException
+	public T post(final T obj) throws ApiNotReachableException, JSONException, ParseException
 	{
 		final String result = CloudLink.getConnector().postData(getDataType(), toJSON(obj));
 		final JSONObject jObj = new JSONObject(result);

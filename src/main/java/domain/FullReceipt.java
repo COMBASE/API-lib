@@ -152,7 +152,7 @@ public class FullReceipt
 					.key(jPayment.getString("currencyKey"))
 					.build();
 				payment.setCurrency(currency);
-				final PaymentMethods paymentMethods = new PaymentMethods.Builder().name(
+				final PaymentMethod paymentMethods = new PaymentMethod.Builder().name(
 					jPayment.getString("paymentMethodName"))
 					.id(jPayment.getString("paymentMethod"))
 					.number(jPayment.getString("paymentMethodNr"))

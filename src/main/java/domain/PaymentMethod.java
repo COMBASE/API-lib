@@ -4,7 +4,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 
-public class PaymentMethods extends AbstractNameAndNumberApiObject<PaymentMethods>
+public class PaymentMethod extends AbstractNameAndNumberApiObject<PaymentMethod>
 {
 	/**
 	 * 
@@ -24,9 +24,9 @@ public class PaymentMethods extends AbstractNameAndNumberApiObject<PaymentMethod
 		}
 
 		@Override
-		public PaymentMethods build()
+		public PaymentMethod build()
 		{
-			return new PaymentMethods(this);
+			return new PaymentMethod(this);
 		}
 	}
 
@@ -42,7 +42,7 @@ public class PaymentMethods extends AbstractNameAndNumberApiObject<PaymentMethod
 	}
 
 	// ctor of PaymentMethods
-	public PaymentMethods(final Init<?> init)
+	public PaymentMethod(final Init<?> init)
 	{
 		super(init);
 		this.currency = init.currency;
@@ -104,14 +104,14 @@ public class PaymentMethods extends AbstractNameAndNumberApiObject<PaymentMethod
 	}
 
 
-	public PaymentMethods fromJSON(JSONObject obj) throws JSONException
+	public static PaymentMethod fromJSON(JSONObject obj) throws JSONException
 	{
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
 
 		final Currency currency = new Currency.Builder().id(obj.getString("currency")).build();
 
-		final PaymentMethods payMeth = new PaymentMethods.Builder().name(obj.getString("name"))
+		final PaymentMethod payMeth = new PaymentMethod.Builder().name(obj.getString("name"))
 			.deleted(obj.getBoolean("deleted"))
 			.number(obj.getString("number"))
 			.id(obj.getString("uuid"))

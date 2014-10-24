@@ -23,7 +23,7 @@ public class AssortmentLoader extends AbstractHasNameJsonLoader<Assortment>
 	@Override
 	public JSONObject toJSON(final Assortment value) throws JSONException
 	{
-		final JSONObject obj = super.appendToJson(value);
+		final JSONObject obj = super.appendTheJson(value);
 		// TODO append JSONObject
 		return obj;
 	}

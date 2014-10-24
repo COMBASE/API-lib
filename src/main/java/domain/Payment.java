@@ -26,7 +26,7 @@ public class Payment extends AbstractApiObject<Payment>
 	private double amount;
 	private Date transactionTime;
 	private POS pos;
-	private PaymentMethods paymentMethod;
+	private PaymentMethod paymentMethod;
 	private Currency currency;
 	private final int receiptIndex;
 
@@ -46,7 +46,7 @@ public class Payment extends AbstractApiObject<Payment>
 		private String serialNumber = null;
 		private POS pos = null;
 		private Currency currency = null;
-		private PaymentMethods paymentMethod = null;
+		private PaymentMethod paymentMethod = null;
 		private int receiptIndex = 0;
 
 		public T pos(final POS posy)
@@ -80,7 +80,7 @@ public class Payment extends AbstractApiObject<Payment>
 			return self();
 		}
 
-		public T paymentMethod(final PaymentMethods payMeth)
+		public T paymentMethod(final PaymentMethod payMeth)
 		{
 			paymentMethod = payMeth;
 			return self();
@@ -358,12 +358,12 @@ public class Payment extends AbstractApiObject<Payment>
 		this.currency = currency;
 	}
 
-	public PaymentMethods getPaymentMethod()
+	public PaymentMethod getPaymentMethod()
 	{
 		return paymentMethod;
 	}
 
-	public void setPaymentMethod(final PaymentMethods paymentMethod)
+	public void setPaymentMethod(final PaymentMethod paymentMethod)
 	{
 		this.paymentMethod = paymentMethod;
 	}
@@ -437,7 +437,7 @@ public class Payment extends AbstractApiObject<Payment>
 		pos.setId(obj.getString("pos"));
 		final Currency cur = new Currency.Builder().build();
 		cur.setId(obj.getString("currency"));
-		final PaymentMethods payMeth = new PaymentMethods.Builder().build();
+		final PaymentMethod payMeth = new PaymentMethod.Builder().build();
 		payMeth.setId(obj.getString("paymentMethod"));
 		final Payment pay = new Payment.Builder().deleted(obj.getBoolean("deleted"))
 			.revision(obj.getLong("revision"))

@@ -1,5 +1,6 @@
 package link.json;
 
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,24 +19,26 @@ public abstract class AbstractHasNameJsonLoader<T extends HasId & HasNumber & Ha
 
 	private final Map<String, T> nameCache = new HashMap<String, T>();
 
-	public AbstractHasNameJsonLoader(final DataType dataType, final String cloudUrl, final String token)
+	public AbstractHasNameJsonLoader(final DataType dataType, final String cloudUrl,
+		final String token)
 	{
 		super(dataType, cloudUrl, token);
 	}
 
 	@Override
-	public JSONObject appendToJson(final T value) throws JSONException
+	public JSONObject appendTheJson(final T value) throws JSONException
 	{
 		JSONObject obj = new JSONObject();
 
-		obj = super.appendToJson(value);
+		obj = super.appendTheJson(value);
 
 		obj.put("name", value.getName());
 
 		return new JSONObject();
 	}
 
-	public T downloadByName(final String name) throws ApiNotReachableException, JSONException
+	public T downloadByName(final String name) throws ApiNotReachableException, JSONException,
+		ParseException
 	{
 		final T cachedObject = nameCache.get(name);
 		if (cachedObject != null)

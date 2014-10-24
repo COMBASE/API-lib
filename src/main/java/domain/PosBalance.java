@@ -287,7 +287,7 @@ public class PosBalance extends AbstractApiObject<PosBalance>
 
 	}
 
-	public PosBalance fromJSON(JSONObject obj) throws JSONException
+	public static PosBalance fromJSON(JSONObject obj) throws JSONException
 	{
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");

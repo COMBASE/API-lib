@@ -7,15 +7,15 @@ import org.codehaus.jettison.json.JSONObject;
 
 public class EndOfDayPaymentSummary
 {
-	private PaymentMethods paymentMethods;
+	private PaymentMethod paymentMethods;
 	private BigDecimal amount;
 
-	public PaymentMethods getPaymentMethods()
+	public PaymentMethod getPaymentMethods()
 	{
 		return paymentMethods;
 	}
 
-	public void setPaymentMethods(final PaymentMethods paymentMethods)
+	public void setPaymentMethods(final PaymentMethod paymentMethods)
 	{
 		this.paymentMethods = paymentMethods;
 	}
@@ -35,7 +35,7 @@ public class EndOfDayPaymentSummary
 
 		final EndOfDayPaymentSummary paymentSummary = new EndOfDayPaymentSummary();
 
-		final PaymentMethods paymentMethods = new PaymentMethods.Builder().id(
+		final PaymentMethod paymentMethods = new PaymentMethod.Builder().id(
 			obj.getString("paymentMethod")).build();
 
 		paymentSummary.setPaymentMethods(paymentMethods);

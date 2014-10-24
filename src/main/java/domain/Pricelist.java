@@ -150,7 +150,7 @@ public class Pricelist extends AbstractNameAndNumberApiObject<Pricelist>
 
 	}
 
-	public Pricelist fromJSON(JSONObject obj) throws JSONException
+	public static Pricelist fromJSON(JSONObject obj) throws JSONException
 	{
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");

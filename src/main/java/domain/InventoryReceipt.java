@@ -313,7 +313,8 @@ public class InventoryReceipt extends AbstractNumberApiObject<InventoryReceipt>
 
 	}
 
-	public InventoryReceipt fromJSON(final JSONObject obj) throws JSONException, ParseException
+	public static InventoryReceipt fromJSON(final JSONObject obj) throws JSONException,
+		ParseException
 	{
 		final Cashier cashier = new Cashier.Builder().id(obj.getString("cashier")).build();
 

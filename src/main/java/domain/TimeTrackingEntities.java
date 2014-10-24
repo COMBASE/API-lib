@@ -133,7 +133,7 @@ public class TimeTrackingEntities extends AbstractNameAndNumberApiObject<TimeTra
 
 	}
 
-	public TimeTrackingEntities fromJSON(JSONObject obj) throws JSONException
+	public static TimeTrackingEntities fromJSON(JSONObject obj) throws JSONException
 	{
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");

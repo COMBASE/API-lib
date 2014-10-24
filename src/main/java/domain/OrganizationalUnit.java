@@ -251,7 +251,7 @@ public class OrganizationalUnit extends AbstractNameAndNumberApiObject<Organizat
 
 	}
 
-	public OrganizationalUnit fromJSON(JSONObject obj) throws JSONException
+	public static OrganizationalUnit fromJSON(JSONObject obj) throws JSONException
 	{
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");

@@ -23,6 +23,8 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 	private int costs;
 	private boolean discountable;
 	private boolean priceChangeable;
+	private BigDecimal basePriceMax;
+	private BigDecimal basePriceMin;
 	private boolean requiresSerialNumber;
 	private boolean trackInventory;
 
@@ -48,6 +50,8 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		private int costs = 0;
 		private boolean discountable = true;
 		private boolean priceChangeable = true;
+		private BigDecimal basePriceMax = new BigDecimal(String.valueOf("9999.99"));
+		private BigDecimal basePriceMin = new BigDecimal(String.valueOf("-9999.99"));
 		private boolean requiresSerialNumber = false;
 		private boolean trackInventory = false;
 		private CommodityGroup commodityGroup = null;
@@ -118,6 +122,18 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		public T priceChangeable(final boolean value)
 		{
 			priceChangeable = value;
+			return self();
+		}
+
+		public T basePriceMin(final BigDecimal value)
+		{
+			basePriceMin = value;
+			return self();
+		}
+
+		public T basePriceMax(final BigDecimal value)
+		{
+			basePriceMax = value;
 			return self();
 		}
 
@@ -361,6 +377,8 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		costs = init.costs;
 		discountable = init.discountable;
 		priceChangeable = init.priceChangeable;
+		basePriceMax = init.basePriceMax;
+		basePriceMin = init.basePriceMin;
 		requiresSerialNumber = init.requiresSerialNumber;
 		trackInventory = init.trackInventory;
 		commodityGroup = init.commodityGroup;
@@ -623,6 +641,26 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 // }
 // }
 
+	public BigDecimal getBasePriceMax()
+	{
+		return basePriceMax;
+	}
+
+	public void setBasePriceMax(final BigDecimal basePriceMax)
+	{
+		this.basePriceMax = basePriceMax;
+	}
+
+	public BigDecimal getBasPriceMin()
+	{
+		return basePriceMin;
+	}
+
+	public void setBasPriceMin(final BigDecimal basePriceMin)
+	{
+		this.basePriceMin = basePriceMin;
+	}
+
 	@Override
 	public boolean equals(final Object obj)
 	{
@@ -653,7 +691,8 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 
 	}
 
-
+	// TODO implement BD fields basePriceMax basePriceMin in from/to JSON
+	// TODO implement SupplierItemPrice
 	public static Product fromJSON(JSONObject obj) throws JSONException
 	{
 		if (obj.has("result") && obj.getString("result") != null)

@@ -1,13 +1,16 @@
 package link.json.loader;
 
-import link.json.AbstractHasNumberJsonLoader;
+import java.text.ParseException;
+
+import link.json.AbstractHasIdJsonLoader;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import domain.AccountTransaction;
 import domain.DataType;
 
-public class AccountTransactionLoader extends AbstractHasNumberJsonLoader<AccountTransactionLoader>
+public class AccountTransactionLoader extends AbstractHasIdJsonLoader<AccountTransaction>
 {
 
 	public AccountTransactionLoader(final DataType dataType, final String cloudUrl,
@@ -17,19 +20,18 @@ public class AccountTransactionLoader extends AbstractHasNumberJsonLoader<Accoun
 	}
 
 	@Override
-	public JSONObject toJSON(final AccountTransactionLoader value) throws JSONException
+	public JSONObject toJSON(final AccountTransaction value) throws JSONException
 	{
-		final JSONObject obj = super.appendToJson(value);
+		final JSONObject obj = super.appendTheJson(value);
 
-		// TODO append json
+		// TODO append JSONstring
 		return obj;
 	}
 
 	@Override
-	public AccountTransactionLoader fromJSON(final JSONObject obj) throws JSONException
+	public AccountTransaction fromJSON(final JSONObject obj) throws JSONException, ParseException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		final AccountTransaction accountTransaction = AccountTransaction.fromJSON(obj);
+		return accountTransaction;
 	}
-
 }

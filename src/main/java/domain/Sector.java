@@ -159,7 +159,7 @@ public class Sector extends AbstractNameAndNumberApiObject<Sector>
 
 	}
 
-	public Sector fromJSON(JSONObject obj) throws JSONException
+	public static Sector fromJSON(JSONObject obj) throws JSONException
 	{
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
