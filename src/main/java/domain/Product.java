@@ -27,6 +27,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 	private BigDecimal basePriceMin;
 	private boolean requiresSerialNumber;
 	private boolean trackInventory;
+	private final List<SupplierItemPrice> supplierItemPrices = null;
 
 	private CommodityGroup commodityGroup;
 
