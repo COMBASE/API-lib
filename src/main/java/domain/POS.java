@@ -39,10 +39,6 @@ public class POS extends AbstractNameAndNumberApiObject<POS>
 	protected static abstract class Init<T extends Init<T>> extends
 		AbstractNameAndNumberApiObject.Init<T>
 	{
-		private final boolean deleted = false;
-		private final String revision = null;
-		private final String uuid = null;
-		private final String number = null;
 		private int autoLogoutDelay = 0;
 		private boolean autoReceiptPrint = false;
 		private String customerDisplayOfflineText = null;

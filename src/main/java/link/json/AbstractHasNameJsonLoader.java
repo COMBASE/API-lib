@@ -4,6 +4,8 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
+import link.CloudLink;
+
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -54,11 +56,21 @@ public abstract class AbstractHasNameJsonLoader<T extends HasId & HasNumber & Ha
 	}
 
 	@Override
-	public void updateCachedObject(final T obj)
+	public T post(final T obj) throws ApiNotReachableException, JSONException, ParseException
+	{
+		final String result = CloudLink.getConnector().postData(getDataType(), toJSON(obj));
+		final JSONObject jObj = new JSONObject(result);
+		final T ret = fromJSON(jObj);
+		updateCache(ret);
+		return ret;
+	}
+
+	@Override
+	public void updateCache(final T obj)
 	{
 		if (obj.getName() != null)
 			nameCache.put(obj.getName(), obj);
 
-		super.updateCachedObject(obj);
+		super.updateCache(obj);
 	}
 }

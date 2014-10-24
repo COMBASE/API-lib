@@ -766,7 +766,6 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 				}
 				if (!jPrice.isNull("organizationalUnit"))
 				{
-					final String orgUnitUuid = jPrice.getString("organizationalUnit");
 					final OrganizationalUnit organizationalUnit = new OrganizationalUnit.Builder().id(
 						jPrice.getString("organizationalUnit"))
 						.build();

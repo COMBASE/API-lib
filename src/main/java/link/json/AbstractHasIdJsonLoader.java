@@ -173,18 +173,32 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 		return downloaded;
 	}
 
-
+	/**
+	 * Puts the object into ID, Number and Name caches overriding existing objects with same ID,
+	 * Number or Name. Invoking this method will automatically try to update all caches by calling
+	 * super method super.post(obj).
+	 * 
+	 * @param obj
+	 * @return
+	 * @throws ApiNotReachableException
+	 * @throws JSONException
+	 * @throws ParseException
+	 */
 	public T post(final T obj) throws ApiNotReachableException, JSONException, ParseException
 	{
 		final String result = CloudLink.getConnector().postData(getDataType(), toJSON(obj));
 		final JSONObject jObj = new JSONObject(result);
 		final T ret = fromJSON(jObj);
-		updateCachedObject(ret);
+		updateCache(ret);
 		return ret;
 	}
 
-
-	public void updateCachedObject(final T obj)
+	/**
+	 * updates given obj corresponding cached version for future loader actions.
+	 * 
+	 * @param obj
+	 */
+	public void updateCache(final T obj)
 	{
 		if (obj.getId() != null)
 			idCache.put(obj.getId(), obj);
