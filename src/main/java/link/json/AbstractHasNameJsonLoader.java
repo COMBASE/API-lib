@@ -38,7 +38,7 @@ public abstract class AbstractHasNameJsonLoader<T extends HasId & HasNumber & Ha
 	}
 
 	public T downloadByName(final String name) throws ApiNotReachableException, JSONException,
-		ParseException
+		ParseException, SubObjectInitializationException
 	{
 		final T cachedObject = nameCache.get(name);
 		if (cachedObject != null)
@@ -47,7 +47,7 @@ public abstract class AbstractHasNameJsonLoader<T extends HasId & HasNumber & Ha
 		final String jStr = cloudLink.getJSONByName(getDataType(), name);
 		final JSONObject jDownloaded = createJsonObject(jStr);
 		if (jDownloaded == null)
-			return null;
+			throw new SubObjectInitializationException(name, getDataType(), null);
 		final T downloaded = fromJSON(jDownloaded);
 		nameCache.put(name, downloaded);
 		return downloaded;

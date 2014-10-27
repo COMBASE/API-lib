@@ -161,9 +161,10 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	 * @return
 	 * @throws ApiNotReachableException
 	 * @throws ParseException
+	 * @throws SubObjectInitializationException
 	 */
 	public T downloadByUUID(final String uuid) throws ApiNotReachableException, JSONException,
-		ParseException
+		ParseException, SubObjectInitializationException
 	{
 		final T cachedObject = idCache.get(uuid);
 		if (cachedObject != null)
@@ -173,6 +174,8 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 
 		final String jStr = cloudLink.getJSONByUuid(getDataType(), uuid);
 		final JSONObject jObject = createJsonObject(jStr);
+		if (jObject == null)
+			throw new SubObjectInitializationException(uuid, getDataType(), null);
 		final T downloaded = fromJSON(jObject);
 		idCache.put(uuid, downloaded);
 		return downloaded;

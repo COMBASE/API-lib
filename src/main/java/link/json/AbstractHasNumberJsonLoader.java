@@ -44,9 +44,10 @@ public abstract class AbstractHasNumberJsonLoader<T extends HasId & HasNumber> e
 	 * @throws ApiNotReachableException
 	 * @throws JSONException
 	 * @throws ParseException
+	 * @throws SubObjectInitializationException
 	 */
 	public T downloadByNumber(final String number) throws ApiNotReachableException, JSONException,
-		ParseException
+		ParseException, SubObjectInitializationException
 	{
 		final T cachedObject = numberCache.get(number);
 		if (cachedObject != null)
@@ -55,7 +56,7 @@ public abstract class AbstractHasNumberJsonLoader<T extends HasId & HasNumber> e
 		final String jStr = cloudLink.getJSONByNumber(getDataType(), number);
 		final JSONObject jDownloaded = createJsonObject(jStr);
 		if (jDownloaded == null)
-			return null;
+			throw new SubObjectInitializationException(number, getDataType(), null);
 		final T downloaded = fromJSON(jDownloaded);
 		numberCache.put(number, downloaded);
 		return downloaded;
