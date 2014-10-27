@@ -6,7 +6,7 @@ import java.util.Date;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-public class AccountTransaction extends AbstractIDApiObject<AccountTransaction>
+public class AccountTransaction extends AbstractApiObject<AccountTransaction>
 {
 	private static final long serialVersionUID = -6707310291148051948L;
 	private Account account;
@@ -18,7 +18,7 @@ public class AccountTransaction extends AbstractIDApiObject<AccountTransaction>
 	private int receiptIndex;
 	private String description;
 
-	protected static abstract class Init<T extends Init<T>> extends AbstractIDApiObject.Init<T>
+	protected static abstract class Init<T extends Init<T>> extends AbstractApiObject.Init<T>
 	{
 		private Account account;
 		private Receipt receipt;

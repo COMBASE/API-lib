@@ -9,7 +9,7 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-public class EndOfDayStatement extends AbstractIDApiObject<EndOfDayStatement>
+public class EndOfDayStatement extends AbstractApiObject<EndOfDayStatement>
 {
 	/**
 	 * 
@@ -36,7 +36,7 @@ public class EndOfDayStatement extends AbstractIDApiObject<EndOfDayStatement>
 
 	private POS pos;
 
-	protected static abstract class Init<T extends Init<T>> extends AbstractIDApiObject.Init<T>
+	protected static abstract class Init<T extends Init<T>> extends AbstractApiObject.Init<T>
 	{
 		private List<EndOfDayAccountSummary> accountSummaries = new ArrayList<EndOfDayAccountSummary>();
 

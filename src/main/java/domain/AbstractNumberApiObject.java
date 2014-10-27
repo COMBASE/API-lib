@@ -7,7 +7,7 @@ import domain.interfaces.HasId;
 import domain.interfaces.HasNumber;
 
 public abstract class AbstractNumberApiObject<T extends HasNumber & HasId> extends
-	AbstractIDApiObject<T> implements HasNumber
+	AbstractApiObject<T> implements HasNumber
 {
 
 	public static abstract class Builder extends Init<Builder>
@@ -24,7 +24,7 @@ public abstract class AbstractNumberApiObject<T extends HasNumber & HasId> exten
 
 	}
 
-	protected static abstract class Init<T extends Init<T>> extends AbstractIDApiObject.Init<T>
+	protected static abstract class Init<T extends Init<T>> extends AbstractApiObject.Init<T>
 	{
 		private String number;
 

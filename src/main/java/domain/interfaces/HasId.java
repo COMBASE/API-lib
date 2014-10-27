@@ -2,12 +2,7 @@ package domain.interfaces;
 
 /**
  * 
- * @author Unknown.
- * 
- *         According to latest archaeological excavation this interface may have already been
- *         implemented by the Maya.
- * 
- *         see also: http://de.wikipedia.org/wiki/Maya-Schrift
+ * @author gob
  * 
  */
 public interface HasId
