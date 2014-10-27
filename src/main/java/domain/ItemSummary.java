@@ -69,6 +69,7 @@ public class ItemSummary
 
 		final PaymentMethod paymentMethods = new PaymentMethod.Builder().name(
 			obj.getString("paymentMethodName"))
+			// .revision(33l)
 			.id(obj.getString("paymentMethod"))
 			.number(obj.getString("paymentMethodNr"))
 			.build();

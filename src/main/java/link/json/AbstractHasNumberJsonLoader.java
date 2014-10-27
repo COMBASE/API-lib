@@ -4,6 +4,8 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
+import link.CloudLink;
+
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -18,10 +20,9 @@ public abstract class AbstractHasNumberJsonLoader<T extends HasId & HasNumber> e
 
 	private final Map<String, T> numberCache = new HashMap<String, T>();
 
-	public AbstractHasNumberJsonLoader(final DataType dataType, final String cloudUrl,
-		final String token)
+	public AbstractHasNumberJsonLoader(final DataType dataType, final CloudLink cloudLink)
 	{
-		super(dataType, cloudUrl, token);
+		super(dataType, cloudLink);
 	}
 
 	@Override

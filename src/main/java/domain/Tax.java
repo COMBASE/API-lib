@@ -222,7 +222,7 @@ public class Tax extends AbstractNameAndNumberApiObject<Tax>
 				inputDf.parse(jRate.getString("validFrom")));
 			rates.add(rate);
 		}
-		final EconomicZone economicZone = new EconomicZone(null);
+		final EconomicZone economicZone = new EconomicZone.Builder().build();
 		economicZone.setId(obj.getString("economicZone"));
 
 		final Tax tax = new Tax.Builder().name(obj.getString("name"))

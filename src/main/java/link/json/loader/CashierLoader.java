@@ -2,6 +2,7 @@ package link.json.loader;
 
 import java.text.ParseException;
 
+import link.CloudLink;
 import link.json.AbstractHasNameJsonLoader;
 
 import org.codehaus.jettison.json.JSONException;
@@ -13,9 +14,9 @@ import domain.DataType;
 public class CashierLoader extends AbstractHasNameJsonLoader<Cashier>
 {
 
-	public CashierLoader(final String cloudUrl, final String token)
+	public CashierLoader(final CloudLink cloudLink)
 	{
-		super(DataType.cashier, cloudUrl, token);
+		super(DataType.cashier, cloudLink);
 	}
 
 	@Override

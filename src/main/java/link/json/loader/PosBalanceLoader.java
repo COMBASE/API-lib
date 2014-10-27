@@ -2,6 +2,7 @@ package link.json.loader;
 
 import java.text.ParseException;
 
+import link.CloudLink;
 import link.json.AbstractHasIdJsonLoader;
 
 import org.codehaus.jettison.json.JSONException;
@@ -13,9 +14,9 @@ import domain.PosBalance;
 public class PosBalanceLoader extends AbstractHasIdJsonLoader<PosBalance>
 {
 
-	public PosBalanceLoader(final String cloudUrl, final String token)
+	public PosBalanceLoader(final CloudLink cloudLink)
 	{
-		super(DataType.posBalance, cloudUrl, token);
+		super(DataType.posBalance, cloudLink);
 	}
 
 	@Override

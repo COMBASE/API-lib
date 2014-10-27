@@ -1,5 +1,6 @@
 package link.json.loader;
 
+import link.CloudLink;
 import link.json.AbstractHasNameJsonLoader;
 
 import org.codehaus.jettison.json.JSONException;
@@ -11,9 +12,9 @@ import domain.DataType;
 public class AccountLoader extends AbstractHasNameJsonLoader<Account>
 {
 
-	public AccountLoader(final String cloudUrl, final String token)
+	public AccountLoader(final CloudLink cloudLink)
 	{
-		super(DataType.account, cloudUrl, token);
+		super(DataType.account, cloudLink);
 	}
 
 	@Override

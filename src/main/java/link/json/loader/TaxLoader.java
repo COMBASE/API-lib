@@ -2,6 +2,7 @@ package link.json.loader;
 
 import java.text.ParseException;
 
+import link.CloudLink;
 import link.json.AbstractHasNameJsonLoader;
 
 import org.codehaus.jettison.json.JSONException;
@@ -13,9 +14,9 @@ import domain.Tax;
 public class TaxLoader extends AbstractHasNameJsonLoader<Tax>
 {
 
-	public TaxLoader(final String cloudUrl, final String token)
+	public TaxLoader(final CloudLink cloudLink)
 	{
-		super(DataType.tax, cloudUrl, token);
+		super(DataType.tax, cloudLink);
 	}
 
 	@Override

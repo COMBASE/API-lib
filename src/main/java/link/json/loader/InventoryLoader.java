@@ -2,6 +2,7 @@ package link.json.loader;
 
 import java.text.ParseException;
 
+import link.CloudLink;
 import link.json.AbstractHasNumberJsonLoader;
 
 import org.codehaus.jettison.json.JSONException;
@@ -13,9 +14,9 @@ import domain.Inventory;
 public class InventoryLoader extends AbstractHasNumberJsonLoader<Inventory>
 {
 
-	public InventoryLoader(final String cloudUrl, final String token)
+	public InventoryLoader(final CloudLink cloudLink)
 	{
-		super(DataType.inventory, cloudUrl, token);
+		super(DataType.inventory, cloudLink);
 	}
 
 	@Override

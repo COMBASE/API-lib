@@ -2,6 +2,7 @@ package link.json.loader;
 
 import java.text.ParseException;
 
+import link.CloudLink;
 import link.json.AbstractHasIdJsonLoader;
 
 import org.codehaus.jettison.json.JSONException;
@@ -13,9 +14,9 @@ import domain.DataType;
 public class AccountTransactionLoader extends AbstractHasIdJsonLoader<AccountTransaction>
 {
 
-	public AccountTransactionLoader(final String cloudUrl, final String token)
+	public AccountTransactionLoader(final CloudLink cloudLink)
 	{
-		super(DataType.accountTransaction, cloudUrl, token);
+		super(DataType.accountTransaction, cloudLink);
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package link.json.loader;
 
 import java.text.ParseException;
 
+import link.CloudLink;
 import link.json.AbstractHasIdJsonLoader;
 
 import org.codehaus.jettison.json.JSONException;
@@ -13,9 +14,9 @@ import domain.TimeTracking;
 public class TimeTrackingLoader extends AbstractHasIdJsonLoader<TimeTracking>
 {
 
-	public TimeTrackingLoader(final String cloudUrl, final String token)
+	public TimeTrackingLoader(final CloudLink cloudLink)
 	{
-		super(DataType.timeTracking, cloudUrl, token);
+		super(DataType.timeTracking, cloudLink);
 	}
 
 	@Override

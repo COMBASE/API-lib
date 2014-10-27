@@ -2,6 +2,7 @@ package link.json.loader;
 
 import java.text.ParseException;
 
+import link.CloudLink;
 import link.json.AbstractHasIdJsonLoader;
 
 import org.codehaus.jettison.json.JSONException;
@@ -13,9 +14,9 @@ import domain.EndOfDayStatement;
 public class EndOfDayStatementLoader extends AbstractHasIdJsonLoader<EndOfDayStatement>
 {
 
-	public EndOfDayStatementLoader(final String cloudUrl, final String token)
+	public EndOfDayStatementLoader(final CloudLink cloudLink)
 	{
-		super(DataType.endOfDayStatement, cloudUrl, token);
+		super(DataType.endOfDayStatement, cloudLink);
 	}
 
 	@Override

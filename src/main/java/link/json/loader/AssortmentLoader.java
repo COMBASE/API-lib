@@ -1,5 +1,6 @@
 package link.json.loader;
 
+import link.CloudLink;
 import link.json.AbstractHasNameJsonLoader;
 
 import org.codehaus.jettison.json.JSONException;
@@ -15,9 +16,9 @@ import domain.DataType;
  */
 public class AssortmentLoader extends AbstractHasNameJsonLoader<Assortment>
 {
-	public AssortmentLoader(final String cloudUrl, final String token)
+	public AssortmentLoader(final CloudLink cloudLink)
 	{
-		super(DataType.assortment, cloudUrl, token);
+		super(DataType.assortment, cloudLink);
 	}
 
 	@Override

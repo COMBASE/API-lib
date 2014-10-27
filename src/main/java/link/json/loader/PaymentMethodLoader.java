@@ -2,6 +2,7 @@ package link.json.loader;
 
 import java.text.ParseException;
 
+import link.CloudLink;
 import link.json.AbstractHasNameJsonLoader;
 
 import org.codehaus.jettison.json.JSONException;
@@ -13,9 +14,9 @@ import domain.PaymentMethod;
 public class PaymentMethodLoader extends AbstractHasNameJsonLoader<PaymentMethod>
 {
 
-	public PaymentMethodLoader(final String cloudUrl, final String token)
+	public PaymentMethodLoader(final CloudLink cloudLink)
 	{
-		super(DataType.paymentMethod, cloudUrl, token);
+		super(DataType.paymentMethod, cloudLink);
 	}
 
 	@Override

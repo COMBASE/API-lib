@@ -2,6 +2,7 @@ package link.json.loader;
 
 import java.text.ParseException;
 
+import link.CloudLink;
 import link.json.AbstractHasNameJsonLoader;
 
 import org.codehaus.jettison.json.JSONException;
@@ -13,9 +14,9 @@ import domain.OrganizationalUnit;
 public class OrganizationalUnitLoader extends AbstractHasNameJsonLoader<OrganizationalUnit>
 {
 
-	public OrganizationalUnitLoader(final String cloudUrl, final String token)
+	public OrganizationalUnitLoader(final CloudLink cloudLink)
 	{
-		super(DataType.organizationalUnit, cloudUrl, token);
+		super(DataType.organizationalUnit, cloudLink);
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package link.json.loader;
 
 import java.text.ParseException;
 
+import link.CloudLink;
 import link.json.AbstractHasNameJsonLoader;
 
 import org.codehaus.jettison.json.JSONException;
@@ -13,9 +14,9 @@ import domain.EconomicZone;
 public class EconomicZoneLoader extends AbstractHasNameJsonLoader<EconomicZone>
 {
 
-	public EconomicZoneLoader(final String cloudUrl, final String token)
+	public EconomicZoneLoader(final CloudLink cloudLink)
 	{
-		super(DataType.economicZone, cloudUrl, token);
+		super(DataType.economicZone, cloudLink);
 	}
 
 	@Override

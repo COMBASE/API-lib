@@ -2,6 +2,7 @@ package link.json.loader;
 
 import java.text.ParseException;
 
+import link.CloudLink;
 import link.json.AbstractHasNameJsonLoader;
 
 import org.codehaus.jettison.json.JSONException;
@@ -13,9 +14,9 @@ import domain.TimeTrackingEntities;
 public class TimeTrackingEntitiesLoader extends AbstractHasNameJsonLoader<TimeTrackingEntities>
 {
 
-	public TimeTrackingEntitiesLoader(final String cloudUrl, final String token)
+	public TimeTrackingEntitiesLoader(final CloudLink cloudLink)
 	{
-		super(DataType.timeTrackingEntity, cloudUrl, token);
+		super(DataType.timeTrackingEntity, cloudLink);
 	}
 
 	@Override

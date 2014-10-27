@@ -32,7 +32,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 
 	private final DataType dataType;
 
-	protected CloudLink cloudLink;
+	protected final CloudLink cloudLink;
 
 	// protected static Logger LOGGER = LoggerFactory.getLogger(JsonDownloader.class);
 
@@ -43,10 +43,9 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 
 	private final Map<String, T> idCache = new HashMap<String, T>();
 
-	public AbstractHasIdJsonLoader(final DataType dataType, final String cloudUrl,
-		final String token)
+	public AbstractHasIdJsonLoader(final DataType dataType, final CloudLink cloudLink)
 	{
-		this.cloudLink = new CloudLink(cloudUrl, token);
+		this.cloudLink = cloudLink;
 		this.dataType = dataType;
 	}
 
