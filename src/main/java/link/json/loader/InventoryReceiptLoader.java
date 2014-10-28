@@ -22,7 +22,7 @@ public class InventoryReceiptLoader extends AbstractHasNumberJsonLoader<Inventor
 	@Override
 	public JSONObject toJSON(final InventoryReceipt value) throws JSONException
 	{
-		final JSONObject obj = super.appendTheJson(value);
+		final JSONObject obj = value.toJSON();
 		return obj;
 	}
 

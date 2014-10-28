@@ -22,7 +22,7 @@ public class POSLoader extends AbstractHasNameJsonLoader<POS>
 	@Override
 	public JSONObject toJSON(final POS value) throws JSONException
 	{
-		final JSONObject obj = super.appendTheJson(value);
+		final JSONObject obj = value.toJSON();
 		return obj;
 	}
 

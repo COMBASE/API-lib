@@ -179,37 +179,6 @@ public class Payment extends AbstractApiObject<Payment>
 		receiptIndex = init.receiptIndex;
 	}
 
-// public JSONObject toJSON()
-// {
-// final JSONObject obj = new JSONObject();
-// try
-// {
-// obj.put("deleted", deleted);
-// obj.put("revision", revision);
-// obj.put("uuid", uuid);
-// obj.put("receiptNumber", receiptNumber);
-// obj.put("currency", currency.getUuid());
-//
-// if (cashier != null)
-// obj.put("cashier", cashier.getUuid());
-// if (pos != null)
-// obj.put("pos", pos.getUuid());
-//
-//
-// return obj;
-// }
-// catch (final JSONException e)
-// {
-// e.printStackTrace();
-// return null;
-// }
-// }
-//
-// public static Payment fromJSON(JSONObject obj) throws JSONException
-// {
-
-// }
-
 // public boolean post() throws IOException
 // {
 //
@@ -405,17 +374,17 @@ public class Payment extends AbstractApiObject<Payment>
 	public JSONObject toJSON() throws JSONException
 	{
 		final JSONObject obj = new JSONObject();
-		writeJSON(obj);
+
+		appendJSON(obj);
+
+		obj.put("receiptNumber", receiptNumber);
+
+		obj.put("cashier", cashier.getId());
+
+		obj.put("pos", pos.getId());
+
 		return obj;
 	}
-
-	@Override
-	public void writeJSON(final JSONObject obj) throws JSONException
-	{
-		super.writeJSON(obj);
-
-	}
-
 
 	public static Payment fromJSON(JSONObject obj) throws JSONException, ParseException
 	{

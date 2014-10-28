@@ -98,15 +98,10 @@ public class Account extends AbstractNameAndNumberApiObject<Account>
 	@Override
 	public JSONObject toJSON() throws JSONException
 	{
-		final JSONObject obj = new JSONObject();
-		writeJSON(obj);
-		return obj;
-	}
+		JSONObject obj = new JSONObject();
+		obj = super.appendJSON(obj);
 
-	@Override
-	public void writeJSON(final JSONObject obj) throws JSONException
-	{
-		super.writeJSON(obj);
+		return obj;
 
 	}
 

@@ -21,7 +21,7 @@ public class PaymentLoader extends AbstractHasIdJsonLoader<Payment>
 	@Override
 	public JSONObject toJSON(final Payment value) throws JSONException
 	{
-		final JSONObject obj = super.appendTheJson(value);
+		final JSONObject obj = value.toJSON();
 		return obj;
 	}
 

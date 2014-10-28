@@ -22,7 +22,7 @@ public class TaxLoader extends AbstractHasNameJsonLoader<Tax>
 	@Override
 	public JSONObject toJSON(final Tax value) throws JSONException
 	{
-		final JSONObject obj = super.appendTheJson(value);
+		final JSONObject obj = value.toJSON();
 		return obj;
 	}
 

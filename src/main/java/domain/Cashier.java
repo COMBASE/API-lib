@@ -89,13 +89,7 @@ public class Cashier extends AbstractNameAndNumberApiObject<Cashier>
 // final JSONObject obj = new JSONObject();
 // try
 // {
-// obj.put("name", name);
-// obj.put("deleted", deleted);
-// obj.put("uuid", uuid);
-// if (number != null)
-// obj.put("number", number);
-// obj.put("firstName", firstName);
-// obj.put("surName", surName);
+
 //
 // return obj;
 // }
@@ -166,16 +160,11 @@ public class Cashier extends AbstractNameAndNumberApiObject<Cashier>
 	@Override
 	public JSONObject toJSON() throws JSONException
 	{
-		final JSONObject obj = new JSONObject();
-		writeJSON(obj);
+		JSONObject obj = new JSONObject();
+		obj = super.appendJSON(obj);
+		obj.put("firstName", firstName);
+		obj.put("surName", surName);
 		return obj;
-	}
-
-	@Override
-	public void writeJSON(final JSONObject obj) throws JSONException
-	{
-		super.writeJSON(obj);
-
 	}
 
 	public static Cashier fromJSON(JSONObject obj) throws JSONException

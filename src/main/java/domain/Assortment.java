@@ -92,16 +92,12 @@ public class Assortment extends AbstractNameAndNumberApiObject<Assortment>
 	@Override
 	public JSONObject toJSON() throws JSONException
 	{
-		final JSONObject obj = new JSONObject();
-		writeJSON(obj);
-		return obj;
-	}
+		JSONObject obj = new JSONObject();
+		obj = super.appendJSON(obj);
 
-	@Override
-	public void writeJSON(final JSONObject obj) throws JSONException
-	{
-		super.writeJSON(obj);
-		obj.put("description", getDescription());
+		obj.put("description", description);
+
+		return obj;
 	}
 
 	public static Assortment fromJSON(JSONObject obj) throws JSONException

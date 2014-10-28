@@ -70,15 +70,7 @@ public class Currency extends AbstractNameAndNumberApiObject<Currency>
 // final JSONObject obj = new JSONObject();
 // try
 // {
-// obj.put("deleted", deleted);
-// obj.put("revision", revision);
-// obj.put("uuid", uuid);
-// obj.put("name", name);
-// if (number != null)
-// obj.put("number", number);
-// obj.put("symbol", symbol);
-// obj.put("key", key);
-// obj.put("centName", centName);
+
 //
 // return obj;
 // }
@@ -158,18 +150,15 @@ public class Currency extends AbstractNameAndNumberApiObject<Currency>
 	@Override
 	public JSONObject toJSON() throws JSONException
 	{
-		final JSONObject obj = new JSONObject();
-		writeJSON(obj);
+		JSONObject obj = new JSONObject();
+		obj = super.appendJSON(obj);
+
+		obj.put("symbol", symbol);
+		obj.put("key", key);
+		obj.put("centName", centName);
+
 		return obj;
 	}
-
-	@Override
-	public void writeJSON(final JSONObject obj) throws JSONException
-	{
-		super.writeJSON(obj);
-
-	}
-
 
 	public static Currency fromJSON(JSONObject obj) throws JSONException
 	{

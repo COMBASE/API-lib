@@ -84,44 +84,6 @@ public class Tax extends AbstractNameAndNumberApiObject<Tax>
 
 	}
 
-// public static Tax fromJSON(JSONObject obj) throws JSONException, ParseException
-// {
-
-// }
-//
-// public JSONObject toJSON()
-// {
-// final JSONObject obj = new JSONObject();
-// try
-// {
-// obj.put("name", name);
-// if (number != null)
-// obj.put("number", number);
-// obj.put("deleted", deleted);
-// obj.put("included", included);
-// if (economicZone != null)
-// {
-// obj.put("economicZone", economicZone.getUuid());
-// }
-// if (!rateList.isEmpty())
-// {
-// final JSONArray array = new JSONArray();
-// for (final Rate ratelem : rateList)
-// {
-// final JSONObject sub = ratelem.toJSON();
-// array.put(sub);
-// }
-// obj.put("rates", array);
-// }
-// return obj;
-// }
-// catch (final JSONException e)
-// {
-// e.printStackTrace();
-// return null;
-// }
-// }
-//
 // public boolean post() throws IOException, ApiNotReachableException
 // {
 // if (economicZone != null && economicZone.getUuid() == null)
@@ -195,17 +157,26 @@ public class Tax extends AbstractNameAndNumberApiObject<Tax>
 	public JSONObject toJSON() throws JSONException
 	{
 		final JSONObject obj = new JSONObject();
-		writeJSON(obj);
+		appendJSON(obj);
+
+		obj.put("included", included);
+		if (economicZone != null)
+		{
+			obj.put("economicZone", economicZone.getId());
+		}
+		if (!rateList.isEmpty())
+		{
+			final JSONArray array = new JSONArray();
+			for (final Rate ratelem : rateList)
+			{
+				final JSONObject sub = ratelem.toJSON();
+				array.put(sub);
+			}
+			obj.put("rates", array);
+		}
+
 		return obj;
 	}
-
-	@Override
-	public void writeJSON(final JSONObject obj) throws JSONException
-	{
-		super.writeJSON(obj);
-
-	}
-
 
 	public static Tax fromJSON(JSONObject obj) throws JSONException, ParseException
 	{

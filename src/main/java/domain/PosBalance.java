@@ -129,13 +129,6 @@ public class PosBalance extends AbstractApiObject<PosBalance>
 		this.zCount = init.zCount;
 	}
 
-// public static PosBalance fromJSON(JSONObject obj) throws JSONException
-// {
-
-//
-//
-// }
-
 	public POS getPos()
 	{
 		return pos;
@@ -276,15 +269,8 @@ public class PosBalance extends AbstractApiObject<PosBalance>
 	public JSONObject toJSON() throws JSONException
 	{
 		final JSONObject obj = new JSONObject();
-		writeJSON(obj);
+		appendJSON(obj);
 		return obj;
-	}
-
-	@Override
-	public void writeJSON(final JSONObject obj) throws JSONException
-	{
-		super.writeJSON(obj);
-
 	}
 
 	public static PosBalance fromJSON(JSONObject obj) throws JSONException

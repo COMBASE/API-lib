@@ -22,7 +22,7 @@ public class PricelistLoader extends AbstractHasNameJsonLoader<Pricelist>
 	@Override
 	public JSONObject toJSON(final Pricelist value) throws JSONException
 	{
-		final JSONObject obj = super.appendTheJson(value);
+		final JSONObject obj = value.toJSON();
 		return obj;
 	}
 

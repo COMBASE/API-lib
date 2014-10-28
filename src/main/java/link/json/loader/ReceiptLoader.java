@@ -22,7 +22,7 @@ public class ReceiptLoader extends AbstractHasNumberJsonLoader<Receipt>
 	@Override
 	public JSONObject toJSON(final Receipt value) throws JSONException
 	{
-		final JSONObject obj = super.appendTheJson(value);
+		final JSONObject obj = value.toJSON();
 		return obj;
 	}
 

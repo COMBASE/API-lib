@@ -22,9 +22,9 @@ public class AccountTransactionLoader extends AbstractHasIdJsonLoader<AccountTra
 	@Override
 	public JSONObject toJSON(final AccountTransaction value) throws JSONException
 	{
-		final JSONObject obj = super.appendTheJson(value);
+		final JSONObject obj = value.toJSON();
 
-		// TODO append JSONstring
+
 		return obj;
 	}
 

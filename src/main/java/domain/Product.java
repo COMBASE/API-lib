@@ -438,56 +438,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 // try
 // {
 //
-// obj.put("name", name);
-// if (number != null)
-// obj.put("number", number);
-// if (uuid != null)
-// obj.put("uuid", uuid);
-// obj.put("deleted", deleted);
-// obj.put("activeAssortment", activeAssortment);
-// if (activeAssortmentFrom != null)
-// obj.put("activeAssortmentFrom", inputDf.format(activeAssortmentFrom));
-// obj.put("costs", costs);
-// obj.put("discountable", discountable);
-// obj.put("priceChangeable", priceChangeable);
-// obj.put("requiresSerialNumber", requiresSerialNumber);
-// obj.put("trackInventory", trackInventory);
-// if (commodityGroup != null)
-// obj.put("commodityGroup", commodityGroup.getUuid());
-// if (assortment != null)
-// obj.put("assortment", assortment.getUuid());
-// if (sector != null)
-// obj.put("sector", sector.getUuid());
-// if (altsector != null)
-// obj.put("alternativeSector", altsector.getUuid());
-// if (!prices.isEmpty())
-// {
-// final JSONArray array = new JSONArray();
-// for (final Price p : prices)
-// {
-// array.put(p.toJSON());
-// }
-// obj.put("prices", array);
-// }
-// if (!codes.isEmpty())
-// {
-// final JSONArray array = new JSONArray();
-// for (final Product_Code code : codes)
-// {
-// if (!code.getCode().equalsIgnoreCase(""))
-// array.put(code.toJSON());
-// }
-// obj.put("articleCodes", array);
-// }
-// if (!texts.isEmpty())
-// {
-// final JSONArray array = new JSONArray();
-// for (final Product_Text text : texts)
-// {
-// array.put(text.toJSON());
-// }
-// obj.put("articleTexts", array);
-// }
+
 // return obj;
 // }
 // catch (final JSONException e)
@@ -546,15 +497,54 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 	public JSONObject toJSON() throws JSONException
 	{
 		final JSONObject obj = new JSONObject();
-		writeJSON(obj);
+		appendJSON(obj);
+
+		obj.put("activeAssortment", activeAssortment);
+		if (activeAssortmentFrom != null)
+			obj.put("activeAssortmentFrom", inputDf.format(activeAssortmentFrom));
+		obj.put("costs", costs);
+		obj.put("discountable", discountable);
+		obj.put("priceChangeable", priceChangeable);
+		obj.put("requiresSerialNumber", requiresSerialNumber);
+		obj.put("trackInventory", trackInventory);
+		if (commodityGroup != null)
+			obj.put("commodityGroup", commodityGroup.getId());
+		if (assortment != null)
+			obj.put("assortment", assortment.getId());
+		if (sector != null)
+			obj.put("sector", sector.getId());
+		if (altsector != null)
+			obj.put("alternativeSector", altsector.getId());
+		if (!prices.isEmpty())
+		{
+			final JSONArray array = new JSONArray();
+			for (final Price p : prices)
+			{
+				array.put(p.toJSON());
+			}
+			obj.put("prices", array);
+		}
+		if (!codes.isEmpty())
+		{
+			final JSONArray array = new JSONArray();
+			for (final Product_Code code : codes)
+			{
+				if (!code.getCode().equalsIgnoreCase(""))
+					array.put(code.toJSON());
+			}
+			obj.put("articleCodes", array);
+		}
+		if (!texts.isEmpty())
+		{
+			final JSONArray array = new JSONArray();
+			for (final Product_Text text : texts)
+			{
+				array.put(text.toJSON());
+			}
+			obj.put("articleTexts", array);
+		}
+
 		return obj;
-	}
-
-	@Override
-	public void writeJSON(final JSONObject obj) throws JSONException
-	{
-		super.writeJSON(obj);
-
 	}
 
 	// TODO implement BD fields basePriceMax basePriceMin in from/to JSON

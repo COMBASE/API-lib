@@ -57,34 +57,6 @@ public class OrganizationalUnit extends AbstractNameAndNumberApiObject<Organizat
 		parent = init.parent;
 	}
 
-// public JSONObject toJSON()
-// {
-// final JSONObject obj = new JSONObject();
-// try
-// {
-// obj.put("name", name);
-// obj.put("deleted", deleted);
-// obj.put("revision", revision);
-// obj.put("uuid", uuid);
-// if (number != null)
-// obj.put("number", number);
-//
-// // Dependencies to existence of other objects
-//
-// return obj;
-// }
-// catch (final JSONException e)
-// {
-// e.printStackTrace();
-// return null;
-// }
-// }
-//
-// public static OrganizationalUnit fromJSON(JSONObject obj) throws JSONException
-// {
-
-// }
-//
 // public boolean post() throws IOException
 // {
 //
@@ -240,15 +212,8 @@ public class OrganizationalUnit extends AbstractNameAndNumberApiObject<Organizat
 	public JSONObject toJSON() throws JSONException
 	{
 		final JSONObject obj = new JSONObject();
-		writeJSON(obj);
+		appendJSON(obj);
 		return obj;
-	}
-
-	@Override
-	public void writeJSON(final JSONObject obj) throws JSONException
-	{
-		super.writeJSON(obj);
-
 	}
 
 	public static OrganizationalUnit fromJSON(JSONObject obj) throws JSONException

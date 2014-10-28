@@ -25,7 +25,7 @@ public class ProductLoader extends AbstractHasNameJsonLoader<Product>
 	@Override
 	public JSONObject toJSON(final Product value) throws JSONException
 	{
-		final JSONObject obj = super.appendTheJson(value);
+		final JSONObject obj = value.toJSON();
 
 		// TODO append json
 

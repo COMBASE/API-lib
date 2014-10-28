@@ -22,7 +22,8 @@ public class EconomicZoneLoader extends AbstractHasNameJsonLoader<EconomicZone>
 	@Override
 	public JSONObject toJSON(final EconomicZone value) throws JSONException
 	{
-		final JSONObject obj = super.appendTheJson(value);
+		final JSONObject obj = value.toJSON();
+
 		return obj;
 	}
 

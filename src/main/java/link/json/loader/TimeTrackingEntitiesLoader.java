@@ -22,7 +22,7 @@ public class TimeTrackingEntitiesLoader extends AbstractHasNameJsonLoader<TimeTr
 	@Override
 	public JSONObject toJSON(final TimeTrackingEntities value) throws JSONException
 	{
-		final JSONObject obj = super.appendTheJson(value);
+		final JSONObject obj = value.toJSON();
 		return obj;
 	}
 

@@ -98,12 +98,6 @@ public class InventoryReceiptItem extends AbstractApiObject<InventoryReceiptItem
 		this.receipt = init.receipt;
 	}
 
-// public static InventoryReceiptItem fromJson(final JSONObject object) throws JSONException
-// {
-//
-
-// }
-
 	public BigDecimal getNominalGoods()
 	{
 		return nominalGoods;
@@ -158,15 +152,8 @@ public class InventoryReceiptItem extends AbstractApiObject<InventoryReceiptItem
 	public JSONObject toJSON() throws JSONException
 	{
 		final JSONObject obj = new JSONObject();
-		writeJSON(obj);
+		appendJSON(obj);
 		return obj;
-	}
-
-	@Override
-	public void writeJSON(final JSONObject obj) throws JSONException
-	{
-		super.writeJSON(obj);
-
 	}
 
 	public static InventoryReceiptItem fromJSON(final JSONObject obj) throws JSONException

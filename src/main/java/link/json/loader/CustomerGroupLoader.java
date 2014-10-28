@@ -22,7 +22,14 @@ public class CustomerGroupLoader extends AbstractHasNameJsonLoader<CustomerGroup
 	@Override
 	public JSONObject toJSON(final CustomerGroup value) throws JSONException
 	{
-		final JSONObject obj = super.appendTheJson(value);
+		final JSONObject obj = value.toJSON();
+
+		obj.put("deleted", value.isDeleted());
+		obj.put("revision", value.getRevision());
+		obj.put("uuid", value.getId());
+		obj.put("name", value.getName());
+		obj.put("number", value.getNumber());
+
 		return obj;
 	}
 

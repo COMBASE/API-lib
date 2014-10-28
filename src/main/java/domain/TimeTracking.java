@@ -77,32 +77,6 @@ public class TimeTracking extends AbstractApiObject<TimeTracking>
 
 	}
 
-// public static TimeTracking fromJSON(JSONObject obj) throws JSONException
-// {
-
-// }
-//
-// @Override
-// public JSONObject toJSON()
-// {
-// final JSONObject obj = new JSONObject();
-// try
-// {
-// obj.put("deleted", deleted);
-// obj.put("uuid", uuid);
-// obj.put("cashier", cashier);
-// obj.put("org", org);
-// obj.put("start", start);
-// obj.put("timeTrackingEntity", timeTrackingEntity);
-// return obj;
-// }
-// catch (final JSONException e)
-// {
-// e.printStackTrace();
-// return null;
-// }
-// }
-//
 // public boolean post() throws IOException
 // {
 //
@@ -184,17 +158,15 @@ public class TimeTracking extends AbstractApiObject<TimeTracking>
 	public JSONObject toJSON() throws JSONException
 	{
 		final JSONObject obj = new JSONObject();
-		writeJSON(obj);
+		appendJSON(obj);
+
+		obj.put("cashier", cashier);
+		obj.put("org", org);
+		obj.put("start", start);
+		obj.put("timeTrackingEntity", timeTrackingEntity);
+
 		return obj;
 	}
-
-	@Override
-	public void writeJSON(final JSONObject obj) throws JSONException
-	{
-		super.writeJSON(obj);
-
-	}
-
 
 	public static TimeTracking fromJSON(JSONObject obj) throws JSONException, ParseException
 	{

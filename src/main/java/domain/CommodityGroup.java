@@ -68,15 +68,7 @@ public class CommodityGroup extends AbstractNameAndNumberApiObject<CommodityGrou
 // final JSONObject obj = new JSONObject();
 // try
 // {
-// obj.put("name", name);
-// if (number != null)
-// obj.put("number", number);
-// obj.put("deleted", deleted);
-// obj.put("hasChildren", hasChildren);
-// if (key != null)
-// obj.put("key", key);
-// if (parent != null)
-// obj.put("parentCommodityGroup", parent.getUuid());
+
 // return obj;
 // }
 // catch (final JSONException e)
@@ -165,18 +157,15 @@ public class CommodityGroup extends AbstractNameAndNumberApiObject<CommodityGrou
 	@Override
 	public JSONObject toJSON() throws JSONException
 	{
-		final JSONObject obj = new JSONObject();
-		writeJSON(obj);
+		JSONObject obj = new JSONObject();
+		obj = super.appendJSON(obj);
+
+		obj.put("hasChildren", hasChildren);
+		obj.put("key", key);
+		obj.put("parentCommodityGroup", parent.getId());
+
 		return obj;
 	}
-
-	@Override
-	public void writeJSON(final JSONObject obj) throws JSONException
-	{
-		super.writeJSON(obj);
-
-	}
-
 
 	public static CommodityGroup fromJSON(JSONObject obj) throws JSONException
 	{

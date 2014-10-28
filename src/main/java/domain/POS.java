@@ -234,24 +234,7 @@ public class POS extends AbstractNameAndNumberApiObject<POS>
 // final JSONObject obj = new JSONObject();
 // try
 // {
-// obj.put("name", name);
-// obj.put("deleted", deleted);
-// obj.put("revision", revision);
-// obj.put("uuid", uuid);
-// if (number != null)
-// obj.put("number", number);
-//
-//
-// if (organizationalUnit != null)
-// obj.put("organizationalUnit", organizationalUnit.getUuid());
-// if (defaultCustomerGroup != null)
-// obj.put("defaultCustomerGroup", defaultCustomerGroup.getUuid());
-// if (defaultPaymentMethod != null)
-// obj.put("defaultPaymentMethod", defaultPaymentMethod.getUuid());
-// if (economicZone != null)
-// obj.put("sector", economicZone.getUuid());
-// if (friendsBonusCustomerGroup != null)
-// obj.put("friendsBonusCustomerGroup", friendsBonusCustomerGroup.getUuid());
+
 //
 // return obj;
 // }
@@ -575,15 +558,20 @@ public class POS extends AbstractNameAndNumberApiObject<POS>
 	public JSONObject toJSON() throws JSONException
 	{
 		final JSONObject obj = new JSONObject();
-		writeJSON(obj);
+		appendJSON(obj);
+
+		if (organizationalUnit != null)
+			obj.put("organizationalUnit", organizationalUnit.getId());
+		if (defaultCustomerGroup != null)
+			obj.put("defaultCustomerGroup", defaultCustomerGroup.getId());
+		if (defaultPaymentMethod != null)
+			obj.put("defaultPaymentMethod", defaultPaymentMethod.getId());
+		if (economicZone != null)
+			obj.put("sector", economicZone.getId());
+		if (friendsBonusCustomerGroup != null)
+			obj.put("friendsBonusCustomerGroup", friendsBonusCustomerGroup.getId());
+
 		return obj;
-	}
-
-	@Override
-	public void writeJSON(final JSONObject obj) throws JSONException
-	{
-		super.writeJSON(obj);
-
 	}
 
 	public static POS fromJSON(JSONObject obj) throws JSONException

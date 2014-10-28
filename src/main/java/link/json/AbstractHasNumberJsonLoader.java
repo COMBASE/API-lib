@@ -25,19 +25,6 @@ public abstract class AbstractHasNumberJsonLoader<T extends HasId & HasNumber> e
 		super(dataType, cloudLink);
 	}
 
-	@Override
-	public JSONObject appendTheJson(final T value) throws JSONException
-	{
-		JSONObject obj = new JSONObject();
-
-		obj = super.appendTheJson(value);
-
-		obj.put("number", value.getNumber());
-
-		return new JSONObject();
-	}
-
-
 	/**
 	 * 
 	 * @param number

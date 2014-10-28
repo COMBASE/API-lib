@@ -14,6 +14,6 @@ public interface HasJSON<T>
 {
 	// public void readJSON(final JSONObject obj) throws JSONException;
 
-	public void writeJSON(final JSONObject obj) throws JSONException;
+	public JSONObject appendJSON(final JSONObject obj) throws JSONException;
 
 }

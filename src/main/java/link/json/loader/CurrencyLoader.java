@@ -22,7 +22,8 @@ public class CurrencyLoader extends AbstractHasNameJsonLoader<Currency>
 	@Override
 	public JSONObject toJSON(final Currency value) throws JSONException
 	{
-		final JSONObject obj = super.appendTheJson(value);
+		final JSONObject obj = value.toJSON();
+
 		return obj;
 	}
 

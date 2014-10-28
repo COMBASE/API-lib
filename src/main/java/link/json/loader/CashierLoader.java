@@ -22,7 +22,9 @@ public class CashierLoader extends AbstractHasNameJsonLoader<Cashier>
 	@Override
 	public JSONObject toJSON(final Cashier value) throws JSONException
 	{
-		final JSONObject obj = super.appendTheJson(value);
+		final JSONObject obj = value.toJSON();
+
+
 		return obj;
 	}
 

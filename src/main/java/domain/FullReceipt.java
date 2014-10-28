@@ -281,8 +281,9 @@ public class FullReceipt extends AbstractNumberApiObject<FullReceipt>
 	@Override
 	public JSONObject toJSON() throws JSONException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		JSONObject obj = new JSONObject();
+		obj = appendJSON(obj);
+		return obj;
 	}
 
 }

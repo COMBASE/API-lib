@@ -61,43 +61,6 @@ public class Sector extends AbstractNameAndNumberApiObject<Sector>
 
 	}
 
-// public JSONObject toJSON()
-// {
-// final JSONObject obj = new JSONObject();
-// try
-// {
-// obj.put("name", name);
-// if (number != null)
-// obj.put("number", number);
-// obj.put("deleted", deleted);
-// if (taxlist != null && !taxlist.isEmpty())
-// {
-// final JSONArray array = new JSONArray();
-// int i = 1;
-// for (final Tax tax : taxlist)
-// {
-// final JSONObject sub = new JSONObject();
-// sub.put("index", String.valueOf(i));
-// sub.put("tax", tax.getUuid());
-// array.put(sub);
-// i++;
-// }
-// obj.put("items", array);
-// }
-// return obj;
-// }
-// catch (final JSONException e)
-// {
-// e.printStackTrace();
-// return null;
-// }
-// }
-//
-// public static Sector fromJSON(JSONObject obj) throws JSONException, ParseException
-// {
-
-// }
-//
 // public boolean post() throws ApiNotReachableException, IOException
 // {
 // if (taxlist != null)
@@ -148,15 +111,24 @@ public class Sector extends AbstractNameAndNumberApiObject<Sector>
 	public JSONObject toJSON() throws JSONException
 	{
 		final JSONObject obj = new JSONObject();
-		writeJSON(obj);
+		appendJSON(obj);
+
+		if (taxlist != null && !taxlist.isEmpty())
+		{
+			final JSONArray array = new JSONArray();
+			int i = 1;
+			for (final Tax tax : taxlist)
+			{
+				final JSONObject sub = new JSONObject();
+				sub.put("index", String.valueOf(i));
+				sub.put("tax", tax.getId());
+				array.put(sub);
+				i++;
+			}
+			obj.put("items", array);
+		}
+
 		return obj;
-	}
-
-	@Override
-	public void writeJSON(final JSONObject obj) throws JSONException
-	{
-		super.writeJSON(obj);
-
 	}
 
 	public static Sector fromJSON(JSONObject obj) throws JSONException

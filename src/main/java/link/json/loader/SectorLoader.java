@@ -22,7 +22,7 @@ public class SectorLoader extends AbstractHasNameJsonLoader<Sector>
 	@Override
 	public JSONObject toJSON(final Sector value) throws JSONException
 	{
-		final JSONObject obj = super.appendTheJson(value);
+		final JSONObject obj = value.toJSON();
 		return obj;
 	}
 

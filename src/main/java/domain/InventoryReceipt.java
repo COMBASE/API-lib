@@ -158,17 +158,6 @@ public class InventoryReceipt extends AbstractNumberApiObject<InventoryReceipt>
 		this.inventory = init.inventory;
 	}
 
-// public static InventoryReceipt fromJSON(final JSONObject object) throws JSONException,
-// ParseException
-// {
-
-// }
-//
-// public JSONObject toJSON()
-// {
-// return null;
-// }
-
 	public Date getBookingTime()
 	{
 		return bookingTime;
@@ -302,15 +291,8 @@ public class InventoryReceipt extends AbstractNumberApiObject<InventoryReceipt>
 	public JSONObject toJSON() throws JSONException
 	{
 		final JSONObject obj = new JSONObject();
-		writeJSON(obj);
+		appendJSON(obj);
 		return obj;
-	}
-
-	@Override
-	public void writeJSON(final JSONObject obj) throws JSONException
-	{
-		super.writeJSON(obj);
-
 	}
 
 	public static InventoryReceipt fromJSON(final JSONObject obj) throws JSONException,

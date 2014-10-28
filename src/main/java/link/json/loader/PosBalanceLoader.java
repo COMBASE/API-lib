@@ -22,7 +22,7 @@ public class PosBalanceLoader extends AbstractHasIdJsonLoader<PosBalance>
 	@Override
 	public JSONObject toJSON(final PosBalance value) throws JSONException
 	{
-		final JSONObject obj = super.appendTheJson(value);
+		final JSONObject obj = value.toJSON();
 		return obj;
 	}
 

@@ -224,45 +224,6 @@ public class Sale extends AbstractApiObject<Sale>
 		taxPayments = init.taxPayments;
 	}
 
-// public JSONObject toJSON()
-// {
-// final JSONObject obj = new JSONObject();
-// try
-// {
-// obj.put("deleted", deleted);
-// obj.put("revision", revision);
-// obj.put("uuid", uuid);
-// obj.put("bookingTime", bookingTime);
-// obj.put("description", description);
-// obj.put("infoTexts", infoTexts);
-// obj.put("sector", sector);
-// obj.put("receiptNumber", receiptNumber);
-// obj.put("receiptIndex", receiptIndex);
-// obj.put("quantity", quantity);
-//
-// if (cashier != null)
-// obj.put("cashier", cashier.getUuid());
-// if (article != null)
-// obj.put("article", article.getUuid());
-// if (commodityGroup != null)
-// obj.put("commodityGroup", commodityGroup.getUuid());
-// if (sector != null)
-// obj.put("sector", sector.getUuid());
-//
-// return obj;
-// }
-// catch (final JSONException e)
-// {
-// e.printStackTrace();
-// return null;
-// }
-// }
-//
-// public static Sale fromJSON(JSONObject obj) throws JSONException
-// {
-
-// }
-//
 // public boolean post() throws ApiNotReachableException, IOException
 // {
 //
@@ -507,15 +468,26 @@ public class Sale extends AbstractApiObject<Sale>
 	public JSONObject toJSON() throws JSONException
 	{
 		final JSONObject obj = new JSONObject();
-		writeJSON(obj);
+		appendJSON(obj);
+
+		obj.put("bookingTime", bookingTime);
+		obj.put("description", description);
+		obj.put("infoTexts", infoTexts);
+		obj.put("sector", sector);
+		obj.put("receiptNumber", receiptNumber);
+		obj.put("receiptIndex", receiptIndex);
+		obj.put("quantity", quantity);
+
+		if (cashier != null)
+			obj.put("cashier", cashier.getId());
+		if (article != null)
+			obj.put("article", article.getId());
+		if (commodityGroup != null)
+			obj.put("commodityGroup", commodityGroup.getId());
+		if (sector != null)
+			obj.put("sector", sector.getId());
+
 		return obj;
-	}
-
-	@Override
-	public void writeJSON(final JSONObject obj) throws JSONException
-	{
-		super.writeJSON(obj);
-
 	}
 
 	public static Sale fromJSON(JSONObject obj) throws JSONException, ParseException

@@ -48,11 +48,6 @@ public class PaymentMethod extends AbstractNameAndNumberApiObject<PaymentMethod>
 		this.currency = init.currency;
 	}
 
-// public static PaymentMethods fromJSON(JSONObject obj) throws JSONException
-// {
-
-// }
-//
 // public boolean post() throws IOException
 // {
 // return CloudLink.getConnector().postData(DataType.paymentMethod, this.toJSON());
@@ -92,17 +87,9 @@ public class PaymentMethod extends AbstractNameAndNumberApiObject<PaymentMethod>
 	public JSONObject toJSON() throws JSONException
 	{
 		final JSONObject obj = new JSONObject();
-		writeJSON(obj);
+		appendJSON(obj);
 		return obj;
 	}
-
-	@Override
-	public void writeJSON(final JSONObject obj) throws JSONException
-	{
-		super.writeJSON(obj);
-
-	}
-
 
 	public static PaymentMethod fromJSON(JSONObject obj) throws JSONException
 	{

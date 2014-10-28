@@ -22,7 +22,8 @@ public class OrganizationalUnitLoader extends AbstractHasNameJsonLoader<Organiza
 	@Override
 	public JSONObject toJSON(final OrganizationalUnit value) throws JSONException
 	{
-		final JSONObject obj = super.appendTheJson(value);
+		final JSONObject obj = value.toJSON();
+
 		return obj;
 	}
 

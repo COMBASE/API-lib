@@ -37,28 +37,6 @@ public class EconomicZone extends AbstractNameAndNumberApiObject<EconomicZone>
 		super(init);
 	}
 
-// public static EconomicZone fromJson(JSONObject obj) throws JSONException
-// {
-//
-// }
-//
-// public JSONObject toJSON()
-// {
-// final JSONObject obj = new JSONObject();
-// try
-// {
-// obj.put("name", name);
-// if (number != null)
-// obj.put("number", number);
-// return obj;
-// }
-// catch (final JSONException e)
-// {
-// e.printStackTrace();
-// return null;
-// }
-// }
-//
 // public boolean post() throws ApiNotReachableException
 // {
 // final boolean result = CloudLink.getConnector().postData(DataType.economicZone,
@@ -92,16 +70,9 @@ public class EconomicZone extends AbstractNameAndNumberApiObject<EconomicZone>
 	@Override
 	public JSONObject toJSON() throws JSONException
 	{
-		final JSONObject obj = new JSONObject();
-		writeJSON(obj);
+		JSONObject obj = new JSONObject();
+		obj = appendJSON(obj);
 		return obj;
-	}
-
-	@Override
-	public void writeJSON(final JSONObject obj) throws JSONException
-	{
-		super.writeJSON(obj);
-
 	}
 
 	public static EconomicZone fromJSON(JSONObject obj) throws JSONException

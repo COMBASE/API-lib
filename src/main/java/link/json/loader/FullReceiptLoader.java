@@ -21,8 +21,9 @@ public class FullReceiptLoader extends AbstractHasNumberJsonLoader<FullReceipt>
 	@Override
 	public JSONObject toJSON(final FullReceipt value) throws JSONException
 	{
-		final JSONObject obj = super.appendTheJson(value);
-		return null;
+		final JSONObject obj = value.toJSON();
+
+		return obj;
 	}
 
 	@Override

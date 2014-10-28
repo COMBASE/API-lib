@@ -22,7 +22,8 @@ public class CommodityGroupLoader extends AbstractHasNameJsonLoader<CommodityGro
 	@Override
 	public JSONObject toJSON(final CommodityGroup value) throws JSONException
 	{
-		final JSONObject obj = super.appendTheJson(value);
+		final JSONObject obj = value.toJSON();
+
 		return obj;
 	}
 

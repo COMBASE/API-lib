@@ -54,18 +54,6 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 
 	public abstract T fromJSON(JSONObject obj) throws JSONException, ParseException;
 
-	public JSONObject appendTheJson(final T value) throws JSONException
-	{
-		final JSONObject obj = new JSONObject();
-
-		obj.put("uuid", value.getId());
-		obj.put("deleted", value.isDeleted());
-		obj.put("revision", value.getRevision());
-
-
-		return new JSONObject();
-	}
-
 	protected JSONArray createJsonArray(final String jStr) throws ApiNotReachableException
 	{
 		try

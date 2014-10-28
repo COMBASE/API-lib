@@ -22,7 +22,7 @@ public class TimeTrackingLoader extends AbstractHasIdJsonLoader<TimeTracking>
 	@Override
 	public JSONObject toJSON(final TimeTracking value) throws JSONException
 	{
-		final JSONObject obj = super.appendTheJson(value);
+		final JSONObject obj = value.toJSON();
 		return obj;
 	}
 

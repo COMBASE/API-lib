@@ -22,7 +22,7 @@ public class SaleLoader extends AbstractHasIdJsonLoader<Sale>
 	@Override
 	public JSONObject toJSON(final Sale value) throws JSONException
 	{
-		final JSONObject obj = super.appendTheJson(value);
+		final JSONObject obj = value.toJSON();
 		return obj;
 	}
 

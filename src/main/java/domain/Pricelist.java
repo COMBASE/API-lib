@@ -108,26 +108,6 @@ public class Pricelist extends AbstractNameAndNumberApiObject<Pricelist>
 		this.uuidOfCurrency = uuidOfCurrency;
 	}
 
-// public JSONObject toJSON()
-// {
-// final JSONObject obj = new JSONObject();
-// try
-// {
-// obj.put("name", name);
-// if (number != null)
-// obj.put("number", number);
-// obj.put("deleted", deleted);
-// obj.put("netPrices", netPrices);
-// obj.put("currency", uuidOfCurrency);
-// return obj;
-// }
-// catch (final JSONException e)
-// {
-// e.printStackTrace();
-// return null;
-// }
-// }
-
 	@Override
 	public boolean equals(final Object obj)
 	{
@@ -139,15 +119,12 @@ public class Pricelist extends AbstractNameAndNumberApiObject<Pricelist>
 	public JSONObject toJSON() throws JSONException
 	{
 		final JSONObject obj = new JSONObject();
-		writeJSON(obj);
+		appendJSON(obj);
+
+		obj.put("netPrices", netPrices);
+		obj.put("currency", uuidOfCurrency);
+
 		return obj;
-	}
-
-	@Override
-	public void writeJSON(final JSONObject obj) throws JSONException
-	{
-		super.writeJSON(obj);
-
 	}
 
 	public static Pricelist fromJSON(JSONObject obj) throws JSONException

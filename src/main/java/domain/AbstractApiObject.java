@@ -9,8 +9,7 @@ import org.codehaus.jettison.json.JSONObject;
 import domain.interfaces.HasId;
 import domain.interfaces.HasJSON;
 
-public abstract class AbstractApiObject<T extends HasId> implements HasId, Serializable,
-	HasJSON<T>
+public abstract class AbstractApiObject<T extends HasId> implements HasId, Serializable, HasJSON<T>
 {
 
 	public static abstract class Builder extends Init<Builder>
@@ -146,10 +145,12 @@ public abstract class AbstractApiObject<T extends HasId> implements HasId, Seria
 	}
 
 	@Override
-	public void writeJSON(final JSONObject obj) throws JSONException
+	public JSONObject appendJSON(final JSONObject obj) throws JSONException
 	{
 		obj.put("uuid", getId());
 		obj.put("deleted", isDeleted());
 		obj.put("revision", getRevision());
+
+		return obj;
 	}
 }

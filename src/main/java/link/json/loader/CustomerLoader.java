@@ -22,7 +22,8 @@ public class CustomerLoader extends AbstractHasNumberJsonLoader<Customer>
 	@Override
 	public JSONObject toJSON(final Customer value) throws JSONException
 	{
-		final JSONObject obj = super.appendTheJson(value);
+		final JSONObject obj = value.toJSON();
+
 		return obj;
 	}
 

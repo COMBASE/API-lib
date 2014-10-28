@@ -46,33 +46,6 @@ public class TimeTrackingEntities extends AbstractNameAndNumberApiObject<TimeTra
 		paidTime = init.paidTime;
 	}
 
-// public static TimeTrackingEntities fromJSON(JSONObject obj) throws JSONException
-// {
-//
-
-// }
-//
-// @Override
-// public JSONObject toJSON()
-// {
-// final JSONObject obj = new JSONObject();
-// try
-// {
-// obj.put("name", name);
-// obj.put("deleted", deleted);
-// obj.put("uuid", uuid);
-// if (number != null)
-// obj.put("number", number);
-// obj.put("paidTime", paidTime);
-// return obj;
-// }
-// catch (final JSONException e)
-// {
-// e.printStackTrace();
-// return null;
-// }
-// }
-//
 // public boolean post() throws IOException
 // {
 //
@@ -122,15 +95,11 @@ public class TimeTrackingEntities extends AbstractNameAndNumberApiObject<TimeTra
 	public JSONObject toJSON() throws JSONException
 	{
 		final JSONObject obj = new JSONObject();
-		writeJSON(obj);
+		appendJSON(obj);
+
+		obj.put("paidTime", paidTime);
+
 		return obj;
-	}
-
-	@Override
-	public void writeJSON(final JSONObject obj) throws JSONException
-	{
-		super.writeJSON(obj);
-
 	}
 
 	public static TimeTrackingEntities fromJSON(JSONObject obj) throws JSONException

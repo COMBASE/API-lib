@@ -113,14 +113,7 @@ public class AccountTransaction extends AbstractApiObject<AccountTransaction>
 // final JSONObject obj = new JSONObject();
 // try
 // {
-// obj.put("account", account.getId());
-// obj.put("receipt", receipt.getUuid());
-// obj.put("cashier", cashier.getUuid());
-// obj.put("pos", pos.getUuid());
-// obj.put("amount", amount);
-// obj.put("bookingTime", bookingTime);
-// obj.put("receiptIndex", receiptIndex);
-// obj.put("description", description);
+
 // return obj;
 // }
 // catch (final JSONException e)
@@ -255,18 +248,20 @@ public class AccountTransaction extends AbstractApiObject<AccountTransaction>
 	@Override
 	public JSONObject toJSON() throws JSONException
 	{
-		final JSONObject obj = new JSONObject();
-		writeJSON(obj);
+		JSONObject obj = new JSONObject();
+		obj = super.appendJSON(obj);
+
+		obj.put("account", account.getId());
+		obj.put("receipt", receipt.getId());
+		obj.put("cashier", cashier.getId());
+		obj.put("pos", pos.getId());
+		obj.put("amount", amount);
+		obj.put("bookingTime", bookingTime);
+		obj.put("receiptIndex", receiptIndex);
+		obj.put("description", description);
+
 		return obj;
 	}
-
-	@Override
-	public void writeJSON(final JSONObject obj) throws JSONException
-	{
-		super.writeJSON(obj);
-
-	}
-
 
 	public static AccountTransaction fromJSON(JSONObject obj) throws JSONException, ParseException
 	{

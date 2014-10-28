@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -444,38 +445,7 @@ public class Inventory extends AbstractNumberApiObject<Inventory>
 //
 // try
 // {
-// jObj.put("deleted", deleted);
 //
-// jObj.put("number", number);
-//
-// if (revision != null)
-// jObj.put("revision", revision);
-//
-// if (uuid != null)
-// jObj.put("uuid", uuid);
-//
-// jObj.put("user", user);
-//
-// jObj.put("description", description);
-//
-//
-// if (organizationalUnits != null && !organizationalUnits.isEmpty())
-// {
-// final JSONArray array = new JSONArray();
-// for (final OrganizationalUnit organizationalUnit : organizationalUnits)
-// {
-// if (organizationalUnit != null)
-// array.put(organizationalUnit.toJSON());
-// }
-// jObj.put("organizationalUnits", array);
-// }
-//
-// jObj.put("createTime", createTime);
-//
-// jObj.put("processTime", processTime);
-//
-//
-// jObj.put("inventoryProcedure", inventoryProcedure);
 // }
 // catch (final JSONException e)
 // {
@@ -540,17 +510,32 @@ public class Inventory extends AbstractNumberApiObject<Inventory>
 	public JSONObject toJSON() throws JSONException
 	{
 		final JSONObject obj = new JSONObject();
-		writeJSON(obj);
+		appendJSON(obj);
+
+		obj.put("user", user);
+
+		obj.put("description", description);
+
+
+		if (organizationalUnits != null && !organizationalUnits.isEmpty())
+		{
+			final JSONArray array = new JSONArray();
+			for (final OrganizationalUnit organizationalUnit : organizationalUnits)
+			{
+				if (organizationalUnit != null)
+					array.put(organizationalUnit.toJSON());
+			}
+			obj.put("organizationalUnits", array);
+		}
+
+		obj.put("createTime", createTime);
+
+		obj.put("processTime", processTime);
+
+		obj.put("inventoryProcedure", inventoryProcedure);
+
 		return obj;
 	}
-
-	@Override
-	public void writeJSON(final JSONObject obj) throws JSONException
-	{
-		super.writeJSON(obj);
-
-	}
-
 
 	public static Inventory fromJSON(JSONObject obj) throws JSONException, ParseException
 	{

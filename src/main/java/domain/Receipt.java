@@ -222,37 +222,6 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 	}
 
 
-// public JSONObject toJSON()
-// {
-// final JSONObject obj = new JSONObject();
-// try
-// {
-// obj.put("deleted", deleted);
-// obj.put("revision", revision);
-// obj.put("uuid", uuid);
-// if (number != null)
-// obj.put("number", number);
-//
-// return obj;
-// }
-// catch (final JSONException e)
-// {
-// e.printStackTrace();
-// return null;
-// }
-// }
-//
-// public static Receipt fromJSON(JSONObject obj) throws JSONException
-// {
-
-// }
-// catch (final ParseException e)
-// {
-// e.printStackTrace();
-// }
-// return rec;
-// }
-//
 // public boolean post() throws IOException
 // {
 //
@@ -500,15 +469,8 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 	public JSONObject toJSON() throws JSONException
 	{
 		final JSONObject obj = new JSONObject();
-		writeJSON(obj);
+		appendJSON(obj);
 		return obj;
-	}
-
-	@Override
-	public void writeJSON(final JSONObject obj) throws JSONException
-	{
-		super.writeJSON(obj);
-
 	}
 
 	public static Receipt fromJSON(JSONObject obj) throws JSONException, ParseException

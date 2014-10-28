@@ -151,25 +151,7 @@ public class Customer extends AbstractNumberApiObject<Customer>
 // JSONObject obj = new JSONObject();
 // try
 // {
-// obj.put("deleted", deleted);
-// obj.put("uuid", uuid);
-// obj.put("revision", revision);
-// if (number != null)
-// obj.put("number", number);
-// if (customerGroup != null)
-// obj.put("customerGroup", customerGroup.getUuid());
-// obj.put("firstName", firstName);
-// obj.put("lastName", lastName);
-// obj.put("gender", gender);
-// obj.put("addressLine1", addressLine1);
-// obj.put("city", city);
-// obj.put("zipCode", zipCode);
-// obj.put("country", country);
-// obj.put("email", email);
-// obj.put("phone", phone);
-// obj.put("birthday", birthday);
-// if (birthday != null)
-// obj.put("birthday", inputDf.format(birthday));
+
 //
 // return obj;
 // }
@@ -334,17 +316,22 @@ public class Customer extends AbstractNumberApiObject<Customer>
 	public JSONObject toJSON() throws JSONException
 	{
 		final JSONObject obj = new JSONObject();
-		writeJSON(obj);
+		appendJSON(obj);
+
+		obj.put("customerGroup", customerGroup.getId());
+		obj.put("firstName", firstName);
+		obj.put("lastName", lastName);
+		obj.put("gender", gender);
+		obj.put("addressLine1", addressLine1);
+		obj.put("city", city);
+		obj.put("zipCode", zipCode);
+		obj.put("country", country);
+		obj.put("email", email);
+		obj.put("phone", phone);
+		obj.put("birthday", birthday);
+
 		return obj;
 	}
-
-	@Override
-	public void writeJSON(final JSONObject obj) throws JSONException
-	{
-		super.writeJSON(obj);
-
-	}
-
 
 	public static Customer fromJSON(JSONObject obj) throws JSONException
 	{

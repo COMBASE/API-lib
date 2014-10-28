@@ -26,18 +26,6 @@ public abstract class AbstractHasNameJsonLoader<T extends HasId & HasNumber & Ha
 		super(dataType, cloudLink);
 	}
 
-	@Override
-	public JSONObject appendTheJson(final T value) throws JSONException
-	{
-		JSONObject obj = new JSONObject();
-
-		obj = super.appendTheJson(value);
-
-		obj.put("name", value.getName());
-
-		return new JSONObject();
-	}
-
 	public T downloadByName(final String name) throws ApiNotReachableException, JSONException,
 		ParseException, SubObjectInitializationException
 	{
