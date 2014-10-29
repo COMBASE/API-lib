@@ -14,6 +14,7 @@ import domain.interfaces.HasId;
 import domain.interfaces.HasName;
 import domain.interfaces.HasNumber;
 import error.ApiNotReachableException;
+import error.SubObjectInitializationException;
 
 public abstract class AbstractHasNameJsonLoader<T extends HasId & HasNumber & HasName> extends
 	AbstractHasNumberJsonLoader<T>

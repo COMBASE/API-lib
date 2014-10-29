@@ -1,4 +1,4 @@
-package link.json;
+package error;
 
 import domain.DataType;
 
@@ -33,8 +33,8 @@ public class SubObjectInitializationException extends Exception
 		ret.append(type.toString());
 		ret.append(" with reference \"");
 		ret.append(reference);
-		ret.append("\" not found. \n");
-		ret.append(super.getLocalizedMessage());
+		ret.append("\" not found. ");
+		// ret.append(super.getLocalizedMessage());
 		return ret.toString();
 	}
 }

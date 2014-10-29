@@ -243,6 +243,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		prices = init.prices;
 		texts = init.texts;
 		assortment = init.assortment;
+		supplierItemPrices = init.supplierItemPrices;
 		codes = init.codes;
 	}
 
@@ -431,23 +432,6 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		this.trackInventory = trackInventory;
 	}
 
-
-// public JSONObject toJSON()
-// {
-// final JSONObject obj = new JSONObject();
-// try
-// {
-//
-
-// return obj;
-// }
-// catch (final JSONException e)
-// {
-// e.printStackTrace();
-// return null;
-// }
-// }
-
 	public BigDecimal getBasePriceMax()
 	{
 		return basePriceMax;
@@ -515,6 +499,18 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 			obj.put("sector", sector.getId());
 		if (altsector != null)
 			obj.put("alternativeSector", altsector.getId());
+
+
+		if (supplierItemPrices != null && !supplierItemPrices.isEmpty())
+		{
+			final JSONArray array = new JSONArray();
+			for (final SupplierItemPrice supplierItemPrice : supplierItemPrices)
+			{
+				array.put(supplierItemPrice.toJSON());
+			}
+			obj.put("supplierItemPrices", array);
+		}
+
 		if (!prices.isEmpty())
 		{
 			final JSONArray array = new JSONArray();

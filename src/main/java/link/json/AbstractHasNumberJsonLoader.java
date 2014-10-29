@@ -13,6 +13,7 @@ import domain.DataType;
 import domain.interfaces.HasId;
 import domain.interfaces.HasNumber;
 import error.ApiNotReachableException;
+import error.SubObjectInitializationException;
 
 public abstract class AbstractHasNumberJsonLoader<T extends HasId & HasNumber> extends
 	AbstractHasIdJsonLoader<T>

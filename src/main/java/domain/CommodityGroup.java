@@ -162,7 +162,8 @@ public class CommodityGroup extends AbstractNameAndNumberApiObject<CommodityGrou
 
 		obj.put("hasChildren", hasChildren);
 		obj.put("key", key);
-		obj.put("parentCommodityGroup", parent.getId());
+		if (parent != null)
+			obj.put("parentCommodityGroup", parent.getId());
 
 		return obj;
 	}

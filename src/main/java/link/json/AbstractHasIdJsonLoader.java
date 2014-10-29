@@ -19,6 +19,7 @@ import org.codehaus.jettison.json.JSONObject;
 import domain.DataType;
 import domain.interfaces.HasId;
 import error.ApiNotReachableException;
+import error.SubObjectInitializationException;
 
 /**
  * Initialize this class or extend it in order to shortcut proper JSON formatting. Offers several
@@ -49,8 +50,6 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 		this.dataType = dataType;
 	}
 
-
-	public abstract JSONObject toJSON(T value) throws JSONException;
 
 	public abstract T fromJSON(JSONObject obj) throws JSONException, ParseException;
 
@@ -184,7 +183,9 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 		final String result = CloudLink.getConnector().postData(getDataType(), toJSON(obj));
 		final JSONObject jObj = new JSONObject(result);
 		final T ret = fromJSON(jObj);
+
 		updateCache(ret);
+
 		return ret;
 	}
 
@@ -287,6 +288,9 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 		}
 		return jArray;
 	}
+
+
+	public abstract JSONObject toJSON(T value) throws JSONException;
 
 
 }
