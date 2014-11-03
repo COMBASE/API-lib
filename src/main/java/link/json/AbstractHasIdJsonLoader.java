@@ -194,9 +194,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 		final Date date1 = new Date();
 		System.out.println("start: " + date1);
 
-
 		JSONArray jProdArray = new JSONArray();
-
 
 		// Thread Executor init
 		final ExecutorService exec = Executors.newFixedThreadPool(Runtime.getRuntime()
@@ -226,6 +224,21 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 
 		final Date date2 = new Date();
 		System.out.println("end: " + date2);
+
+		return null;
+	}
+
+	/**
+	 * gets the corresponding object out of the cache
+	 * 
+	 * @param id
+	 * @return the corresponding object
+	 */
+	public T getCachedObjectByID(final T object)
+	{
+
+		if (object != null && object.getId() != null)
+			return idCache.get(object.getId());
 
 		return null;
 	}

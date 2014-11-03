@@ -52,6 +52,20 @@ public abstract class AbstractHasNumberJsonLoader<T extends HasId & HasNumber> e
 	}
 
 	@Override
+	public T getCachedObjectByID(final T object)
+	{
+
+		final T cachedObject = super.getCachedObjectByID(object);
+		if (cachedObject != null)
+			return cachedObject;
+
+		if (object != null && object.getNumber() != null)
+			return numberCache.get(object.getNumber());
+
+		return null;
+	}
+
+	@Override
 	public void updateCache(final T obj)
 	{
 		if (obj.getNumber() != null)
