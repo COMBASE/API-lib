@@ -27,8 +27,6 @@ public class ProductLoader extends AbstractHasNameJsonLoader<Product>
 	{
 		final JSONObject obj = value.toJSON();
 
-		// TODO append json
-
 		return obj;
 	}
 
