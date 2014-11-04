@@ -380,7 +380,7 @@ public class Product
 	 * !-STABLE-! ~MAS
 	 * **/
 
-	public static void postList(final List<Product> productList, final int limit)
+	public static void postList(final List<Product> productList, final int limit, final int threads)
 	{
 
 		final Date date1 = new Date();
@@ -468,8 +468,7 @@ public class Product
 			e.printStackTrace();
 		}
 		// Thread Executor init
-		final ExecutorService exec = Executors.newFixedThreadPool(Runtime.getRuntime()
-			.availableProcessors());
+		final ExecutorService exec = Executors.newFixedThreadPool(threads);
 
 		int offset = 0;
 		int i = 0;
@@ -874,6 +873,7 @@ public class Product
 				}
 				obj.put("articleTexts", array);
 			}
+			System.out.println("JSON= " + obj.toString());
 			return obj;
 		}
 		catch (final JSONException e)
