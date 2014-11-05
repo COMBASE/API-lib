@@ -1,37 +1,410 @@
 package domain;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 
 public class OrganizationalUnit extends AbstractNameAndNumberApiObject<OrganizationalUnit>
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -5837677863056916822L;
-	private String parent;
-	// private AssortmentValidities assortmentValidities;
-	// private AdressInformation adressInformation;
-	private Pricelist priceGroup;
-	// private OrderingSources orderingSources;
-	private String storageSpace;
-	private String salesArea;
-	private boolean mondayOpen;
-	private boolean tuesdayOpen;
-	private boolean wednesdayOpen;
-	private boolean thursdayOpen;
-	private boolean fridayOpen;
-	private boolean saturdayOpen;
-	private boolean sundayOpen;
-	private boolean hasChildren;
+	private OrganizationalUnit parent;
 
-	// usw...
+	private EconomicZone economicZone;
+
+	private List<Assortment> assortmentValidities = new ArrayList<Assortment>();
+
+	// private SupplierCaseEntityInformationReadable addressInformation;
+
+	private Pricelist priceGroup;
+
+	private List<OrganizationalUnit> orderingSources = new ArrayList<OrganizationalUnit>();
+
+	private BigDecimal storageSpace;
+
+	private BigDecimal salesArea;
+
+	private Boolean mondayOpen;
+
+	private Boolean tuesdayOpen;
+
+	private Boolean wednesdayOpen;
+
+	private Boolean thursdayOpen;
+
+	private Boolean fridayOpen;
+
+	private Boolean saturdayOpen;
+
+	private Boolean sundayOpen;
+
+	private Boolean hasChildren;
+
+	private Date mondayFrom;
+
+	private Date tuesdayFrom;
+
+	private Date wednesdayFrom;
+
+	private Date thursdayFrom;
+
+	private Date fridayFrom;
+
+	private Date saturdayFrom;
+
+	private Date sundayFrom;
+
+	private Date mondayTo;
+
+	private Date tuesdayTo;
+
+	private Date wednesdayTo;
+
+	private Date thursdayTo;
+
+	private Date fridayTo;
+
+	private Date saturdayTo;
+
+	private Date sundayTo;
+
+	private Integer centralityIndex;// Zentralitätsindex (integer)
+
+	private Long ehNumber;
+
+	private BigDecimal monthlyOperatingCostsRent;// monatliche Kosten
+													// Betrieb/Miete
+
+	private BigDecimal monthlyStaffCosts;// monatliche Kosten Personal
+
+	private BigDecimal stretchZone;
+
+	private BigDecimal viewingZone;
+
+	private BigDecimal gripZone;
+
+	private BigDecimal bendZone;
+
+	private Boolean warehouse;
 
 	protected static abstract class Init<T extends Init<T>> extends
 		AbstractNameAndNumberApiObject.Init<T>
 	{
-		private final String parent = null;
+		private OrganizationalUnit parent = null;
+
+		private EconomicZone economicZone = null;
+
+		private List<Assortment> assortmentValidities = new ArrayList<Assortment>();
+
+		// private SupplierCaseEntityInformationReadable addressInformation=null;
+
+		private Pricelist priceGroup = null;
+
+		private List<OrganizationalUnit> orderingSources = new ArrayList<OrganizationalUnit>();
+
+		private BigDecimal storageSpace = null;
+
+		private BigDecimal salesArea = null;
+
+		private Boolean mondayOpen = null;
+
+		private Boolean tuesdayOpen = null;
+
+		private Boolean wednesdayOpen = null;
+
+		private Boolean thursdayOpen = null;
+
+		private Boolean fridayOpen = null;
+
+		private Boolean saturdayOpen = null;
+
+		private Boolean sundayOpen = null;
+
+		private Boolean hasChildren = null;
+
+		private Date mondayFrom = null;
+
+		private Date tuesdayFrom = null;
+
+		private Date wednesdayFrom = null;
+
+		private Date thursdayFrom = null;
+
+		private Date fridayFrom = null;
+
+		private Date saturdayFrom = null;
+
+		private Date sundayFrom = null;
+
+		private Date mondayTo = null;
+
+		private Date tuesdayTo = null;
+
+		private Date wednesdayTo = null;
+
+		private Date thursdayTo = null;
+
+		private Date fridayTo = null;
+
+		private Date saturdayTo = null;
+
+		private Date sundayTo = null;
+
+		private Integer centralityIndex = null;// Zentralitätsindex (integer)
+
+		private Long ehNumber = null;
+
+		private BigDecimal monthlyOperatingCostsRent = null;// monatliche Kosten
+		// Betrieb/Miete
+
+		private BigDecimal monthlyStaffCosts = null;// monatliche Kosten Personal
+
+		private BigDecimal stretchZone = null;
+
+		private BigDecimal viewingZone = null;
+
+		private BigDecimal gripZone = null;
+
+		private BigDecimal bendZone = null;
+
+		private Boolean warehouse = null;
+
+		public T parent(final OrganizationalUnit value)
+		{
+			parent = value;
+			return self();
+		}
+
+		public T economicZone(final EconomicZone value)
+		{
+			economicZone = value;
+			return self();
+		}
+
+		public T assortmentValidities(final List<Assortment> value)
+		{
+			assortmentValidities = value;
+			return self();
+		}
+
+		// private SupplierCaseEntityInformationReadable addressInformation=null;
+
+		public T priceGroup(final Pricelist value)
+		{
+			priceGroup = value;
+			return self();
+		}
+
+		public T orderingSources(final List<OrganizationalUnit> value)
+		{
+			orderingSources = value;
+			return self();
+		}
+
+		public T storageSpace(final BigDecimal value)
+		{
+			storageSpace = value;
+			return self();
+		}
+
+		public T salesArea(final BigDecimal value)
+		{
+			salesArea = value;
+			return self();
+		}
+
+		public T mondayOpen(final Boolean value)
+		{
+			mondayOpen = value;
+			return self();
+		}
+
+		public T tuesdayOpen(final Boolean value)
+		{
+			tuesdayOpen = value;
+			return self();
+		}
+
+		public T wednesdayOpen(final Boolean value)
+		{
+			wednesdayOpen = value;
+			return self();
+		}
+
+		public T thursdayOpen(final Boolean value)
+		{
+			thursdayOpen = value;
+			return self();
+		}
+
+		public T fridayOpen(final Boolean value)
+		{
+			fridayOpen = value;
+			return self();
+		}
+
+		public T saturdayOpen(final Boolean value)
+		{
+			saturdayOpen = value;
+			return self();
+		}
+
+		public T sundayOpen(final Boolean value)
+		{
+			sundayOpen = value;
+			return self();
+		}
+
+		public T hasChildren(final Boolean value)
+		{
+			hasChildren = value;
+			return self();
+		}
+
+		public T mondayFrom(final Date value)
+		{
+			mondayFrom = value;
+			return self();
+		}
+
+		public T tuesdayFrom(final Date value)
+		{
+			tuesdayFrom = value;
+			return self();
+		}
+
+		public T wednesdayFrom(final Date value)
+		{
+			wednesdayFrom = value;
+			return self();
+		}
+
+		public T thursdayFrom(final Date value)
+		{
+			thursdayFrom = value;
+			return self();
+		}
+
+		public T fridayFrom(final Date value)
+		{
+			fridayFrom = value;
+			return self();
+		}
+
+		public T saturdayFrom(final Date value)
+		{
+			saturdayFrom = value;
+			return self();
+		}
+
+		public T sundayFrom(final Date value)
+		{
+			sundayFrom = value;
+			return self();
+		}
+
+		public T mondayTo(final Date value)
+		{
+			mondayTo = value;
+			return self();
+		}
+
+		public T tuesdayTo(final Date value)
+		{
+			tuesdayTo = value;
+			return self();
+		}
+
+		public T wednesdayTo(final Date value)
+		{
+			wednesdayTo = value;
+			return self();
+		}
+
+		public T thursdayTo(final Date value)
+		{
+			thursdayTo = value;
+			return self();
+		}
+
+		public T fridayTo(final Date value)
+		{
+			fridayTo = value;
+			return self();
+		}
+
+		public T saturdayTo(final Date value)
+		{
+			saturdayTo = value;
+			return self();
+		}
+
+		public T sundayTo(final Date value)
+		{
+			sundayTo = value;
+			return self();
+		}
+
+		public T centralityIndex(final int value)
+		{
+			centralityIndex = value;
+			return self();
+		}// Zentralitätsindex (integer)
+
+		public T ehNumber(final Long value)
+		{
+			ehNumber = value;
+			return self();
+		}
+
+		public T monthlyOperatingCostsRent(final BigDecimal value)
+		{
+			monthlyOperatingCostsRent = value;
+			return self();
+		}// monatliche Kosten
+
+		// Betrieb/Miete
+
+		public T monthlyStaffCosts(final BigDecimal value)
+		{
+			monthlyStaffCosts = value;
+			return self();
+		}// monatliche Kosten Personal
+
+		public T stretchZone(final BigDecimal value)
+		{
+			stretchZone = value;
+			return self();
+		}
+
+		public T viewingZone(final BigDecimal value)
+		{
+			viewingZone = value;
+			return self();
+		}
+
+		public T gripZone(final BigDecimal value)
+		{
+			gripZone = value;
+			return self();
+		}
+
+		public T bendZone(final BigDecimal value)
+		{
+			bendZone = value;
+			return self();
+		}
+
+		public T warehouse(final Boolean value)
+		{
+			warehouse = value;
+			return self();
+		}
+
 
 		@Override
 		public OrganizationalUnit build()
@@ -54,24 +427,85 @@ public class OrganizationalUnit extends AbstractNameAndNumberApiObject<Organizat
 	private OrganizationalUnit(final Init<?> init)
 	{
 		super(init);
+
 		parent = init.parent;
-	}
 
-// public boolean post() throws IOException
-// {
-//
-// // dependencies
-// return CloudLink.getConnector().postData(DataType.organizationalUnit, this.toJSON());
-// }
+		economicZone = init.economicZone;
 
-	public String getParent()
-	{
-		return parent;
-	}
+		assortmentValidities = init.assortmentValidities;
 
-	public void setParent(final String parent)
-	{
-		this.parent = parent;
+		// private SupplierCaseEntityInformationReadable addressInformation=init.blubb;
+
+		priceGroup = init.priceGroup;
+
+		orderingSources = init.orderingSources;
+
+		storageSpace = init.storageSpace;
+
+		salesArea = init.salesArea;
+
+		mondayOpen = init.mondayOpen;
+
+		tuesdayOpen = init.tuesdayOpen;
+
+		wednesdayOpen = init.wednesdayOpen;
+
+		thursdayOpen = init.thursdayOpen;
+
+		fridayOpen = init.fridayOpen;
+
+		saturdayOpen = init.saturdayOpen;
+
+		sundayOpen = init.sundayOpen;
+
+		hasChildren = init.hasChildren;
+
+		mondayFrom = init.mondayFrom;
+
+		tuesdayFrom = init.tuesdayFrom;
+
+		wednesdayFrom = init.wednesdayFrom;
+
+		thursdayFrom = init.thursdayFrom;
+
+		fridayFrom = init.fridayFrom;
+
+		saturdayFrom = init.saturdayFrom;
+
+		sundayFrom = init.sundayFrom;
+
+		mondayTo = init.mondayTo;
+
+		tuesdayTo = init.tuesdayTo;
+
+		wednesdayTo = init.wednesdayTo;
+
+		thursdayTo = init.thursdayTo;
+
+		fridayTo = init.fridayTo;
+
+		saturdayTo = init.saturdayTo;
+
+		sundayTo = init.sundayTo;
+
+		centralityIndex = init.centralityIndex;// Zentralitätsindex (integer)
+
+		ehNumber = init.ehNumber;
+
+		monthlyOperatingCostsRent = init.monthlyOperatingCostsRent;// monatliche Kosten
+		// Betrieb/Miete
+
+		monthlyStaffCosts = init.monthlyStaffCosts;// monatliche Kosten Personal
+
+		stretchZone = init.stretchZone;
+
+		viewingZone = init.viewingZone;
+
+		gripZone = init.gripZone;
+
+		bendZone = init.bendZone;
+
+		warehouse = init.warehouse;
 	}
 
 	public Pricelist getPriceGroup()
@@ -84,104 +518,364 @@ public class OrganizationalUnit extends AbstractNameAndNumberApiObject<Organizat
 		this.priceGroup = priceGroup;
 	}
 
-	public String getStorageSpace()
-	{
-		return storageSpace;
-	}
-
-	public void setStorageSpace(final String storageSpace)
-	{
-		this.storageSpace = storageSpace;
-	}
-
-	public String getSalesArea()
-	{
-		return salesArea;
-	}
-
-	public void setSalesArea(final String salesArea)
-	{
-		this.salesArea = salesArea;
-	}
-
-	public boolean isMondayOpen()
+	public Boolean isMondayOpen()
 	{
 		return mondayOpen;
 	}
 
-	public void setMondayOpen(final boolean mondayOpen)
+	public void setMondayOpen(final Boolean mondayOpen)
 	{
 		this.mondayOpen = mondayOpen;
 	}
 
-	public boolean isTuesdayOpen()
+	public Boolean isTuesdayOpen()
 	{
 		return tuesdayOpen;
 	}
 
-	public void setTuesdayOpen(final boolean tuesdayOpen)
+	public void setTuesdayOpen(final Boolean tuesdayOpen)
 	{
 		this.tuesdayOpen = tuesdayOpen;
 	}
 
-	public boolean isWednesdayOpen()
+	public Boolean isWednesdayOpen()
 	{
 		return wednesdayOpen;
 	}
 
-	public void setWednesdayOpen(final boolean wednesdayOpen)
+	public void setWednesdayOpen(final Boolean wednesdayOpen)
 	{
 		this.wednesdayOpen = wednesdayOpen;
 	}
 
-	public boolean isThursdayOpen()
+	public Boolean isThursdayOpen()
 	{
 		return thursdayOpen;
 	}
 
-	public void setThursdayOpen(final boolean thursdayOpen)
+	public void setThursdayOpen(final Boolean thursdayOpen)
 	{
 		this.thursdayOpen = thursdayOpen;
 	}
 
-	public boolean isFridayOpen()
+	public Boolean isFridayOpen()
 	{
 		return fridayOpen;
 	}
 
-	public void setFridayOpen(final boolean fridayOpen)
+	public void setFridayOpen(final Boolean fridayOpen)
 	{
 		this.fridayOpen = fridayOpen;
 	}
 
-	public boolean isSaturdayOpen()
+	public Boolean isSaturdayOpen()
 	{
 		return saturdayOpen;
 	}
 
-	public void setSaturdayOpen(final boolean saturdayOpen)
+	public void setSaturdayOpen(final Boolean saturdayOpen)
 	{
 		this.saturdayOpen = saturdayOpen;
 	}
 
-	public boolean isSundayOpen()
+	public Boolean isSundayOpen()
 	{
 		return sundayOpen;
 	}
 
-	public void setSundayOpen(final boolean sundayOpen)
+	public void setSundayOpen(final Boolean sundayOpen)
 	{
 		this.sundayOpen = sundayOpen;
 	}
 
-	public boolean isHasChildren()
+	public Boolean isHasChildren()
 	{
 		return hasChildren;
 	}
 
-	public void setHasChildren(final boolean hasChildren)
+	public void setHasChildren(final Boolean hasChildren)
 	{
 		this.hasChildren = hasChildren;
+	}
+
+	public EconomicZone getEconomicZone()
+	{
+		return economicZone;
+	}
+
+	public void setEconomicZone(final EconomicZone economicZone)
+	{
+		this.economicZone = economicZone;
+	}
+
+	public List<Assortment> getAssortmentValidities()
+	{
+		return assortmentValidities;
+	}
+
+	public void setAssortmentValidities(final List<Assortment> assortmentValidities)
+	{
+		this.assortmentValidities = assortmentValidities;
+	}
+
+	public List<OrganizationalUnit> getOrderingSources()
+	{
+		return orderingSources;
+	}
+
+	public void setOrderingSources(final List<OrganizationalUnit> orderingSources)
+	{
+		this.orderingSources = orderingSources;
+	}
+
+	public Date getMondayFrom()
+	{
+		return mondayFrom;
+	}
+
+	public void setMondayFrom(final Date mondayFrom)
+	{
+		this.mondayFrom = mondayFrom;
+	}
+
+	public Date getTuesdayFrom()
+	{
+		return tuesdayFrom;
+	}
+
+	public void setTuesdayFrom(final Date tuesdayFrom)
+	{
+		this.tuesdayFrom = tuesdayFrom;
+	}
+
+	public Date getWednesdayFrom()
+	{
+		return wednesdayFrom;
+	}
+
+	public void setWednesdayFrom(final Date wednesdayFrom)
+	{
+		this.wednesdayFrom = wednesdayFrom;
+	}
+
+	public Date getThursdayFrom()
+	{
+		return thursdayFrom;
+	}
+
+	public void setThursdayFrom(final Date thursdayFrom)
+	{
+		this.thursdayFrom = thursdayFrom;
+	}
+
+	public Date getFridayFrom()
+	{
+		return fridayFrom;
+	}
+
+	public void setFridayFrom(final Date fridayFrom)
+	{
+		this.fridayFrom = fridayFrom;
+	}
+
+	public Date getSaturdayFrom()
+	{
+		return saturdayFrom;
+	}
+
+	public void setSaturdayFrom(final Date saturdayFrom)
+	{
+		this.saturdayFrom = saturdayFrom;
+	}
+
+	public Date getSundayFrom()
+	{
+		return sundayFrom;
+	}
+
+	public void setSundayFrom(final Date sundayFrom)
+	{
+		this.sundayFrom = sundayFrom;
+	}
+
+	public Date getMondayTo()
+	{
+		return mondayTo;
+	}
+
+	public void setMondayTo(final Date mondayTo)
+	{
+		this.mondayTo = mondayTo;
+	}
+
+	public Date getTuesdayTo()
+	{
+		return tuesdayTo;
+	}
+
+	public void setTuesdayTo(final Date tuesdayTo)
+	{
+		this.tuesdayTo = tuesdayTo;
+	}
+
+	public Date getWednesdayTo()
+	{
+		return wednesdayTo;
+	}
+
+	public void setWednesdayTo(final Date wednesdayTo)
+	{
+		this.wednesdayTo = wednesdayTo;
+	}
+
+	public Date getThursdayTo()
+	{
+		return thursdayTo;
+	}
+
+	public void setThursdayTo(final Date thursdayTo)
+	{
+		this.thursdayTo = thursdayTo;
+	}
+
+	public Date getFridayTo()
+	{
+		return fridayTo;
+	}
+
+	public void setFridayTo(final Date fridayTo)
+	{
+		this.fridayTo = fridayTo;
+	}
+
+	public Date getSaturdayTo()
+	{
+		return saturdayTo;
+	}
+
+	public void setSaturdayTo(final Date saturdayTo)
+	{
+		this.saturdayTo = saturdayTo;
+	}
+
+	public Date getSundayTo()
+	{
+		return sundayTo;
+	}
+
+	public void setSundayTo(final Date sundayTo)
+	{
+		this.sundayTo = sundayTo;
+	}
+
+	public Integer getCentralityIndex()
+	{
+		return centralityIndex;
+	}
+
+	public void setCentralityIndex(final Integer centralityIndex)
+	{
+		this.centralityIndex = centralityIndex;
+	}
+
+	public Long getEhNumber()
+	{
+		return ehNumber;
+	}
+
+	public void setEhNumber(final Long ehNumber)
+	{
+		this.ehNumber = ehNumber;
+	}
+
+	public BigDecimal getMonthlyOperatingCostsRent()
+	{
+		return monthlyOperatingCostsRent;
+	}
+
+	public void setMonthlyOperatingCostsRent(final BigDecimal monthlyOperatingCostsRent)
+	{
+		this.monthlyOperatingCostsRent = monthlyOperatingCostsRent;
+	}
+
+	public BigDecimal getMonthlyStaffCosts()
+	{
+		return monthlyStaffCosts;
+	}
+
+	public void setMonthlyStaffCosts(final BigDecimal monthlyStaffCosts)
+	{
+		this.monthlyStaffCosts = monthlyStaffCosts;
+	}
+
+	public BigDecimal getStretchZone()
+	{
+		return stretchZone;
+	}
+
+	public void setStretchZone(final BigDecimal stretchZone)
+	{
+		this.stretchZone = stretchZone;
+	}
+
+	public BigDecimal getViewingZone()
+	{
+		return viewingZone;
+	}
+
+	public void setViewingZone(final BigDecimal viewingZone)
+	{
+		this.viewingZone = viewingZone;
+	}
+
+	public BigDecimal getGripZone()
+	{
+		return gripZone;
+	}
+
+	public void setGripZone(final BigDecimal gripZone)
+	{
+		this.gripZone = gripZone;
+	}
+
+	public BigDecimal getBendZone()
+	{
+		return bendZone;
+	}
+
+	public void setBendZone(final BigDecimal bendZone)
+	{
+		this.bendZone = bendZone;
+	}
+
+	public Boolean isWarehouse()
+	{
+		return warehouse;
+	}
+
+	public void setWarehouse(final Boolean warehouse)
+	{
+		this.warehouse = warehouse;
+	}
+
+	public static long getSerialversionuid()
+	{
+		return serialVersionUID;
+	}
+
+	public void setParent(final OrganizationalUnit parent)
+	{
+		this.parent = parent;
+	}
+
+	public void setStorageSpace(final BigDecimal storageSpace)
+	{
+		this.storageSpace = storageSpace;
+	}
+
+	public void setSalesArea(final BigDecimal salesArea)
+	{
+		this.salesArea = salesArea;
 	}
 
 	@Override
@@ -213,6 +907,46 @@ public class OrganizationalUnit extends AbstractNameAndNumberApiObject<Organizat
 	{
 		final JSONObject obj = new JSONObject();
 		appendJSON(obj);
+
+		obj.put("parent", parent);
+		obj.put("assortmentValidities", assortmentValidities);
+		obj.put("priceGroup", priceGroup);
+		obj.put("economicZone", economicZone);
+		obj.put("orderingSources", orderingSources);
+		obj.put("storageSpace", storageSpace);
+		obj.put("salesArea", salesArea);
+		obj.put("mondayOpen", mondayOpen);
+		obj.put("tuesdayOpen", tuesdayOpen);
+		obj.put("wednesdayOpen", wednesdayOpen);
+		obj.put("thursdayOpen", thursdayOpen);
+		obj.put("fridayOpen", fridayOpen);
+		obj.put("saturdayOpen", saturdayOpen);
+		obj.put("sundayOpen", sundayOpen);
+		obj.put("hasChildren", hasChildren);
+		obj.put("mondayFrom", mondayFrom);
+		obj.put("tuesdayFrom", tuesdayFrom);
+		obj.put("wednesdayFrom", wednesdayFrom);
+		obj.put("thursdayFrom", thursdayFrom);
+		obj.put("fridayFrom", fridayFrom);
+		obj.put("saturdayFrom", saturdayFrom);
+		obj.put("sundayFrom", sundayFrom);
+		obj.put("mondayTo", mondayTo);
+		obj.put("tuesdayTo", tuesdayTo);
+		obj.put("wednesdayTo", wednesdayTo);
+		obj.put("thursdayTo", thursdayTo);
+		obj.put("fridayTo", fridayTo);
+		obj.put("saturdayTo", saturdayTo);
+		obj.put("sundayTo", sundayTo);
+		obj.put("centralityIndex", centralityIndex);
+		obj.put("ehNumber", ehNumber);
+		obj.put("monthlyOperatingCostsRent", monthlyOperatingCostsRent);
+		obj.put("monthlyStaffCosts", monthlyStaffCosts);
+		obj.put("stretchZone", stretchZone);
+		obj.put("viewingZone", viewingZone);
+		obj.put("gripZone", gripZone);
+		obj.put("bendZone", bendZone);
+		obj.put("warehouse", warehouse);
+
 		return obj;
 	}
 

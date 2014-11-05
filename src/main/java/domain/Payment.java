@@ -381,7 +381,8 @@ public class Payment extends AbstractApiObject<Payment>
 
 		obj.put("cashier", cashier.getId());
 
-		obj.put("pos", pos.getId());
+		if (pos != null)
+			obj.put("pos", pos.getId());
 
 		return obj;
 	}

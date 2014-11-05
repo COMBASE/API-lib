@@ -19,6 +19,7 @@ import org.codehaus.jettison.json.JSONObject;
 import domain.DataType;
 import domain.interfaces.HasId;
 import error.ApiNotReachableException;
+import error.PostWithNoReferenceSetException;
 import error.SubObjectInitializationException;
 
 /**
@@ -177,23 +178,33 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	 * @throws ApiNotReachableException
 	 * @throws JSONException
 	 * @throws ParseException
+	 * @throws PostWithNoReferenceSetException
 	 */
-	public T post(final T obj) throws ApiNotReachableException, JSONException, ParseException
+	public T post(final T obj) throws ApiNotReachableException, JSONException, ParseException,
+		PostWithNoReferenceSetException
 	{
-		updateCache(obj);
-		final String result = CloudLink.getConnector().postData(getDataType(), toJSON(obj));
-		final JSONObject jObj = new JSONObject(result);
-		final T ret = fromJSON(jObj);
-
-		final T cachedObject = getCachedObject(ret);
-		if (cachedObject != null)
+		if (obj == null || obj.getId() == null)
+			throw new PostWithNoReferenceSetException(null);
+		else
 		{
-			cachedObject.setId(ret.getId());
-			updateCache(cachedObject);
-			return cachedObject;
+
+			updateCache(obj);
+
+			final String result = CloudLink.getConnector().postData(getDataType(), toJSON(obj));
+			final JSONObject jObj = new JSONObject(result);
+			final T ret = fromJSON(jObj);
+
+			final T cachedObject = getCachedObject(ret);
+			if (cachedObject != null)
+			{
+				cachedObject.setId(ret.getId());
+				updateCache(cachedObject);
+				return cachedObject;
+			}
+
+			return ret;
 		}
 
-		return ret;
 	}
 
 	public T postList(final List<T> objs, final int limit) throws JSONException

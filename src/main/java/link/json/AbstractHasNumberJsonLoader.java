@@ -13,6 +13,7 @@ import domain.DataType;
 import domain.interfaces.HasId;
 import domain.interfaces.HasNumber;
 import error.ApiNotReachableException;
+import error.PostWithNoReferenceSetException;
 import error.SubObjectInitializationException;
 
 public abstract class AbstractHasNumberJsonLoader<T extends HasId & HasNumber> extends
@@ -49,6 +50,16 @@ public abstract class AbstractHasNumberJsonLoader<T extends HasId & HasNumber> e
 		final T downloaded = fromJSON(jDownloaded);
 		numberCache.put(number, downloaded);
 		return downloaded;
+	}
+
+	@Override
+	public T post(final T obj) throws ApiNotReachableException, JSONException, ParseException,
+		PostWithNoReferenceSetException
+	{
+		if (obj == null || (obj.getNumber() == null && obj.getId() == null))
+			throw new PostWithNoReferenceSetException(null);
+		else
+			return super.post(obj);
 	}
 
 	@Override

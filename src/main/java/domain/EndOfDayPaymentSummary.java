@@ -8,7 +8,8 @@ import org.codehaus.jettison.json.JSONObject;
 public class EndOfDayPaymentSummary
 {
 	private PaymentMethod paymentMethods;
-	private BigDecimal amount;
+	private BigDecimal actualAmount;
+	private BigDecimal expectedAmount;
 
 	public PaymentMethod getPaymentMethods()
 	{
@@ -20,16 +21,6 @@ public class EndOfDayPaymentSummary
 		this.paymentMethods = paymentMethods;
 	}
 
-	public BigDecimal getAmount()
-	{
-		return amount;
-	}
-
-	public void setAmount(final BigDecimal amount)
-	{
-		this.amount = amount;
-	}
-
 	public static EndOfDayPaymentSummary fromJSON(final JSONObject obj) throws JSONException
 	{
 
@@ -39,8 +30,30 @@ public class EndOfDayPaymentSummary
 			obj.getString("paymentMethod")).build();
 
 		paymentSummary.setPaymentMethods(paymentMethods);
-		paymentSummary.setAmount(new BigDecimal(String.valueOf(obj.getDouble("amount"))));
+		paymentSummary.setActualAmount(new BigDecimal(String.valueOf(obj.getDouble("actualAmount"))));
+		paymentSummary.setExpectedAmount(new BigDecimal(
+			String.valueOf(obj.getDouble("expectedAmount"))));
 
 		return paymentSummary;
+	}
+
+	public BigDecimal getActualAmount()
+	{
+		return actualAmount;
+	}
+
+	public void setActualAmount(final BigDecimal actualAmount)
+	{
+		this.actualAmount = actualAmount;
+	}
+
+	public BigDecimal getExpectedAmount()
+	{
+		return expectedAmount;
+	}
+
+	public void setExpectedAmount(final BigDecimal expectedAmount)
+	{
+		this.expectedAmount = expectedAmount;
 	}
 }

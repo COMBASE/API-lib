@@ -14,6 +14,7 @@ import domain.interfaces.HasId;
 import domain.interfaces.HasName;
 import domain.interfaces.HasNumber;
 import error.ApiNotReachableException;
+import error.PostWithNoReferenceSetException;
 import error.SubObjectInitializationException;
 
 public abstract class AbstractHasNameJsonLoader<T extends HasId & HasNumber & HasName> extends
@@ -41,6 +42,17 @@ public abstract class AbstractHasNameJsonLoader<T extends HasId & HasNumber & Ha
 		final T downloaded = fromJSON(jDownloaded);
 		nameCache.put(name, downloaded);
 		return downloaded;
+	}
+
+	@Override
+	public T post(final T obj) throws ApiNotReachableException, JSONException, ParseException,
+		PostWithNoReferenceSetException
+	{
+		if (obj == null ||
+			(obj.getName() == null && obj.getNumber() == null && obj.getId() == null))
+			throw new PostWithNoReferenceSetException(null);
+		else
+			return super.post(obj);
 	}
 
 	@Override
