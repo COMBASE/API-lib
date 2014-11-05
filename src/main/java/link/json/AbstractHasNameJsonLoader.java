@@ -44,10 +44,10 @@ public abstract class AbstractHasNameJsonLoader<T extends HasId & HasNumber & Ha
 	}
 
 	@Override
-	public T getCachedObjectByID(final T object)
+	public T getCachedObject(final T object)
 	{
 
-		final T cachedObject = super.getCachedObjectByID(object);
+		final T cachedObject = super.getCachedObject(object);
 		if (cachedObject != null)
 			return cachedObject;
 

@@ -61,6 +61,8 @@ public class CommodityGroup extends AbstractNameAndNumberApiObject<CommodityGrou
 		hasChildren = init.hasChildren;
 		key = init.key;
 		parent = init.parent;
+
+
 	}
 
 // public JSONObject toJSON()

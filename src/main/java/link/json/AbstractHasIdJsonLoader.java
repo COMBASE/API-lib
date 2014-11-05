@@ -180,11 +180,18 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	 */
 	public T post(final T obj) throws ApiNotReachableException, JSONException, ParseException
 	{
+		updateCache(obj);
 		final String result = CloudLink.getConnector().postData(getDataType(), toJSON(obj));
 		final JSONObject jObj = new JSONObject(result);
 		final T ret = fromJSON(jObj);
 
-		updateCache(ret);
+		final T cachedObject = getCachedObject(ret);
+		if (cachedObject != null)
+		{
+			cachedObject.setId(ret.getId());
+			updateCache(cachedObject);
+			return cachedObject;
+		}
 
 		return ret;
 	}
@@ -234,7 +241,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	 * @param id
 	 * @return the corresponding object
 	 */
-	public T getCachedObjectByID(final T object)
+	public T getCachedObject(final T object)
 	{
 
 		if (object != null && object.getId() != null)
