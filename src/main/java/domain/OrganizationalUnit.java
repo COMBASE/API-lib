@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -16,7 +17,7 @@ public class OrganizationalUnit extends AbstractNameAndNumberApiObject<Organizat
 
 	private EconomicZone economicZone;
 
-	private List<Assortment> assortmentValidities = new ArrayList<Assortment>();
+	private List<AssortmentValidity> assortmentValidities = new ArrayList<AssortmentValidity>();
 
 	// private SupplierCaseEntityInformationReadable addressInformation;
 
@@ -98,7 +99,7 @@ public class OrganizationalUnit extends AbstractNameAndNumberApiObject<Organizat
 
 		private EconomicZone economicZone = null;
 
-		private List<Assortment> assortmentValidities = new ArrayList<Assortment>();
+		private List<AssortmentValidity> assortmentValidities = new ArrayList<AssortmentValidity>();
 
 		// private SupplierCaseEntityInformationReadable addressInformation=null;
 
@@ -185,7 +186,7 @@ public class OrganizationalUnit extends AbstractNameAndNumberApiObject<Organizat
 			return self();
 		}
 
-		public T assortmentValidities(final List<Assortment> value)
+		public T assortmentValidities(final List<AssortmentValidity> value)
 		{
 			assortmentValidities = value;
 			return self();
@@ -608,12 +609,12 @@ public class OrganizationalUnit extends AbstractNameAndNumberApiObject<Organizat
 		this.economicZone = economicZone;
 	}
 
-	public List<Assortment> getAssortmentValidities()
+	public List<AssortmentValidity> getAssortmentValidities()
 	{
 		return assortmentValidities;
 	}
 
-	public void setAssortmentValidities(final List<Assortment> assortmentValidities)
+	public void setAssortmentValidities(final List<AssortmentValidity> assortmentValidities)
 	{
 		this.assortmentValidities = assortmentValidities;
 	}
@@ -909,10 +910,33 @@ public class OrganizationalUnit extends AbstractNameAndNumberApiObject<Organizat
 		appendJSON(obj);
 
 		obj.put("parent", parent);
-		obj.put("assortmentValidities", assortmentValidities);
-		obj.put("priceGroup", priceGroup);
-		obj.put("economicZone", economicZone);
-		obj.put("orderingSources", orderingSources);
+
+		if (!assortmentValidities.isEmpty())
+		{
+			final JSONArray array = new JSONArray();
+			for (final AssortmentValidity assortmentValidity : assortmentValidities)
+			{
+				array.put(assortmentValidity.toJSON());
+			}
+			obj.put("assortmentValidities", array);
+		}
+
+		if (priceGroup != null)
+			obj.put("priceGroup", priceGroup.getId());
+
+		if (economicZone != null)
+			obj.put("economicZone", economicZone.getId());
+
+		if (!orderingSources.isEmpty())
+		{
+			final JSONArray array = new JSONArray();
+			for (final OrganizationalUnit organizationalUnit : orderingSources)
+			{
+				array.put(organizationalUnit.toJSON());
+			}
+			obj.put("orderingSources", array);
+		}
+
 		obj.put("storageSpace", storageSpace);
 		obj.put("salesArea", salesArea);
 		obj.put("mondayOpen", mondayOpen);

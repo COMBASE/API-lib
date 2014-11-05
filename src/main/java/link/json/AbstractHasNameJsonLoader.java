@@ -52,7 +52,7 @@ public abstract class AbstractHasNameJsonLoader<T extends HasId & HasNumber & Ha
 			(obj.getName() == null && obj.getNumber() == null && obj.getId() == null))
 			throw new PostWithNoReferenceSetException(null);
 		else
-			return super.post(obj);
+			return upload(obj);
 	}
 
 	@Override

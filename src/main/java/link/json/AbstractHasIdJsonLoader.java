@@ -187,24 +187,28 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 			throw new PostWithNoReferenceSetException(null);
 		else
 		{
-
-			updateCache(obj);
-
-			final String result = CloudLink.getConnector().postData(getDataType(), toJSON(obj));
-			final JSONObject jObj = new JSONObject(result);
-			final T ret = fromJSON(jObj);
-
-			final T cachedObject = getCachedObject(ret);
-			if (cachedObject != null)
-			{
-				cachedObject.setId(ret.getId());
-				updateCache(cachedObject);
-				return cachedObject;
-			}
-
-			return ret;
+			return upload(obj);
 		}
 
+	}
+
+	protected T upload(final T obj) throws JSONException, ParseException
+	{
+		updateCache(obj);
+
+		final String result = CloudLink.getConnector().postData(getDataType(), toJSON(obj));
+		final JSONObject jObj = new JSONObject(result);
+		final T ret = fromJSON(jObj);
+
+		final T cachedObject = getCachedObject(ret);
+		if (cachedObject != null)
+		{
+			cachedObject.setId(ret.getId());
+			updateCache(cachedObject);
+			return cachedObject;
+		}
+
+		return ret;
 	}
 
 	public T postList(final List<T> objs, final int limit) throws JSONException
