@@ -45,8 +45,10 @@ public class AssortmentValidity
 		final JSONObject obj = new JSONObject();
 
 		obj.put("assortment", assortment.getId());
-		obj.put("validFrom", validFrom);
-		obj.put("validTo", validTo);
+		if (validFrom != null)
+			obj.put("validFrom", inputDf.format(validFrom));
+		if (validTo != null)
+			obj.put("validTo", inputDf.format(validTo));
 
 		return obj;
 	}
