@@ -153,6 +153,19 @@ public class InventoryReceiptItem extends AbstractApiObject<InventoryReceiptItem
 	{
 		final JSONObject obj = new JSONObject();
 		appendJSON(obj);
+
+		obj.put("nominalGoods", nominalGoods);
+
+		obj.put("actualGoods", actualGoods);
+
+		obj.put("differenceReason", differenceReason);
+
+		if (article != null)
+			obj.put("article", article.getId());
+
+		if (receipt != null)
+			obj.put("receipt", receipt.getId());
+
 		return obj;
 	}
 

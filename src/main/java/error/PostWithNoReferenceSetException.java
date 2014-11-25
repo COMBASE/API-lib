@@ -18,7 +18,6 @@ public class PostWithNoReferenceSetException extends Exception
 	{
 		final StringBuilder ret = new StringBuilder();
 		ret.append("Object Reference field is null. Could not post object.");
-		ret.append(super.getLocalizedMessage());
 		return ret.toString();
 	}
 

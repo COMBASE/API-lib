@@ -292,6 +292,35 @@ public class InventoryReceipt extends AbstractNumberApiObject<InventoryReceipt>
 	{
 		final JSONObject obj = new JSONObject();
 		appendJSON(obj);
+
+		if (bookingTime != null)
+			obj.put("bookingTime", inputDf.format(bookingTime));
+
+		if (cashier != null)
+			obj.put("cashier", cashier.getId());
+
+		if (createTime != null)
+			obj.put("createTime", inputDf.format(createTime));
+
+		obj.put("description", description);
+
+		if (finishTime != null)
+			obj.put("finishTime", inputDf.format(finishTime));
+
+		if (modifiedTime != null)
+			obj.put("modifiedTime", inputDf.format(modifiedTime));
+
+		if (pos != null)
+			obj.put("pos", pos.getId());
+
+		if (organizationalUnit != null)
+			obj.put("organizationalUnit", organizationalUnit.getId());
+
+		obj.put("user", user);
+
+		if (inventory != null)
+			obj.put("inventory", inventory.getId());
+
 		return obj;
 	}
 

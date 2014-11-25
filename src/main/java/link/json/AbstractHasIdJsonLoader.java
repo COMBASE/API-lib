@@ -216,7 +216,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 		final Date date1 = new Date();
 		System.out.println("start: " + date1);
 
-		JSONArray jProdArray = new JSONArray();
+		JSONArray jArray = new JSONArray();
 
 		// Thread Executor init
 		final ExecutorService exec = Executors.newFixedThreadPool(Runtime.getRuntime()
@@ -226,18 +226,19 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 		int i = 0;
 		while (i < objs.size())
 		{
-			jProdArray = new JSONArray();
+			jArray = new JSONArray();
 			offset = offset + limit;
 			while (i < offset && i < objs.size())
 			{
 				final T obj = objs.get(i);
 
-				jProdArray.put(toJSON(obj));
+				jArray.put(toJSON(obj));
+
 				i++;
 			}
 
 			// TODO return post response result JSONString
-			exec.execute(new PostListThread(jProdArray));
+			exec.execute(new PostListThread(getDataType(), jArray));
 		}
 		exec.shutdown();
 		while (!exec.isTerminated())

@@ -54,7 +54,7 @@ public class ProductLoader extends AbstractHasNameJsonLoader<Product>
 		if (cachedObject != null)
 			return cachedObject;
 
-		final String jStr = cloudLink.getJSONByName(getDataType(), code);
+		final String jStr = cloudLink.getJSONByCode(code);
 		final JSONObject jDownloaded = createJsonObject(jStr);
 		if (jDownloaded == null)
 			throw new SubObjectInitializationException(code, getDataType(), null);

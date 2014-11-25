@@ -43,6 +43,11 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 
 	private List<Product_Code> codes;
 
+	private Boolean packaging;
+
+	private Boolean preparationArticle;
+
+
 	protected static abstract class Init<T extends Init<T>> extends
 		AbstractNameAndNumberApiObject.Init<T>
 	{
@@ -63,6 +68,21 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		private final List<Product_Text> texts = new ArrayList<Product_Text>();
 		private final List<Product_Code> codes = new ArrayList<Product_Code>();
 		private List<SupplierItemPrice> supplierItemPrices = null;
+		private Boolean packaging = false;
+
+		private Boolean preparationArticle = false;
+
+		public T packaging(final Boolean value)
+		{
+			packaging = value;
+			return self();
+		}
+
+		public T preparationArticle(final Boolean value)
+		{
+			preparationArticle = value;
+			return self();
+		}
 
 		public T activeAssortment(final boolean value)
 		{
@@ -245,6 +265,8 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		assortment = init.assortment;
 		supplierItemPrices = init.supplierItemPrices;
 		codes = init.codes;
+		preparationArticle = init.preparationArticle;
+		packaging = init.packaging;
 	}
 
 	public Date getActiveAssortmentFrom()
@@ -462,6 +484,26 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		this.supplierItemPrices = supplierItemPrices;
 	}
 
+	public Boolean getPackaging()
+	{
+		return packaging;
+	}
+
+	public void setPackaging(final Boolean packaging)
+	{
+		this.packaging = packaging;
+	}
+
+	public Boolean getPreparationArticle()
+	{
+		return preparationArticle;
+	}
+
+	public void setPreparationArticle(final Boolean preparationArticle)
+	{
+		this.preparationArticle = preparationArticle;
+	}
+
 	@Override
 	public boolean equals(final Object obj)
 	{
@@ -491,6 +533,8 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		obj.put("priceChangeable", priceChangeable);
 		obj.put("requiresSerialNumber", requiresSerialNumber);
 		obj.put("trackInventory", trackInventory);
+		// obj.put("packaging", packaging);
+		obj.put("preparationArticle", preparationArticle);
 		if (commodityGroup != null)
 			obj.put("commodityGroup", commodityGroup.getId());
 		if (assortment != null)
@@ -573,6 +617,8 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 			.revision(obj.getLong("revision"))
 			.commodityGroup(commodityGroup)
 			.assortment(assortment)
+			.preparationArticle(obj.getBoolean("preparationArticle"))
+			.packaging(obj.getBoolean("packaging"))
 			.build();
 
 		if (obj.has("number"))

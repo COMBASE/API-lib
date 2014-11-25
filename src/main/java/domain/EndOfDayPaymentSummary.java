@@ -30,7 +30,8 @@ public class EndOfDayPaymentSummary
 			obj.getString("paymentMethod")).build();
 
 		paymentSummary.setPaymentMethods(paymentMethods);
-		paymentSummary.setActualAmount(new BigDecimal(String.valueOf(obj.getDouble("actualAmount"))));
+		// paymentSummary.setActualAmount(new
+// BigDecimal(String.valueOf(obj.getDouble("actualAmount"))));
 		paymentSummary.setExpectedAmount(new BigDecimal(
 			String.valueOf(obj.getDouble("expectedAmount"))));
 

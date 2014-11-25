@@ -26,7 +26,7 @@ public class Inventory extends AbstractNumberApiObject<Inventory>
 
 	private Date processTime;
 
-	private final String inventoryProcedure;
+	private final InventoryProcedureType inventoryProcedure;
 
 	private Integer automaticBookingDays;
 
@@ -62,7 +62,7 @@ public class Inventory extends AbstractNumberApiObject<Inventory>
 
 		private Date processTime = null;
 
-		private String inventoryProcedure = null;
+		private InventoryProcedureType inventoryProcedure = null;
 
 		private Integer automaticBookingDays = null;
 
@@ -117,7 +117,7 @@ public class Inventory extends AbstractNumberApiObject<Inventory>
 			return self();
 		}
 
-		public T inventoryProcedure(final String value)
+		public T inventoryProcedure(final InventoryProcedureType value)
 		{
 			inventoryProcedure = value;
 			return self();
@@ -522,17 +522,20 @@ public class Inventory extends AbstractNumberApiObject<Inventory>
 			final JSONArray array = new JSONArray();
 			for (final OrganizationalUnit organizationalUnit : organizationalUnits)
 			{
-				if (organizationalUnit != null)
-					array.put(organizationalUnit.toJSON());
+				if (organizationalUnit != null && !organizationalUnit.getId().equalsIgnoreCase(""))
+					array.put(organizationalUnit.getId());
 			}
 			obj.put("organizationalUnits", array);
 		}
 
-		obj.put("createTime", createTime);
+		if (createTime != null)
+			obj.put("createTime", inputDf.format(createTime));
 
-		obj.put("processTime", processTime);
+		if (processTime != null)
+			obj.put("processTime", inputDf.format(processTime));
 
-		obj.put("inventoryProcedure", inventoryProcedure);
+		if (inventoryProcedure != null)
+			obj.put("inventoryProcedure", inventoryProcedure.name());
 
 		return obj;
 	}
@@ -555,7 +558,7 @@ public class Inventory extends AbstractNumberApiObject<Inventory>
 			.organizationalUnits(organizationalUnits)
 			.createTime(inputDf.parse(obj.getString("createTime")))
 			.processTime(inputDf.parse(obj.getString("processTime")))
-			.inventoryProcedure(obj.getString("inventoryProcedure"))
+			.inventoryProcedure(InventoryProcedureType.valueOf(obj.getString("inventoryProcedure")))
 			.build();
 
 		return inventory;

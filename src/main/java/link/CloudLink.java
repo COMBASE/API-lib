@@ -54,6 +54,32 @@ public class CloudLink
 		return new String(ApiCon.fetchData(type, ReferenceType.uuid, reference));
 	}
 
+	/**
+	 * gets jsonstring by Article Code like EAN or GTIN
+	 * 
+	 * @param type
+	 * @param reference
+	 * @return Product JSON String
+	 * @throws ApiNotReachableException
+	 */
+	public String getJSONByCode(String reference) throws ApiNotReachableException
+	{
+		reference = reference.replaceAll(" ", "%20");
+		reference = reference.replaceAll("/", "%2F");
+		reference = reference.replaceAll("&", "%26");
+		reference = reference.replaceAll("#", "%23");
+		reference = reference.replaceAll("!", "%21");
+		return new String(ApiCon.fetchData(DataType.product, ReferenceType.code, reference));
+	}
+
+	/**
+	 * gets jsonstring by name.
+	 * 
+	 * @param type
+	 * @param reference
+	 * @return
+	 * @throws ApiNotReachableException
+	 */
 	public String getJSONByName(final DataType type, String reference)
 		throws ApiNotReachableException
 	{
@@ -69,20 +95,6 @@ public class CloudLink
 		throws ApiNotReachableException
 	{
 		return new String(ApiCon.fetchData(type, ReferenceType.number, reference));
-	}
-
-	/**
-	 * gets jsonstring by Article Code like EAN or GTIN
-	 * 
-	 * @param type
-	 * @param reference
-	 * @return
-	 * @throws ApiNotReachableException
-	 */
-	public String getJSONByCode(final DataType type, final String reference)
-		throws ApiNotReachableException
-	{
-		return new String(ApiCon.fetchData(type, ReferenceType.code, reference));
 	}
 
 	/**
