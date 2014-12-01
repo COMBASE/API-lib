@@ -72,7 +72,7 @@ public class ApiConnector
 	 * @return
 	 * @throws IOException
 	 */
-	public StringBuffer fetchData(final DataType type, final domain.ReferenceType refType,
+	public String fetchData(final DataType type, final domain.ReferenceType refType,
 		final String reference) throws ApiNotReachableException
 	{
 
@@ -108,7 +108,7 @@ public class ApiConnector
 			final BufferedReader in = new BufferedReader(new InputStreamReader(
 				con.getInputStream(), "UTF-8"));
 			String inputLine;
-			final StringBuffer response = new StringBuffer();
+			final StringBuilder response = new StringBuilder();
 			while ((inputLine = in.readLine()) != null)
 			{
 				response.append(inputLine);
@@ -118,7 +118,7 @@ public class ApiConnector
 			{
 				System.out.println(df.format(new Date()) + " APICON:GET -> Type:" +
 					type.getReference() + " JSON=" + obj.toString());
-				return response;
+				return response.toString();
 			}
 			else
 			{
@@ -147,7 +147,7 @@ public class ApiConnector
 	 * @param obj
 	 * @return
 	 */
-	public boolean postData(final DataType type, final JSONArray obj)
+	public String postData(final DataType type, final JSONArray obj)
 	{
 		String slash = "";
 		if (!cloudURL.endsWith("/"))
@@ -183,26 +183,47 @@ public class ApiConnector
 				out.close();
 			if (con.getResponseCode() == 200)
 			{
+				final BufferedReader in = new BufferedReader(new InputStreamReader(
+					con.getInputStream(), "UTF-8"));
+				String inputLine;
+				final StringBuilder response = new StringBuilder();
+				while ((inputLine = in.readLine()) != null)
+				{
+					response.append(inputLine);
+				}
+				in.close();
 				System.out.println(df.format(new Date()) + " APICON:POST -> Type:" +
 					type.getReference());
 				con.disconnect(); // Disconnect
-				return true;
+				return response.toString();
 			}
 			else
 			{
+				final BufferedReader in = new BufferedReader(new InputStreamReader(
+					con.getInputStream(), "UTF-8"));
+				String inputLine;
+				final StringBuilder response = new StringBuilder();
+				while ((inputLine = in.readLine()) != null)
+				{
+					response.append(inputLine);
+				}
+				in.close();
+
 				System.out.println(df.format(new Date()) + " ERR: APICON:POST -> Type:" +
 					type.getReference());
 
 				con.disconnect(); // Disconnect
 				System.out.println("Error: " + con.getResponseMessage() + ":" +
 					con.getResponseCode());
-				return false;
+				return response.toString();
 			}
 		}
 		catch (final IOException e)
 		{
 			e.printStackTrace();
-			return false;
+			System.out.println(type.toString());
+			System.out.println(obj.toString());
+			return null;
 		}
 	}
 
@@ -213,7 +234,7 @@ public class ApiConnector
 	 * @param obj
 	 * @return
 	 */
-	public boolean postData(final DataType type, final JSONObject obj)
+	public String postData(final DataType type, final JSONObject obj)
 	{
 
 		String slash = "";
@@ -249,26 +270,46 @@ public class ApiConnector
 				out.close();
 			if (con.getResponseCode() == 200)
 			{
+				final BufferedReader in = new BufferedReader(new InputStreamReader(
+					con.getInputStream(), "UTF-8"));
+				String inputLine;
+				final StringBuilder response = new StringBuilder();
+				while ((inputLine = in.readLine()) != null)
+				{
+					response.append(inputLine);
+				}
+				in.close();
+
 				System.out.println(df.format(new Date()) + " APICON:POST -> Type:" +
 					type.getReference() + " JSON=" + obj.toString());
 				con.disconnect(); // Disconnect
-				return true;
+				return response.toString();
 			}
 			else
 			{
+				final BufferedReader in = new BufferedReader(new InputStreamReader(
+					con.getInputStream(), "UTF-8"));
+				String inputLine;
+				final StringBuilder response = new StringBuilder();
+				while ((inputLine = in.readLine()) != null)
+				{
+					response.append(inputLine);
+				}
+				in.close();
+
 				System.out.println(df.format(new Date()) + " ERR: APICON:POST -> Type:" +
 					type.getReference() + " JSON=" + obj.toString());
 
 				con.disconnect(); // Disconnect
 				System.out.println("Error: " + con.getResponseMessage() + ":" +
 					con.getResponseCode());
-				return false;
+				return response.toString();
 			}
 		}
 		catch (final IOException e)
 		{
 			e.printStackTrace();
-			return false;
+			return null;
 		}
 	}
 
