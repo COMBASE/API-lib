@@ -132,16 +132,16 @@ public class CloudLink
 		return new String(ApiCon.fetchData(type, ReferenceType.offset, reference));
 	}
 
-// /**
-// * Saves an Object in JSON-format in the Cloud
-// *
-// * @param type
-// * @param obj
-// * @return
-// */
-// public boolean postJSON(final DataType type, final JSONObject obj)
-// {
-// return ApiCon.postData(type, obj);
+ /**
+ * Saves an Object in JSON-format in the Cloud
+ *
+ * @param type
+ * @param obj
+ * @return
+ */
+ public boolean postJSON(final DataType type, final JSONObject obj)
+ {
+ return ApiCon.postData(type, obj);
 // }
 
 	/**
