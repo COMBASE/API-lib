@@ -1,7 +1,5 @@
 package domain;
 
-import link.CloudLink;
-
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -43,10 +41,11 @@ public class InfoText
 		}
 	}
 
-	public boolean post()
-	{
-		return CloudLink.getConnector().postData(DataType.infotext, this.toJSON());
-	}
+
+// public boolean post()
+// {
+// return CloudLink.getConnector().postData(DataType.infotext, this.toJSON());
+// }
 
 	@Override
 	public boolean equals(final Object obj)

@@ -9,6 +9,7 @@ import java.util.Date;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import domain.interfaces.HasId;
 import domain.interfaces.HasJSON;
 
 public abstract class AbstractApiObject<T extends HasId> implements HasId, Serializable, HasJSON<T>
@@ -124,7 +125,6 @@ public abstract class AbstractApiObject<T extends HasId> implements HasId, Seria
 		this.revision = revision;
 	}
 
-	@Override
 	public abstract JSONObject toJSON() throws JSONException;
 
 	protected StringBuilder toString(final StringBuilder builder)

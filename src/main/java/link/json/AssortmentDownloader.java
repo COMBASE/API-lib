@@ -71,8 +71,9 @@ public class AssortmentDownloader extends JsonDownloader
 	 * updates the cached object altered during runtime.
 	 * 
 	 * @param product
+	 * @throws JSONException
 	 */
-	public void saveAssortment(final Assortment assortment)
+	public void saveAssortment(final Assortment assortment) throws JSONException
 	{
 		final JSONObject jObj = assortment.toJSON();
 

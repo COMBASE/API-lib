@@ -7,27 +7,18 @@ import org.codehaus.jettison.json.JSONObject;
 
 public class EndOfDayPaymentSummary
 {
-	private PaymentMethods paymentMethods;
-	private BigDecimal amount;
+	private PaymentMethod paymentMethods;
+	private BigDecimal actualAmount;
+	private BigDecimal expectedAmount;
 
-	public PaymentMethods getPaymentMethods()
+	public PaymentMethod getPaymentMethods()
 	{
 		return paymentMethods;
 	}
 
-	public void setPaymentMethods(final PaymentMethods paymentMethods)
+	public void setPaymentMethods(final PaymentMethod paymentMethods)
 	{
 		this.paymentMethods = paymentMethods;
-	}
-
-	public BigDecimal getAmount()
-	{
-		return amount;
-	}
-
-	public void setAmount(final BigDecimal amount)
-	{
-		this.amount = amount;
 	}
 
 	public static EndOfDayPaymentSummary fromJSON(final JSONObject obj) throws JSONException
@@ -35,12 +26,35 @@ public class EndOfDayPaymentSummary
 
 		final EndOfDayPaymentSummary paymentSummary = new EndOfDayPaymentSummary();
 
-		final PaymentMethods paymentMethods = new PaymentMethods.Builder(null).uuid(
+		final PaymentMethod paymentMethods = new PaymentMethod.Builder().id(
 			obj.getString("paymentMethod")).build();
 
 		paymentSummary.setPaymentMethods(paymentMethods);
-		paymentSummary.setAmount(new BigDecimal(String.valueOf(obj.getDouble("amount"))));
+		// paymentSummary.setActualAmount(new
+// BigDecimal(String.valueOf(obj.getDouble("actualAmount"))));
+		paymentSummary.setExpectedAmount(new BigDecimal(
+			String.valueOf(obj.getDouble("expectedAmount"))));
 
 		return paymentSummary;
+	}
+
+	public BigDecimal getActualAmount()
+	{
+		return actualAmount;
+	}
+
+	public void setActualAmount(final BigDecimal actualAmount)
+	{
+		this.actualAmount = actualAmount;
+	}
+
+	public BigDecimal getExpectedAmount()
+	{
+		return expectedAmount;
+	}
+
+	public void setExpectedAmount(final BigDecimal expectedAmount)
+	{
+		this.expectedAmount = expectedAmount;
 	}
 }

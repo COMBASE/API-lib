@@ -46,11 +46,11 @@ public class Price
 		final JSONObject obj = new JSONObject();
 		try
 		{
-			obj.put("priceList", priceList.getUuid());
+			obj.put("priceList", priceList.getId());
 			obj.put("validFrom", inputDf.format(validFrom));
 			obj.put("value", value);
 			if (organizationalUnit != null)
-				obj.put("organizationalUnit", organizationalUnit.getUuid());
+				obj.put("organizationalUnit", organizationalUnit.getId());
 			return obj;
 		}
 		catch (final JSONException e)

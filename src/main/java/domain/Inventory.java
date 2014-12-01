@@ -1,7 +1,6 @@
 package domain;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -10,20 +9,12 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-public class Inventory
+public class Inventory extends AbstractNameAndNumberApiObject<Inventory>
 {
-	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
-
-	private boolean deleted;
-
-	// needed to adress a certain Inventory object not touching any API relevent keywordfields
-	private String qualifier = null;
-
-	private String number;
-
-	private Long revision;
-
-	private String uuid;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4473050181320272357L;
 
 	private String user;
 
@@ -35,7 +26,7 @@ public class Inventory
 
 	private Date processTime;
 
-	private final String inventoryProcedure;
+	private final InventoryProcedureType inventoryProcedure;
 
 	private Integer automaticBookingDays;
 
@@ -59,61 +50,9 @@ public class Inventory
 
 	private Boolean wednesdayInventory;
 
-	public Inventory(final Builder builder)
+	protected static abstract class Init<T extends Init<T>> extends
+		AbstractNameAndNumberApiObject.Init<T>
 	{
-		this.number = builder.number;
-
-		this.uuid = builder.uuid;
-
-		this.deleted = builder.deleted;
-
-		this.revision = builder.revision;
-
-		this.user = builder.user;
-
-		this.description = builder.description;
-
-		this.organizationalUnits = builder.organizationalUnits;
-
-		this.createTime = builder.createTime;
-
-		this.processTime = builder.processTime;
-
-		this.inventoryProcedure = builder.inventoryProcedure;
-
-		this.automaticBookingDays = builder.automaticBookingDays;
-
-		this.maxArticlesPerList = builder.maxArticlesPerList;
-
-		this.automaticBooking = builder.automaticBooking;
-
-		this.fridayInventory = builder.fridayInventory;
-
-		this.mondayInventory = builder.mondayInventory;
-
-		this.oneCommodityGroupPerList = builder.oneCommodityGroupPerList;
-
-		this.saturdayInventory = builder.saturdayInventory;
-
-		this.sundayInventory = builder.sundayInventory;
-
-		this.thursdayInventory = builder.thursdayInventory;
-
-		this.tuesdayInventory = builder.tuesdayInventory;
-
-		this.wednesdayInventory = builder.wednesdayInventory;
-	}
-
-	public static class Builder
-	{
-		private String number = null;
-
-		private String uuid = null;
-
-		private boolean deleted = false;
-
-		private Long revision = null;
-
 		private String user = null;
 
 		private String description = null;
@@ -124,7 +63,7 @@ public class Inventory
 
 		private Date processTime = null;
 
-		private String inventoryProcedure = null;
+		private InventoryProcedureType inventoryProcedure = null;
 
 		private Integer automaticBookingDays = null;
 
@@ -149,202 +88,189 @@ public class Inventory
 		private Boolean wednesdayInventory = null;
 
 
-		public Builder number(final String value)
-		{
-			this.number = value;
-			return this;
-		}
-
-		public Builder uuid(final String value)
-		{
-			this.uuid = value;
-			return this;
-		}
-
-		public Builder user(final String value)
+		public T user(final String value)
 		{
 			user = value;
-			return this;
+			return self();
 		}
 
-		public Builder deleted(final boolean value)
-		{
-			deleted = value;
-			return this;
-		}
-
-		public Builder revision(final Long value)
-		{
-			revision = value;
-			return this;
-		}
-
-		public Builder description(final String value)
+		public T description(final String value)
 		{
 			description = value;
-			return this;
+			return self();
 		}
 
-		public Builder organizationalUnits(final List<OrganizationalUnit> value)
+		public T organizationalUnits(final List<OrganizationalUnit> value)
 		{
 			organizationalUnits = value;
-			return this;
+			return self();
 		}
 
-		public Builder createTime(final Date value)
+		public T createTime(final Date value)
 		{
 			createTime = value;
-			return this;
+			return self();
 		}
 
-		public Builder processTime(final Date value)
+		public T processTime(final Date value)
 		{
 			processTime = value;
-			return this;
+			return self();
 		}
 
-		public Builder inventoryProcedure(final String value)
+		public T inventoryProcedure(final InventoryProcedureType value)
 		{
-			this.inventoryProcedure = value;
-			return this;
+			inventoryProcedure = value;
+			return self();
 		}
 
-		public Builder automaticBookingDays(final Integer value)
+		public T automaticBookingDays(final Integer value)
 		{
 			automaticBookingDays = value;
-			return this;
+			return self();
 		}
 
-		public Builder maxArticlesPerList(final Integer value)
+		public T maxArticlesPerList(final Integer value)
 		{
 			maxArticlesPerList = value;
-			return this;
+			return self();
 		}
 
-		public Builder automaticBooking(final Boolean value)
+		public T automaticBooking(final Boolean value)
 		{
 			automaticBooking = value;
-			return this;
+			return self();
 		}
 
-		public Builder fridayInventory(final Boolean value)
+		public T fridayInventory(final Boolean value)
 		{
 			fridayInventory = value;
-			return this;
+			return self();
 		}
 
-		public Builder mondayInventory(final Boolean value)
+		public T mondayInventory(final Boolean value)
 		{
 			mondayInventory = value;
-			return this;
+			return self();
 		}
 
-		public Builder oneCommodityGroupPerList(final Boolean value)
+		public T oneCommodityGroupPerList(final Boolean value)
 		{
 			oneCommodityGroupPerList = value;
-			return this;
+			return self();
 		}
 
-		public Builder saturdayInventory(final Boolean value)
+		public T saturdayInventory(final Boolean value)
 		{
 			saturdayInventory = value;
-			return this;
+			return self();
 		}
 
-		public Builder sundayInventory(final Boolean value)
+		public T sundayInventory(final Boolean value)
 		{
 			sundayInventory = value;
-			return this;
+			return self();
 		}
 
-		public Builder thursdayInventory(final Boolean value)
+		public T thursdayInventory(final Boolean value)
 		{
 			thursdayInventory = value;
-			return this;
+			return self();
 		}
 
-		public Builder tuesdayInventory(final Boolean value)
+		public T tuesdayInventory(final Boolean value)
 		{
 			tuesdayInventory = value;
-			return this;
+			return self();
 		}
 
-		public Builder wednesdayInventory(final Boolean value)
+		public T wednesdayInventory(final Boolean value)
 		{
 			wednesdayInventory = value;
-			return this;
+			return self();
 		}
 
+		@Override
 		public Inventory build()
 		{
 			return new Inventory(this);
 		}
 	}
 
-	public static Inventory fromJSON(JSONObject jObj) throws JSONException, ParseException
+	public static class Builder extends Init<Builder>
 	{
 
-		if (jObj.has("result") && jObj.getString("result").equalsIgnoreCase("null"))
-			jObj = jObj.getJSONObject("result");
+		@Override
+		protected Builder self()
+		{
+			return this;
+		}
 
-		final List<OrganizationalUnit> organizationalUnits = new ArrayList<OrganizationalUnit>();
-		jObj.getJSONArray("organizationalUnits");
-
-		final Inventory inventory = new Inventory.Builder().deleted(jObj.getBoolean("deleted"))
-			.revision(jObj.getLong("revision"))
-			.uuid(jObj.getString("uuid"))
-			.number(jObj.getString("number"))
-			.user(jObj.getString("user"))
-			.description(jObj.getString("description"))
-			.organizationalUnits(organizationalUnits)
-			.createTime(inputDf.parse(jObj.getString("createTime")))
-			.processTime(inputDf.parse(jObj.getString("processTime")))
-			.inventoryProcedure(jObj.getString("inventoryProcedure"))
-			.build();
-
-		return inventory;
 	}
 
-
-	public String getNumber()
+	public Inventory(final Init<?> init)
 	{
-		return number;
+		super(init);
+
+		this.user = init.user;
+
+		this.description = init.description;
+
+		this.organizationalUnits = init.organizationalUnits;
+
+		this.createTime = init.createTime;
+
+		this.processTime = init.processTime;
+
+		this.inventoryProcedure = init.inventoryProcedure;
+
+		this.automaticBookingDays = init.automaticBookingDays;
+
+		this.maxArticlesPerList = init.maxArticlesPerList;
+
+		this.automaticBooking = init.automaticBooking;
+
+		this.fridayInventory = init.fridayInventory;
+
+		this.mondayInventory = init.mondayInventory;
+
+		this.oneCommodityGroupPerList = init.oneCommodityGroupPerList;
+
+		this.saturdayInventory = init.saturdayInventory;
+
+		this.sundayInventory = init.sundayInventory;
+
+		this.thursdayInventory = init.thursdayInventory;
+
+		this.tuesdayInventory = init.tuesdayInventory;
+
+		this.wednesdayInventory = init.wednesdayInventory;
 	}
 
-	public void setNumber(final String number)
-	{
-		this.number = number;
-	}
+// public static Inventory fromJSON(JSONObject jObj) throws JSONException, ParseException
+// {
+//
+// if (jObj.has("result") && jObj.getString("result").equalsIgnoreCase("null"))
+// jObj = jObj.getJSONObject("result");
+//
+// final List<OrganizationalUnit> organizationalUnits = new ArrayList<OrganizationalUnit>();
+// jObj.getJSONArray("organizationalUnits");
+//
+// final Inventory inventory = new Inventory.Builder().deleted(jObj.getBoolean("deleted"))
+// .revision(jObj.getLong("revision"))
+// .uuid(jObj.getString("uuid"))
+// .number(jObj.getString("number"))
+// .user(jObj.getString("user"))
+// .description(jObj.getString("description"))
+// .organizationalUnits(organizationalUnits)
+// .createTime(inputDf.parse(jObj.getString("createTime")))
+// .processTime(inputDf.parse(jObj.getString("processTime")))
+// .inventoryProcedure(jObj.getString("inventoryProcedure"))
+// .build();
+//
+// return inventory;
+// }
 
-	public Long getRevision()
-	{
-		return revision;
-	}
-
-	public void setRevision(final Long revision)
-	{
-		this.revision = revision;
-	}
-
-	public String getUuid()
-	{
-		return uuid;
-	}
-
-	public void setUuid(final String uuid)
-	{
-		this.uuid = uuid;
-	}
-
-	public boolean isDeleted()
-	{
-		return deleted;
-	}
-
-	public void setDeleted(final boolean deleted)
-	{
-		this.deleted = deleted;
-	}
 
 	public String getUser()
 	{
@@ -514,65 +440,133 @@ public class Inventory
 	}
 
 
-	public JSONObject toJSON()
+// public JSONObject toJSON()
+// {
+// final JSONObject jObj = new JSONObject();
+//
+// try
+// {
+//
+// }
+// catch (final JSONException e)
+// {
+//
+// e.printStackTrace();
+// return null;
+// }
+//
+//
+// return jObj;
+// }
+
+	@Override
+	public boolean equals(final Object obj)
 	{
-		final JSONObject jObj = new JSONObject();
 
-		try
+		return obj.hashCode() == this.hashCode();
+	}
+
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+
+		result = super.hashCode(result);
+		result = prime * result + ((this.user == null) ? 0 : this.user.hashCode());
+		result = prime * result + ((this.description == null) ? 0 : this.description.hashCode());
+		result = prime * result +
+			((this.organizationalUnits == null) ? 0 : this.organizationalUnits.hashCode());
+		result = prime * result + ((this.createTime == null) ? 0 : this.createTime.hashCode());
+		result = prime * result + ((this.processTime == null) ? 0 : this.processTime.hashCode());
+		result = prime * result +
+			((this.inventoryProcedure == null) ? 0 : this.inventoryProcedure.hashCode());
+		result = prime * result +
+			((this.automaticBookingDays == null) ? 0 : this.automaticBookingDays.hashCode());
+		result = prime * result +
+			((this.maxArticlesPerList == null) ? 0 : this.maxArticlesPerList.hashCode());
+		result = prime * result +
+			((this.automaticBooking == null) ? 0 : this.automaticBooking.hashCode());
+		result = prime * result + ((this.fridayInventory == null) ? 0 : this.user.hashCode());
+		result = prime * result +
+			((this.mondayInventory == null) ? 0 : this.mondayInventory.hashCode());
+		result = prime * result +
+			((this.tuesdayInventory == null) ? 0 : this.tuesdayInventory.hashCode());
+		result = prime * result +
+			((this.wednesdayInventory == null) ? 0 : this.wednesdayInventory.hashCode());
+		result = prime * result +
+			((this.thursdayInventory == null) ? 0 : this.thursdayInventory.hashCode());
+		result = prime * result +
+			((this.sundayInventory == null) ? 0 : this.sundayInventory.hashCode());
+		result = prime * result +
+			((this.saturdayInventory == null) ? 0 : this.saturdayInventory.hashCode());
+		result = prime *
+			result +
+			((this.oneCommodityGroupPerList == null) ? 0 : this.oneCommodityGroupPerList.hashCode());
+
+		return result;
+	}
+
+	@Override
+	public JSONObject toJSON() throws JSONException
+	{
+		final JSONObject obj = new JSONObject();
+		appendJSON(obj);
+
+		obj.put("user", user);
+
+		obj.put("description", description);
+
+
+		if (organizationalUnits != null && !organizationalUnits.isEmpty())
 		{
-			jObj.put("deleted", deleted);
-
-			jObj.put("number", number);
-
-			if (revision != null)
-				jObj.put("revision", revision);
-
-			if (uuid != null)
-				jObj.put("uuid", uuid);
-
-			jObj.put("user", user);
-
-			jObj.put("description", description);
-
-
-			if (organizationalUnits != null && !organizationalUnits.isEmpty())
+			final JSONArray array = new JSONArray();
+			for (final OrganizationalUnit organizationalUnit : organizationalUnits)
 			{
-				final JSONArray array = new JSONArray();
-				for (final OrganizationalUnit organizationalUnit : organizationalUnits)
-				{
-					if (organizationalUnit != null)
-						array.put(organizationalUnit.toJSON());
-				}
-				jObj.put("organizationalUnits", array);
+				if (organizationalUnit != null && !organizationalUnit.getId().equalsIgnoreCase(""))
+					array.put(organizationalUnit.getId());
 			}
-
-			jObj.put("createTime", createTime);
-
-			jObj.put("processTime", processTime);
-
-
-			jObj.put("inventoryProcedure", inventoryProcedure);
-		}
-		catch (final JSONException e)
-		{
-
-			e.printStackTrace();
-			return null;
+			obj.put("organizationalUnits", array);
 		}
 
+		if (createTime != null)
+			obj.put("createTime", inputDf.format(createTime));
 
-		return jObj;
+		if (processTime != null)
+			obj.put("processTime", inputDf.format(processTime));
+
+		if (inventoryProcedure != null)
+			obj.put("inventoryProcedure", inventoryProcedure.name());
+
+		obj.remove("name");
+
+		obj.put("description", getName());
+
+		return obj;
 	}
 
-
-	public String getQualifier()
+	public static Inventory fromJSON(JSONObject obj) throws JSONException, ParseException
 	{
-		return qualifier;
-	}
 
+		if (obj.has("result") && !obj.getString("result").equalsIgnoreCase("null"))
+			obj = obj.getJSONObject("result");
 
-	public void setQualifier(final String qualifier)
-	{
-		this.qualifier = qualifier;
+		final List<OrganizationalUnit> organizationalUnits = new ArrayList<OrganizationalUnit>();
+		obj.getJSONArray("organizationalUnits");
+
+		final Inventory inventory = new Inventory.Builder().deleted(obj.getBoolean("deleted"))
+			.revision(obj.getLong("revision"))
+			.id(obj.getString("uuid"))
+			.number(obj.getString("number"))
+			.user(obj.getString("user"))
+			.description(obj.getString("description"))
+			.organizationalUnits(organizationalUnits)
+			.createTime(inputDf.parse(obj.getString("createTime")))
+			.processTime(inputDf.parse(obj.getString("processTime")))
+			.inventoryProcedure(InventoryProcedureType.valueOf(obj.getString("inventoryProcedure")))
+			.name(obj.getString("description"))
+			.build();
+
+		return inventory;
 	}
 }

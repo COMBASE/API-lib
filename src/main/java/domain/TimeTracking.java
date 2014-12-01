@@ -1,177 +1,93 @@
 package domain;
 
-import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import link.CloudLink;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 
-public class TimeTracking
+public class TimeTracking extends AbstractApiObject<TimeTracking>
 {
-	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
-	private boolean deleted;
-	private final String revision;
-	private String uuid;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -740149629390934463L;
 	private Cashier cashier;
 	private String org;
 	private Date start;
 	private TimeTrackingEntities timeTrackingEntity;
 
-	private TimeTracking(final Builder builder)
+	private TimeTracking(final Init<?> init)
 	{
-		deleted = builder.deleted;
-		revision = builder.revision;
-		cashier = builder.cashier;
-		org = builder.org;
-		start = builder.start;
-		timeTrackingEntity = builder.timeTrackingEntity;
+		super(init);
+		cashier = init.cashier;
+		org = init.org;
+		start = init.start;
+		timeTrackingEntity = init.timeTrackingEntity;
 
 	}
 
-	public static class Builder
+	public static abstract class Init<T extends Init<T>> extends AbstractApiObject.Init<T>
 	{
-		private String revision = null;
-		private boolean deleted = true;
 		private Cashier cashier = null;
 		private String org;
 		private Date start;
 		private TimeTrackingEntities timeTrackingEntity;
 
-
-		// ctor
-		public Builder()
-		{
-
-		}
-
-		public Builder deleted(final boolean value)
-		{
-			deleted = value;
-			return this;
-		}
-
-		public Builder revision(final String value)
-		{
-			revision = value;
-			return this;
-		}
-
-		public Builder cashier(final Cashier cash)
+		public T cashier(final Cashier cash)
 		{
 			cashier = cash;
-			return this;
+			return self();
 		}
 
-		public Builder org(final String value)
+		public T org(final String value)
 		{
 			org = value;
-			return this;
+			return self();
 		}
 
-		public Builder start(final Date value)
+		public T start(final Date value)
 		{
 			start = value;
-			return this;
+			return self();
 		}
 
-		public Builder timeTrackingentity(final TimeTrackingEntities entity)
+		public T timeTrackingentity(final TimeTrackingEntities entity)
 		{
 			timeTrackingEntity = entity;
-			return this;
+			return self();
 		}
 
+		@Override
 		public TimeTracking build()
 		{
 			return new TimeTracking(this);
 		}
 	}
 
-	public static TimeTracking fromJSON(JSONObject obj) throws JSONException
-	{
-		if (obj.has("result") && obj.getString("result") != null)
-			obj = obj.getJSONObject("result");
-
-		// Date
-		final String date = obj.getString("start");
-		Date startTime = null;
-		try
-		{
-			startTime = inputDf.parse(date);
-		}
-		catch (final ParseException e)
-		{
-			e.printStackTrace();
-		}
-
-		final TimeTrackingEntities ent = new TimeTrackingEntities.Builder(null).build();
-		ent.setUuid(obj.getString("timeTrackingEntity"));
-		final Cashier cash = new Cashier.Builder(null).build();
-		cash.setUuid(obj.getString("cashier"));
-		final TimeTracking tTrack = new TimeTracking.Builder().deleted(obj.getBoolean("deleted"))
-			.start(startTime)
-			.timeTrackingentity(ent)
-			.cashier(cash)
-			.revision(obj.getString("revision"))
-			.build();
-		return tTrack;
-	}
-
-	public JSONObject toJSON()
-	{
-		final JSONObject obj = new JSONObject();
-		try
-		{
-			obj.put("deleted", deleted);
-			obj.put("uuid", uuid);
-			obj.put("cashier", cashier);
-			obj.put("org", org);
-			obj.put("start", start);
-			obj.put("timeTrackingEntity", timeTrackingEntity);
-			return obj;
-		}
-		catch (final JSONException e)
-		{
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public boolean post() throws IOException
+	public static class Builder extends Init<Builder>
 	{
 
-		if (cashier != null && cashier.getUuid() == null)
-			cashier.post();
-		if (timeTrackingEntity != null && timeTrackingEntity.getUuid() == null)
-			timeTrackingEntity.post();
-		return CloudLink.getConnector().postData(DataType.timeTracking, this.toJSON());
+		@Override
+		protected Builder self()
+		{
+			return this;
+		}
+
 	}
+
+// public boolean post() throws IOException
+// {
+//
+// if (cashier != null && cashier.getUuid() == null)
+// cashier.post();
+// if (timeTrackingEntity != null && timeTrackingEntity.getUuid() == null)
+// timeTrackingEntity.post();
+// return CloudLink.getConnector().postData(DataType.timeTracking, this.toJSON());
+// }
 
 	// ******************Setter and Getter**********************************************************
-	public void setDeleted(final boolean del)
-	{
-		this.deleted = del;
-	}
-
-	public boolean isDeleted()
-	{
-		return this.deleted;
-	}
-
-	public void setUuid(final String uuid)
-	{
-		this.uuid = uuid;
-	}
-
-	public String getUuid()
-	{
-		return this.uuid;
-	}
-
 	public void setCashier(final Cashier cashier)
 	{
 		this.cashier = cashier;
@@ -212,10 +128,6 @@ public class TimeTracking
 		return this.timeTrackingEntity;
 	}
 
-	public String getRevision()
-	{
-		return revision;
-	}
 
 	@Override
 	public boolean equals(final Object obj)
@@ -231,8 +143,8 @@ public class TimeTracking
 		int result = 1;
 
 		result = prime * result + ((this.org == null) ? 0 : this.org.hashCode());
-		result = prime * result + ((this.uuid == null) ? 0 : this.uuid.hashCode());
-		result = prime * result + ((this.revision == null) ? 0 : this.revision.hashCode());
+
+
 		result = prime * result + ((this.cashier == null) ? 0 : this.cashier.hashCode());
 		result = prime * result + ((this.start == null) ? 0 : this.start.hashCode());
 		result = prime * result +
@@ -240,5 +152,44 @@ public class TimeTracking
 
 
 		return result;
+	}
+
+	@Override
+	public JSONObject toJSON() throws JSONException
+	{
+		final JSONObject obj = new JSONObject();
+		appendJSON(obj);
+
+		obj.put("cashier", cashier);
+		obj.put("org", org);
+		obj.put("start", start);
+		obj.put("timeTrackingEntity", timeTrackingEntity);
+
+		return obj;
+	}
+
+	public static TimeTracking fromJSON(JSONObject obj) throws JSONException, ParseException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
+
+		// Date
+		final String date = obj.getString("start");
+		Date startTime = null;
+
+		startTime = inputDf.parse(date);
+
+
+		final TimeTrackingEntities ent = new TimeTrackingEntities.Builder().build();
+		ent.setId(obj.getString("timeTrackingEntity"));
+		final Cashier cash = new Cashier.Builder().build();
+		cash.setId(obj.getString("cashier"));
+		final TimeTracking tTrack = new TimeTracking.Builder().deleted(obj.getBoolean("deleted"))
+			.start(startTime)
+			.timeTrackingentity(ent)
+			.cashier(cash)
+			.revision(obj.getLong("revision"))
+			.build();
+		return tTrack;
 	}
 }

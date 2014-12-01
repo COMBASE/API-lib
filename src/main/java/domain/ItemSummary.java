@@ -11,7 +11,7 @@ import org.codehaus.jettison.json.JSONObject;
  */
 public class ItemSummary
 {
-	private PaymentMethods paymentMethod;
+	private PaymentMethod paymentMethod;
 	private double actualItemTotal;
 	private double expectedItemTotal;
 	private double absoluteDifference;
@@ -26,12 +26,12 @@ public class ItemSummary
 
 	public static class Builder
 	{
-		private PaymentMethods paymentMethod = null;
+		private PaymentMethod paymentMethod = null;
 		private double actualItemTotal = 0;
 		private double expectedItemTotal = 0;
 		private double absoluteDifference = 0;
 
-		public Builder paymentMethod(final PaymentMethods value)
+		public Builder paymentMethod(final PaymentMethod value)
 		{
 			this.paymentMethod = value;
 			return this;
@@ -67,8 +67,10 @@ public class ItemSummary
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
 
-		final PaymentMethods paymentMethods = new PaymentMethods.Builder(
-			obj.getString("paymentMethodName")).uuid(obj.getString("paymentMethod"))
+		final PaymentMethod paymentMethods = new PaymentMethod.Builder().name(
+			obj.getString("paymentMethodName"))
+			// .revision(33l)
+			.id(obj.getString("paymentMethod"))
 			.number(obj.getString("paymentMethodNr"))
 			.build();
 
@@ -83,12 +85,12 @@ public class ItemSummary
 
 	}
 
-	public PaymentMethods getPaymentMethod()
+	public PaymentMethod getPaymentMethod()
 	{
 		return paymentMethod;
 	}
 
-	public void setPaymentMethod(final PaymentMethods paymentMethod)
+	public void setPaymentMethod(final PaymentMethod paymentMethod)
 	{
 		this.paymentMethod = paymentMethod;
 	}

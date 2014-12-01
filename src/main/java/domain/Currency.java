@@ -3,194 +3,99 @@ package domain;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-public class Currency
+
+public class Currency extends AbstractNameAndNumberApiObject<Currency>
 {
-	private boolean deleted;
-	private String name;
-	private String number;
-	private String uuid;
-	private String revision;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4139497347198731346L;
 	private String symbol;
 	private String key;
 	private String centName;
 
-	private Currency(final Builder builder)
+	protected static abstract class Init<T extends Init<T>> extends
+		AbstractNameAndNumberApiObject.Init<T>
 	{
-		deleted = builder.deleted;
-		name = builder.name;
-		number = builder.number;
-		uuid = builder.uuid;
-		revision = builder.revision;
-		symbol = builder.symbol;
-		key = builder.key;
-		centName = builder.centName;
-	}
-
-	public static class Builder
-	{
-		private boolean deleted = false;
-		private String name = null;
-		private String number = null;
-		private String uuid = null;
-		private String revision = null;
 		private String symbol = null;
 		private String key = null;
 		private String centName = null;
 
-		public Builder(final String name)
-		{
-			this.name = name;
-		}
-
-		public Builder deleted(final boolean value)
-		{
-			deleted = value;
-			return this;
-		}
-
-		public Builder number(final String value)
-		{
-			number = value;
-			return this;
-		}
-
-		public Builder uuid(final String value)
-		{
-			uuid = value;
-			return this;
-		}
-
-		public Builder revision(final String value)
-		{
-			revision = value;
-			return this;
-		}
-
-		public Builder symbol(final String value)
+		public T symbol(final String value)
 		{
 			symbol = value;
-			return this;
+			return self();
 		}
 
-		public Builder key(final String value)
+		public T key(final String value)
 		{
 			key = value;
-			return this;
+			return self();
 		}
 
-		public Builder centName(final String value)
+		public T centName(final String value)
 		{
 			centName = value;
-			return this;
+			return self();
 		}
 
+		@Override
 		public Currency build()
 		{
 			return new Currency(this);
 		}
 	}
 
-	public JSONObject toJSON()
+	public static class Builder extends Init<Builder>
 	{
-		final JSONObject obj = new JSONObject();
-		try
+
+		@Override
+		protected Builder self()
 		{
-			obj.put("deleted", deleted);
-			obj.put("revision", revision);
-			obj.put("uuid", uuid);
-			obj.put("name", name);
-			if (number != null)
-				obj.put("number", number);
-			obj.put("symbol", symbol);
-			obj.put("key", key);
-			obj.put("centName", centName);
-
-			return obj;
+			return this;
 		}
-		catch (final JSONException e)
-		{
-			e.printStackTrace();
-			return null;
-		}
+
 	}
 
-	public static Currency fromJSON(JSONObject obj) throws JSONException
+	private Currency(final Init<?> init)
 	{
-		if (obj.has("result") && obj.getString("result") != null)
-			obj = obj.getJSONObject("result");
-		final Currency cur = new Currency.Builder(obj.getString("name")).deleted(
-			obj.getBoolean("deleted"))
-			.revision(obj.getString("revision"))
-			.uuid(obj.getString("uuid"))
-			.number(obj.getString("number"))
-			.symbol(obj.getString("symbol"))
-			.key(obj.getString("key"))
-			.centName(obj.getString("centName"))
-			.build();
-		return cur;
+		super(init);
+		symbol = init.symbol;
+		key = init.key;
+		centName = init.centName;
 	}
 
-	/**
-	 * Currency upload nicht API-gestützt
-	 * 
-	 */
-	/*
-	 * public boolean post() throws IOException {
-	 * 
-	 * return CloudLink.getConnector().postData(DataType.currency, this.toJSON());
-	 * 
-	 * }
-	 */
+// public JSONObject toJSON()
+// {
+// final JSONObject obj = new JSONObject();
+// try
+// {
 
-	public boolean isDeleted()
-	{
-		return deleted;
-	}
-
-	public void setDeleted(final boolean deleted)
-	{
-		this.deleted = deleted;
-	}
-
-	public String getName()
-	{
-		return name;
-	}
-
-	public void setName(final String name)
-	{
-		this.name = name;
-	}
-
-	public String getNumber()
-	{
-		return number;
-	}
-
-	public void setNumber(final String number)
-	{
-		this.number = number;
-	}
-
-	public String getUuid()
-	{
-		return uuid;
-	}
-
-	public void setUuid(final String uuid)
-	{
-		this.uuid = uuid;
-	}
-
-	public String getRevision()
-	{
-		return revision;
-	}
-
-	public void setRevision(final String revision)
-	{
-		this.revision = revision;
-	}
+//
+// return obj;
+// }
+// catch (final JSONException e)
+// {
+// e.printStackTrace();
+// return null;
+// }
+// }
+//
+// public static Currency fromJSON(JSONObject obj) throws JSONException
+// {
+// if (obj.has("result") && obj.getString("result") != null)
+// obj = obj.getJSONObject("result");
+// final Currency cur = new Currency.Builder(obj.getString("name")).deleted(
+// obj.getBoolean("deleted"))
+// .revision(obj.getString("revision"))
+// .uuid(obj.getString("uuid"))
+// .number(obj.getString("number"))
+// .symbol(obj.getString("symbol"))
+// .key(obj.getString("key"))
+// .centName(obj.getString("centName"))
+// .build();
+// return cur;
+// }
 
 	public String getSymbol()
 	{
@@ -234,14 +139,40 @@ public class Currency
 	{
 		final int prime = 31;
 		int result = 1;
+		result = super.hashCode(result);
 		result = prime * result + ((this.key == null) ? 0 : this.key.hashCode());
-		result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
-		result = prime * result + ((this.number == null) ? 0 : this.number.hashCode());
-		result = prime * result + ((this.uuid == null) ? 0 : this.uuid.hashCode());
 		result = prime * result + ((this.symbol == null) ? 0 : this.symbol.hashCode());
 		result = prime * result + ((this.centName == null) ? 0 : this.centName.hashCode());
 
 		return result;
 	}
 
+	@Override
+	public JSONObject toJSON() throws JSONException
+	{
+		JSONObject obj = new JSONObject();
+		obj = super.appendJSON(obj);
+
+		obj.put("symbol", symbol);
+		obj.put("key", key);
+		obj.put("centName", centName);
+
+		return obj;
+	}
+
+	public static Currency fromJSON(JSONObject obj) throws JSONException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
+		final Currency cur = new Currency.Builder().name(obj.getString("name"))
+			.deleted(obj.getBoolean("deleted"))
+			.revision(obj.getLong("revision"))
+			.id(obj.getString("uuid"))
+			.number(obj.getString("number"))
+			.symbol(obj.getString("symbol"))
+			.key(obj.getString("key"))
+			.centName(obj.getString("centName"))
+			.build();
+		return cur;
+	}
 }

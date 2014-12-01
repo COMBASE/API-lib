@@ -1,7 +1,6 @@
 package domain;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -10,15 +9,12 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-public class EndOfDayStatement
+public class EndOfDayStatement extends AbstractApiObject<EndOfDayStatement>
 {
-	private static SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
-
-	private long revision;
-
-	private String uuid;
-
-	private boolean deleted;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4420456052325768842L;
 
 	private List<EndOfDayAccountSummary> accountSummaries;
 
@@ -40,44 +36,8 @@ public class EndOfDayStatement
 
 	private POS pos;
 
-	public EndOfDayStatement(final Builder builder)
+	protected static abstract class Init<T extends Init<T>> extends AbstractApiObject.Init<T>
 	{
-		revision = builder.revision;
-
-		uuid = builder.uuid;
-
-		deleted = builder.deleted;
-
-		accountSummaries = builder.accountSummaries;
-
-		cashierSummaries = builder.cashierSummaries;
-
-		commodityGroupSummaries = builder.commodityGroupSummaries;
-
-		customerGroupSummaries = builder.customerGroupSummaries;
-
-		finishTime = builder.finishTime;
-
-		paymentSummaries = builder.paymentSummaries;
-
-		receiptCount = builder.receiptCount;
-
-		taxSummaries = builder.taxSummaries;
-
-		zCount = builder.zCount;
-
-		pos = builder.pos;
-	}
-
-	public static class Builder
-	{
-
-		private long revision = 0l;
-
-		private String uuid = null;
-
-		private boolean deleted = false;
-
 		private List<EndOfDayAccountSummary> accountSummaries = new ArrayList<EndOfDayAccountSummary>();
 
 		private List<EndOfDayCashierSummary> cashierSummaries = new ArrayList<EndOfDayCashierSummary>();
@@ -98,93 +58,280 @@ public class EndOfDayStatement
 
 		private POS pos;
 
-		public Builder revision(final long value)
-		{
-			this.revision = value;
-			return this;
-		}
-
-		public Builder uuid(final String value)
-		{
-			this.uuid = value;
-			return this;
-		}
-
-		public Builder deleted(final boolean value)
-		{
-			this.deleted = value;
-			return this;
-		}
-
-		public Builder accountSummaries(final List<EndOfDayAccountSummary> value)
+		public T accountSummaries(final List<EndOfDayAccountSummary> value)
 		{
 			this.accountSummaries = value;
-			return this;
+			return self();
 		}
 
-		public Builder cashierSummaries(final List<EndOfDayCashierSummary> value)
+		public T cashierSummaries(final List<EndOfDayCashierSummary> value)
 		{
 			this.cashierSummaries = value;
-			return this;
+			return self();
 		}
 
-		public Builder commodityGroupSummaries(final List<EndOfDayCommoditygroupSummary> value)
+		public T commodityGroupSummaries(final List<EndOfDayCommoditygroupSummary> value)
 		{
 			this.commodityGroupSummaries = value;
-			return this;
+			return self();
 		}
 
-		public Builder customerGroupSummaries(final List<EndOfDayCustomergroupSummary> value)
+		public T customerGroupSummaries(final List<EndOfDayCustomergroupSummary> value)
 		{
 			this.customerGroupSummaries = value;
-			return this;
+			return self();
 		}
 
-		public Builder finishTime(final Date value)
+		public T finishTime(final Date value)
 		{
 			this.finishTime = value;
-			return this;
+			return self();
 		}
 
-		public Builder paymentSummaries(final List<EndOfDayPaymentSummary> value)
+		public T paymentSummaries(final List<EndOfDayPaymentSummary> value)
 		{
 			this.paymentSummaries = value;
-			return this;
+			return self();
 		}
 
-		public Builder receiptCount(final long value)
+		public T receiptCount(final long value)
 		{
 			this.receiptCount = value;
-			return this;
+			return self();
 		}
 
-		public Builder taxSummaries(final List<EndOfDayTaxSummary> value)
+		public T taxSummaries(final List<EndOfDayTaxSummary> value)
 		{
 			this.taxSummaries = value;
-			return this;
+			return self();
 		}
 
-		public Builder zCount(final long value)
+		public T zCount(final long value)
 		{
 			this.zCount = value;
-			return this;
+			return self();
 		}
 
-		public Builder pos(final POS value)
+		public T pos(final POS value)
 		{
 			this.pos = value;
-			return this;
+			return self();
 		}
 
+		@Override
 		public EndOfDayStatement build()
 		{
 			return new EndOfDayStatement(this);
 		}
 	}
 
-	public static EndOfDayStatement fromJSON(JSONObject obj) throws JSONException, ParseException
+	public static class Builder extends Init<Builder>
 	{
 
+		@Override
+		protected Builder self()
+		{
+			return this;
+		}
+
+	}
+
+	public EndOfDayStatement(final Init<?> init)
+	{
+		super(init);
+
+		accountSummaries = init.accountSummaries;
+
+		cashierSummaries = init.cashierSummaries;
+
+		commodityGroupSummaries = init.commodityGroupSummaries;
+
+		customerGroupSummaries = init.customerGroupSummaries;
+
+		finishTime = init.finishTime;
+
+		paymentSummaries = init.paymentSummaries;
+
+		receiptCount = init.receiptCount;
+
+		taxSummaries = init.taxSummaries;
+
+		zCount = init.zCount;
+
+		pos = init.pos;
+	}
+
+	public Date getFinishTime()
+	{
+		return finishTime;
+	}
+
+	public void ListFinishTime(final Date finishTime)
+	{
+		this.finishTime = finishTime;
+	}
+
+	public long getReceiptCount()
+	{
+		return receiptCount;
+	}
+
+	public void ListReceiptCount(final long receiptCount)
+	{
+		this.receiptCount = receiptCount;
+	}
+
+	public long getzCount()
+	{
+		return zCount;
+	}
+
+	public void ListzCount(final long zCount)
+	{
+		this.zCount = zCount;
+	}
+
+	public POS getPos()
+	{
+		return pos;
+	}
+
+	public void ListPos(final POS pos)
+	{
+		this.pos = pos;
+	}
+
+
+	public List<EndOfDayAccountSummary> getAccountSummaries()
+	{
+		return accountSummaries;
+	}
+
+	public List<EndOfDayCashierSummary> getCashierSummaries()
+	{
+		return cashierSummaries;
+	}
+
+	public List<EndOfDayCommoditygroupSummary> getCommodityGroupSummaries()
+	{
+		return commodityGroupSummaries;
+	}
+
+	public List<EndOfDayCustomergroupSummary> getCustomerGroupSummaries()
+	{
+		return customerGroupSummaries;
+	}
+
+	public List<EndOfDayPaymentSummary> getPaymentSummaries()
+	{
+		return paymentSummaries;
+	}
+
+	public List<EndOfDayTaxSummary> getTaxSummaries()
+	{
+		return taxSummaries;
+	}
+
+	public void setAccountSummaries(final List<EndOfDayAccountSummary> accountSummaries)
+	{
+		this.accountSummaries = accountSummaries;
+	}
+
+	public void setCashierSummaries(final List<EndOfDayCashierSummary> cashierSummaries)
+	{
+		this.cashierSummaries = cashierSummaries;
+	}
+
+	public void setCommodityGroupSummaries(
+		final List<EndOfDayCommoditygroupSummary> commodityGroupSummaries)
+	{
+		this.commodityGroupSummaries = commodityGroupSummaries;
+	}
+
+	public void setCustomerGroupSummaries(
+		final List<EndOfDayCustomergroupSummary> customerGroupSummaries)
+	{
+		this.customerGroupSummaries = customerGroupSummaries;
+	}
+
+	public void setFinishTime(final Date finishTime)
+	{
+		this.finishTime = finishTime;
+	}
+
+	public void setPaymentSummaries(final List<EndOfDayPaymentSummary> paymentSummaries)
+	{
+		this.paymentSummaries = paymentSummaries;
+	}
+
+	public void setReceiptCount(final long receiptCount)
+	{
+		this.receiptCount = receiptCount;
+	}
+
+	public void setTaxSummaries(final List<EndOfDayTaxSummary> taxSummaries)
+	{
+		this.taxSummaries = taxSummaries;
+	}
+
+	public void setzCount(final long zCount)
+	{
+		this.zCount = zCount;
+	}
+
+	public void setPos(final POS pos)
+	{
+		this.pos = pos;
+	}
+
+	@Override
+	public boolean equals(final Object obj)
+	{
+
+		return obj.hashCode() == this.hashCode();
+	}
+
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+
+		result = super.hashCode(result);
+		result = prime * result +
+			((this.accountSummaries == null) ? 0 : this.accountSummaries.hashCode());
+		result = prime * result +
+			((this.cashierSummaries == null) ? 0 : this.cashierSummaries.hashCode());
+		result = prime * result +
+			((this.commodityGroupSummaries == null) ? 0 : this.commodityGroupSummaries.hashCode());
+		result = prime * result +
+			((this.customerGroupSummaries == null) ? 0 : this.customerGroupSummaries.hashCode());
+		result = prime * result + ((this.finishTime == null) ? 0 : this.finishTime.hashCode());
+		result = prime * result +
+			((this.paymentSummaries == null) ? 0 : this.paymentSummaries.hashCode());
+		result = prime * result + ((this.receiptCount == 0) ? 0 : 1);
+		result = prime * result + ((this.taxSummaries == null) ? 0 : this.taxSummaries.hashCode());
+		result = prime * result +
+			((this.accountSummaries == null) ? 0 : this.accountSummaries.hashCode());
+		result = prime * result +
+			((this.accountSummaries == null) ? 0 : this.accountSummaries.hashCode());
+		result = prime * result +
+			((this.accountSummaries == null) ? 0 : this.accountSummaries.hashCode());
+
+
+		return result;
+	}
+
+	@Override
+	public JSONObject toJSON() throws JSONException
+	{
+		JSONObject obj = new JSONObject();
+		obj = appendJSON(obj);
+		return obj;
+	}
+
+	public static EndOfDayStatement fromJSON(JSONObject obj) throws JSONException, ParseException
+	{
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
 
@@ -276,13 +423,13 @@ public class EndOfDayStatement
 
 
 		// POS
-		final POS pos = new POS.Builder(null).uuid(obj.getString("pos")).build();
+		final POS pos = new POS.Builder().id(obj.getString("pos")).build();
 
 
 		final EndOfDayStatement endOfDayStatement = new EndOfDayStatement.Builder().deleted(
 			obj.getBoolean("deleted"))
 			.revision(obj.getLong("revision"))
-			.uuid(obj.getString("uuid"))
+			.id(obj.getString("uuid"))
 			.finishTime(inputDf.parse(obj.getString("finishTime")))
 			.pos(pos)
 			.receiptCount(obj.getLong("receiptCount"))
@@ -296,169 +443,5 @@ public class EndOfDayStatement
 			.build();
 
 		return endOfDayStatement;
-
 	}
-
-	public Date getFinishTime()
-	{
-		return finishTime;
-	}
-
-	public void ListFinishTime(final Date finishTime)
-	{
-		this.finishTime = finishTime;
-	}
-
-	public long getReceiptCount()
-	{
-		return receiptCount;
-	}
-
-	public void ListReceiptCount(final long receiptCount)
-	{
-		this.receiptCount = receiptCount;
-	}
-
-	public long getzCount()
-	{
-		return zCount;
-	}
-
-	public void ListzCount(final long zCount)
-	{
-		this.zCount = zCount;
-	}
-
-	public POS getPos()
-	{
-		return pos;
-	}
-
-	public void ListPos(final POS pos)
-	{
-		this.pos = pos;
-	}
-
-	public long getRevision()
-	{
-		return revision;
-	}
-
-	public String getUuid()
-	{
-		return uuid;
-	}
-
-	public boolean isDeleted()
-	{
-		return deleted;
-	}
-
-	public List<EndOfDayAccountSummary> getAccountSummaries()
-	{
-		return accountSummaries;
-	}
-
-	public List<EndOfDayCashierSummary> getCashierSummaries()
-	{
-		return cashierSummaries;
-	}
-
-	public List<EndOfDayCommoditygroupSummary> getCommodityGroupSummaries()
-	{
-		return commodityGroupSummaries;
-	}
-
-	public List<EndOfDayCustomergroupSummary> getCustomerGroupSummaries()
-	{
-		return customerGroupSummaries;
-	}
-
-	public List<EndOfDayPaymentSummary> getPaymentSummaries()
-	{
-		return paymentSummaries;
-	}
-
-	public List<EndOfDayTaxSummary> getTaxSummaries()
-	{
-		return taxSummaries;
-	}
-
-	public static SimpleDateFormat getInputDf()
-	{
-		return inputDf;
-	}
-
-	public static void setInputDf(final SimpleDateFormat inputDf)
-	{
-		EndOfDayStatement.inputDf = inputDf;
-	}
-
-	public void setRevision(final long revision)
-	{
-		this.revision = revision;
-	}
-
-	public void setUuid(final String uuid)
-	{
-		this.uuid = uuid;
-	}
-
-	public void setDeleted(final boolean deleted)
-	{
-		this.deleted = deleted;
-	}
-
-	public void setAccountSummaries(final List<EndOfDayAccountSummary> accountSummaries)
-	{
-		this.accountSummaries = accountSummaries;
-	}
-
-	public void setCashierSummaries(final List<EndOfDayCashierSummary> cashierSummaries)
-	{
-		this.cashierSummaries = cashierSummaries;
-	}
-
-	public void setCommodityGroupSummaries(
-		final List<EndOfDayCommoditygroupSummary> commodityGroupSummaries)
-	{
-		this.commodityGroupSummaries = commodityGroupSummaries;
-	}
-
-	public void setCustomerGroupSummaries(
-		final List<EndOfDayCustomergroupSummary> customerGroupSummaries)
-	{
-		this.customerGroupSummaries = customerGroupSummaries;
-	}
-
-	public void setFinishTime(final Date finishTime)
-	{
-		this.finishTime = finishTime;
-	}
-
-	public void setPaymentSummaries(final List<EndOfDayPaymentSummary> paymentSummaries)
-	{
-		this.paymentSummaries = paymentSummaries;
-	}
-
-	public void setReceiptCount(final long receiptCount)
-	{
-		this.receiptCount = receiptCount;
-	}
-
-	public void setTaxSummaries(final List<EndOfDayTaxSummary> taxSummaries)
-	{
-		this.taxSummaries = taxSummaries;
-	}
-
-	public void setzCount(final long zCount)
-	{
-		this.zCount = zCount;
-	}
-
-	public void setPos(final POS pos)
-	{
-		this.pos = pos;
-	}
-
 }

@@ -1,24 +1,15 @@
 package domain;
 
-import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import link.CloudLink;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 
-public class Receipt
+public class Receipt extends AbstractNumberApiObject<Receipt>
 {
-
-	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
-	private boolean deleted;
-	private String revision;
-	private String uuid;
-	private String number;
+	private static final long serialVersionUID = 889206414092644647L;
 	private Cashier cashier;
 	private Date creatTime;
 	private String currency;
@@ -41,41 +32,8 @@ public class Receipt
 	private boolean voided;
 	private Customer customer;
 
-	private Receipt(final Builder builder)
+	protected static abstract class Init<T extends Init<T>> extends AbstractNumberApiObject.Init<T>
 	{
-		deleted = builder.deleted;
-		revision = builder.revision;
-		number = builder.number;
-		uuid = builder.uuid;
-		cashier = builder.cashier;
-		creatTime = builder.creatTime;
-		currency = builder.currency;
-		customerGroup = builder.customerGroup;
-		finishTime = builder.finishTime;
-		modifiedTime = builder.modifiedTime;
-		orderNumber = builder.orderNumber;
-		pos = builder.pos;
-		organizationalUnit = builder.organizationalUnit;
-		priceGroup = builder.priceGroup;
-		grossTotalAmount = builder.grossTotalAmount;
-		netTotalAmount = builder.netTotalAmount;
-		taxAmount = builder.taxAmount;
-		grossRevenueAmount = builder.grossRevenueAmount;
-		netRevenueAmount = builder.netRevenueAmount;
-		receiptDiscountAmount = builder.receiptDiscountAmount;
-		receiptDiscountGrossAmount = builder.receiptDiscountGrossAmount;
-		receiptDiscountNetAmount = builder.receiptDiscountNetAmount;
-		zCount = builder.zCount;
-		voided = builder.voided;
-		customer = builder.customer;
-	}
-
-	public static class Builder
-	{
-		private boolean deleted = false;
-		private String revision = null;
-		private String number = null;
-		private String uuid = null;
 		private Cashier cashier = null;
 		private Date creatTime = null;
 		private String currency = null;
@@ -98,273 +56,180 @@ public class Receipt
 		private boolean voided = false;
 		private Customer customer = null;
 
-		public Builder()
-		{
-
-		}
-
-		public Builder deleted(final boolean value)
-		{
-			this.deleted = value;
-			return this;
-		}
-
-		public Builder uuid(final String value)
-		{
-			this.uuid = value;
-			return this;
-		}
-
-		public Builder revision(final String value)
-		{
-			this.revision = value;
-			return this;
-		}
-
-		public Builder number(final String value)
-		{
-			this.number = value;
-			return this;
-		}
-
-		public Builder cashier(final Cashier cash)
+		public T cashier(final Cashier cash)
 		{
 			this.cashier = cash;
-			return this;
+			return self();
 		}
 
-		public Builder creatTime(final Date value)
+		public T creatTime(final Date value)
 		{
 			this.creatTime = value;
-			return this;
+			return self();
 		}
 
-		public Builder currency(final String value)
+		public T currency(final String value)
 		{
 			this.currency = value;
-			return this;
+			return self();
 		}
 
-		public Builder finishTime(final Date value)
+		public T finishTime(final Date value)
 		{
 			this.finishTime = value;
-			return this;
+			return self();
 		}
 
-		public Builder modifiedTime(final Date value)
+		public T modifiedTime(final Date value)
 		{
 			this.modifiedTime = value;
-			return this;
+			return self();
 		}
 
-		public Builder orderNumber(final int value)
+		public T orderNumber(final int value)
 		{
 			this.orderNumber = value;
-			return this;
+			return self();
 		}
 
-		public Builder grossTotalAmount(final double value)
+		public T grossTotalAmount(final double value)
 		{
 			this.grossTotalAmount = value;
-			return this;
+			return self();
 		}
 
-		public Builder netTotalAmount(final double value)
+		public T netTotalAmount(final double value)
 		{
 			this.netTotalAmount = value;
-			return this;
+			return self();
 		}
 
-		public Builder taxAmount(final double value)
+		public T taxAmount(final double value)
 		{
 			this.taxAmount = value;
-			return this;
+			return self();
 		}
 
-		public Builder pos(final POS pos)
+		public T pos(final POS pos)
 		{
 			this.pos = pos;
-			return this;
+			return self();
 		}
 
-		public Builder organizationalUnit(final OrganizationalUnit organizationalUnit)
+		public T organizationalUnit(final OrganizationalUnit organizationalUnit)
 		{
 			this.organizationalUnit = organizationalUnit;
-			return this;
+			return self();
 		}
 
-		public Builder grossRevenueAmount(final double value)
+		public T grossRevenueAmount(final double value)
 		{
 			this.grossRevenueAmount = value;
-			return this;
+			return self();
 		}
 
-		public Builder netRevenueAmount(final double value)
+		public T netRevenueAmount(final double value)
 		{
 			this.netRevenueAmount = value;
-			return this;
+			return self();
 		}
 
-		public Builder receiptDiscountAmount(final double value)
+		public T receiptDiscountAmount(final double value)
 		{
 			this.receiptDiscountAmount = value;
-			return this;
+			return self();
 		}
 
-		public Builder receiptDiscountGrossAmount(final double value)
+		public T receiptDiscountGrossAmount(final double value)
 		{
 			this.receiptDiscountGrossAmount = value;
-			return this;
+			return self();
 		}
 
-		public Builder receiptDiscountNetAmount(final double value)
+		public T receiptDiscountNetAmount(final double value)
 		{
 			this.receiptDiscountNetAmount = value;
-			return this;
+			return self();
 		}
 
-		public Builder zCount(final double value)
+		public T zCount(final double value)
 		{
 			this.zCount = value;
-			return this;
+			return self();
 		}
 
-		public Builder voided(final boolean value)
+		public T voided(final boolean value)
 		{
 			this.voided = value;
-			return this;
+			return self();
 		}
 
-		public Builder customerGroup(final CustomerGroup cGrp)
+		public T customerGroup(final CustomerGroup cGrp)
 		{
 			this.customerGroup = cGrp;
-			return this;
+			return self();
 		}
 
-		public Builder customer(final Customer cust)
+		public T customer(final Customer cust)
 		{
 			this.customer = cust;
-			return this;
+			return self();
 		}
 
+		@Override
 		public Receipt build()
 		{
 			return new Receipt(this);
 		}
 	}
 
-	public JSONObject toJSON()
+	public static class Builder extends Init<Builder>
 	{
-		final JSONObject obj = new JSONObject();
-		try
+
+		@Override
+		protected Builder self()
 		{
-			obj.put("deleted", deleted);
-			obj.put("revision", revision);
-			obj.put("uuid", uuid);
-			if (number != null)
-				obj.put("number", number);
-
-			return obj;
+			return this;
 		}
-		catch (final JSONException e)
-		{
-			e.printStackTrace();
-			return null;
-		}
+
 	}
 
-	public static Receipt fromJSON(JSONObject obj) throws JSONException
+	public Receipt(final Init<?> init)
 	{
-		if (obj.has("result") && obj.getString("result") != null)
-			obj = obj.getJSONObject("result");
+		super(init);
+		cashier = init.cashier;
+		creatTime = init.creatTime;
+		currency = init.currency;
+		customerGroup = init.customerGroup;
+		finishTime = init.finishTime;
+		modifiedTime = init.modifiedTime;
+		orderNumber = init.orderNumber;
+		pos = init.pos;
+		organizationalUnit = init.organizationalUnit;
+		priceGroup = init.priceGroup;
+		grossTotalAmount = init.grossTotalAmount;
+		netTotalAmount = init.netTotalAmount;
+		taxAmount = init.taxAmount;
+		grossRevenueAmount = init.grossRevenueAmount;
+		netRevenueAmount = init.netRevenueAmount;
+		receiptDiscountAmount = init.receiptDiscountAmount;
+		receiptDiscountGrossAmount = init.receiptDiscountGrossAmount;
+		receiptDiscountNetAmount = init.receiptDiscountNetAmount;
+		zCount = init.zCount;
+		voided = init.voided;
+		customer = init.customer;
 
-
-		final Cashier cash = new Cashier.Builder(null).build();
-		cash.setUuid(obj.getString("cashier"));
-		final CustomerGroup cGrp = new CustomerGroup.Builder(null).build();
-		cGrp.setUuid(obj.getString("customerGroup"));
-		final Customer cust = new Customer.Builder().build();
-		cust.setUuid(obj.getString("customer"));
-		Receipt rec = null;
-		try
-		{
-			rec = new Receipt.Builder().number(obj.getString("number"))
-				.deleted(obj.getBoolean("deleted"))
-				.revision(obj.getString("revision"))
-				.cashier(cash)
-				.customerGroup(cGrp)
-				.customer(cust)
-				.receiptDiscountGrossAmount(obj.getDouble("receiptDiscountGrossAmount"))
-				.voided(obj.getBoolean("voided"))
-				.uuid(obj.getString("uuid"))
-				.grossTotalAmount(obj.getDouble("grossTotalAmount"))
-				.netTotalAmount(obj.getDouble("netTotalAmount"))
-				.taxAmount(obj.getDouble("taxAmount"))
-				.grossRevenueAmount(obj.getDouble("grossRevenueAmount"))
-				.netRevenueAmount(obj.getDouble("netRevenueAmount"))
-				.receiptDiscountAmount(obj.getDouble("receiptDiscountAmount"))
-				.receiptDiscountGrossAmount(obj.getDouble("receiptDiscountGrossAmount"))
-				.receiptDiscountNetAmount(obj.getDouble("receiptDiscountNetAmount"))
-				.creatTime(inputDf.parse(obj.getString("createTime")))
-				.modifiedTime(inputDf.parse(obj.getString("modifiedTime")))
-				.finishTime(inputDf.parse(obj.getString("finishTime")))
-				.build();
-		}
-		catch (final ParseException e)
-		{
-			e.printStackTrace();
-		}
-		return rec;
 	}
 
-	public boolean post() throws IOException
-	{
 
-		if (cashier != null && cashier.getUuid() == null)
-			cashier.post();
-
-		return CloudLink.getConnector().postData(DataType.receipt, this.toJSON());
-	}
-
-	public boolean isDeleted()
-	{
-		return deleted;
-	}
-
-	public void setDeleted(final boolean deleted)
-	{
-		this.deleted = deleted;
-	}
-
-	public String getRevision()
-	{
-		return revision;
-	}
-
-	public void setRevision(final String revision)
-	{
-		this.revision = revision;
-	}
-
-	public String getUuid()
-	{
-		return uuid;
-	}
-
-	public void setUuid(final String uuid)
-	{
-		this.uuid = uuid;
-	}
-
-	public String getNumber()
-	{
-		return number;
-	}
-
-	public void setNumber(final String number)
-	{
-		this.number = number;
-	}
+// public boolean post() throws IOException
+// {
+//
+// if (cashier != null && cashier.getUuid() == null)
+// cashier.post();
+//
+// return CloudLink.getConnector().postData(DataType.receipt, this.toJSON());
+// }
 
 	public Cashier getCashier()
 	{
@@ -589,9 +454,7 @@ public class Receipt
 		final int prime = 31;
 		int result = 1;
 
-		result = prime * result + ((this.number == null) ? 0 : this.number.hashCode());
-		result = prime * result + ((this.uuid == null) ? 0 : this.uuid.hashCode());
-		result = prime * result + ((this.revision == null) ? 0 : this.revision.hashCode());
+		result = super.hashCode(result);
 		result = prime * result + ((this.currency == null) ? 0 : this.currency.hashCode());
 		result = prime * result + ((this.cashier == null) ? 0 : this.cashier.hashCode());
 		result = prime * result +
@@ -602,5 +465,49 @@ public class Receipt
 		return result;
 	}
 
+	@Override
+	public JSONObject toJSON() throws JSONException
+	{
+		final JSONObject obj = new JSONObject();
+		appendJSON(obj);
+		return obj;
+	}
 
+	public static Receipt fromJSON(JSONObject obj) throws JSONException, ParseException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
+
+
+		final Cashier cash = new Cashier.Builder().build();
+		cash.setId(obj.getString("cashier"));
+		final CustomerGroup cGrp = new CustomerGroup.Builder().build();
+		cGrp.setId(obj.getString("customerGroup"));
+		final Customer cust = new Customer.Builder().build();
+		cust.setId(obj.getString("customer"));
+		Receipt rec = null;
+		rec = new Receipt.Builder().number(obj.getString("number"))
+			.deleted(obj.getBoolean("deleted"))
+			.revision(obj.getLong("revision"))
+			.cashier(cash)
+			.customerGroup(cGrp)
+			.customer(cust)
+			.receiptDiscountGrossAmount(obj.getDouble("receiptDiscountGrossAmount"))
+			.voided(obj.getBoolean("voided"))
+			.id(obj.getString("uuid"))
+			.grossTotalAmount(obj.getDouble("grossTotalAmount"))
+			.netTotalAmount(obj.getDouble("netTotalAmount"))
+			.taxAmount(obj.getDouble("taxAmount"))
+			.grossRevenueAmount(obj.getDouble("grossRevenueAmount"))
+			.netRevenueAmount(obj.getDouble("netRevenueAmount"))
+			.receiptDiscountAmount(obj.getDouble("receiptDiscountAmount"))
+			.receiptDiscountGrossAmount(obj.getDouble("receiptDiscountGrossAmount"))
+			.receiptDiscountNetAmount(obj.getDouble("receiptDiscountNetAmount"))
+			.creatTime(inputDf.parse(obj.getString("createTime")))
+			.modifiedTime(inputDf.parse(obj.getString("modifiedTime")))
+			.finishTime(inputDf.parse(obj.getString("finishTime")))
+			.build();
+
+		return rec;
+	}
 }

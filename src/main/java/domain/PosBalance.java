@@ -1,7 +1,6 @@
 package domain;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -10,12 +9,12 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-public class PosBalance
+public class PosBalance extends AbstractApiObject<PosBalance>
 {
-	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
-	private boolean deleted;
-	private String revision;
-	private String uuid;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3747780830697069675L;
 	private POS pos;
 	private Cashier cashier;
 	private Date createTime;
@@ -26,27 +25,8 @@ public class PosBalance
 	private double actualTotal;
 	private int zCount;
 
-	public PosBalance(final Builder builder)
+	protected static abstract class Init<T extends Init<T>> extends AbstractApiObject.Init<T>
 	{
-		this.deleted = builder.deleted;
-		this.revision = builder.revision;
-		this.uuid = builder.uuid;
-		this.pos = builder.pos;
-		this.cashier = builder.cashier;
-		this.createTime = builder.createTime;
-		this.finishTime = builder.finishTime;
-		this.itemSummaries = builder.itemSummaries;
-		this.balanceAttempts = builder.balanceAttempts;
-		this.expectedTotal = builder.expectedTotal;
-		this.actualTotal = builder.actualTotal;
-		this.zCount = builder.zCount;
-	}
-
-	public static class Builder
-	{
-		private boolean deleted = false;
-		private String revision = null;
-		private String uuid = null;
 		private POS pos = null;
 		private Cashier cashier = null;
 		private Date createTime = null;
@@ -57,179 +37,97 @@ public class PosBalance
 		private double actualTotal = 0;
 		private int zCount = 0;
 
-		public Builder deleted(final boolean value)
-		{
-			this.deleted = value;
-			return this;
-		}
-
-		public Builder revision(final String value)
-		{
-			this.revision = value;
-			return this;
-		}
-
-		public Builder uuid(final String value)
-		{
-			this.uuid = value;
-			return this;
-		}
-
-		public Builder pos(final POS value)
+		public T pos(final POS value)
 		{
 			this.pos = value;
-			return this;
+			return self();
 		}
 
-		public Builder cashier(final Cashier value)
+		public T cashier(final Cashier value)
 		{
 			this.cashier = value;
-			return this;
+			return self();
 		}
 
-		public Builder createTime(final Date value)
+		public T createTime(final Date value)
 		{
 			this.createTime = value;
-			return this;
+			return self();
 		}
 
-		public Builder finishTime(final Date value)
+		public T finishTime(final Date value)
 		{
 			this.finishTime = value;
-			return this;
+			return self();
 		}
 
-		public Builder itemSummaries(final Collection<ItemSummary> value)
+		public T itemSummaries(final Collection<ItemSummary> value)
 		{
 			this.itemSummaries = value;
-			return this;
+			return self();
 		}
 
-		public Builder itemSummaries(final ItemSummary value)
+		public T itemSummaries(final ItemSummary value)
 		{
 			itemSummaries.add(value);
-			return this;
+			return self();
 		}
 
-		public Builder balanceAttempts(final int value)
+		public T balanceAttempts(final int value)
 		{
 			this.balanceAttempts = value;
-			return this;
+			return self();
 		}
 
-		public Builder expectedTotal(final double value)
+		public T expectedTotal(final double value)
 		{
 			this.expectedTotal = value;
-			return this;
+			return self();
 		}
 
-		public Builder actualTotal(final double value)
+		public T actualTotal(final double value)
 		{
 			this.actualTotal = value;
-			return this;
+			return self();
 		}
 
-		public Builder zCount(final int value)
+		public T zCount(final int value)
 		{
 			this.zCount = value;
-			return this;
+			return self();
 		}
 
+		@Override
 		public PosBalance build()
 		{
 			return new PosBalance(this);
 		}
 	}
 
-
-	public static PosBalance fromJSON(JSONObject obj) throws JSONException
+	public static class Builder extends Init<Builder>
 	{
-		if (obj.has("result") && obj.getString("result") != null)
-			obj = obj.getJSONObject("result");
 
-		final Collection<ItemSummary> itemSummaryObjs = new ArrayList<ItemSummary>();
-		final JSONArray itemSummaries = obj.getJSONArray("itemSummaries");
-
-		for (int i = 0; i <= itemSummaries.length() - 1; i++)
+		@Override
+		protected Builder self()
 		{
-			final JSONObject itemSummary = itemSummaries.getJSONObject(i);
-			final ItemSummary itemSummaryObj = ItemSummary.fromJSON(itemSummary);
-			itemSummaryObjs.add(itemSummaryObj);
+			return this;
 		}
 
-		final POS pos = new POS.Builder(null).uuid(obj.getString("pos")).build();
-		final Cashier cashier = new Cashier.Builder(null).uuid(obj.getString("cashier")).build();
-
-		// date
-		Date createTimeFormatted = null;
-		Date finishTimeFormatted = null;
-		try
-		{
-			String date = obj.getString("createTime");
-			createTimeFormatted = inputDf.parse(date);
-			date = obj.getString("finishTime");
-			finishTimeFormatted = inputDf.parse(date);
-		}
-		catch (final ParseException e)
-		{
-			e.printStackTrace();
-		}
-
-		final PosBalance posBalance = new PosBalance.Builder().deleted(obj.getBoolean("deleted"))
-			.revision(obj.getString("revision"))
-			.uuid(obj.getString("uuid"))
-			.pos(pos)
-			.cashier(cashier)
-			.createTime(createTimeFormatted)
-			.finishTime(finishTimeFormatted)
-			.itemSummaries(itemSummaryObjs)
-			.balanceAttempts(obj.getInt("balanceAttempts"))
-			.expectedTotal(obj.getDouble("expectedTotal"))
-			.actualTotal(obj.getDouble("actualTotal"))
-			.zCount(obj.getInt("zCount"))
-			.build();
-
-
-		return posBalance;
-
-
 	}
 
-	public boolean isDeleted()
+	public PosBalance(final Init<?> init)
 	{
-		return deleted;
+		super(init);
+		this.pos = init.pos;
+		this.cashier = init.cashier;
+		this.createTime = init.createTime;
+		this.finishTime = init.finishTime;
+		this.itemSummaries = init.itemSummaries;
+		this.balanceAttempts = init.balanceAttempts;
+		this.expectedTotal = init.expectedTotal;
+		this.actualTotal = init.actualTotal;
+		this.zCount = init.zCount;
 	}
-
-
-	public void setDeleted(final boolean deleted)
-	{
-		this.deleted = deleted;
-	}
-
-
-	public String getRevision()
-	{
-		return revision;
-	}
-
-
-	public void setRevision(final String revision)
-	{
-		this.revision = revision;
-	}
-
-
-	public String getUuid()
-	{
-		return uuid;
-	}
-
-
-	public void setUuid(final String uuid)
-	{
-		this.uuid = uuid;
-	}
-
 
 	public POS getPos()
 	{
@@ -341,5 +239,88 @@ public class PosBalance
 	{
 
 		return obj.hashCode() == this.hashCode();
+	}
+
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+
+		result = super.hashCode(result);
+		result = prime * result + ((this.pos == null) ? 0 : this.pos.hashCode());
+		result = prime * result + ((this.cashier == null) ? 0 : this.cashier.hashCode());
+		result = prime * result + ((this.createTime == null) ? 0 : this.createTime.hashCode());
+		result = prime * result + ((this.finishTime == null) ? 0 : this.finishTime.hashCode());
+		result = prime * result +
+			((this.itemSummaries == null) ? 0 : this.itemSummaries.hashCode());
+		result = prime * result + ((this.balanceAttempts == 0) ? 0 : this.balanceAttempts);
+		result = prime * result +
+			((this.expectedTotal == 0) ? 0 : Double.valueOf(this.expectedTotal).hashCode());
+		result = prime * result +
+			((this.actualTotal == 0) ? 0 : Double.valueOf(this.actualTotal).hashCode());
+		result = prime * result + ((this.zCount == 0) ? 0 : this.zCount);
+
+
+		return result;
+	}
+
+	@Override
+	public JSONObject toJSON() throws JSONException
+	{
+		final JSONObject obj = new JSONObject();
+		appendJSON(obj);
+		return obj;
+	}
+
+	public static PosBalance fromJSON(JSONObject obj) throws JSONException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
+
+		final Collection<ItemSummary> itemSummaryObjs = new ArrayList<ItemSummary>();
+		final JSONArray itemSummaries = obj.getJSONArray("itemSummaries");
+
+		for (int i = 0; i <= itemSummaries.length() - 1; i++)
+		{
+			final JSONObject itemSummary = itemSummaries.getJSONObject(i);
+			final ItemSummary itemSummaryObj = ItemSummary.fromJSON(itemSummary);
+			itemSummaryObjs.add(itemSummaryObj);
+		}
+
+		final POS pos = new POS.Builder().id(obj.getString("pos")).build();
+		final Cashier cashier = new Cashier.Builder().id(obj.getString("cashier")).build();
+
+		// date
+		Date createTimeFormatted = null;
+		Date finishTimeFormatted = null;
+		try
+		{
+			String date = obj.getString("createTime");
+			createTimeFormatted = inputDf.parse(date);
+			date = obj.getString("finishTime");
+			finishTimeFormatted = inputDf.parse(date);
+		}
+		catch (final ParseException e)
+		{
+			e.printStackTrace();
+		}
+
+		final PosBalance posBalance = new PosBalance.Builder().deleted(obj.getBoolean("deleted"))
+			.revision(obj.getLong("revision"))
+			.id(obj.getString("uuid"))
+			.pos(pos)
+			.cashier(cashier)
+			.createTime(createTimeFormatted)
+			.finishTime(finishTimeFormatted)
+			.itemSummaries(itemSummaryObjs)
+			.balanceAttempts(obj.getInt("balanceAttempts"))
+			.expectedTotal(obj.getDouble("expectedTotal"))
+			.actualTotal(obj.getDouble("actualTotal"))
+			.zCount(obj.getInt("zCount"))
+			.build();
+
+
+		return posBalance;
 	}
 }

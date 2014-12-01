@@ -2,6 +2,8 @@ package link;
 
 import java.util.Iterator;
 
+import link.json.AbstractHasIdJsonLoader;
+
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;

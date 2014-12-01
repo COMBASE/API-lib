@@ -1,19 +1,17 @@
 package domain;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-public class InventoryReceipt
+public class InventoryReceipt extends AbstractNumberApiObject<InventoryReceipt>
 {
-	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
-
-	private String uuid;
-
-	private final String number;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2039817144646051158L;
 
 	private Date bookingTime;
 
@@ -35,39 +33,8 @@ public class InventoryReceipt
 
 	private Inventory inventory;
 
-	public InventoryReceipt(final Builder builder)
+	protected static abstract class Init<T extends Init<T>> extends AbstractNumberApiObject.Init<T>
 	{
-		this.uuid = builder.uuid;
-
-		this.number = builder.number;
-
-		this.bookingTime = builder.bookingTime;
-
-		this.cashier = builder.cashier;
-
-		this.createTime = builder.createTime;
-
-		this.description = builder.description;
-
-		this.finishTime = builder.finishTime;
-
-		this.modifiedTime = builder.modifiedTime;
-
-		this.pos = builder.pos;
-
-		this.organizationalUnit = builder.organizationalUnit;
-
-		this.user = builder.user;
-
-		this.inventory = builder.inventory;
-	}
-
-	public static class Builder
-	{
-		private String uuid = null;
-
-		private String number = null;
-
 		private Date bookingTime = null;
 
 		private Cashier cashier = null;
@@ -88,114 +55,107 @@ public class InventoryReceipt
 
 		private Inventory inventory = null;
 
-		public Builder bookingTime(final Date value)
+		public T bookingTime(final Date value)
 		{
 			bookingTime = value;
-			return this;
+			return self();
 		}
 
-		public Builder uuid(final String value)
-		{
-			uuid = value;
-			return this;
-		}
-
-		public Builder number(final String value)
-		{
-			number = value;
-			return this;
-		}
-
-		public Builder cashier(final Cashier value)
+		public T cashier(final Cashier value)
 		{
 			cashier = value;
-			return this;
+			return self();
 		}
 
-		public Builder createTime(final Date value)
+		public T createTime(final Date value)
 		{
 			createTime = value;
-			return this;
+			return self();
 		}
 
-		public Builder description(final String value)
+		public T description(final String value)
 		{
 			description = value;
-			return this;
+			return self();
 		}
 
-		public Builder finishTime(final Date value)
+		public T finishTime(final Date value)
 		{
 			finishTime = value;
-			return this;
+			return self();
 		}
 
-		public Builder modifiedTime(final Date value)
+		public T modifiedTime(final Date value)
 		{
 			modifiedTime = value;
-			return this;
+			return self();
 		}
 
-		public Builder pos(final POS value)
+		public T pos(final POS value)
 		{
 			pos = value;
-			return this;
+			return self();
 		}
 
-		public Builder organizationalUnit(final OrganizationalUnit value)
+		public T organizationalUnit(final OrganizationalUnit value)
 		{
 			organizationalUnit = value;
-			return this;
+			return self();
 		}
 
-		public Builder user(final String value)
+		public T user(final String value)
 		{
 			user = value;
-			return this;
+			return self();
 		}
 
-		public Builder inventory(final Inventory value)
+		public T inventory(final Inventory value)
 		{
 			inventory = value;
-			return this;
+			return self();
 		}
 
+		@Override
 		public InventoryReceipt build()
 		{
 			return new InventoryReceipt(this);
 		}
 	}
 
-	public static InventoryReceipt fromJSON(final JSONObject object) throws JSONException,
-		ParseException
+	public static class Builder extends Init<Builder>
 	{
-		final Cashier cashier = new Cashier.Builder(null).uuid(object.getString("cashier")).build();
 
-		final OrganizationalUnit organizationalUnit = new OrganizationalUnit.Builder(null).uuid(
-			object.getString("organizationalUnit")).build();
+		@Override
+		protected Builder self()
+		{
+			return this;
+		}
 
-		final Inventory inventory = new Inventory.Builder().uuid(object.getString("inventory"))
-			.build();
-
-		final InventoryReceipt inventoryReceipt = new InventoryReceipt.Builder().uuid(
-			object.getString("uuid"))
-			.number(object.getString("number"))
-			.bookingTime(inputDf.parse(object.getString("bookingTime")))
-			.cashier(cashier)
-			.createTime(inputDf.parse(object.getString("createTime")))
-			.description(object.getString("description"))
-			.finishTime(inputDf.parse(object.getString("finishTime")))
-			.organizationalUnit(organizationalUnit)
-			.inventory(inventory)
-			.build();
-
-
-		return inventoryReceipt;
 	}
 
-	public JSONObject toJSON()
+	public InventoryReceipt(final Init<?> init)
 	{
-		return null;
+		super(init);
+
+		this.bookingTime = init.bookingTime;
+
+		this.cashier = init.cashier;
+
+		this.createTime = init.createTime;
+
+		this.description = init.description;
+
+		this.finishTime = init.finishTime;
+
+		this.modifiedTime = init.modifiedTime;
+
+		this.pos = init.pos;
+
+		this.organizationalUnit = init.organizationalUnit;
+
+		this.user = init.user;
+
+		this.inventory = init.inventory;
 	}
 
 	public Date getBookingTime()
@@ -298,13 +258,99 @@ public class InventoryReceipt
 		this.inventory = inventory;
 	}
 
-	public String getUuid()
+	@Override
+	public boolean equals(final Object obj)
 	{
-		return uuid;
+
+		return obj.hashCode() == this.hashCode();
 	}
 
-	public void setUuid(final String uuid)
+	@Override
+	public int hashCode()
 	{
-		this.uuid = uuid;
+		final int prime = 31;
+		int result = 1;
+
+		result = super.hashCode(result);
+		result = prime * result + ((this.description == null) ? 0 : this.description.hashCode());
+		result = prime * result + ((this.user == null) ? 0 : this.user.hashCode());
+		result = prime * result + ((this.bookingTime == null) ? 0 : this.bookingTime.hashCode());
+		result = prime * result + ((this.cashier == null) ? 0 : this.cashier.hashCode());
+		result = prime * result + ((this.createTime == null) ? 0 : this.createTime.hashCode());
+		result = prime * result + ((this.finishTime == null) ? 0 : this.finishTime.hashCode());
+		result = prime * result + ((this.modifiedTime == null) ? 0 : this.modifiedTime.hashCode());
+		result = prime * result + ((this.pos == null) ? 0 : this.pos.hashCode());
+		result = prime * result +
+			((this.organizationalUnit == null) ? 0 : this.organizationalUnit.hashCode());
+		result = prime * result + ((this.inventory == null) ? 0 : this.inventory.hashCode());
+
+		return result;
 	}
+
+	@Override
+	public JSONObject toJSON() throws JSONException
+	{
+		final JSONObject obj = new JSONObject();
+		appendJSON(obj);
+
+		if (bookingTime != null)
+			obj.put("bookingTime", inputDf.format(bookingTime));
+
+		if (cashier != null)
+			obj.put("cashier", cashier.getId());
+
+		if (createTime != null)
+			obj.put("createTime", inputDf.format(createTime));
+
+		obj.put("description", description);
+
+		if (finishTime != null)
+			obj.put("finishTime", inputDf.format(finishTime));
+
+		if (modifiedTime != null)
+			obj.put("modifiedTime", inputDf.format(modifiedTime));
+
+		if (pos != null)
+			obj.put("pos", pos.getId());
+
+		if (organizationalUnit != null)
+			obj.put("organizationalUnit", organizationalUnit.getId());
+
+		obj.put("user", user);
+
+		if (inventory != null)
+			obj.put("inventory", inventory.getId());
+
+		return obj;
+	}
+
+	public static InventoryReceipt fromJSON(JSONObject obj) throws JSONException, ParseException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
+
+		final Cashier cashier = new Cashier.Builder().id(obj.getString("cashier")).build();
+
+		final OrganizationalUnit organizationalUnit = new OrganizationalUnit.Builder().id(
+			obj.getString("organizationalUnit")).build();
+
+		final Inventory inventory = new Inventory.Builder().id(obj.getString("inventory")).build();
+
+		final InventoryReceipt inventoryReceipt = new InventoryReceipt.Builder().id(
+			obj.getString("uuid"))
+			.number(obj.getString("number"))
+			.bookingTime(prepareDate(obj, "bookingTime"))
+			.cashier(cashier)
+			.createTime(prepareDate(obj, "createTime"))
+			.description(obj.getString("description"))
+			.finishTime(prepareDate(obj, "finishTime"))
+			.organizationalUnit(organizationalUnit)
+			.inventory(inventory)
+			.build();
+
+
+		return inventoryReceipt;
+	}
+
+
 }

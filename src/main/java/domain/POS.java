@@ -1,19 +1,15 @@
 package domain;
 
-import java.io.IOException;
-
-import link.CloudLink;
-
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 
-public class POS
+public class POS extends AbstractNameAndNumberApiObject<POS>
 {
-	private boolean deleted;
-	private String revision;
-	private String uuid;
-	private String number;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7976248646395275345L;
 	private int autoLogoutDelay;
 	private boolean autoReceiptPrint;
 	private String customerDisplayOfflineText;
@@ -40,173 +36,227 @@ public class POS
 	private String automaticPaymentFinalization;
 	private String StringbloyalDeviceKey;
 
-	private POS(final Builder builder)
+	protected static abstract class Init<T extends Init<T>> extends
+		AbstractNameAndNumberApiObject.Init<T>
 	{
-		deleted = builder.deleted;
-		revision = builder.revision;
-		uuid = builder.uuid;
-		number = builder.number;
-		name = builder.name;
-		organizationalUnit = builder.organizationalUnit;
-	}
-
-	public static class Builder
-	{
-		private final boolean deleted = false;
-		private final String revision = null;
-		private String uuid = null;
-		private String number = null;
-		private final int autoLogoutDelay = 0;
-		private final boolean autoReceiptPrint = false;
-		private final String customerDisplayOfflineText = null;
-		private final String customerDisplayOnlineText = null;
-		private final String distributerCode = null;
-		private final CustomerGroup defaultCustomerGroup = null;
-		private final Payment defaultPaymentMethod = null;
-		private final EconomicZone economicZone = null;
-		private final boolean forceClosedDrawer = false;
-		private final CustomerGroup friendsBonusCustomerGroup = null;
-		private final String friendsbonusIdentification = null;
-		private final String friendsbonusSecret = null;
-		private final int maxBalanceAttempts = 0;
+		private int autoLogoutDelay = 0;
+		private boolean autoReceiptPrint = false;
+		private String customerDisplayOfflineText = null;
+		private String customerDisplayOnlineText = null;
+		private String distributerCode = null;
+		private CustomerGroup defaultCustomerGroup = null;
+		private Payment defaultPaymentMethod = null;
+		private EconomicZone economicZone = null;
+		private boolean forceClosedDrawer = false;
+		private CustomerGroup friendsBonusCustomerGroup = null;
+		private String friendsbonusIdentification = null;
+		private String friendsbonusSecret = null;
+		private int maxBalanceAttempts = 0;
 		private String name = null;
-		private final boolean orderNumberRequired = false;
+		private boolean orderNumberRequired = false;
 		private OrganizationalUnit organizationalUnit = null;
 		// private WareHouse warehous=null;
-		private final String secret = null;
-		private final String systemHash = null;
-		private final String automaticEndOfDayIntervalStr = null;
-		private final boolean centInput = false;
-		private final boolean requirePaymentAmountInput = false;
-		private final boolean kioskMode = false;
-		private final String automaticPaymentFinalization = null;
-		private final String StringbloyalDeviceKey = null;
+		private String secret = null;
+		private String systemHash = null;
+		private String automaticEndOfDayIntervalStr = null;
+		private boolean centInput = false;
+		private boolean requirePaymentAmountInput = false;
+		private boolean kioskMode = false;
+		private final String automaticPaymentization = null;
+		private String StringbloyalDeviceKey = null;
 
-		public Builder(final String name)
-		{
-			this.name = name;
-		}
-
-		public Builder number(final String value)
-		{
-			number = value;
-			return this;
-		}
-
-		public Builder uuid(final String value)
-		{
-			uuid = value;
-			return this;
-		}
-
-		public Builder organizationalUnit(final OrganizationalUnit orgUnit)
+		public T organizationalUnit(final OrganizationalUnit orgUnit)
 		{
 			organizationalUnit = orgUnit;
-			return this;
+			return self();
 		}
 
+		public T autoLogoutDelay(final int value)
+		{
+			this.autoLogoutDelay = value;
+			return self();
+		}
+
+		public T autoReceiptPrint(final boolean value)
+		{
+			this.autoReceiptPrint = value;
+			return self();
+		}
+
+		public T customerDisplayOfflineText(final String value)
+		{
+			this.customerDisplayOfflineText = value;
+			return self();
+		}
+
+		public T customerDisplayOnlineText(final String value)
+		{
+			this.customerDisplayOnlineText = value;
+			return self();
+		}
+
+		public T distributerCode(final String value)
+		{
+			this.distributerCode = value;
+			return self();
+		}
+
+		public T defaultCustomerGroup(final CustomerGroup value)
+		{
+			this.defaultCustomerGroup = value;
+			return self();
+		}
+
+		public T defaultPaymentMethod(final Payment value)
+		{
+			this.defaultPaymentMethod = value;
+			return self();
+		}
+
+		public T economicZone(final EconomicZone value)
+		{
+			this.economicZone = value;
+			return self();
+		}
+
+		public T forceClosedDrawer(final boolean value)
+		{
+			this.forceClosedDrawer = value;
+			return self();
+		}
+
+		public T friendsBonusCustomerGroup(final CustomerGroup value)
+		{
+			this.friendsBonusCustomerGroup = value;
+			return self();
+		}
+
+		public T friendsbonusIdentification(final String value)
+		{
+			this.friendsbonusIdentification = value;
+			return self();
+		}
+
+		public T friendsbonusSecret(final String value)
+		{
+			this.friendsbonusSecret = value;
+			return self();
+		}
+
+		public T maxBalanceAttempts(final int value)
+		{
+			this.maxBalanceAttempts = value;
+			return self();
+		}
+
+		@Override
+		public T name(final String value)
+		{
+			this.name = value;
+			return self();
+		}
+
+		public T orderNumberRequired(final boolean value)
+		{
+			this.orderNumberRequired = value;
+			return self();
+		}
+
+		// private WareHouse warehous=null;
+		public T secret(final String value)
+		{
+			this.secret = value;
+			return self();
+		}
+
+		public T systemHash(final String value)
+		{
+			this.systemHash = value;
+			return self();
+		}
+
+		public T automaticEndOfDayIntervalStr(final String value)
+		{
+			this.automaticEndOfDayIntervalStr = value;
+			return self();
+		}
+
+		public T centInput(final boolean value)
+		{
+			this.centInput = value;
+			return self();
+		}
+
+		public T requirePaymentAmountInput(final boolean value)
+		{
+			this.requirePaymentAmountInput = value;
+			return self();
+		}
+
+		public T kioskMode(final boolean value)
+		{
+			this.kioskMode = value;
+			return self();
+		}
+
+		public T StringbloyalDeviceKey(final String value)
+		{
+			this.StringbloyalDeviceKey = value;
+			return self();
+		}
+
+		@Override
 		public POS build()
 		{
 			return new POS(this);
 		}
 	}
 
-	public JSONObject toJSON()
+	public static class Builder extends Init<Builder>
 	{
-		final JSONObject obj = new JSONObject();
-		try
+
+		@Override
+		protected Builder self()
 		{
-			obj.put("name", name);
-			obj.put("deleted", deleted);
-			obj.put("revision", revision);
-			obj.put("uuid", uuid);
-			if (number != null)
-				obj.put("number", number);
-
-
-			if (organizationalUnit != null)
-				obj.put("organizationalUnit", organizationalUnit.getUuid());
-			if (defaultCustomerGroup != null)
-				obj.put("defaultCustomerGroup", defaultCustomerGroup.getUuid());
-			if (defaultPaymentMethod != null)
-				obj.put("defaultPaymentMethod", defaultPaymentMethod.getUuid());
-			if (economicZone != null)
-				obj.put("sector", economicZone.getUuid());
-			if (friendsBonusCustomerGroup != null)
-				obj.put("friendsBonusCustomerGroup", friendsBonusCustomerGroup.getUuid());
-
-			return obj;
+			return this;
 		}
-		catch (final JSONException e)
-		{
-			e.printStackTrace();
-			return null;
-		}
+
 	}
 
-	public static POS fromJSON(JSONObject obj) throws JSONException
+	private POS(final Init<?> init)
 	{
-		if (obj.has("result") && obj.getString("result") != null)
-			obj = obj.getJSONObject("result");
-		final OrganizationalUnit orgUnit = new OrganizationalUnit.Builder(null).build();
-		orgUnit.setUuid(obj.getString("organizationalUnit"));
-
-		final POS pos = new POS.Builder(null).number(obj.getString("number"))
-			.organizationalUnit(orgUnit)
-			.uuid(obj.getString("uuid"))
-
-
-			.build();
-		return pos;
+		super(init);
+		organizationalUnit = init.organizationalUnit;
 	}
 
-	public boolean post() throws IOException
-	{
+// public JSONObject toJSON()
+// {
+// final JSONObject obj = new JSONObject();
+// try
+// {
 
-		if (organizationalUnit != null && organizationalUnit.getUuid() == null)
-			organizationalUnit.post();
-		return CloudLink.getConnector().postData(DataType.pos, this.toJSON());
-	}
-
-	public boolean isDeleted()
-	{
-		return deleted;
-	}
-
-	public void setDeleted(final boolean deleted)
-	{
-		this.deleted = deleted;
-	}
-
-	public String getRevision()
-	{
-		return revision;
-	}
-
-	public void setRevision(final String revision)
-	{
-		this.revision = revision;
-	}
-
-	public String getUuid()
-	{
-		return uuid;
-	}
-
-	public void setUuid(final String uuid)
-	{
-		this.uuid = uuid;
-	}
-
-	public String getNumber()
-	{
-		return number;
-	}
-
-	public void setNumber(final String number)
-	{
-		this.number = number;
-	}
+//
+// return obj;
+// }
+// catch (final JSONException e)
+// {
+// e.printStackTrace();
+// return null;
+// }
+// }
+//
+// public static POS fromJSON(JSONObject obj) throws JSONException
+// {
+//
+// }
+//
+// public boolean post() throws IOException
+// {
+//
+// if (organizationalUnit != null && organizationalUnit.getUuid() == null)
+// organizationalUnit.post();
+// return CloudLink.getConnector().postData(DataType.pos, this.toJSON());
+// }
 
 	public int getAutoLogoutDelay()
 	{
@@ -338,11 +388,13 @@ public class POS
 		this.maxBalanceAttempts = maxBalanceAttempts;
 	}
 
+	@Override
 	public String getName()
 	{
 		return name;
 	}
 
+	@Override
 	public void setName(final String name)
 	{
 		this.name = name;
@@ -461,9 +513,7 @@ public class POS
 		final int prime = 31;
 		int result = 1;
 
-		result = prime * result + ((this.number == null) ? 0 : this.number.hashCode());
-		result = prime * result + ((this.uuid == null) ? 0 : this.uuid.hashCode());
-		result = prime * result + ((this.revision == null) ? 0 : this.revision.hashCode());
+		result = super.hashCode(result);
 		result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
 		result = prime *
 			result +
@@ -504,4 +554,39 @@ public class POS
 		return result;
 	}
 
+	@Override
+	public JSONObject toJSON() throws JSONException
+	{
+		final JSONObject obj = new JSONObject();
+		appendJSON(obj);
+
+		if (organizationalUnit != null)
+			obj.put("organizationalUnit", organizationalUnit.getId());
+		if (defaultCustomerGroup != null)
+			obj.put("defaultCustomerGroup", defaultCustomerGroup.getId());
+		if (defaultPaymentMethod != null)
+			obj.put("defaultPaymentMethod", defaultPaymentMethod.getId());
+		if (economicZone != null)
+			obj.put("sector", economicZone.getId());
+		if (friendsBonusCustomerGroup != null)
+			obj.put("friendsBonusCustomerGroup", friendsBonusCustomerGroup.getId());
+
+		return obj;
+	}
+
+	public static POS fromJSON(JSONObject obj) throws JSONException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
+		final OrganizationalUnit orgUnit = new OrganizationalUnit.Builder().build();
+		orgUnit.setId(obj.getString("organizationalUnit"));
+
+		final POS pos = new POS.Builder().number(obj.getString("number"))
+			.organizationalUnit(orgUnit)
+			.id(obj.getString("uuid"))
+
+
+			.build();
+		return pos;
+	}
 }

@@ -3,152 +3,57 @@ package domain;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-public class Account
-{
 
-	private boolean deleted;
-	private String uuid;
-	private String revision;
-	private String number;
-	private String name;
+public class Account extends AbstractNameAndNumberApiObject<Account>
+{
+	private static final long serialVersionUID = 4756810592495231540L;
 
 	private String type;
+
 	private boolean requiresSerialNumber;
 
-
-	public Account(final Builder builder)
+	protected static abstract class Init<T extends Init<T>> extends
+		AbstractNameAndNumberApiObject.Init<T>
 	{
-		deleted = builder.deleted;
-		number = builder.number;
-		uuid = builder.uuid;
-		name = builder.name;
-		revision = builder.revision;
-		type = builder.type;
-		requiresSerialNumber = builder.requiresSerialNumber;
-	}
+		private String type;
 
-	public static class Builder
-	{
-		private boolean deleted = false;
-		private String uuid = null;
-		private String revision = null;
-		private String number = null;
-		private String name = null;
-		private String type = null;
-		private boolean requiresSerialNumber = false;
+		private boolean requiresSerialNumber;
 
-		public Builder deleted(final boolean value)
+		public T type(final String value)
 		{
-			deleted = value;
-			return this;
+			this.type = value;
+			return self();
 		}
 
-		public Builder revision(final String value)
+		public T requiresSerialNumber(final boolean value)
 		{
-			revision = value;
-			return this;
+			this.requiresSerialNumber = value;
+			return self();
 		}
 
-		public Builder number(final String value)
-		{
-			number = value;
-			return this;
-		}
-
-		public Builder uuid(final String value)
-		{
-			uuid = value;
-			return this;
-		}
-
-		public Builder name(final String value)
-		{
-			name = value;
-			return this;
-		}
-
-		public Builder type(final String value)
-		{
-			type = value;
-			return this;
-		}
-
-		public Builder requiresSerialNumber(final boolean value)
-		{
-			requiresSerialNumber = value;
-			return this;
-		}
-
+		@Override
 		public Account build()
 		{
 			return new Account(this);
 		}
 	}
 
-	public static Account fromJSON(JSONObject obj) throws JSONException
+	public static class Builder extends Init<Builder>
 	{
-		if (obj.has("result") && obj.getString("result") != null)
-			obj = obj.getJSONObject("result");
 
-		final Account acc = new Account.Builder().deleted(obj.getBoolean("deleted"))
-			.revision(obj.getString("revision"))
-			.number(obj.getString("number"))
-			.uuid(obj.getString("uuid"))
-			.name(obj.getString("name"))
-			.type(obj.getString("type"))
-			.requiresSerialNumber(obj.getBoolean("requiresSerialNumber"))
-			.build();
-		return acc;
+		@Override
+		protected Builder self()
+		{
+			return this;
+		}
+
 	}
 
-	public boolean isDeleted()
+	public Account(final Init<?> init)
 	{
-		return deleted;
-	}
-
-	public void setDeleted(final boolean deleted)
-	{
-		this.deleted = deleted;
-	}
-
-	public String getUuid()
-	{
-		return uuid;
-	}
-
-	public void setUuid(final String uuid)
-	{
-		this.uuid = uuid;
-	}
-
-	public String getRevision()
-	{
-		return revision;
-	}
-
-	public void setRevision(final String revision)
-	{
-		this.revision = revision;
-	}
-
-	public String getNumber()
-	{
-		return number;
-	}
-
-	public void setNumber(final String number)
-	{
-		this.number = number;
-	}
-
-	public String getName()
-	{
-		return name;
-	}
-
-	public void setName(final String name)
-	{
-		this.name = name;
+		super(init);
+		type = init.type;
+		requiresSerialNumber = init.requiresSerialNumber;
 	}
 
 	public String getType()
@@ -183,12 +88,37 @@ public class Account
 	{
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
-		result = prime * result + ((this.number == null) ? 0 : this.number.hashCode());
-		result = prime * result + ((this.uuid == null) ? 0 : this.uuid.hashCode());
-		result = prime * result + ((this.revision == null) ? 0 : this.revision.hashCode());
 		result = prime * result + ((this.type == null) ? 0 : this.type.hashCode());
 
+		result = super.hashCode(result);
+
 		return result;
+	}
+
+	@Override
+	public JSONObject toJSON() throws JSONException
+	{
+		JSONObject obj = new JSONObject();
+		obj = super.appendJSON(obj);
+
+		return obj;
+
+	}
+
+
+	public static Account fromJSON(JSONObject obj) throws JSONException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
+
+		final Account acc = new Account.Builder().deleted(obj.getBoolean("deleted"))
+			.revision(obj.getLong("revision"))
+			.number(obj.getString("number"))
+			.id(obj.getString("uuid"))
+			.name(obj.getString("name"))
+			.type(obj.getString("type"))
+			.requiresSerialNumber(obj.getBoolean("requiresSerialNumber"))
+			.build();
+		return acc;
 	}
 }

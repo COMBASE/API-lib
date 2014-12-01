@@ -16,18 +16,26 @@ import domain.DataType;
 public class PostListThread extends Thread
 {
 	JSONArray array;
+	DataType type;
+	String ret;
 
-	public PostListThread(final JSONArray array)
+	public PostListThread(final DataType type, final JSONArray array)
 	{
 		super();
 		this.array = array;
+		this.type = type;
 	}
 
 	@Override
 	public void run()
 	{
 // System.out.println("start: " + new Date());
-		CloudLink.getConnector().postData(DataType.product, array);
+		ret = CloudLink.getConnector().postData(type, array);
 // System.out.println("end: " + new Date());
+	}
+
+	public String getReturn()
+	{
+		return ret;
 	}
 }

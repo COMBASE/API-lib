@@ -1,22 +1,14 @@
 package domain;
 
-import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import link.CloudLink;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-public class AccountTransaction
+public class AccountTransaction extends AbstractApiObject<AccountTransaction>
 {
-	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
-	private boolean deleted;
-	private String uuid;
-	private String revision;
-
+	private static final long serialVersionUID = -6707310291148051948L;
 	private Account account;
 	private Receipt receipt;
 	private Cashier cashier;
@@ -26,217 +18,129 @@ public class AccountTransaction
 	private int receiptIndex;
 	private String description;
 
-
-	private AccountTransaction(final Builder builder)
+	protected static abstract class Init<T extends Init<T>> extends AbstractApiObject.Init<T>
 	{
-		revision = builder.revision;
-		deleted = builder.deleted;
-		uuid = builder.uuid;
-		account = builder.account;
-		receipt = builder.receipt;
-		cashier = builder.cashier;
-		pos = builder.pos;
-		amount = builder.amount;
-		bookingTime = builder.bookingTime;
-		receiptIndex = builder.receiptIndex;
-		description = builder.description;
-	}
-
-	public static class Builder
-	{
-		private boolean deleted = false;
-		private String uuid = null;
-		private String revision = null;
 		private Account account;
-		private Receipt receipt = null;
-		private Cashier cashier = null;
-		private POS pos = null;
-		private double amount = 0;
-		private Date bookingTime = null;
-		private int receiptIndex = 0;
-		private String description = null;
+		private Receipt receipt;
+		private Cashier cashier;
+		private POS pos;
+		private double amount;
+		private Date bookingTime;
+		private int receiptIndex;
+		private String description;
 
-		public Builder revision(final String value)
-		{
-			revision = value;
-			return this;
-		}
-
-		public Builder deleted(final boolean value)
-		{
-			deleted = value;
-			return this;
-		}
-
-		public Builder uuid(final String value)
-		{
-			uuid = value;
-			return this;
-		}
-
-		public Builder account(final Account acc)
+		public T account(final Account acc)
 		{
 			account = acc;
-			return this;
+			return self();
 		}
 
-		public Builder receipt(final Receipt rec)
+		public T receipt(final Receipt rec)
 		{
 			receipt = rec;
-			return this;
+			return self();
 		}
 
-		public Builder cashier(final Cashier cash)
+		public T cashier(final Cashier cash)
 		{
 			cashier = cash;
-			return this;
+			return self();
 		}
 
-		public Builder pos(final POS posy)
+		public T pos(final POS posy)
 		{
 			pos = posy;
-			return this;
+			return self();
 		}
 
-		public Builder amount(final double value)
+		public T amount(final double value)
 		{
 			amount = value;
-			return this;
+			return self();
 		}
 
-		public Builder bookingTime(final Date value)
+		public T bookingTime(final Date value)
 		{
 			bookingTime = value;
-			return this;
+			return self();
 		}
 
-		public Builder receiptIndex(final int value)
+		public T receiptIndex(final int value)
 		{
 			receiptIndex = value;
-			return this;
+			return self();
 		}
 
-		public Builder description(final String value)
+		public T description(final String value)
 		{
 			description = value;
-			return this;
+			return self();
 		}
 
+		@Override
 		public AccountTransaction build()
 		{
 			return new AccountTransaction(this);
 		}
 	}
 
-	public JSONObject toJSON()
+	public static class Builder extends Init<Builder>
 	{
-		final JSONObject obj = new JSONObject();
-		try
-		{
-			obj.put("deleted", deleted);
-			obj.put("revision", revision);
-			obj.put("uuid", uuid);
-			obj.put("account", account.getUuid());
-			obj.put("receipt", receipt.getUuid());
-			obj.put("cashier", cashier.getUuid());
-			obj.put("pos", pos.getUuid());
-			obj.put("amount", amount);
-			obj.put("bookingTime", bookingTime);
-			obj.put("receiptIndex", receiptIndex);
-			obj.put("description", description);
-			return obj;
-		}
-		catch (final JSONException e)
-		{
-			e.printStackTrace();
-			return null;
-		}
-	}
 
-	public static AccountTransaction fromJSON(JSONObject obj) throws JSONException
-	{
-		if (obj.has("result") && obj.getString("result") != null)
-			obj = obj.getJSONObject("result");
-
-		// date
-		final String date = obj.getString("bookingTime");
-		Date bTime = null;
-		try
+		@Override
+		protected Builder self()
 		{
-			bTime = inputDf.parse(date);
-		}
-		catch (final ParseException e)
-		{
-			e.printStackTrace();
+			return this;
 		}
 
-		final Account acc = new Account.Builder().build();
-		acc.setUuid(obj.getString("account"));
-		final Receipt rec = new Receipt.Builder().build();
-		rec.setUuid(obj.getString("receipt"));
-		final Cashier cash = new Cashier.Builder(null).build();
-		cash.setUuid(obj.getString("cashier"));
-		final POS pos = new POS.Builder(null).build();
-		pos.setUuid(obj.getString("pos"));
-		final AccountTransaction accT = new AccountTransaction.Builder().deleted(
-			obj.getBoolean("deleted"))
-			.revision(obj.getString("revision"))
-			.receipt(rec)
-			.cashier(cash)
-			.pos(pos)
-			.account(acc)
-			.amount(obj.getDouble("amount"))
-			.bookingTime(bTime)
-			.receiptIndex(obj.getInt("receiptIndex"))
-			.description(obj.getString("description"))
-			.build();
-		return accT;
 	}
 
-	public boolean post() throws IOException
+	public AccountTransaction(final Init<?> init)
 	{
-		/*
-		 * if (account != null && account.getUuid() == null) account.post();
-		 */
-		if (receipt != null && receipt.getUuid() == null)
-			receipt.post();
-		if (cashier != null && cashier.getUuid() == null)
-			cashier.post();
-		if (pos != null && pos.getUuid() == null)
-			pos.post();
-		return CloudLink.getConnector().postData(DataType.accountTransaction, this.toJSON());
-
+		super(init);
+		account = init.account;
+		receipt = init.receipt;
+		cashier = init.cashier;
+		pos = init.pos;
+		amount = init.amount;
+		bookingTime = init.bookingTime;
+		receiptIndex = init.receiptIndex;
+		description = init.description;
 	}
 
-	public String getUuid()
-	{
-		return uuid;
-	}
+// public JSONObject toJSON()
+// {
+// final JSONObject obj = new JSONObject();
+// try
+// {
 
-	public void setUuid(final String uuid)
-	{
-		this.uuid = uuid;
-	}
+// return obj;
+// }
+// catch (final JSONException e)
+// {
+// e.printStackTrace();
+// return null;
+// }
+// }
 
-	public String getRevision()
-	{
-		return revision;
-	}
+//
+//
+//
 
-	public void setRevision(final String revision)
-	{
-		this.revision = revision;
-	}
-
-	public boolean isDeleted()
-	{
-		return deleted;
-	}
-
-	public void setDeleted(final boolean deleted)
-	{
-		this.deleted = deleted;
-	}
+// public boolean post() throws IOException
+// {
+// /*
+// * if (account != null && account.getUuid() == null) account.post();
+// */
+// if (receipt != null && receipt.getUuid() == null)
+// receipt.post();
+// if (cashier != null && cashier.getUuid() == null)
+// cashier.post();
+// if (pos != null && pos.getUuid() == null)
+// pos.post();
+// return CloudLink.getConnector().postData(DataType.accountTransaction, this.toJSON());
+//
+// }
 
 	public Receipt getReceipt()
 	{
@@ -331,8 +235,6 @@ public class AccountTransaction
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((this.description == null) ? 0 : this.description.hashCode());
-		result = prime * result + ((this.revision == null) ? 0 : this.revision.hashCode());
-		result = prime * result + ((this.uuid == null) ? 0 : this.uuid.hashCode());
 		result = prime * result + ((this.account == null) ? 0 : this.account.hashCode());
 		result = prime * result + ((this.bookingTime == null) ? 0 : this.bookingTime.hashCode());
 		result = prime * result + ((this.cashier == null) ? 0 : this.cashier.hashCode());
@@ -341,6 +243,62 @@ public class AccountTransaction
 
 
 		return result;
+	}
+
+	@Override
+	public JSONObject toJSON() throws JSONException
+	{
+		JSONObject obj = new JSONObject();
+		obj = super.appendJSON(obj);
+
+		obj.put("account", account.getId());
+		obj.put("receipt", receipt.getId());
+		obj.put("cashier", cashier.getId());
+		obj.put("pos", pos.getId());
+		obj.put("amount", amount);
+		obj.put("bookingTime", bookingTime);
+		obj.put("receiptIndex", receiptIndex);
+		obj.put("description", description);
+
+		return obj;
+	}
+
+	public static AccountTransaction fromJSON(JSONObject obj) throws JSONException, ParseException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
+
+		// date
+		final String date = obj.getString("bookingTime");
+		Date bTime = null;
+
+		bTime = inputDf.parse(date);
+
+		final Account account = new Account.Builder().build();
+		account.setId(obj.getString("account"));
+
+		final Receipt rec = new Receipt.Builder().build();
+		rec.setId(obj.getString("receipt"));
+
+		final Cashier cash = new Cashier.Builder().build();
+		cash.setId(obj.getString("cashier"));
+
+		final POS pos = new POS.Builder().build();
+		pos.setId(obj.getString("pos"));
+
+		final AccountTransaction accountTransaction = new AccountTransaction.Builder().deleted(
+			obj.getBoolean("deleted"))
+			.revision(obj.getLong("revision"))
+			.receipt(rec)
+			.cashier(cash)
+			.pos(pos)
+			.account(account)
+			.amount(obj.getDouble("amount"))
+			.bookingTime(bTime)
+			.receiptIndex(obj.getInt("receiptIndex"))
+			.description(obj.getString("description"))
+			.build();
+		return accountTransaction;
 	}
 
 

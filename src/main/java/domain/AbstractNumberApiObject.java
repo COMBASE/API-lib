@@ -3,6 +3,7 @@ package domain;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import domain.interfaces.HasId;
 import domain.interfaces.HasNumber;
 
 public abstract class AbstractNumberApiObject<T extends HasNumber & HasId> extends
