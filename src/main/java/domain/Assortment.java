@@ -1,190 +1,63 @@
 package domain;
 
-import link.CloudLink;
-
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import error.ApiNotReachableException;
 
-public class Assortment
+public class Assortment extends AbstractNameAndNumberApiObject<Assortment>
 {
-	private boolean deleted;
-	private String uuid;
-	private final String revision;
-	private String number;
-	private String name;
-
-	private String description;
-
-
-	private Assortment(final Builder builder)
+	public static class Builder extends Init<Builder>
 	{
-		number = builder.number;
-		name = builder.name;
-		description = builder.description;
-		deleted = builder.deleted;
-		uuid = builder.uuid;
-		revision = builder.revision;
+
+		@Override
+		protected Builder self()
+		{
+			return this;
+		}
+
 	}
-
-	public static class Builder
+	protected static abstract class Init<T extends Init<T>> extends
+		AbstractNameAndNumberApiObject.Init<T>
 	{
-		private final String name;
-		private String uuid = null;
-		private String number = null;
 		private String description;
-		private boolean deleted;
-		private String revision;
 
-		public Builder(final String name)
-		{
-			this.name = name;
-		}
-
-		public Builder revision(final String value)
-		{
-			this.revision = value;
-			return this;
-		}
-
-		public Builder number(final String value)
-		{
-			number = value;
-			return this;
-		}
-
-		public Builder uuid(final String value)
-		{
-			uuid = value;
-			return this;
-		}
-
-		public Builder deleted(final boolean value)
-		{
-			deleted = value;
-			return this;
-		}
-
-		public Builder description(final String desc)
-		{
-			description = desc;
-			return this;
-		}
-
+		@Override
 		public Assortment build()
 		{
 			return new Assortment(this);
 		}
-	}
 
-	public static Assortment fromJSON(JSONObject obj) throws JSONException
-	{
-
-		if (obj.has("result") && obj.getString("result") != null)
-			obj = obj.getJSONObject("result");
-
-
-		final Assortment assortment = new Assortment.Builder(obj.getString("name")).deleted(
-			obj.getBoolean("deleted"))
-			.number(obj.getString("number"))
-			.uuid(obj.getString("uuid"))
-			.build();
-		return assortment;
-
-
-	}
-
-	public JSONObject toJSON()
-	{
-		final JSONObject obj = new JSONObject();
-		try
+		public T description(final String value)
 		{
-			obj.put("name", name);
-			if (number != null)
-				obj.put("number", number);
-			obj.put("deleted", deleted);
-			obj.put("description", description);
-			return obj;
-		}
-		catch (final JSONException e)
-		{
-			e.printStackTrace();
-			return null;
+			this.description = value;
+			return self();
 		}
 	}
 
-	public boolean post() throws ApiNotReachableException
-	{
-		final boolean result = CloudLink.getConnector()
-			.postData(DataType.assortment, this.toJSON());
-		if (number != null)
-			uuid = CloudLink.getUUIDByNumber(DataType.assortment, number);
-		else
-			uuid = CloudLink.getUUIDByName(DataType.assortment, name);
-		return result;
-	}
+	private static final long serialVersionUID = 4119884542878721366L;
 
-	public String getUuid()
-	{
-		return uuid;
-	}
+	private String description;
 
-	public String getNumber()
+	private Assortment(final Init<?> init)
 	{
-		return number;
-	}
-
-	public void setNumber(final String number)
-	{
-		this.number = number;
-	}
-
-	public String getName()
-	{
-		return name;
-	}
-
-	public void setName(final String name)
-	{
-		this.name = name;
-	}
-
-	public String getDescription()
-	{
-		return description;
-	}
-
-	public void setDescription(final String description)
-	{
-		this.description = description;
-	}
-
-	public boolean isDeleted()
-	{
-		return deleted;
-	}
-
-	public void setDeleted(final boolean deleted)
-	{
-		this.deleted = deleted;
-	}
-
-	public void setUuid(final String uuid)
-	{
-		this.uuid = uuid;
-	}
-
-	public String getRevision()
-	{
-		return revision;
+		super(init);
+		description = init.description;
 	}
 
 	@Override
 	public boolean equals(final Object obj)
 	{
-
 		return obj.hashCode() == this.hashCode();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+
+
+	public String getDescription()
+	{
+		return description;
 	}
 
 	@Override
@@ -192,10 +65,52 @@ public class Assortment
 	{
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
-		result = prime * result + ((this.number == null) ? 0 : this.number.hashCode());
-		result = prime * result + ((this.uuid == null) ? 0 : this.uuid.hashCode());
+
+		result = prime * result + ((this.description == null) ? 0 : this.description.hashCode());
+
+		result = super.hashCode(result);
 
 		return result;
+	}
+
+	public void setDescription(final String description)
+	{
+		this.description = description;
+	}
+
+
+	@Override
+	public String toString()
+	{
+		final StringBuilder builder = new StringBuilder();
+
+		super.toString(builder);
+
+		return builder.toString();
+	}
+
+	@Override
+	public JSONObject toJSON() throws JSONException
+	{
+		JSONObject obj = new JSONObject();
+		obj = super.appendJSON(obj);
+
+		obj.put("description", description);
+
+		return obj;
+	}
+
+	public static Assortment fromJSON(JSONObject obj) throws JSONException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
+
+
+		final Assortment assortment = new Assortment.Builder().name(obj.getString("name"))
+			.deleted(obj.getBoolean("deleted"))
+			.number(obj.getString("number"))
+			.id(obj.getString("uuid"))
+			.build();
+		return assortment;
 	}
 }
