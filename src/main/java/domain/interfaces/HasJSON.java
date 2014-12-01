@@ -1,12 +1,19 @@
+/**
+ * Copyright 2012 COMBASE AG
+ */
 package domain.interfaces;
 
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import domain.AbstractApiObject;
-
-public interface HasJSON<T extends AbstractApiObject>
+/**
+ * @author Gordon Bosch
+ * 
+ */
+public interface HasJSON<T>
 {
-	T fromJSON(final JSONObject obj);
+	// public void readJSON(final JSONObject obj) throws JSONException;
 
-	JSONObject toJSON();
+	public JSONObject appendJSON(final JSONObject obj) throws JSONException;
+
 }
