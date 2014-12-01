@@ -1,7 +1,10 @@
 package domain;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -152,5 +155,23 @@ public abstract class AbstractApiObject<T extends HasId> implements HasId, Seria
 		obj.put("revision", getRevision());
 
 		return obj;
+	}
+
+	protected static BigDecimal prepareBigDecimal(final JSONObject obj,
+		final String bigDecimalString) throws JSONException
+	{
+		if (!obj.isNull(bigDecimalString) &&
+			!obj.getString(bigDecimalString).equalsIgnoreCase("null"))
+			return new BigDecimal(obj.getString(bigDecimalString));
+		return null;
+	}
+
+	protected static Date prepareDate(final JSONObject obj, final String dateString)
+		throws ParseException, JSONException
+	{
+		Date date = null;
+		if (!obj.isNull(dateString) || !obj.getString(dateString).equalsIgnoreCase("null"))
+			return date = inputDf.parse(obj.getString(dateString));
+		return null;
 	}
 }

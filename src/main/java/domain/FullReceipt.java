@@ -266,8 +266,14 @@ public class FullReceipt extends AbstractNumberApiObject<FullReceipt>
 			{
 				final JSONObject jSale = jASale.getJSONObject(i);
 				final Sale sale = Sale.fromJSON(jSale);
+
+				Product_Code code = null;
+				if (!jSale.isNull("articleEAN"))
+					code = new Product_Code(jSale.getString("articleEAN"), new BigDecimal(1));
+
+
 				final Product product = new Product.Builder().number(jSale.getString("articleNr"))
-					.codes(new Product_Code(jSale.getString("articleEAN"), new BigDecimal(1)))
+					.codes(code)
 					.id(jSale.getString("article"))
 					.build();
 				sale.setArticle(product);

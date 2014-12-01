@@ -221,6 +221,8 @@ public class ApiConnector
 		catch (final IOException e)
 		{
 			e.printStackTrace();
+			System.out.println(type.toString());
+			System.out.println(obj.toString());
 			return null;
 		}
 	}

@@ -1,11 +1,14 @@
 package link.json;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -174,21 +177,18 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	 * super method super.post(obj).
 	 * 
 	 * @param obj
-	 * @return
+	 * @return the updated obj:T previously inserted into this method.
 	 * @throws ApiNotReachableException
 	 * @throws JSONException
 	 * @throws ParseException
 	 * @throws PostWithNoReferenceSetException
 	 */
-	public T post(final T obj) throws ApiNotReachableException, JSONException, ParseException,
-		PostWithNoReferenceSetException
+	public T post(final T obj) throws ApiNotReachableException, JSONException, ParseException
 	{
-		if (obj == null || obj.getId() == null)
-			throw new PostWithNoReferenceSetException(null);
-		else
-		{
-			return upload(obj);
-		}
+// if (obj == null || obj.getId() == null)
+// throw new PostWithNoReferenceSetException(null);
+// else
+		return upload(obj);
 
 	}
 
@@ -211,16 +211,31 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 		return ret;
 	}
 
-	public T postList(final List<T> objs, final int limit) throws JSONException
+	/**
+	 * posts all Data
+	 * 
+	 * @param objs
+	 * @param limit
+	 * @return response:Set<object_type>
+	 * @throws JSONException
+	 * @throws ParseException
+	 * @throws ApiNotReachableException
+	 */
+	public List<T> postList(final List<T> objs, final int limit, final int threads)
+		throws JSONException, ParseException, ApiNotReachableException
 	{
+		final Set<PostListThread> threadSet = new HashSet<PostListThread>();
+		final Set<PostListThread> removedThreadSet = new HashSet<PostListThread>();
 		final Date date1 = new Date();
 		System.out.println("start: " + date1);
 
 		JSONArray jArray = new JSONArray();
 
 		// Thread Executor init
-		final ExecutorService exec = Executors.newFixedThreadPool(Runtime.getRuntime()
-			.availableProcessors());
+// final ExecutorService exec = Executors.newFixedThreadPool(Runtime.getRuntime()
+// .availableProcessors());
+
+		final ExecutorService exec = Executors.newFixedThreadPool(threads);
 
 		int offset = 0;
 		int i = 0;
@@ -237,18 +252,55 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 				i++;
 			}
 
+			final PostListThread localThread = new PostListThread(getDataType(), jArray);
+			threadSet.add(localThread);
 			// TODO return post response result JSONString
-			exec.execute(new PostListThread(getDataType(), jArray));
+			exec.execute(localThread);
+
+
 		}
 		exec.shutdown();
+		final List<T> objects = new ArrayList<T>();
 		while (!exec.isTerminated())
 		{
+			while (!threadSet.isEmpty())
+			{
+				for (final PostListThread thread : threadSet)
+				{
+					if (thread.getReturn() != null)
+					{
+						final String jsonString = thread.getReturn();
+
+						final JSONObject jsonObject = new JSONObject(jsonString);
+						JSONArray jsonArray;
+
+						if (jsonObject.has("resultList") && !jsonObject.isNull("resultList"))
+						{
+							jsonArray = jsonObject.getJSONArray("resultList");
+
+							for (int j = 0; j < jsonArray.length(); j++)
+							{
+								final T obj = fromJSON(jsonArray.getJSONObject(j));
+								objects.add(obj);
+							}
+						}
+
+						removedThreadSet.add(thread);
+
+					}
+				}
+
+				threadSet.removeAll(removedThreadSet);
+
+			}
 		}
 
 		final Date date2 = new Date();
 		System.out.println("end: " + date2);
 
-		return null;
+		updateCache(objects);
+
+		return objects;
 	}
 
 	/**
@@ -275,6 +327,16 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	{
 		if (obj.getId() != null)
 			idCache.put(obj.getId(), obj);
+	}
+
+	public void updateCache(final List<T> objs)
+	{
+		for (final T obj : objs)
+		{
+			if (obj.getId() != null)
+				idCache.put(obj.getId(), obj);
+		}
+
 	}
 
 	public Iterator<JSONObject> iterator(final long revision) throws ApiNotReachableException

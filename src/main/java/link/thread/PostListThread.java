@@ -17,6 +17,7 @@ public class PostListThread extends Thread
 {
 	JSONArray array;
 	DataType type;
+	String ret;
 
 	public PostListThread(final DataType type, final JSONArray array)
 	{
@@ -29,7 +30,12 @@ public class PostListThread extends Thread
 	public void run()
 	{
 // System.out.println("start: " + new Date());
-		CloudLink.getConnector().postData(type, array);
+		ret = CloudLink.getConnector().postData(type, array);
 // System.out.println("end: " + new Date());
+	}
+
+	public String getReturn()
+	{
+		return ret;
 	}
 }

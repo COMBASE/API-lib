@@ -2,6 +2,7 @@ package link.json;
 
 import java.text.ParseException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import link.CloudLink;
@@ -14,7 +15,6 @@ import domain.interfaces.HasId;
 import domain.interfaces.HasName;
 import domain.interfaces.HasNumber;
 import error.ApiNotReachableException;
-import error.PostWithNoReferenceSetException;
 import error.SubObjectInitializationException;
 
 public abstract class AbstractHasNameJsonLoader<T extends HasId & HasNumber & HasName> extends
@@ -45,14 +45,13 @@ public abstract class AbstractHasNameJsonLoader<T extends HasId & HasNumber & Ha
 	}
 
 	@Override
-	public T post(final T obj) throws ApiNotReachableException, JSONException, ParseException,
-		PostWithNoReferenceSetException
+	public T post(final T obj) throws ApiNotReachableException, JSONException, ParseException
 	{
-		if (obj == null ||
-			(obj.getName() == null && obj.getNumber() == null && obj.getId() == null))
-			throw new PostWithNoReferenceSetException(null);
-		else
-			return upload(obj);
+// if (obj == null ||
+// (obj.getName() == null && obj.getNumber() == null && obj.getId() == null))
+// throw new PostWithNoReferenceSetException(null);
+// else
+		return upload(obj);
 	}
 
 	@Override
@@ -77,4 +76,18 @@ public abstract class AbstractHasNameJsonLoader<T extends HasId & HasNumber & Ha
 
 		super.updateCache(obj);
 	}
+
+	@Override
+	public void updateCache(final List<T> objs)
+	{
+		for (final T obj : objs)
+		{
+			if (obj.getName() != null)
+				nameCache.put(obj.getName(), obj);
+		}
+
+		super.updateCache(objs);
+
+	}
+
 }

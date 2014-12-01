@@ -9,7 +9,7 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-public class Inventory extends AbstractNumberApiObject<Inventory>
+public class Inventory extends AbstractNameAndNumberApiObject<Inventory>
 {
 	/**
 	 * 
@@ -50,7 +50,8 @@ public class Inventory extends AbstractNumberApiObject<Inventory>
 
 	private Boolean wednesdayInventory;
 
-	protected static abstract class Init<T extends Init<T>> extends AbstractNumberApiObject.Init<T>
+	protected static abstract class Init<T extends Init<T>> extends
+		AbstractNameAndNumberApiObject.Init<T>
 	{
 		private String user = null;
 
@@ -537,13 +538,17 @@ public class Inventory extends AbstractNumberApiObject<Inventory>
 		if (inventoryProcedure != null)
 			obj.put("inventoryProcedure", inventoryProcedure.name());
 
+		obj.remove("name");
+
+		obj.put("description", getName());
+
 		return obj;
 	}
 
 	public static Inventory fromJSON(JSONObject obj) throws JSONException, ParseException
 	{
 
-		if (obj.has("result") && obj.getString("result").equalsIgnoreCase("null"))
+		if (obj.has("result") && !obj.getString("result").equalsIgnoreCase("null"))
 			obj = obj.getJSONObject("result");
 
 		final List<OrganizationalUnit> organizationalUnits = new ArrayList<OrganizationalUnit>();
@@ -559,6 +564,7 @@ public class Inventory extends AbstractNumberApiObject<Inventory>
 			.createTime(inputDf.parse(obj.getString("createTime")))
 			.processTime(inputDf.parse(obj.getString("processTime")))
 			.inventoryProcedure(InventoryProcedureType.valueOf(obj.getString("inventoryProcedure")))
+			.name(obj.getString("description"))
 			.build();
 
 		return inventory;

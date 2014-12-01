@@ -624,7 +624,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		if (obj.has("number"))
 			prod.setNumber(obj.getString("number"));
 
-		if (obj.getString("articleCodes") != "null")
+		if (!obj.isNull("articleCodes") && !obj.getString("articleCodes").equalsIgnoreCase("null"))
 		{
 			JSONArray jACode = new JSONArray();
 			jACode = obj.getJSONArray("articleCodes");
@@ -635,8 +635,12 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 			{
 				jCode = (JSONObject)jACode.get(i);
 				final BigDecimal quantity = new BigDecimal(jCode.getDouble("quantity"));
-				productCode = new Product_Code(jCode.getString("code"), quantity);
-				codeList.add(productCode);
+				if (!jCode.isNull("code"))
+				{
+					productCode = new Product_Code(jCode.getString("code"), quantity);
+					codeList.add(productCode);
+				}
+
 			}
 			prod.setCodes(codeList);
 		}

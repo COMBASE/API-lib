@@ -324,9 +324,11 @@ public class InventoryReceipt extends AbstractNumberApiObject<InventoryReceipt>
 		return obj;
 	}
 
-	public static InventoryReceipt fromJSON(final JSONObject obj) throws JSONException,
-		ParseException
+	public static InventoryReceipt fromJSON(JSONObject obj) throws JSONException, ParseException
 	{
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
+
 		final Cashier cashier = new Cashier.Builder().id(obj.getString("cashier")).build();
 
 		final OrganizationalUnit organizationalUnit = new OrganizationalUnit.Builder().id(
@@ -337,11 +339,11 @@ public class InventoryReceipt extends AbstractNumberApiObject<InventoryReceipt>
 		final InventoryReceipt inventoryReceipt = new InventoryReceipt.Builder().id(
 			obj.getString("uuid"))
 			.number(obj.getString("number"))
-			.bookingTime(inputDf.parse(obj.getString("bookingTime")))
+			.bookingTime(prepareDate(obj, "bookingTime"))
 			.cashier(cashier)
-			.createTime(inputDf.parse(obj.getString("createTime")))
+			.createTime(prepareDate(obj, "createTime"))
 			.description(obj.getString("description"))
-			.finishTime(inputDf.parse(obj.getString("finishTime")))
+			.finishTime(prepareDate(obj, "finishTime"))
 			.organizationalUnit(organizationalUnit)
 			.inventory(inventory)
 			.build();
@@ -349,4 +351,6 @@ public class InventoryReceipt extends AbstractNumberApiObject<InventoryReceipt>
 
 		return inventoryReceipt;
 	}
+
+
 }

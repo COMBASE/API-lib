@@ -169,8 +169,11 @@ public class InventoryReceiptItem extends AbstractApiObject<InventoryReceiptItem
 		return obj;
 	}
 
-	public static InventoryReceiptItem fromJSON(final JSONObject obj) throws JSONException
+	public static InventoryReceiptItem fromJSON(JSONObject obj) throws JSONException
 	{
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
+
 		final Product product = new Product.Builder().id(obj.getString("article")).build();
 
 		final InventoryReceipt receipt = new InventoryReceipt.Builder().id(obj.getString("receipt"))
@@ -178,8 +181,8 @@ public class InventoryReceiptItem extends AbstractApiObject<InventoryReceiptItem
 
 		final InventoryReceiptItem inventoryReceiptItem = new InventoryReceiptItem.Builder().id(
 			obj.getString("uuid"))
-			.nominalGoods(new BigDecimal(obj.getString("nominalGoods")))
-			.actualGoods(new BigDecimal(obj.getString("acturalGoods")))
+			.nominalGoods(prepareBigDecimal(obj, "nominalGoods"))
+			.actualGoods(prepareBigDecimal(obj, "actualGoods"))
 			.article(product)
 			.differenceReason(obj.getString("differenceReason"))
 			.receipt(receipt)
@@ -188,4 +191,6 @@ public class InventoryReceiptItem extends AbstractApiObject<InventoryReceiptItem
 
 		return inventoryReceiptItem;
 	}
+
+
 }
