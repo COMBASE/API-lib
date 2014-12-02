@@ -169,6 +169,7 @@ public abstract class AbstractApiObject<T extends HasId> implements HasId, Seria
 	protected static Date prepareDate(final JSONObject obj, final String dateString)
 		throws ParseException, JSONException
 	{
+		@SuppressWarnings("unused")
 		Date date = null;
 		if (!obj.isNull(dateString) || !obj.getString(dateString).equalsIgnoreCase("null"))
 			return date = inputDf.parse(obj.getString(dateString));

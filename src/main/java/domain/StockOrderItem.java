@@ -2,8 +2,14 @@ package domain;
 
 import java.math.BigDecimal;
 
-public class StockOrderItem
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
+public class StockOrderItem extends AbstractApiObject<StockOrderItem>
 {
+
+	private static final long serialVersionUID = -3894410230357779821L;
+
 	private BigDecimal bookedQuantity;
 	private BigDecimal containerQuantity;
 	private BigDecimal quantity;
@@ -18,24 +24,7 @@ public class StockOrderItem
 	private String color;
 	private String size;
 
-	public StockOrderItem(final Builder builder)
-	{
-		bookedQuantity = builder.bookedQuantity;
-		containerQuantity = builder.containerQuantity;
-		quantity = builder.quantity;
-		purchasePrice = builder.purchasePrice;
-		salesPrice = builder.salesPrice;
-		desiredOverallQuantity = builder.desiredOverallQuantity;
-		actualOverallQuantity = builder.actualOverallQuantity;
-		itemPrice = builder.itemPrice;
-
-		name = builder.name;
-		product = builder.product;
-		color = builder.color;
-		size = builder.size;
-	}
-
-	public static class Builder
+	protected static abstract class Init<T extends Init<T>> extends AbstractApiObject.Init<T>
 	{
 		private BigDecimal bookedQuantity = null;
 		private BigDecimal containerQuantity = null;
@@ -51,77 +40,112 @@ public class StockOrderItem
 		private String color = null;
 		private String size = null;
 
-		public Builder bookedQuantity(final BigDecimal value)
+		public T bookedQuantity(final BigDecimal value)
 		{
 			this.bookedQuantity = value;
-			return this;
+			return self();
 		}
 
-		public Builder containerQuantity(final BigDecimal value)
+		public T containerQuantity(final BigDecimal value)
 		{
 			this.containerQuantity = value;
-			return this;
+			return self();
 		}
 
-		public Builder quantity(final BigDecimal value)
+		public T quantity(final BigDecimal value)
 		{
 			this.quantity = value;
-			return this;
+			return self();
 		}
 
-		public Builder purchasePrice(final BigDecimal value)
+		public T purchasePrice(final BigDecimal value)
 		{
 			this.purchasePrice = value;
-			return this;
+			return self();
 		}
 
-		public Builder salesPrice(final BigDecimal value)
+		public T salesPrice(final BigDecimal value)
 		{
 			this.salesPrice = value;
-			return this;
+			return self();
 		}
 
-		public Builder desiredOverallQuantity(final BigDecimal value)
+		public T desiredOverallQuantity(final BigDecimal value)
 		{
 			this.desiredOverallQuantity = value;
-			return this;
+			return self();
 		}
 
-		public Builder actualOverallQuantity(final BigDecimal value)
+		public T actualOverallQuantity(final BigDecimal value)
 		{
 			this.actualOverallQuantity = value;
-			return this;
+			return self();
 		}
 
-		public Builder itemPrice(final BigDecimal value)
+		public T itemPrice(final BigDecimal value)
 		{
 			this.itemPrice = value;
-			return this;
+			return self();
 		}
 
-		public Builder name(final String value)
+		public T name(final String value)
 		{
 			this.name = value;
-			return this;
+			return self();
 		}
 
-		public Builder product(final String value)
+		public T product(final String value)
 		{
 			this.product = value;
-			return this;
+			return self();
 		}
 
-		public Builder color(final String value)
+		public T color(final String value)
 		{
 			this.color = value;
+			return self();
+		}
+
+		public T size(final String value)
+		{
+			this.size = value;
+			return self();
+		}
+
+		@Override
+		public StockOrderItem build()
+		{
+			return new StockOrderItem(this);
+		}
+	}
+
+	public static class Builder extends Init<Builder>
+	{
+
+		@Override
+		protected Builder self()
+		{
 			return this;
 		}
 
-		public Builder size(final String value)
-		{
-			this.size = value;
-			return this;
-		}
+	}
+
+	public StockOrderItem(final Init<?> init)
+	{
+		super(init);
+		bookedQuantity = init.bookedQuantity;
+		containerQuantity = init.containerQuantity;
+		quantity = init.quantity;
+		purchasePrice = init.purchasePrice;
+		salesPrice = init.salesPrice;
+		desiredOverallQuantity = init.desiredOverallQuantity;
+		actualOverallQuantity = init.actualOverallQuantity;
+		itemPrice = init.itemPrice;
+
+		name = init.name;
+		product = init.product;
+		color = init.color;
+		size = init.size;
 	}
 
 	public BigDecimal getBookedQuantity()
@@ -242,5 +266,81 @@ public class StockOrderItem
 	public void setSize(final String size)
 	{
 		this.size = size;
+	}
+
+	@Override
+	public boolean equals(final Object obj)
+	{
+
+		return obj.hashCode() == this.hashCode();
+	}
+
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+
+		result = super.hashCode(result);
+		result = prime * result +
+			((this.bookedQuantity == null) ? 0 : this.bookedQuantity.hashCode());
+		result = prime * result +
+			((this.containerQuantity == null) ? 0 : this.containerQuantity.hashCode());
+		result = prime * result +
+			((this.desiredOverallQuantity == null) ? 0 : this.desiredOverallQuantity.hashCode());
+		result = prime * result + ((this.itemPrice == null) ? 0 : this.itemPrice.hashCode());
+		result = prime * result +
+			((this.purchasePrice == null) ? 0 : this.purchasePrice.hashCode());
+		result = prime * result + ((this.quantity == null) ? 0 : this.quantity.hashCode());
+		result = prime * result + ((this.salesPrice == null) ? 0 : this.salesPrice.hashCode());
+		result = prime * result + ((this.size == null) ? 0 : this.size.hashCode());
+
+		return result;
+	}
+
+	public static StockOrderItem fromJSON(final JSONObject obj) throws JSONException
+	{
+
+		final StockOrderItem item = new StockOrderItem.Builder().actualOverallQuantity(
+			prepareBigDecimal(obj, "actualOverallQuantity"))
+			.bookedQuantity(prepareBigDecimal(obj, "bookedQuantity"))
+			.color(obj.getString("color"))
+			.containerQuantity(prepareBigDecimal(obj, "containerQuantity"))
+			.deleted(obj.getBoolean("deleted"))
+			.desiredOverallQuantity(prepareBigDecimal(obj, "desiredOverallQuantity"))
+			.id(obj.getString("uuid"))
+			.itemPrice(prepareBigDecimal(obj, "itemPrice"))
+			.name(obj.getString("name"))
+			.product(obj.getString("product"))
+			.purchasePrice(prepareBigDecimal(obj, "purchasePrice"))
+			.quantity(prepareBigDecimal(obj, "quantity"))
+			.revision(obj.getLong("revision"))
+			.salesPrice(prepareBigDecimal(obj, "salesPrice"))
+			.build();
+
+		return item;
+	}
+
+	@Override
+	public JSONObject toJSON() throws JSONException
+	{
+		JSONObject obj = new JSONObject();
+		obj = appendJSON(obj);
+
+		obj.put("bookedQuantity", bookedQuantity);
+		obj.put("containerQuantity", containerQuantity);
+		obj.put("quantity", quantity);
+		obj.put("purchasePrice", purchasePrice);
+		obj.put("salesPrice", salesPrice);
+		obj.put("desiredOverallQuantity", desiredOverallQuantity);
+		obj.put("actualOverallQuantity", actualOverallQuantity);
+		obj.put("itemPrice", itemPrice);
+
+		obj.put("name", name);
+		obj.put("product", product);
+		obj.put("color", color);
+		obj.put("size", size);
+
+		return obj;
 	}
 }

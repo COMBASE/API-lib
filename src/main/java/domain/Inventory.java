@@ -16,7 +16,7 @@ public class Inventory extends AbstractNameAndNumberApiObject<Inventory>
 	 */
 	private static final long serialVersionUID = -4473050181320272357L;
 
-	private String user;
+	private User user;
 
 	private String description;
 
@@ -53,7 +53,7 @@ public class Inventory extends AbstractNameAndNumberApiObject<Inventory>
 	protected static abstract class Init<T extends Init<T>> extends
 		AbstractNameAndNumberApiObject.Init<T>
 	{
-		private String user = null;
+		private User user = null;
 
 		private String description = null;
 
@@ -88,7 +88,7 @@ public class Inventory extends AbstractNameAndNumberApiObject<Inventory>
 		private Boolean wednesdayInventory = null;
 
 
-		public T user(final String value)
+		public T user(final User value)
 		{
 			user = value;
 			return self();
@@ -272,12 +272,12 @@ public class Inventory extends AbstractNameAndNumberApiObject<Inventory>
 // }
 
 
-	public String getUser()
+	public User getUser()
 	{
 		return user;
 	}
 
-	public void setUser(final String user)
+	public void setUser(final User user)
 	{
 		this.user = user;
 	}
@@ -513,7 +513,8 @@ public class Inventory extends AbstractNameAndNumberApiObject<Inventory>
 		final JSONObject obj = new JSONObject();
 		appendJSON(obj);
 
-		obj.put("user", user);
+		if (user != null)
+			obj.put("user", user.getId());
 
 		obj.put("description", description);
 
@@ -554,11 +555,13 @@ public class Inventory extends AbstractNameAndNumberApiObject<Inventory>
 		final List<OrganizationalUnit> organizationalUnits = new ArrayList<OrganizationalUnit>();
 		obj.getJSONArray("organizationalUnits");
 
+		final User user = new User.Builder().id(obj.getString("user")).build();
+
 		final Inventory inventory = new Inventory.Builder().deleted(obj.getBoolean("deleted"))
 			.revision(obj.getLong("revision"))
 			.id(obj.getString("uuid"))
 			.number(obj.getString("number"))
-			.user(obj.getString("user"))
+			.user(user)
 			.description(obj.getString("description"))
 			.organizationalUnits(organizationalUnits)
 			.createTime(inputDf.parse(obj.getString("createTime")))

@@ -53,15 +53,9 @@ public class User extends AbstractNumberApiObject<User>
 
 		this.requestedEmail = init.requestedEmail;
 
-		this.emailChangeCount = init.emailChangeCount;
-
 		this.firstname = init.firstname;
 
 		this.orgs = init.orgs;
-
-		this.passwordHash = init.passwordHash;
-
-		this.passwordSalt = init.passwordSalt;
 
 		this.permissions = init.permissions;
 
@@ -70,10 +64,6 @@ public class User extends AbstractNumberApiObject<User>
 		this.surname = init.surname;
 
 		// private UserRoleReadable role;
-
-		this.locale = init.locale;
-
-		this.selectedOrg = init.selectedOrg;
 
 	}
 
@@ -441,24 +431,18 @@ public class User extends AbstractNumberApiObject<User>
 			}
 		}
 
-		final OrganizationalUnit selectedOrg = new OrganizationalUnit.Builder().id(
-			obj.getString("selectedOrg")).build();
+// final OrganizationalUnit selectedOrg = new OrganizationalUnit.Builder().id(
+// obj.getString("selectedOrg")).build();
 
 		final User user = new User.Builder().created(inputDf.parse(obj.getString("created")))
 			.deleted(obj.getBoolean("deleted"))
 			.email(obj.getString("email"))
-			.emailChangeCount(obj.getInt("emailChangeCount"))
 			.firstname(obj.getString("firstname"))
 			.id(obj.getString("uuid"))
-			.locale(obj.getString("locale"))
 			.number(obj.getString("number"))
 			.orgs(organizationalUnits)
-			.passwordHash(obj.getString("passwordHash"))
-			.passwordSalt(obj.getString("passwortSalt"))
 			.permissions(permissions)
-			.requestedEmail(obj.getString("requestedEmail"))
 			.revision(obj.getLong("revision"))
-			.selectedOrg(selectedOrg)
 			.surname(obj.getString("surname"))
 			.build();
 
