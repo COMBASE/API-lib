@@ -37,4 +37,16 @@ public class SubObjectInitializationException extends Exception
 		// ret.append(super.getLocalizedMessage());
 		return ret.toString();
 	}
+
+	public String getReference()
+	{
+		return reference;
+	}
+
+	public DataType getType()
+	{
+		return type;
+	}
+
+
 }
