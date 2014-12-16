@@ -34,7 +34,7 @@ public interface JsonDownloaderInterface
 	public JSONObject downloadByNumber(String number) throws ApiNotReachableException;
 
 	/**
-	 * for proper use you have to ensure that the JSONDownloader Object is kept alive as long you
+	 * for proper use you have to ensure that the JSONDownloader Object is kept alive as long as you
 	 * haven't got all needed JsonObjects!
 	 * 
 	 * returns an org.jettison.JSONArray of all org.jettison.JSONObjects having the same or greater

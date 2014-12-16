@@ -22,6 +22,7 @@ import org.codehaus.jettison.json.JSONObject;
 import domain.DataType;
 import domain.interfaces.HasId;
 import error.ApiNotReachableException;
+import error.ArticleCodeMustBeUniqueException;
 import error.PostWithNoReferenceSetException;
 import error.SubObjectInitializationException;
 
@@ -181,9 +182,11 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	 * @throws ApiNotReachableException
 	 * @throws JSONException
 	 * @throws ParseException
+	 * @throws ArticleCodeMustBeUniqueException
 	 * @throws PostWithNoReferenceSetException
 	 */
-	public T post(final T obj) throws ApiNotReachableException, JSONException, ParseException
+	public T post(final T obj) throws ApiNotReachableException, JSONException, ParseException,
+		ArticleCodeMustBeUniqueException
 	{
 // if (obj == null || obj.getId() == null)
 // throw new PostWithNoReferenceSetException(null);
@@ -192,13 +195,22 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 
 	}
 
-	protected T upload(final T obj) throws JSONException, ParseException
+	protected T upload(final T obj) throws JSONException, ParseException,
+		ArticleCodeMustBeUniqueException
 	{
 		updateCache(obj);
 
 		final String result = CloudLink.getConnector().postData(getDataType(), toJSON(obj));
-		final JSONObject jObj = new JSONObject(result);
-		final T ret = fromJSON(jObj);
+		T ret;
+		try
+		{
+			final JSONObject jObj = new JSONObject(result);
+			ret = fromJSON(jObj);
+		}
+		catch (final JSONException e)
+		{
+			throw new ArticleCodeMustBeUniqueException(e);
+		}
 
 		final T cachedObject = getCachedObject(ret);
 		if (cachedObject != null)
@@ -254,7 +266,6 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 
 			final PostListThread localThread = new PostListThread(getDataType(), jArray);
 			threadSet.add(localThread);
-			// TODO return post response result JSONString
 			exec.execute(localThread);
 
 
@@ -342,7 +353,6 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	public Iterator<JSONObject> iterator(final long revision) throws ApiNotReachableException
 	{
 		return new CloudResultIterator(this, revision);
-
 	}
 
 	protected DataType getDataType()

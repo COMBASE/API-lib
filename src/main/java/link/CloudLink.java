@@ -2,6 +2,7 @@ package link;
 
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -10,13 +11,15 @@ import domain.ReferenceType;
 import error.ApiNotReachableException;
 
 /**
- * This is the most important Class of this library you definetely want to initialize it
+ * This is the most important Class of this library right after the JSONLoader classes. You
+ * definetely want to initialize it!
  * 
  * @author Gordon Bosch
  * 
  */
 public class CloudLink
 {
+	protected final static Logger LOGGER = Logger.getLogger(CloudLink.class);
 	private static ApiConnector ApiCon;
 
 	/**
@@ -152,7 +155,7 @@ public class CloudLink
 	public static ApiConnector getConnector()
 	{
 		if (ApiCon == null)
-			System.err.println("Please initiliaze a CloudLink Object first!");
+			LOGGER.error("Please initiliaze a CloudLink Object first!");
 		return ApiCon;
 	}
 
@@ -166,7 +169,7 @@ public class CloudLink
 	public static String getUUIDByName(final DataType type, String reference)
 	{
 		if (ApiCon == null)
-			System.err.println("Please initiliaze a CloudLink Object first!");
+			LOGGER.error("Please initiliaze a CloudLink Object first!");
 		if (reference == null)
 			return null;
 
@@ -187,8 +190,7 @@ public class CloudLink
 			}
 			catch (final ApiNotReachableException e)
 			{
-				System.out.println("ApiNotReachableException");
-				e.printStackTrace();
+				LOGGER.error(e);
 				return null;
 			}
 			if (obj.has("result") && !obj.opt("result").equals(null))
@@ -211,7 +213,7 @@ public class CloudLink
 		throws ApiNotReachableException
 	{
 		if (ApiCon == null)
-			System.err.println("Please initiliaze a CloudLink Object first!");
+			LOGGER.error("Please initiliaze a CloudLink Object first!");
 		if (reference == null)
 			return null;
 		try
@@ -245,7 +247,7 @@ public class CloudLink
 	public static String getNumberByName(final DataType type, String reference)
 	{
 		if (ApiCon == null)
-			System.err.println("Please initiliaze a CloudLink Object first!");
+			LOGGER.error("Please initiliaze a CloudLink Object first!");
 		if (reference == null)
 			return null;
 
@@ -288,7 +290,7 @@ public class CloudLink
 		throws ApiNotReachableException
 	{
 		if (ApiCon == null)
-			System.err.println("Please initiliaze a CloudLink Object first!");
+			LOGGER.error("Please initiliaze a CloudLink Object first!");
 		if (reference == null)
 			return null;
 		try

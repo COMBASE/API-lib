@@ -10,13 +10,13 @@ import java.net.URL;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -31,6 +31,7 @@ import error.ApiNotReachableException;
  */
 public class ApiConnector
 {
+	private final static Logger LOGGER = Logger.getLogger(ApiConnector.class);
 	private final SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy'T'HH:mm:ss");
 	private final String cloudURL;
 	private final String token;
@@ -116,16 +117,16 @@ public class ApiConnector
 			in.close();
 			if (con.getResponseCode() == 200)
 			{
-				System.out.println(df.format(new Date()) + " APICON:GET -> Type:" +
-					type.getReference() + " JSON=" + obj.toString());
+				LOGGER.info("APICON:GET -> Type:" + type.getReference() + " JSON=" + obj.toString());
+
 				return response.toString();
 			}
 			else
 			{
-				System.out.println(df.format(new Date()) + " ERR: APICON:GET -> Type:" +
-					type.getReference() + " JSON=" + obj.toString());
-				System.out.println("Error: " + con.getResponseMessage() + ":" +
-					con.getResponseCode());
+				LOGGER.error("ERR: APICON:GET -> Type:" + type.getReference() + " JSON=" +
+					obj.toString());
+				LOGGER.error(con.getResponseMessage() + ":" + con.getResponseCode());
+
 				return null;
 			}
 		}
@@ -192,8 +193,7 @@ public class ApiConnector
 					response.append(inputLine);
 				}
 				in.close();
-				System.out.println(df.format(new Date()) + " APICON:POST -> Type:" +
-					type.getReference());
+				LOGGER.info("APICON:POST -> Type:" + type.getReference());
 				con.disconnect(); // Disconnect
 				return response.toString();
 			}
@@ -209,20 +209,16 @@ public class ApiConnector
 				}
 				in.close();
 
-				System.out.println(df.format(new Date()) + " ERR: APICON:POST -> Type:" +
-					type.getReference());
+				LOGGER.error("APICON:FAILED POST -> Type:" + type.getReference());
 
 				con.disconnect(); // Disconnect
-				System.out.println("Error: " + con.getResponseMessage() + ":" +
-					con.getResponseCode());
+				LOGGER.error(con.getResponseMessage() + ":" + con.getResponseCode());
 				return response.toString();
 			}
 		}
 		catch (final IOException e)
 		{
-			e.printStackTrace();
-			System.out.println(type.toString());
-			System.out.println(obj.toString());
+			LOGGER.error(type.toString() + obj.toString(), e);
 			return null;
 		}
 	}
@@ -279,9 +275,8 @@ public class ApiConnector
 					response.append(inputLine);
 				}
 				in.close();
-
-				System.out.println(df.format(new Date()) + " APICON:POST -> Type:" +
-					type.getReference() + " JSON=" + obj.toString());
+				LOGGER.info("APICON:POST -> Type:" + type.getReference() + " JSON=" +
+					obj.toString());
 				con.disconnect(); // Disconnect
 				return response.toString();
 			}
@@ -297,18 +292,17 @@ public class ApiConnector
 				}
 				in.close();
 
-				System.out.println(df.format(new Date()) + " ERR: APICON:POST -> Type:" +
-					type.getReference() + " JSON=" + obj.toString());
-
+				LOGGER.error("APICON:FAILED POST -> Type:" + type.getReference() + " JSON=" +
+					obj.toString());
 				con.disconnect(); // Disconnect
-				System.out.println("Error: " + con.getResponseMessage() + ":" +
-					con.getResponseCode());
+				LOGGER.error(con.getResponseMessage() + ":" + con.getResponseCode());
 				return response.toString();
 			}
 		}
 		catch (final IOException e)
 		{
-			e.printStackTrace();
+			LOGGER.error(e);
+
 			return null;
 		}
 	}
@@ -326,7 +320,7 @@ public class ApiConnector
 		}
 		catch (final Exception e)
 		{
-			e.printStackTrace();
+			LOGGER.error(e);
 		}
 	}
 }

@@ -504,6 +504,8 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		obj.put("priceChangeable", priceChangeable);
 		obj.put("requiresSerialNumber", requiresSerialNumber);
 		obj.put("trackInventory", trackInventory);
+		obj.put("basePriceMax", basePriceMax);
+		obj.put("basePriceMin", basePriceMin);
 		// obj.put("packaging", packaging);
 		obj.put("preparationArticle", preparationArticle);
 		if (commodityGroup != null)
@@ -591,6 +593,12 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 			.preparationArticle(obj.getBoolean("preparationArticle"))
 			.packaging(obj.getBoolean("packaging"))
 			.build();
+
+		if (!obj.getString("basePriceMax").equalsIgnoreCase("null"))
+			prod.setBasePriceMax(new BigDecimal(obj.getDouble("basePriceMax")));
+
+		if (!obj.getString("basePriceMin").equalsIgnoreCase("null"))
+			prod.setBasePriceMin(new BigDecimal(obj.getDouble("basePriceMin")));
 
 		if (obj.has("number"))
 			prod.setNumber(obj.getString("number"));

@@ -15,6 +15,7 @@ import domain.interfaces.HasId;
 import domain.interfaces.HasName;
 import domain.interfaces.HasNumber;
 import error.ApiNotReachableException;
+import error.ArticleCodeMustBeUniqueException;
 import error.SubObjectInitializationException;
 
 public abstract class AbstractHasNameJsonLoader<T extends HasId & HasNumber & HasName> extends
@@ -45,7 +46,8 @@ public abstract class AbstractHasNameJsonLoader<T extends HasId & HasNumber & Ha
 	}
 
 	@Override
-	public T post(final T obj) throws ApiNotReachableException, JSONException, ParseException
+	public T post(final T obj) throws ApiNotReachableException, JSONException, ParseException,
+		ArticleCodeMustBeUniqueException
 	{
 // if (obj == null ||
 // (obj.getName() == null && obj.getNumber() == null && obj.getId() == null))
