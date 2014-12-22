@@ -43,6 +43,8 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 	private Boolean packaging;
 
 	private Boolean preparationArticle;
+	
+	private List<Tag> tags;
 
 
 	protected static abstract class Init<T extends Init<T>> extends
@@ -69,6 +71,8 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		private Boolean packaging = false;
 
 		private Boolean preparationArticle = false;
+		
+		private List<Tag> tags = new ArrayList<Tag>();
 
 		public T packaging(final Boolean value)
 		{
@@ -219,6 +223,21 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 			return self();
 		}
 
+		public T tags(final Collection<Tag> coll)
+		{
+			for (final Tag tag : coll)
+			{
+				tags.add(tag);
+			}
+			return self();
+		}
+		
+		public T tags(final Tag tag)
+		{
+			tags.add(tag);
+			return self();
+		}
+		
 		@Override
 		public Product build()
 		{
@@ -260,6 +279,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		codes = init.codes;
 		preparationArticle = init.preparationArticle;
 		packaging = init.packaging;
+		tags = init.tags;
 	}
 
 	public Date getActiveAssortmentFrom()
@@ -310,6 +330,10 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		return texts;
 	}
 
+	public List<Tag> getTags()
+	{
+		return tags;
+	}
 
 	@Override
 	public int hashCode()
@@ -325,7 +349,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 			((this.commodityGroup == null) ? 0 : this.commodityGroup.hashCode());
 		// result = prime * result + ((this.prices == null) ? 0 : this.prices.hashCode());
 		result = prime * result + ((this.sector == null) ? 0 : this.sector.hashCode());
-
+		result = prime * result + ((this.tags == null) ? 0 : this.tags.hashCode());
 
 		return result;
 	}
@@ -475,6 +499,11 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		this.preparationArticle = preparationArticle;
 	}
 
+	public void setTags(final List<Tag> tags)
+	{
+		this.tags = tags;
+	}
+	
 	@Override
 	public boolean equals(final Object obj)
 	{
@@ -504,8 +533,6 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		obj.put("priceChangeable", priceChangeable);
 		obj.put("requiresSerialNumber", requiresSerialNumber);
 		obj.put("trackInventory", trackInventory);
-		obj.put("basePriceMax", basePriceMax);
-		obj.put("basePriceMin", basePriceMin);
 		// obj.put("packaging", packaging);
 		obj.put("preparationArticle", preparationArticle);
 		if (commodityGroup != null)
@@ -516,6 +543,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 			obj.put("sector", sector.getId());
 		if (altsector != null)
 			obj.put("alternativeSector", altsector.getId());
+		
 
 
 		if (supplierItemPrices != null && !supplierItemPrices.isEmpty())
@@ -556,6 +584,15 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 			}
 			obj.put("articleTexts", array);
 		}
+		if (tags != null && !tags.isEmpty())
+		{
+			final JSONArray array = new JSONArray();
+			for (final Tag tag : tags)
+			{
+				array.put(tag.toJSON());
+			}
+			obj.put("tags", array);
+		}
 
 		return obj;
 	}
@@ -594,15 +631,9 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 			.packaging(obj.getBoolean("packaging"))
 			.build();
 
-		if (!obj.getString("basePriceMax").equalsIgnoreCase("null"))
-			prod.setBasePriceMax(new BigDecimal(obj.getDouble("basePriceMax")));
-
-		if (!obj.getString("basePriceMin").equalsIgnoreCase("null"))
-			prod.setBasePriceMin(new BigDecimal(obj.getDouble("basePriceMin")));
-
 		if (obj.has("number"))
 			prod.setNumber(obj.getString("number"));
-
+		
 		if (!obj.isNull("articleCodes") && !obj.getString("articleCodes").equalsIgnoreCase("null"))
 		{
 			JSONArray jACode = new JSONArray();
