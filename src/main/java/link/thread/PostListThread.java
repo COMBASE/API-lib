@@ -3,17 +3,21 @@
  */
 package link.thread;
 
+import java.util.concurrent.Callable;
+
 import link.CloudLink;
 
 import org.codehaus.jettison.json.JSONArray;
 
 import domain.DataType;
+import error.ArticleCodeMustBeUniqueException;
 
 /**
  * @author Gordon Bosch
  * 
  */
-public class PostListThread extends Thread
+
+public class PostListThread implements Callable
 {
 	JSONArray array;
 	DataType type;
@@ -26,16 +30,16 @@ public class PostListThread extends Thread
 		this.type = type;
 	}
 
-	@Override
-	public void run()
-	{
-// System.out.println("start: " + new Date());
-		ret = CloudLink.getConnector().postData(type, array);
-// System.out.println("end: " + new Date());
-	}
-
 	public String getReturn()
 	{
+		return ret;
+	}
+
+	@Override
+	public String call() throws ArticleCodeMustBeUniqueException
+	{
+		ret = CloudLink.getConnector().postData(type, array);
+
 		return ret;
 	}
 }

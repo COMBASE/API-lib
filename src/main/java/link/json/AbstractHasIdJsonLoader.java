@@ -9,8 +9,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import link.CloudLink;
 import link.thread.PostListThread;
@@ -111,20 +115,20 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	/**
 	 * Used to return a JSONArray of all existing elements.
 	 * 
-	 * @return a JSONArray of existing (not deleted) objects 
+	 * @return a JSONArray of existing (not deleted) objects
 	 * @throws ApiNotReachableException
 	 */
-	
+
 	public JSONArray downloadAllExisting() throws ApiNotReachableException
 	{
 		final String jStr = cloudLink.getJSONPageByOffset(getDataType(), limit, 0);
 		JSONArray jArray = createJsonArray(jStr);
 		jArray = downloadExistingJSONArrayBuilder(jArray, limit, limit);
-		
+
 		return null;
 	}
-	
-	
+
+
 	/**
 	 * for proper use you have to ensure that the JSONDownloader Object is kept alive as long you
 	 * haven't got all needed JsonObjects!
@@ -227,7 +231,8 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 		}
 		catch (final JSONException e)
 		{
-			throw new ArticleCodeMustBeUniqueException(e);
+			LOGGER.error("Malformed JSON Syntax inside response Message. Returning null.", e);
+			return null;
 		}
 
 		final T cachedObject = getCachedObject(ret);
@@ -250,6 +255,8 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	 * @throws JSONException
 	 * @throws ParseException
 	 * @throws ApiNotReachableException
+	 * @throws ExecutionException
+	 * @throws InterruptedException
 	 */
 	public List<T> postList(final List<T> objs, final int limit, final int threads)
 		throws JSONException, ParseException, ApiNotReachableException
@@ -267,6 +274,8 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 
 		final ExecutorService exec = Executors.newFixedThreadPool(threads);
 
+		final Set<Future<String>> set = new HashSet<Future<String>>();
+
 		int offset = 0;
 		int i = 0;
 		while (i < objs.size())
@@ -282,47 +291,90 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 				i++;
 			}
 
-			final PostListThread localThread = new PostListThread(getDataType(), jArray);
-			threadSet.add(localThread);
-			exec.execute(localThread);
+			final Callable<String> callable = new PostListThread(getDataType(), jArray);
+
+// final PostListThread localThread = new PostListThread(getDataType(), jArray);
+			final Future<String> future = exec.submit(callable);
+			set.add(future);
+// threadSet.add(localThread);
+// exec.execute(localThread);
 
 
 		}
-		exec.shutdown();
 		final List<T> objects = new ArrayList<T>();
-		while (!exec.isTerminated())
+		for (final Future<String> future : set)
 		{
-			while (!threadSet.isEmpty())
+			JSONObject jsonObject;
+			try
 			{
-				for (final PostListThread thread : threadSet)
+				jsonObject = new JSONObject(future.get());
+
+
+				if (jsonObject.has("resultList") && !jsonObject.isNull("resultList"))
 				{
-					if (thread.getReturn() != null)
+					final JSONArray jsonArray = jsonObject.getJSONArray("resultlist");
+					for (int j = 0; j < jsonArray.length(); j++)
 					{
-						final String jsonString = thread.getReturn();
-
-						final JSONObject jsonObject = new JSONObject(jsonString);
-						JSONArray jsonArray;
-
-						if (jsonObject.has("resultList") && !jsonObject.isNull("resultList"))
-						{
-							jsonArray = jsonObject.getJSONArray("resultList");
-
-							for (int j = 0; j < jsonArray.length(); j++)
-							{
-								final T obj = fromJSON(jsonArray.getJSONObject(j));
-								objects.add(obj);
-							}
-						}
-
-						removedThreadSet.add(thread);
-
+						final T obj = fromJSON(jsonArray.getJSONObject(j));
+						objects.add(obj);
 					}
 				}
 
-				threadSet.removeAll(removedThreadSet);
+				exec.shutdown();
 
 			}
+			catch (final CancellationException e)
+			{
+				System.out.println("exception3");
+				e.printStackTrace();
+			}
+			catch (final InterruptedException e)
+			{
+				System.out.println("exception1");
+				e.printStackTrace();
+			}
+			catch (final ExecutionException e)
+			{
+				System.out.println("exception2");
+				e.printStackTrace();
+			}
 		}
+
+
+// final List<T> objects = new ArrayList<T>();
+// while (!exec.isTerminated())
+// {
+// while (!threadSet.isEmpty())
+// {
+// for (final PostListThread thread : threadSet)
+// {
+// if (thread.getReturn() != null)
+// {
+// final String jsonString = thread.getReturn();
+//
+// final JSONObject jsonObject = new JSONObject(jsonString);
+// JSONArray jsonArray;
+//
+// if (jsonObject.has("resultList") && !jsonObject.isNull("resultList"))
+// {
+// jsonArray = jsonObject.getJSONArray("resultList");
+//
+// for (int j = 0; j < jsonArray.length(); j++)
+// {
+// final T obj = fromJSON(jsonArray.getJSONObject(j));
+// objects.add(obj);
+// }
+// }
+//
+// removedThreadSet.add(thread);
+//
+// }
+// }
+//
+// threadSet.removeAll(removedThreadSet);
+//
+// }
+// }
 
 		final Date date2 = new Date();
 		LOGGER.info("end: " + date2);
@@ -391,7 +443,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	protected JSONArray recursiveOffsetIterator(JSONArray jArray, final int offset,
 		final long revision, final int limit) throws ApiNotReachableException
 	{
-		
+
 		final String jStr = cloudLink.getJSONByOffset(getDataType(), Long.toString(revision),
 			limit, offset);
 		try
@@ -425,30 +477,30 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	 * @throws ApiNotReachableException
 	 */
 	protected JSONArray downloadExistingJSONArrayBuilder(JSONArray jArray, final int offset,
-			final int limit) throws ApiNotReachableException
+		final int limit) throws ApiNotReachableException
+	{
+
+		final String jStr = cloudLink.getJSONPageByOffset(getDataType(), limit, offset);
+		try
 		{
-			
-			final String jStr = cloudLink.getJSONPageByOffset(getDataType(), limit, offset);
-			try
+			final JSONObject newStuff = new JSONObject(jStr);
+
+			if (!newStuff.getString("resultList").equalsIgnoreCase("null"))
 			{
-				final JSONObject newStuff = new JSONObject(jStr);
 
-				if (!newStuff.getString("resultList").equalsIgnoreCase("null"))
-				{
+				final JSONArray newStuffArray = newStuff.getJSONArray("resultList");
+				for (int i = 0; i <= newStuffArray.length() - 1; i++)
+					jArray.put(newStuffArray.getJSONObject(i));
+				jArray = downloadExistingJSONArrayBuilder(jArray, offset + limit, limit);
 
-					final JSONArray newStuffArray = newStuff.getJSONArray("resultList");
-					for (int i = 0; i <= newStuffArray.length() - 1; i++)
-						jArray.put(newStuffArray.getJSONObject(i));
-					jArray = downloadExistingJSONArrayBuilder(jArray, offset + limit, limit);
-
-				}
 			}
-			catch (final JSONException e)
-			{
-				e.printStackTrace();
-			}
-			return jArray;
 		}
+		catch (final JSONException e)
+		{
+			e.printStackTrace();
+		}
+		return jArray;
+	}
 
 	public abstract JSONObject toJSON(T value) throws JSONException;
 

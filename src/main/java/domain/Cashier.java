@@ -9,14 +9,14 @@ public class Cashier extends AbstractNameAndNumberApiObject<Cashier>
 	private static final long serialVersionUID = -229595034107308709L;
 	private final String firstName;
 	private String surName;
-	private int loginCode;
+	private String loginCode;
 
 	protected static abstract class Init<T extends Init<T>> extends
 		AbstractNameAndNumberApiObject.Init<T>
 	{
 		private String firstName;
 		private String surName;
-		private int loginCode;
+		private String loginCode;
 
 
 		public T firstName(final String value)
@@ -31,7 +31,7 @@ public class Cashier extends AbstractNameAndNumberApiObject<Cashier>
 			return self();
 		}
 
-		public T loginCode(final int value)
+		public T loginCode(final String value)
 		{
 			loginCode = value;
 			return self();
@@ -117,12 +117,12 @@ public class Cashier extends AbstractNameAndNumberApiObject<Cashier>
 		return this.surName;
 	}
 
-	public void setLoginCode(final int loginCode)
+	public void setLoginCode(final String loginCode)
 	{
 		this.loginCode = loginCode;
 	}
 
-	public int getLoginCode()
+	public String getLoginCode()
 	{
 		return this.loginCode;
 	}
@@ -142,7 +142,7 @@ public class Cashier extends AbstractNameAndNumberApiObject<Cashier>
 		result = super.hashCode(result);
 		result = prime * result + ((this.firstName == null) ? 0 : this.firstName.hashCode());
 		result = prime * result + ((this.surName == null) ? 0 : this.surName.hashCode());
-		result = prime * result + ((this.loginCode == 0) ? 0 : loginCode);
+		result = prime * result + ((this.loginCode == null) ? 0 : loginCode.hashCode());
 
 		return result;
 	}
@@ -164,6 +164,7 @@ public class Cashier extends AbstractNameAndNumberApiObject<Cashier>
 		obj = super.appendJSON(obj);
 		obj.put("firstName", firstName);
 		obj.put("surName", surName);
+		obj.put("loginCode", loginCode);
 		return obj;
 	}
 
@@ -178,7 +179,7 @@ public class Cashier extends AbstractNameAndNumberApiObject<Cashier>
 			.firstName(obj.getString("firstname"))
 			.surName(obj.getString("surname"))
 			.id(obj.getString("uuid"))
-			.loginCode(obj.getInt("loginCode"))
+			.loginCode(obj.getString("loginCode"))
 			.build();
 		return cash;
 	}
