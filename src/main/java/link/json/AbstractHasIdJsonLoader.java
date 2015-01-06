@@ -109,6 +109,23 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	}
 
 	/**
+	 * Used to return a JSONArray of all existing elements.
+	 * 
+	 * @return a JSONArray of existing (not deleted) objects 
+	 * @throws ApiNotReachableException
+	 */
+	
+	public JSONArray downloadAllExisting() throws ApiNotReachableException
+	{
+		final String jStr = cloudLink.getJSONPageByOffset(getDataType(), limit, 0);
+		JSONArray jArray = createJsonArray(jStr);
+		jArray = downloadExistingJSONArrayBuilder(jArray, limit, limit);
+		
+		return null;
+	}
+	
+	
+	/**
 	 * for proper use you have to ensure that the JSONDownloader Object is kept alive as long you
 	 * haven't got all needed JsonObjects!
 	 * 
@@ -374,7 +391,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	protected JSONArray recursiveOffsetIterator(JSONArray jArray, final int offset,
 		final long revision, final int limit) throws ApiNotReachableException
 	{
-
+		
 		final String jStr = cloudLink.getJSONByOffset(getDataType(), Long.toString(revision),
 			limit, offset);
 		try
@@ -398,6 +415,40 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 		return jArray;
 	}
 
+	/**
+	 * helper method for downloadAllExisting
+	 * 
+	 * @param jArray
+	 * @param offset
+	 * @param limit
+	 * @return
+	 * @throws ApiNotReachableException
+	 */
+	protected JSONArray downloadExistingJSONArrayBuilder(JSONArray jArray, final int offset,
+			final int limit) throws ApiNotReachableException
+		{
+			
+			final String jStr = cloudLink.getJSONPageByOffset(getDataType(), limit, offset);
+			try
+			{
+				final JSONObject newStuff = new JSONObject(jStr);
+
+				if (!newStuff.getString("resultList").equalsIgnoreCase("null"))
+				{
+
+					final JSONArray newStuffArray = newStuff.getJSONArray("resultList");
+					for (int i = 0; i <= newStuffArray.length() - 1; i++)
+						jArray.put(newStuffArray.getJSONObject(i));
+					jArray = downloadExistingJSONArrayBuilder(jArray, offset + limit, limit);
+
+				}
+			}
+			catch (final JSONException e)
+			{
+				e.printStackTrace();
+			}
+			return jArray;
+		}
 
 	public abstract JSONObject toJSON(T value) throws JSONException;
 

@@ -134,6 +134,24 @@ public class CloudLink
 		final String reference = revision + "/" + limit + "/" + offset;
 		return new String(ApiCon.fetchData(type, ReferenceType.offset, reference));
 	}
+	
+	/**
+	 * Gets a JSONString from the cloud by offset, calling the page reference.
+	 * 
+	 * @param type
+	 * @param limit
+	 * @param offset
+	 * @return
+	 * @throws ApiNotReachableException
+	 */
+	public String getJSONPageByOffset(final DataType type, final int limit, final int offset) 
+			throws ApiNotReachableException
+	{
+		final String reference = limit + "/" + offset;
+		return new String(ApiCon.fetchData(type, ReferenceType.page, reference));
+	}
+	
+	
 
 	/**
 	 * Saves an Object in JSON-format in the Cloud
