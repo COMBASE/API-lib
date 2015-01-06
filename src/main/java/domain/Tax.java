@@ -201,6 +201,7 @@ public class Tax extends AbstractNameAndNumberApiObject<Tax>
 			.rateList(rates)
 			.id(obj.getString("uuid"))
 			.number(obj.getString("number"))
+			.deleted(obj.getBoolean("deleted"))
 			.build();
 
 		return tax;

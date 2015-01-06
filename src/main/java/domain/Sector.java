@@ -148,6 +148,7 @@ public class Sector extends AbstractNameAndNumberApiObject<Sector>
 		final Sector sec = new Sector.Builder().name(obj.getString("name"))
 			.id(obj.getString("uuid"))
 			.taxlist(tax)
+			.deleted(obj.getBoolean("deleted"))
 			.build();
 		if (obj.has("number"))
 			sec.setNumber(obj.getString("number"));

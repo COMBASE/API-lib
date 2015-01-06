@@ -125,7 +125,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 		JSONArray jArray = createJsonArray(jStr);
 		jArray = downloadExistingJSONArrayBuilder(jArray, limit, limit);
 
-		return null;
+		return jArray;
 	}
 
 
