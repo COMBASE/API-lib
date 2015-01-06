@@ -15,6 +15,7 @@ import java.util.concurrent.Executors;
 import link.CloudLink;
 import link.thread.PostListThread;
 
+import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -40,7 +41,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 
 	protected final CloudLink cloudLink;
 
-	// protected static Logger LOGGER = LoggerFactory.getLogger(JsonDownloader.class);
+	protected static Logger LOGGER = Logger.getLogger(AbstractHasIdJsonLoader.class);
 
 	// extern gesteuert
 	private int offset = 0;
@@ -239,7 +240,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 		final Set<PostListThread> threadSet = new HashSet<PostListThread>();
 		final Set<PostListThread> removedThreadSet = new HashSet<PostListThread>();
 		final Date date1 = new Date();
-		System.out.println("start: " + date1);
+		LOGGER.info("start: " + date1);
 
 		JSONArray jArray = new JSONArray();
 
@@ -307,7 +308,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 		}
 
 		final Date date2 = new Date();
-		System.out.println("end: " + date2);
+		LOGGER.info("end: " + date2);
 
 		updateCache(objects);
 
@@ -392,7 +393,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 		}
 		catch (final JSONException e)
 		{
-			e.printStackTrace();
+			LOGGER.error(e);
 		}
 		return jArray;
 	}

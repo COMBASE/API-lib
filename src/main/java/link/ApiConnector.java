@@ -10,6 +10,8 @@ import java.net.URL;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -18,10 +20,12 @@ import javax.net.ssl.X509TrustManager;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import domain.DataType;
 import error.ApiNotReachableException;
+import error.ArticleCodeMustBeUniqueException;
 
 /**
  * This Class is our Interface to the Cloud
@@ -76,7 +80,6 @@ public class ApiConnector
 	public String fetchData(final DataType type, final domain.ReferenceType refType,
 		final String reference) throws ApiNotReachableException
 	{
-
 		String url;
 		String slash = "";
 
@@ -147,8 +150,10 @@ public class ApiConnector
 	 * @param type
 	 * @param obj
 	 * @return
+	 * @throws ArticleCodeMustBeUniqueException
 	 */
 	public String postData(final DataType type, final JSONArray obj)
+		throws ArticleCodeMustBeUniqueException
 	{
 		String slash = "";
 		if (!cloudURL.endsWith("/"))
@@ -195,8 +200,56 @@ public class ApiConnector
 				in.close();
 				LOGGER.info("APICON:POST -> Type:" + type.getReference());
 				con.disconnect(); // Disconnect
+
+
+				try
+				{
+					final JSONObject responseJson = new JSONObject(response.toString());
+
+					// API Exception Handling
+					if (!responseJson.isNull("error"))
+					{
+						final JSONObject error = responseJson.getJSONObject("error");
+						// TODO implement simple error block
+						LOGGER.warn("ToDo");
+
+					}
+
+					// API Exception Handling
+					if (!responseJson.isNull("errorList"))
+					{
+						final JSONArray errorList = responseJson.getJSONArray("errorList");
+
+						// contains all error objects
+						final Set<String> errorSet = new HashSet<String>();
+
+						for (int i = 0; i < errorList.length(); i++)
+						{
+
+							final String errorString = errorList.getString(i);
+
+							final String[] errorStrings = errorString.split(":", 2);
+
+							errorSet.add(errorStrings[1]);
+
+						}
+
+						throw new ArticleCodeMustBeUniqueException(null, errorSet);
+
+					}
+
+
+				}
+				catch (final JSONException e)
+				{
+					LOGGER.error("Could not interpret responseMessage from API! Malformed JSONSyntax");
+				}
+
+
 				return response.toString();
 			}
+
+			// ErrorCode 400 handling
 			else
 			{
 				final BufferedReader in = new BufferedReader(new InputStreamReader(
@@ -212,7 +265,7 @@ public class ApiConnector
 				LOGGER.error("APICON:FAILED POST -> Type:" + type.getReference());
 
 				con.disconnect(); // Disconnect
-				LOGGER.error(con.getResponseMessage() + ":" + con.getResponseCode());
+				LOGGER.error(con.getResponseCode());
 				return response.toString();
 			}
 		}
