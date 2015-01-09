@@ -14,7 +14,6 @@ import domain.DataType;
 import domain.interfaces.HasId;
 import domain.interfaces.HasNumber;
 import error.ApiNotReachableException;
-import error.ArticleCodeMustBeUniqueException;
 import error.SubObjectInitializationException;
 
 public abstract class AbstractHasNumberJsonLoader<T extends HasId & HasNumber> extends
@@ -54,8 +53,8 @@ public abstract class AbstractHasNumberJsonLoader<T extends HasId & HasNumber> e
 	}
 
 	@Override
-	public T post(final T obj) throws ApiNotReachableException, JSONException, ParseException,
-		ArticleCodeMustBeUniqueException
+	public T post(final T obj) throws ApiNotReachableException, JSONException, ParseException
+
 	{
 // if (obj == null || (obj.getNumber() == null && obj.getId() == null))
 // throw new PostWithNoReferenceSetException(null);

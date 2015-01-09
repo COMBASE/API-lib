@@ -207,8 +207,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	 * @throws ArticleCodeMustBeUniqueException
 	 * @throws PostWithNoReferenceSetException
 	 */
-	public T post(final T obj) throws ApiNotReachableException, JSONException, ParseException,
-		ArticleCodeMustBeUniqueException
+	public T post(final T obj) throws ApiNotReachableException, JSONException, ParseException
 	{
 // if (obj == null || obj.getId() == null)
 // throw new PostWithNoReferenceSetException(null);
@@ -217,8 +216,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 
 	}
 
-	protected T upload(final T obj) throws JSONException, ParseException,
-		ArticleCodeMustBeUniqueException
+	protected T upload(final T obj) throws JSONException, ParseException
 	{
 		updateCache(obj);
 
