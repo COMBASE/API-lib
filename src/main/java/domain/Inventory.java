@@ -539,6 +539,7 @@ public class Inventory extends AbstractNameAndNumberApiObject<Inventory>
 		if (inventoryProcedure != null)
 			obj.put("inventoryProcedure", inventoryProcedure.name());
 
+		// some caching magic
 		obj.remove("name");
 
 		obj.put("description", getName());

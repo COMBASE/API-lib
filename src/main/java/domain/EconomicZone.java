@@ -37,17 +37,6 @@ public class EconomicZone extends AbstractNameAndNumberApiObject<EconomicZone>
 		super(init);
 	}
 
-// public boolean post() throws ApiNotReachableException
-// {
-// final boolean result = CloudLink.getConnector().postData(DataType.economicZone,
-// this.toJSON());
-// if (number != null)
-// uuid = CloudLink.getUUIDByNumber(DataType.economicZone, number);
-// else
-// uuid = CloudLink.getUUIDByName(DataType.economicZone, name);
-// return result;
-// }
-
 	@Override
 	public boolean equals(final Object obj)
 	{
@@ -82,6 +71,8 @@ public class EconomicZone extends AbstractNameAndNumberApiObject<EconomicZone>
 		final EconomicZone economicZone = new EconomicZone.Builder().name(obj.getString("name"))
 			.number(obj.getString("number"))
 			.id(obj.getString("uuid"))
+			.deleted(obj.getBoolean("deleted"))
+			.revision(obj.getLong("revision"))
 			.build();
 		return economicZone;
 	}

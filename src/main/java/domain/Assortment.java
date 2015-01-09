@@ -110,6 +110,7 @@ public class Assortment extends AbstractNameAndNumberApiObject<Assortment>
 			.deleted(obj.getBoolean("deleted"))
 			.number(obj.getString("number"))
 			.id(obj.getString("uuid"))
+			.revision(obj.getLong("revision"))
 			.build();
 		return assortment;
 	}

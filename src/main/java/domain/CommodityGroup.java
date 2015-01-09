@@ -148,7 +148,9 @@ public class CommodityGroup extends AbstractNameAndNumberApiObject<CommodityGrou
 	{
 		final int prime = 31;
 		int result = 1;
+
 		result = super.hashCode(result);
+
 		result = prime * result + ((this.key == null) ? 0 : this.key.hashCode());
 		result = prime * result + ((this.parent == null) ? 0 : this.parent.hashCode());
 		result = prime * result + ((this.hasChildren == false) ? 0 : 1);
@@ -174,12 +176,14 @@ public class CommodityGroup extends AbstractNameAndNumberApiObject<CommodityGrou
 	{
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
-		final CommodityGroup grp = new CommodityGroup.Builder().name(obj.getString("name")).build();
+		final CommodityGroup grp = new CommodityGroup.Builder().name(obj.getString("name"))
+			.revision(obj.getLong("revision"))
+			.deleted(obj.getBoolean("deleted"))
+			.build();
 		if (obj.has("number"))
 			grp.setNumber(obj.getString("number"));
 		if (obj.has("uuid"))
 			grp.setId(obj.getString("uuid"));
-
 
 		return grp;
 	}

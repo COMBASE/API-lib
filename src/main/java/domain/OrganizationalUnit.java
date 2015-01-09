@@ -898,6 +898,35 @@ public class OrganizationalUnit extends AbstractNameAndNumberApiObject<Organizat
 		result = prime * result + ((this.salesArea == null) ? 0 : this.salesArea.hashCode());
 		result = prime * result + ((this.storageSpace == null) ? 0 : this.storageSpace.hashCode());
 		result = prime * result + ((this.priceGroup == null) ? 0 : this.priceGroup.hashCode());
+		result = prime * result +
+			((this.assortmentValidities == null) ? 0 : this.assortmentValidities.hashCode());
+		result = prime * result + ((this.bendZone == null) ? 0 : this.bendZone.hashCode());
+		result = prime * result + ((this.economicZone == null) ? 0 : this.economicZone.hashCode());
+		result = prime * result + ((this.fridayFrom == null) ? 0 : this.fridayFrom.hashCode());
+		result = prime * result + ((this.fridayOpen == null) ? 0 : this.fridayOpen.hashCode());
+		result = prime * result + ((this.fridayTo == null) ? 0 : this.fridayTo.hashCode());
+		result = prime * result + ((this.gripZone == null) ? 0 : this.gripZone.hashCode());
+		result = prime * result + ((this.hasChildren == null) ? 0 : this.hasChildren.hashCode());
+		result = prime * result + ((this.mondayFrom == null) ? 0 : this.mondayFrom.hashCode());
+		result = prime * result + ((this.mondayOpen == null) ? 0 : this.mondayOpen.hashCode());
+		result = prime * result + ((this.mondayTo == null) ? 0 : this.mondayTo.hashCode());
+		result = prime *
+			result +
+			((this.monthlyOperatingCostsRent == null) ? 0
+				: this.monthlyOperatingCostsRent.hashCode());
+		result = prime * result +
+			((this.monthlyStaffCosts == null) ? 0 : this.monthlyStaffCosts.hashCode());
+		result = prime * result +
+			((this.orderingSources == null) ? 0 : this.orderingSources.hashCode());
+		result = prime * result + ((this.parent == null) ? 0 : this.parent.hashCode());
+		result = prime * result + ((this.priceGroup == null) ? 0 : this.priceGroup.hashCode());
+		result = prime * result + ((this.salesArea == null) ? 0 : this.salesArea.hashCode());
+		result = prime * result + ((this.saturdayFrom == null) ? 0 : this.saturdayFrom.hashCode());
+		result = prime * result + ((this.saturdayOpen == null) ? 0 : this.saturdayOpen.hashCode());
+		result = prime * result + ((this.saturdayTo == null) ? 0 : this.saturdayTo.hashCode());
+		result = prime * result + ((this.storageSpace == null) ? 0 : this.storageSpace.hashCode());
+		result = prime * result + ((this.stretchZone == null) ? 0 : this.stretchZone.hashCode());
+		result = prime * result + ((this.sundayFrom == null) ? 0 : this.sundayFrom.hashCode());
 
 
 		return result;
@@ -983,6 +1012,7 @@ public class OrganizationalUnit extends AbstractNameAndNumberApiObject<Organizat
 			.deleted(obj.getBoolean("deleted"))
 			.number(obj.getString("number"))
 			.id(obj.getString("uuid"))
+			.revision(obj.getLong("revision"))
 			.build();
 		return orgUnit;
 	}

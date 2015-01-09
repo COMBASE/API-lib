@@ -1,5 +1,6 @@
 package domain;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Date;
 
@@ -13,7 +14,7 @@ public class AccountTransaction extends AbstractApiObject<AccountTransaction>
 	private Receipt receipt;
 	private Cashier cashier;
 	private POS pos;
-	private double amount;
+	private BigDecimal amount;
 	private Date bookingTime;
 	private int receiptIndex;
 	private String description;
@@ -24,7 +25,7 @@ public class AccountTransaction extends AbstractApiObject<AccountTransaction>
 		private Receipt receipt;
 		private Cashier cashier;
 		private POS pos;
-		private double amount;
+		private BigDecimal amount;
 		private Date bookingTime;
 		private int receiptIndex;
 		private String description;
@@ -53,7 +54,7 @@ public class AccountTransaction extends AbstractApiObject<AccountTransaction>
 			return self();
 		}
 
-		public T amount(final double value)
+		public T amount(final BigDecimal value)
 		{
 			amount = value;
 			return self();
@@ -108,40 +109,6 @@ public class AccountTransaction extends AbstractApiObject<AccountTransaction>
 		description = init.description;
 	}
 
-// public JSONObject toJSON()
-// {
-// final JSONObject obj = new JSONObject();
-// try
-// {
-
-// return obj;
-// }
-// catch (final JSONException e)
-// {
-// e.printStackTrace();
-// return null;
-// }
-// }
-
-//
-//
-//
-
-// public boolean post() throws IOException
-// {
-// /*
-// * if (account != null && account.getUuid() == null) account.post();
-// */
-// if (receipt != null && receipt.getUuid() == null)
-// receipt.post();
-// if (cashier != null && cashier.getUuid() == null)
-// cashier.post();
-// if (pos != null && pos.getUuid() == null)
-// pos.post();
-// return CloudLink.getConnector().postData(DataType.accountTransaction, this.toJSON());
-//
-// }
-
 	public Receipt getReceipt()
 	{
 		return receipt;
@@ -172,12 +139,12 @@ public class AccountTransaction extends AbstractApiObject<AccountTransaction>
 		this.pos = pos;
 	}
 
-	public double getAmount()
+	public BigDecimal getAmount()
 	{
 		return amount;
 	}
 
-	public void setAmount(final double amount)
+	public void setAmount(final BigDecimal amount)
 	{
 		this.amount = amount;
 	}
@@ -234,13 +201,17 @@ public class AccountTransaction extends AbstractApiObject<AccountTransaction>
 	{
 		final int prime = 31;
 		int result = 1;
+
+		result = super.hashCode();
+
 		result = prime * result + ((this.description == null) ? 0 : this.description.hashCode());
 		result = prime * result + ((this.account == null) ? 0 : this.account.hashCode());
 		result = prime * result + ((this.bookingTime == null) ? 0 : this.bookingTime.hashCode());
 		result = prime * result + ((this.cashier == null) ? 0 : this.cashier.hashCode());
 		result = prime * result + ((this.pos == null) ? 0 : this.pos.hashCode());
 		result = prime * result + ((this.receipt == null) ? 0 : this.receipt.hashCode());
-
+		result = prime * result + ((this.amount == null) ? 0 : this.amount.hashCode());
+		result = prime * result + ((this.receiptIndex == 0) ? 0 : 1);
 
 		return result;
 	}
@@ -249,6 +220,7 @@ public class AccountTransaction extends AbstractApiObject<AccountTransaction>
 	public JSONObject toJSON() throws JSONException
 	{
 		JSONObject obj = new JSONObject();
+
 		obj = super.appendJSON(obj);
 
 		obj.put("account", account.getId());
@@ -289,11 +261,12 @@ public class AccountTransaction extends AbstractApiObject<AccountTransaction>
 		final AccountTransaction accountTransaction = new AccountTransaction.Builder().deleted(
 			obj.getBoolean("deleted"))
 			.revision(obj.getLong("revision"))
+			.id(obj.getString("uuid"))
 			.receipt(rec)
 			.cashier(cash)
 			.pos(pos)
 			.account(account)
-			.amount(obj.getDouble("amount"))
+			.amount(prepareBigDecimal(obj, "amount"))
 			.bookingTime(bTime)
 			.receiptIndex(obj.getInt("receiptIndex"))
 			.description(obj.getString("description"))

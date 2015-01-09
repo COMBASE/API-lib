@@ -65,48 +65,6 @@ public class Cashier extends AbstractNameAndNumberApiObject<Cashier>
 		loginCode = init.loginCode;
 	}
 
-// public static Cashier fromJSON(JSONObject obj) throws JSONException
-// {
-//
-// if (obj.has("result") && obj.getString("result") != null)
-// obj = obj.getJSONObject("result");
-//
-//
-// final Cashier cash = new Cashier.Builder(null).deleted(obj.getBoolean("deleted"))
-// .number(obj.getString("number"))
-// .firstName(obj.getString("firstname"))
-// .surName(obj.getString("surname"))
-// .uuid(obj.getString("uuid"))
-// .loginCode(obj.getInt("loginCode"))
-// .build();
-// return cash;
-//
-//
-// }
-//
-// public JSONObject toJSON()
-// {
-// final JSONObject obj = new JSONObject();
-// try
-// {
-
-//
-// return obj;
-// }
-// catch (final JSONException e)
-// {
-// e.printStackTrace();
-// return null;
-// }
-// }
-//
-// public boolean post() throws IOException
-// {
-//
-// return CloudLink.getConnector().postData(DataType.cashier, this.toJSON());
-// }
-
-	// ******************Setter and Getter**********************************************************
 	public void setSurName(final String surName)
 	{
 		this.surName = surName;
@@ -176,6 +134,7 @@ public class Cashier extends AbstractNameAndNumberApiObject<Cashier>
 
 		final Cashier cash = new Cashier.Builder().deleted(obj.getBoolean("deleted"))
 			.number(obj.getString("number"))
+			.revision(obj.getLong("revision"))
 			.firstName(obj.getString("firstname"))
 			.surName(obj.getString("surname"))
 			.id(obj.getString("uuid"))

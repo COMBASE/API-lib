@@ -333,26 +333,16 @@ public class Customer extends AbstractNumberApiObject<Customer>
 		return obj;
 	}
 
-	public static Customer fromJSON(JSONObject obj) throws JSONException
+	public static Customer fromJSON(JSONObject obj) throws JSONException, ParseException
 	{
 		if (obj.has("result") && obj.getString("result") != null)
 		{
 			obj = obj.getJSONObject("result");
 		}
 
-		final String sdate = obj.getString("birthday");
-		Date bdate = null;
-		try
-		{
-			if (sdate != "null")
-				bdate = inputDf.parse(sdate);
-		}
-		catch (final ParseException e)
-		{
-			e.printStackTrace();
-		}
-
 		final Customer cust = new Customer.Builder().id(obj.getString("uuid"))
+			.deleted(obj.getBoolean("deleted"))
+			.revision(obj.getLong("revision"))
 			.number(obj.getString("number"))
 			.firstName(obj.getString("firstName"))
 			.lastName(obj.getString("lastName"))
@@ -363,7 +353,7 @@ public class Customer extends AbstractNumberApiObject<Customer>
 			.city(obj.getString("city"))
 			.country(obj.getString("country"))
 			.phone(obj.getString("phone"))
-			.birthday(bdate)
+			.birthday(prepareDate(obj, "birthday"))
 			.build();
 
 		return cust;

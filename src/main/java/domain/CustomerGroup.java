@@ -83,6 +83,8 @@ public class CustomerGroup extends AbstractNameAndNumberApiObject<CustomerGroup>
 		JSONObject obj = new JSONObject();
 		obj = appendJSON(obj);
 
+		obj.put("priceGroup", priceGroup);
+
 		return obj;
 	}
 
@@ -91,15 +93,18 @@ public class CustomerGroup extends AbstractNameAndNumberApiObject<CustomerGroup>
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
 
+		final Pricelist pricelist = new Pricelist.Builder().id(obj.getString("priceGroup")).build();
+
 		final CustomerGroup custGrp = new CustomerGroup.Builder().name(obj.getString("name"))
 			.id(obj.getString("uuid"))
 			.number(obj.getString("number"))
+			.deleted(obj.getBoolean("deleted"))
+			.revision(obj.getLong("revision"))
+			.priceGroup(pricelist)
 			.build();
+
 		return custGrp;
+
 	}
 
-// public boolean post() throws IOException
-// {
-// return CloudLink.getConnector().postData(DataType.customergroup, this.toJSON());
-// }
 }
