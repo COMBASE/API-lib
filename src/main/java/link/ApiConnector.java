@@ -24,6 +24,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import domain.DataType;
+import domain.ReferenceType;
 import error.ApiNotReachableException;
 import error.ArticleCodeMustBeUniqueException;
 
@@ -86,8 +87,12 @@ public class ApiConnector
 		if (!cloudURL.endsWith("/"))
 			slash = "/";
 
-		url = cloudURL + slash + token + "/" + type.getReference() + "/" + refType.getType() + "/" +
-			reference;
+		if (refType.equals(ReferenceType.auth))
+			url = cloudURL + slash + refType.getType() + "/" +
+					reference;
+		else
+			url = cloudURL + slash + token + "/" + type.getReference() + "/" + refType.getType() + "/" +
+					reference;
 
 		HttpURLConnection con = null;
 

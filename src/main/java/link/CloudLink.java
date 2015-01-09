@@ -332,5 +332,20 @@ public class CloudLink
 		}
 		return null;
 	}
+	
+	public String getTokenByAuthData(final DataType type, String reference) throws ApiNotReachableException
+	{
+		if (ApiCon == null)
+			LOGGER.error("Please initiliaze a CloudLink Object first!");
+		if (reference == null)
+			return null;
+
+		String token = null;
+		
+		token = ApiCon.fetchData(type, ReferenceType.auth, reference);
+
+		
+		return token;
+	}
 
 }
