@@ -7,6 +7,12 @@ import domain.DataType;
 import error.ApiNotReachableException;
 import link.CloudLink;
 
+/**
+ * Sends a request to the cloud to get an access token
+ * 
+ * @author art
+ *
+ */
 public class TokenLoader {
 	
 	protected final CloudLink cloudLink;
