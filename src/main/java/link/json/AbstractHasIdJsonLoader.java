@@ -310,7 +310,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 
 				if (jsonObject.has("resultList") && !jsonObject.isNull("resultList"))
 				{
-					final JSONArray jsonArray = jsonObject.getJSONArray("resultlist");
+					final JSONArray jsonArray = jsonObject.getJSONArray("resultList");
 					for (int j = 0; j < jsonArray.length(); j++)
 					{
 						final T obj = fromJSON(jsonArray.getJSONObject(j));
