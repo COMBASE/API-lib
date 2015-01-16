@@ -256,7 +256,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	 * @throws ExecutionException
 	 * @throws InterruptedException
 	 */
-	public List<T> postList(final List<T> objs, final int limit, final int threads)
+	public List<T> postList(final List<? extends T> objs, final int limit, final int threads)
 		throws JSONException, ParseException, ApiNotReachableException
 	{
 		final Set<PostListThread> threadSet = new HashSet<PostListThread>();
