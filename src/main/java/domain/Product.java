@@ -43,7 +43,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 	private Boolean packaging;
 
 	private Boolean preparationArticle;
-	
+
 	private List<Tag> tags;
 
 
@@ -71,8 +71,8 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		private Boolean packaging = false;
 
 		private Boolean preparationArticle = false;
-		
-		private List<Tag> tags = new ArrayList<Tag>();
+
+		private final List<Tag> tags = new ArrayList<Tag>();
 
 		public T packaging(final Boolean value)
 		{
@@ -231,13 +231,13 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 			}
 			return self();
 		}
-		
+
 		public T tags(final Tag tag)
 		{
 			tags.add(tag);
 			return self();
 		}
-		
+
 		@Override
 		public Product build()
 		{
@@ -399,6 +399,14 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		this.assortment = assortment;
 	}
 
+	public void addCodes(final Collection<Product_Code> coll)
+	{
+		for (final Product_Code code : coll)
+		{
+			this.codes.add(code);
+		}
+	}
+
 	public void setCodes(final List<Product_Code> codes)
 	{
 		this.codes = codes;
@@ -442,6 +450,14 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 	public void setTexts(final List<Product_Text> texts)
 	{
 		this.texts = texts;
+	}
+
+	public void addTexts(final Collection<Product_Text> texts)
+	{
+		for (final Product_Text product_Text : texts)
+		{
+			this.texts.add(product_Text);
+		}
 	}
 
 	public void setTrackInventory(final boolean trackInventory)
@@ -503,7 +519,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 	{
 		this.tags = tags;
 	}
-	
+
 	@Override
 	public boolean equals(final Object obj)
 	{
@@ -543,7 +559,6 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 			obj.put("sector", sector.getId());
 		if (altsector != null)
 			obj.put("alternativeSector", altsector.getId());
-		
 
 
 		if (supplierItemPrices != null && !supplierItemPrices.isEmpty())
@@ -599,7 +614,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 
 	// TODO implement BD fields basePriceMax basePriceMin in from/to JSON
 	// TODO implement SupplierItemPrice
-	public static Product fromJSON(JSONObject obj) throws JSONException
+	public static Product fromJSON(JSONObject obj) throws JSONException, ParseException
 	{
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
@@ -633,7 +648,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 
 		if (obj.has("number"))
 			prod.setNumber(obj.getString("number"));
-		
+
 		if (!obj.isNull("articleCodes") && !obj.getString("articleCodes").equalsIgnoreCase("null"))
 		{
 			JSONArray jACode = new JSONArray();
@@ -655,7 +670,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 			prod.setCodes(codeList);
 		}
 
-		if (obj.get("prices") != "null")
+		if (!obj.isNull("prices") && !obj.getString("prices").equalsIgnoreCase("null"))
 		{
 			final JSONArray jPrices = obj.getJSONArray("prices");
 			final List<Price> prices = new ArrayList<Price>();
@@ -667,25 +682,17 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 				final BigDecimal value = new BigDecimal(jPrice.getDouble("value"));
 				final Pricelist pricelist = new Pricelist.Builder().id(
 					jPrice.getString("priceList")).build();
-				Date date = new Date();
-				try
-				{
-					date = inputDf.parse(jPrice.getString("validFrom"));
-				}
-				catch (final ParseException e)
-				{
-					e.printStackTrace();
-				}
 				if (!jPrice.isNull("organizationalUnit"))
 				{
 					final OrganizationalUnit organizationalUnit = new OrganizationalUnit.Builder().id(
 						jPrice.getString("organizationalUnit"))
 						.build();
 
-					prices.add(new Price(pricelist, date, value, organizationalUnit));
+					prices.add(new Price(pricelist, prepareDate(jPrice, "validFrom"), value,
+						organizationalUnit));
 				}
 				else
-					prices.add(new Price(pricelist, date, value, null));
+					prices.add(new Price(pricelist, prepareDate(jPrice, "validFrom"), value, null));
 			}
 			prod.setPrices(prices);
 		}
