@@ -17,9 +17,9 @@ import error.ApiNotReachableException;
 import error.SubObjectInitializationException;
 
 /**
- * 
+ *
  * @author mas
- * 
+ *
  */
 public class ProductLoader extends AbstractHasNameJsonLoader<Product>
 {
@@ -40,7 +40,7 @@ public class ProductLoader extends AbstractHasNameJsonLoader<Product>
 	}
 
 	@Override
-	public Product fromJSON(final JSONObject obj) throws JSONException
+	public Product fromJSON(final JSONObject obj) throws JSONException, ParseException
 	{
 		final Product product = Product.fromJSON(obj);
 
@@ -48,7 +48,7 @@ public class ProductLoader extends AbstractHasNameJsonLoader<Product>
 	}
 
 	public Product downloadByCode(final String code) throws ApiNotReachableException,
-		JSONException, ParseException, SubObjectInitializationException
+	JSONException, ParseException, SubObjectInitializationException
 	{
 		final Product cachedObject = codeCache.get(code);
 		if (cachedObject != null)

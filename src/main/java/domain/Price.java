@@ -28,7 +28,7 @@ public class Price
 
 	/**
 	 * old contructor
-	 * 
+	 *
 	 * @param priceList
 	 * @param validFrom
 	 * @param value
@@ -41,13 +41,17 @@ public class Price
 		this.value = value;
 	}
 
+	// TODO replace new Date(0) with null after release 30.01.15
 	public JSONObject toJSON()
 	{
 		final JSONObject obj = new JSONObject();
 		try
 		{
 			obj.put("priceList", priceList.getId());
-			obj.put("validFrom", inputDf.format(validFrom));
+			if (validFrom != null)
+				obj.put("validFrom", inputDf.format(validFrom));
+			else
+				obj.put("validFrom", new Date(0));
 			obj.put("value", value);
 			if (organizationalUnit != null)
 				obj.put("organizationalUnit", organizationalUnit.getId());
