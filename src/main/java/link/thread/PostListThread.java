@@ -14,10 +14,10 @@ import error.ArticleCodeMustBeUniqueException;
 
 /**
  * @author Gordon Bosch
- * 
+ *
  */
 
-public class PostListThread implements Callable
+public class PostListThread implements Callable<String>
 {
 	JSONArray array;
 	DataType type;

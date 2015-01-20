@@ -15,15 +15,15 @@ import org.codehaus.jettison.json.JSONObject;
 public class Product extends AbstractNameAndNumberApiObject<Product>
 {
 	private static final long serialVersionUID = -4259851643720605829L;
-	private boolean activeAssortment;
+	private Boolean activeAssortment;
 	private Date activeAssortmentFrom;
 	private int costs;
-	private boolean discountable;
-	private boolean priceChangeable;
+	private Boolean discountable;
+	private Boolean priceChangeable;
 	private BigDecimal basePriceMax;
 	private BigDecimal basePriceMin;
-	private boolean requiresSerialNumber;
-	private boolean trackInventory;
+	private Boolean requiresSerialNumber;
+	private Boolean trackInventory;
 	private List<SupplierItemPrice> supplierItemPrices = null;
 
 	private CommodityGroup commodityGroup;
@@ -48,18 +48,18 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 
 
 	protected static abstract class Init<T extends Init<T>> extends
-		AbstractNameAndNumberApiObject.Init<T>
+	AbstractNameAndNumberApiObject.Init<T>
 
 	{
-		private boolean activeAssortment = false;
+		private Boolean activeAssortment = null;
 		private Date activeAssortmentFrom = null;
 		private int costs = 0;
-		private boolean discountable = true;
-		private boolean priceChangeable = true;
+		private Boolean discountable = null;
+		private Boolean priceChangeable = null;
 		private BigDecimal basePriceMax = new BigDecimal(String.valueOf("9999.99"));
 		private BigDecimal basePriceMin = new BigDecimal(String.valueOf("-9999.99"));
-		private boolean requiresSerialNumber = false;
-		private boolean trackInventory = false;
+		private Boolean requiresSerialNumber = null;
+		private Boolean trackInventory = null;
 		private CommodityGroup commodityGroup = null;
 		private Sector sector = null;
 		private Sector altsector = null;
@@ -68,9 +68,9 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		private final List<Product_Text> texts = new ArrayList<Product_Text>();
 		private final List<Product_Code> codes = new ArrayList<Product_Code>();
 		private List<SupplierItemPrice> supplierItemPrices = null;
-		private Boolean packaging = false;
+		private Boolean packaging = null;
 
-		private Boolean preparationArticle = false;
+		private Boolean preparationArticle = null;
 
 		private final List<Tag> tags = new ArrayList<Tag>();
 
@@ -86,7 +86,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 			return self();
 		}
 
-		public T activeAssortment(final boolean value)
+		public T activeAssortment(final Boolean value)
 		{
 			activeAssortment = value;
 			return self();
@@ -137,13 +137,13 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 			return self();
 		}
 
-		public T discountable(final boolean value)
+		public T discountable(final Boolean value)
 		{
 			discountable = value;
 			return self();
 		}
 
-		public T priceChangeable(final boolean value)
+		public T priceChangeable(final Boolean value)
 		{
 			priceChangeable = value;
 			return self();
@@ -176,7 +176,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 			return self();
 		}
 
-		public T requiresSerialNumber(final boolean value)
+		public T requiresSerialNumber(final Boolean value)
 		{
 			requiresSerialNumber = value;
 			return self();
@@ -203,7 +203,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 			return self();
 		}
 
-		public T trackInventory(final boolean value)
+		public T trackInventory(final Boolean value)
 		{
 			trackInventory = value;
 			return self();
@@ -301,7 +301,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 	{
 		if (codes == null)
 			codes = new ArrayList<Product_Code>();
-		return codes;
+			return codes;
 	}
 
 	public CommodityGroup getCommodityGroup()
@@ -354,32 +354,32 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		return result;
 	}
 
-	public boolean isActiveAssortment()
+	public Boolean isActiveAssortment()
 	{
 		return activeAssortment;
 	}
 
-	public boolean isDiscountable()
+	public Boolean isDiscountable()
 	{
 		return discountable;
 	}
 
-	public boolean isPriceChangeable()
+	public Boolean isPriceChangeable()
 	{
 		return priceChangeable;
 	}
 
-	public boolean isRequiresSerialNumber()
+	public Boolean isRequiresSerialNumber()
 	{
 		return requiresSerialNumber;
 	}
 
-	public boolean isTrackInventory()
+	public Boolean isTrackInventory()
 	{
 		return trackInventory;
 	}
 
-	public void setActiveAssortment(final boolean activeAssortment)
+	public void setActiveAssortment(final Boolean activeAssortment)
 	{
 		this.activeAssortment = activeAssortment;
 	}
@@ -422,12 +422,12 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		this.costs = costs;
 	}
 
-	public void setDiscountable(final boolean discountable)
+	public void setDiscountable(final Boolean discountable)
 	{
 		this.discountable = discountable;
 	}
 
-	public void setPriceChangeable(final boolean priceChangeable)
+	public void setPriceChangeable(final Boolean priceChangeable)
 	{
 		this.priceChangeable = priceChangeable;
 	}
@@ -437,7 +437,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		this.prices = prices;
 	}
 
-	public void setRequiresSerialNumber(final boolean requiresSerialNumber)
+	public void setRequiresSerialNumber(final Boolean requiresSerialNumber)
 	{
 		this.requiresSerialNumber = requiresSerialNumber;
 	}
@@ -460,7 +460,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		}
 	}
 
-	public void setTrackInventory(final boolean trackInventory)
+	public void setTrackInventory(final Boolean trackInventory)
 	{
 		this.trackInventory = trackInventory;
 	}

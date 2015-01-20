@@ -34,9 +34,9 @@ import error.SubObjectInitializationException;
 /**
  * Initialize this class or extend it in order to shortcut proper JSON formatting. Offers several
  * methods for downloading JSON from KORONA.POS Cloud. Please refer to method description.
- * 
+ *
  * @author mas
- * 
+ *
  */
 public abstract class AbstractHasIdJsonLoader<T extends HasId>
 {
@@ -50,7 +50,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	// extern gesteuert
 	private int offset = 0;
 
-	private final int limit = 50;
+	private final int limit = 10;
 
 	private final Map<String, T> idCache = new HashMap<String, T>();
 
@@ -68,13 +68,18 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 		try
 		{
 			final JSONObject jsonObj = new JSONObject(jStr);
+
+			if (jsonObj.has("totalElements") && jsonObj.has("totalPages"))
+				LOGGER.debug("requested JSONArray contains " + jsonObj.getString("totalElements") +
+					" totalElements in " + jsonObj.getString("totalPages") + " totalPages.");
+
 			JSONArray jsonArray = new JSONArray();
 			jsonArray = jsonObj.getJSONArray("resultList");
 			return jsonArray;
 		}
 		catch (final JSONException e)
 		{
-			// JsonDownloader.LOGGER.warn("Empty JSON String.");
+			LOGGER.warn("Empty JSON String.");
 			return null;
 		}
 	}
@@ -98,7 +103,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	/**
 	 * returns an org.jettison.JSONArray of all org.jettison.JSONObjects having the same or greater
 	 * revision than the given one from KORONA.POS Cloud.
-	 * 
+	 *
 	 * @param revision
 	 * @return
 	 * @throws ApiNotReachableException
@@ -114,7 +119,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 
 	/**
 	 * Used to return a JSONArray of all existing elements.
-	 * 
+	 *
 	 * @return a JSONArray of existing (not deleted) objects
 	 * @throws ApiNotReachableException
 	 */
@@ -132,12 +137,12 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	/**
 	 * for proper use you have to ensure that the JSONDownloader Object is kept alive as long you
 	 * haven't got all needed JsonObjects!
-	 * 
+	 *
 	 * returns an org.jettison.JSONArray of all org.jettison.JSONObjects having the same or greater
 	 * revision than the given one from KORONA.POS Cloud. This method is used to download a certain
 	 * number of JSONObjects procede them and downloader the next amount of JSONOBjects. Each method
 	 * call increases the offset. Ensure to stop looping as this method returns null.
-	 * 
+	 *
 	 * @param number
 	 * @return JSONArray
 	 * @throws ApiNotReachableException
@@ -150,12 +155,13 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 		if (jArray == null)
 			return null;
 		offset += limit;
+
 		return jArray;
 	}
 
 	/**
 	 * Returns an org.jettison.JSONArray of all JSONObjects equal or greater than given revision.
-	 * 
+	 *
 	 * @param number
 	 * @return
 	 * @throws ApiNotReachableException
@@ -169,7 +175,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 
 	/**
 	 * returns the corresponding org.jettison.JSONObject by UUID from KORONA.POS Cloud
-	 * 
+	 *
 	 * @param number
 	 * @return
 	 * @throws ApiNotReachableException
@@ -177,7 +183,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	 * @throws SubObjectInitializationException
 	 */
 	public T downloadByUUID(final String uuid) throws ApiNotReachableException, JSONException,
-		ParseException, SubObjectInitializationException
+	ParseException, SubObjectInitializationException
 	{
 		final T cachedObject = idCache.get(uuid);
 		if (cachedObject != null)
@@ -198,7 +204,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	 * Puts the object into ID, Number and Name caches overriding existing objects with same ID,
 	 * Number or Name. Invoking this method will automatically try to update all caches by calling
 	 * super method super.post(obj).
-	 * 
+	 *
 	 * @param obj
 	 * @return the updated obj:T previously inserted into this method.
 	 * @throws ApiNotReachableException
@@ -246,7 +252,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 
 	/**
 	 * posts all Data
-	 * 
+	 *
 	 * @param objs
 	 * @param limit
 	 * @return response:Set<object_type>
@@ -258,17 +264,11 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	 */
 	public List<T> postList(final List<? extends T> objs, final int limit, final int threads)
 		throws JSONException, ParseException, ApiNotReachableException
-	{
-		final Set<PostListThread> threadSet = new HashSet<PostListThread>();
-		final Set<PostListThread> removedThreadSet = new HashSet<PostListThread>();
+		{
 		final Date date1 = new Date();
 		LOGGER.info("start: " + date1);
 
 		JSONArray jArray = new JSONArray();
-
-		// Thread Executor init
-// final ExecutorService exec = Executors.newFixedThreadPool(Runtime.getRuntime()
-// .availableProcessors());
 
 		final ExecutorService exec = Executors.newFixedThreadPool(threads);
 
@@ -291,14 +291,11 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 
 			final Callable<String> callable = new PostListThread(getDataType(), jArray);
 
-// final PostListThread localThread = new PostListThread(getDataType(), jArray);
 			final Future<String> future = exec.submit(callable);
 			set.add(future);
-// threadSet.add(localThread);
-// exec.execute(localThread);
-
 
 		}
+
 		final List<T> objects = new ArrayList<T>();
 		for (final Future<String> future : set)
 		{
@@ -338,53 +335,17 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 			}
 		}
 
-
-// final List<T> objects = new ArrayList<T>();
-// while (!exec.isTerminated())
-// {
-// while (!threadSet.isEmpty())
-// {
-// for (final PostListThread thread : threadSet)
-// {
-// if (thread.getReturn() != null)
-// {
-// final String jsonString = thread.getReturn();
-//
-// final JSONObject jsonObject = new JSONObject(jsonString);
-// JSONArray jsonArray;
-//
-// if (jsonObject.has("resultList") && !jsonObject.isNull("resultList"))
-// {
-// jsonArray = jsonObject.getJSONArray("resultList");
-//
-// for (int j = 0; j < jsonArray.length(); j++)
-// {
-// final T obj = fromJSON(jsonArray.getJSONObject(j));
-// objects.add(obj);
-// }
-// }
-//
-// removedThreadSet.add(thread);
-//
-// }
-// }
-//
-// threadSet.removeAll(removedThreadSet);
-//
-// }
-// }
-
 		final Date date2 = new Date();
 		LOGGER.info("end: " + date2);
 
 		updateCache(objects);
 
 		return objects;
-	}
+		}
 
 	/**
 	 * gets the corresponding object out of the cache
-	 * 
+	 *
 	 * @param id
 	 * @return the corresponding object
 	 */
@@ -399,7 +360,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 
 	/**
 	 * updates given obj corresponding cached version for future loader actions.
-	 * 
+	 *
 	 * @param obj
 	 */
 	public void updateCache(final T obj)
@@ -430,7 +391,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 
 	/**
 	 * recursive helper method for downloadByOffset
-	 * 
+	 *
 	 * @param jArray
 	 * @param offset
 	 * @param revision
@@ -467,7 +428,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 
 	/**
 	 * helper method for downloadAllExisting
-	 * 
+	 *
 	 * @param jArray
 	 * @param offset
 	 * @param limit

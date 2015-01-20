@@ -2,6 +2,7 @@ package link.json;
 
 import java.util.Iterator;
 
+import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -11,13 +12,15 @@ import error.ApiNotReachableException;
 /**
  * Iterates over org.codehaus.jettison.json.JSONArray buffer automatically loaded from KORONA.Cloud
  * API Service using KORONA.CloudAPI-Lib.
- * 
+ *
  * @author mas
- * 
+ *
  */
 
 public class CloudResultIterator implements Iterator<JSONObject>
 {
+
+	protected static Logger LOGGER = Logger.getLogger(CloudResultIterator.class);
 
 	private JSONArray buffer;
 	int currentBufferIndex;
@@ -27,7 +30,7 @@ public class CloudResultIterator implements Iterator<JSONObject>
 
 	/**
 	 * ctor
-	 * 
+	 *
 	 * @param jsonDownloader
 	 * @param revision
 	 * @throws ApiNotReachableException
@@ -47,10 +50,10 @@ public class CloudResultIterator implements Iterator<JSONObject>
 	 * return an element rather than throwing an exception.) If end of buffer is reached buffer will
 	 * be reloaded with new offset for next 50 JSONObjects. If refresh returns empty JSONArray this
 	 * method returns false.
-	 * 
+	 *
 	 * @return true if next JSONObject is not null or JSONArray is not empty.
-	 * 
-	 * 
+	 *
+	 *
 	 */
 	@Override
 	public boolean hasNext()
@@ -89,7 +92,12 @@ public class CloudResultIterator implements Iterator<JSONObject>
 		{
 
 			currentBufferIndex++;
-			return buffer.getJSONObject(currentBufferIndex);
+
+			final JSONObject nextJSONObject = buffer.getJSONObject(currentBufferIndex);
+
+			LOGGER.debug("PROCESSING " + nextJSONObject.toString());
+
+			return nextJSONObject;
 
 		}
 		catch (final JSONException e)
