@@ -670,6 +670,36 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 			prod.setCodes(codeList);
 		}
 
+		if (!obj.isNull("articleTexts") && !obj.getString("articleTexts").equalsIgnoreCase("null"))
+		{
+			JSONArray jAText = new JSONArray();
+			jAText = obj.getJSONArray("articleTexts");
+			JSONObject jText = new JSONObject();
+			final List<Product_Text> textList = new ArrayList<Product_Text>();
+			Product_Text productText = null;
+			ProductText_Type type = null;
+			ProductText_Type[] possibleTypes = ProductText_Type.values();
+			for (int i = 0; i <= jAText.length() - 1; i++)
+			{
+				jText = jAText.getJSONObject(i);
+				if (!jText.isNull("text") && !jText.isNull("type"))
+				{
+					for (int j = 0; j < possibleTypes.length; j++)
+					{
+						if (possibleTypes[j].getReference().equalsIgnoreCase(jText.getString("type")))
+						{
+							type = possibleTypes[j];
+							break;
+						}
+					}
+					productText = new Product_Text(jText.getString("text"), type);
+					textList.add(productText);
+				}
+
+			}
+			prod.setTexts(textList);
+		}
+		
 		if (!obj.isNull("prices") && !obj.getString("prices").equalsIgnoreCase("null"))
 		{
 			final JSONArray jPrices = obj.getJSONArray("prices");
