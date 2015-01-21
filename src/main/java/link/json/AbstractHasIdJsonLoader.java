@@ -50,7 +50,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	// extern gesteuert
 	private int offset = 0;
 
-	private final int limit = 10;
+	private final int limit = 50;
 
 	private final Map<String, T> idCache = new HashMap<String, T>();
 
