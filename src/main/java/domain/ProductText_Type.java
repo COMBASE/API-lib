@@ -7,7 +7,7 @@ public enum ProductText_Type
 		"ARTICLETEXT_INGREDIENTS"), allergens("ARTICLETEXT_ALLERGENS"), receiptDescription("ARTICLETEXT_RECEIPT_TEXT"),
 		manual("ARTICLETEXT_MANUAL"), orderText("ARTICLETEXT_ORDER_TEXT"), careInstructions("ARTICLETEXT_CARE_INSTRUCTIONS"),
 		recipe("ARTICLETEXT_RECIPE"), certificate("ARTICLETEXT_CERTIFICATE"), warrantyText("ARTICLETEXT_WARRANTY_TEXT"),
-		infoUrl("ARTICLETEXT_INFO_URL");
+		infoUrl("ARTICLETEXT_INFO_URL"), additives("ARTICLETEXT_ADDITIVES");
 	private final String reference;
 
 	ProductText_Type(String s)
