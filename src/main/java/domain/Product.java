@@ -475,16 +475,6 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		this.basePriceMax = basePriceMax;
 	}
 
-	public BigDecimal getBasPriceMin()
-	{
-		return basePriceMin;
-	}
-
-	public void setBasPriceMin(final BigDecimal basePriceMin)
-	{
-		this.basePriceMin = basePriceMin;
-	}
-
 	public List<SupplierItemPrice> getSupplierItemPrices()
 	{
 		return supplierItemPrices;
