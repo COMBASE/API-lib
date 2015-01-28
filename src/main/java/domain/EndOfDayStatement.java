@@ -12,7 +12,7 @@ import org.codehaus.jettison.json.JSONObject;
 public class EndOfDayStatement extends AbstractApiObject<EndOfDayStatement>
 {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 4420456052325768842L;
 
@@ -430,7 +430,7 @@ public class EndOfDayStatement extends AbstractApiObject<EndOfDayStatement>
 			obj.getBoolean("deleted"))
 			.revision(obj.getLong("revision"))
 			.id(obj.getString("uuid"))
-			.finishTime(inputDf.parse(obj.getString("finishTime")))
+			.finishTime(prepareDate(obj, "finishTime"))
 			.pos(pos)
 			.receiptCount(obj.getLong("receiptCount"))
 			.zCount(obj.getLong("zCount"))

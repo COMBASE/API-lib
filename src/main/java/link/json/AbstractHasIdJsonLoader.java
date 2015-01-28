@@ -133,6 +133,30 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 		return jArray;
 	}
 
+	/**
+	 * Downloads the next amountPerPage objects from the cloud starting by the next lowest revision
+	 * provided to this method. The Offset is the page controller iterating over pages by
+	 * offset+amountPerPage.
+	 *
+	 * @param revision
+	 * @param amountPerPage
+	 * @param offset
+	 * @return JSONArray
+	 * @throws ApiNotReachableException
+	 */
+	public JSONArray downloadByOffset(final long revision, final int amountPerPage, int offset)
+		throws ApiNotReachableException
+	{
+		final String jStr = cloudLink.getJSONByOffset(getDataType(), Long.toString(revision),
+			amountPerPage, offset);
+		final JSONArray jArray = createJsonArray(jStr);
+		if (jArray == null)
+			return null;
+		offset += amountPerPage;
+
+		return jArray;
+	}
+
 
 	/**
 	 * for proper use you have to ensure that the JSONDownloader Object is kept alive as long you

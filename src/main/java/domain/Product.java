@@ -48,7 +48,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 
 
 	protected static abstract class Init<T extends Init<T>> extends
-	AbstractNameAndNumberApiObject.Init<T>
+		AbstractNameAndNumberApiObject.Init<T>
 
 	{
 		private Boolean activeAssortment = null;
@@ -301,7 +301,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 	{
 		if (codes == null)
 			codes = new ArrayList<Product_Code>();
-			return codes;
+		return codes;
 	}
 
 	public CommodityGroup getCommodityGroup()
@@ -549,6 +549,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		obj.put("priceChangeable", priceChangeable);
 		obj.put("requiresSerialNumber", requiresSerialNumber);
 		obj.put("trackInventory", trackInventory);
+		obj.put("packaging", packaging);
 		// obj.put("packaging", packaging);
 		obj.put("preparationArticle", preparationArticle);
 		if (commodityGroup != null)
@@ -678,7 +679,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 			final List<Product_Text> textList = new ArrayList<Product_Text>();
 			Product_Text productText = null;
 			ProductText_Type type = null;
-			ProductText_Type[] possibleTypes = ProductText_Type.values();
+			final ProductText_Type[] possibleTypes = ProductText_Type.values();
 			for (int i = 0; i <= jAText.length() - 1; i++)
 			{
 				jText = jAText.getJSONObject(i);
@@ -686,7 +687,8 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 				{
 					for (int j = 0; j < possibleTypes.length; j++)
 					{
-						if (possibleTypes[j].getReference().equalsIgnoreCase(jText.getString("type")))
+						if (possibleTypes[j].getReference().equalsIgnoreCase(
+							jText.getString("type")))
 						{
 							type = possibleTypes[j];
 							break;
@@ -699,7 +701,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 			}
 			prod.setTexts(textList);
 		}
-		
+
 		if (!obj.isNull("prices") && !obj.getString("prices").equalsIgnoreCase("null"))
 		{
 			final JSONArray jPrices = obj.getJSONArray("prices");
