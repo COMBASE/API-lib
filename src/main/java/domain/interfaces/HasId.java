@@ -1,9 +1,10 @@
 package domain.interfaces;
 
+
 /**
- * 
+ *
  * @author gob
- * 
+ *
  */
 public interface HasId
 {

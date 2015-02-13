@@ -133,6 +133,17 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 		return jArray;
 	}
 
+	public String downloadJSONStringByOffset(final long revision, final int amountPerPage,
+		int offset) throws ApiNotReachableException
+	{
+		final String jStr = cloudLink.getJSONByOffset(getDataType(), Long.toString(revision),
+			amountPerPage, offset);
+		if (jStr == null)
+			return null;
+		offset += amountPerPage;
+		return jStr;
+	}
+
 	/**
 	 * Downloads the next amountPerPage objects from the cloud starting by the next lowest revision
 	 * provided to this method. The Offset is the page controller iterating over pages by
@@ -207,7 +218,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	 * @throws SubObjectInitializationException
 	 */
 	public T downloadByUUID(final String uuid) throws ApiNotReachableException, JSONException,
-	ParseException, SubObjectInitializationException
+		ParseException, SubObjectInitializationException
 	{
 		final T cachedObject = idCache.get(uuid);
 		if (cachedObject != null)
@@ -288,7 +299,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	 */
 	public List<T> postList(final List<? extends T> objs, final int limit, final int threads)
 		throws JSONException, ParseException, ApiNotReachableException
-		{
+	{
 		final Date date1 = new Date();
 		LOGGER.info("start: " + date1);
 
@@ -365,7 +376,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 		updateCache(objects);
 
 		return objects;
-		}
+	}
 
 	/**
 	 * gets the corresponding object out of the cache
