@@ -1,5 +1,6 @@
 package domain;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,7 +15,7 @@ import org.codehaus.jettison.json.JSONObject;
 public class Sale extends AbstractApiObject<Sale>
 {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -3645926143364056863L;
 	private Product article;
@@ -26,14 +27,14 @@ public class Sale extends AbstractApiObject<Sale>
 	private Sector sector;
 	private String receiptNumber;
 	private int receiptIndex;
-	private double quantity;
+	private BigDecimal quantity;
 	private POS pos;
 	private Receipt receipt;
-	private double manualPrice;
-	private double itemPrice;
-	private double grossItemPrice;
-	private double netItemPrice;
-	private double baseItemPrice;
+	private BigDecimal manualPrice;
+	private BigDecimal itemPrice;
+	private BigDecimal grossItemPrice;
+	private BigDecimal netItemPrice;
+	private BigDecimal baseItemPrice;
 	private String serialNumber;
 	private List<TaxPayments> taxPayments;
 
@@ -48,13 +49,13 @@ public class Sale extends AbstractApiObject<Sale>
 		private Sector sector = null;
 		private String receiptNumber = null;
 		private int receiptIndex = 0;
-		private double quantity = 0;
+		private BigDecimal quantity = null;
 		private Receipt receipt = null;
-		private double manualPrice = 0;
-		private double itemPrice = 0;
-		private double grossItemPrice = 0;
-		private double netItemPrice = 0;
-		private double baseItemPrice = 0;
+		private BigDecimal manualPrice = null;
+		private BigDecimal itemPrice = null;
+		private BigDecimal grossItemPrice = null;
+		private BigDecimal netItemPrice = null;
+		private BigDecimal baseItemPrice = null;
 		private String serialNumber = null;
 		private POS pos;
 		private final List<TaxPayments> taxPayments = new ArrayList<TaxPayments>();
@@ -134,7 +135,7 @@ public class Sale extends AbstractApiObject<Sale>
 			return self();
 		}
 
-		public T quantity(final double value)
+		public T quantity(final BigDecimal value)
 		{
 			quantity = value;
 			return self();
@@ -146,31 +147,31 @@ public class Sale extends AbstractApiObject<Sale>
 			return self();
 		}
 
-		public T manualPrice(final double value)
+		public T manualPrice(final BigDecimal value)
 		{
 			manualPrice = value;
 			return self();
 		}
 
-		public T itemPrice(final double value)
+		public T itemPrice(final BigDecimal value)
 		{
 			itemPrice = value;
 			return self();
 		}
 
-		public T grossItemPrice(final double value)
+		public T grossItemPrice(final BigDecimal value)
 		{
 			grossItemPrice = value;
 			return self();
 		}
 
-		public T netItemPrice(final double value)
+		public T netItemPrice(final BigDecimal value)
 		{
 			netItemPrice = value;
 			return self();
 		}
 
-		public T baseItemPrice(final double value)
+		public T baseItemPrice(final BigDecimal value)
 		{
 			baseItemPrice = value;
 			return self();
@@ -328,12 +329,12 @@ public class Sale extends AbstractApiObject<Sale>
 		this.receiptIndex = index;
 	}
 
-	public double getQuantity()
+	public BigDecimal getQuantity()
 	{
 		return this.quantity;
 	}
 
-	public void setQuantity(final int quant)
+	public void setQuantity(final BigDecimal quant)
 	{
 		this.quantity = quant;
 	}
@@ -348,52 +349,52 @@ public class Sale extends AbstractApiObject<Sale>
 		this.receipt = receipt;
 	}
 
-	public double getManualPrice()
+	public BigDecimal getManualPrice()
 	{
 		return manualPrice;
 	}
 
-	public void setManualPrice(final double manualPrice)
+	public void setManualPrice(final BigDecimal manualPrice)
 	{
 		this.manualPrice = manualPrice;
 	}
 
-	public double getItemPrice()
+	public BigDecimal getItemPrice()
 	{
 		return itemPrice;
 	}
 
-	public void setItemPrice(final double itemPrice)
+	public void setItemPrice(final BigDecimal itemPrice)
 	{
 		this.itemPrice = itemPrice;
 	}
 
-	public double getGrossItemPrice()
+	public BigDecimal getGrossItemPrice()
 	{
 		return grossItemPrice;
 	}
 
-	public void setGrossItemPrice(final double grossItemPrice)
+	public void setGrossItemPrice(final BigDecimal grossItemPrice)
 	{
 		this.grossItemPrice = grossItemPrice;
 	}
 
-	public double getNetItemPrice()
+	public BigDecimal getNetItemPrice()
 	{
 		return netItemPrice;
 	}
 
-	public void setNetItemPrice(final double netItemPrice)
+	public void setNetItemPrice(final BigDecimal netItemPrice)
 	{
 		this.netItemPrice = netItemPrice;
 	}
 
-	public double getBaseItemPrice()
+	public BigDecimal getBaseItemPrice()
 	{
 		return baseItemPrice;
 	}
 
-	public void setBaseItemPrice(final double baseItemPrice)
+	public void setBaseItemPrice(final BigDecimal baseItemPrice)
 	{
 		this.baseItemPrice = baseItemPrice;
 	}
@@ -406,11 +407,6 @@ public class Sale extends AbstractApiObject<Sale>
 	public void setSerialNumber(final String serialNumber)
 	{
 		this.serialNumber = serialNumber;
-	}
-
-	public void setQuantity(final double quantity)
-	{
-		this.quantity = quantity;
 	}
 
 	public POS getPos()
@@ -533,12 +529,12 @@ public class Sale extends AbstractApiObject<Sale>
 			.sector(sec)
 			.receiptNumber(obj.getString("receiptNumber"))
 			.receiptIndex(obj.getInt("receiptIndex"))
-			.quantity(obj.getDouble("quantity"))
+			.quantity(prepareBigDecimal(obj, "quantity"))
 			.receipt(rec)
-			.itemPrice(obj.getDouble("itemPrice"))
-			.netItemPrice(obj.getDouble("netItemPrice"))
-			.baseItemPrice(obj.getDouble("baseItemPrice"))
-			.grossItemPrice(obj.getDouble("grossItemPrice"))
+			.itemPrice(prepareBigDecimal(obj, "itemPrice"))
+			.netItemPrice(prepareBigDecimal(obj, "netItemPrice"))
+			.baseItemPrice(prepareBigDecimal(obj, "baseItemPrice"))
+			.grossItemPrice(prepareBigDecimal(obj, "grossItemPrice"))
 			.pos(pos)
 			.build();
 
@@ -551,7 +547,7 @@ public class Sale extends AbstractApiObject<Sale>
 				JSONObject tax = new JSONObject();
 				tax = jTax.getJSONObject(i);
 				final TaxPayments taxO = new TaxPayments(tax.getString("salesTax"),
-					tax.getDouble("currentTaxRate"), tax.getDouble("amount"));
+					prepareBigDecimal(tax, "currentTaxRate"), prepareBigDecimal(tax, "amount"));
 				final List<TaxPayments> taxL = new ArrayList<TaxPayments>();
 				taxL.add(taxO);
 				sale.setTaxPayments(taxL);

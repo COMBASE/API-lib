@@ -1,5 +1,6 @@
 package domain;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Date;
 
@@ -20,15 +21,15 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 	private POS pos;
 	private OrganizationalUnit organizationalUnit;
 	private Pricelist priceGroup;
-	private double grossTotalAmount;
-	private double netTotalAmount;
-	private double taxAmount;
-	private double grossRevenueAmount;
-	private double netRevenueAmount;
-	private double receiptDiscountAmount;
-	private double receiptDiscountGrossAmount;
-	private double receiptDiscountNetAmount;
-	private double zCount;
+	private BigDecimal grossTotalAmount;
+	private BigDecimal netTotalAmount;
+	private BigDecimal taxAmount;
+	private BigDecimal grossRevenueAmount;
+	private BigDecimal netRevenueAmount;
+	private BigDecimal receiptDiscountAmount;
+	private BigDecimal receiptDiscountGrossAmount;
+	private BigDecimal receiptDiscountNetAmount;
+	private BigDecimal zCount;
 	private boolean voided;
 	private Customer customer;
 
@@ -44,15 +45,15 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 		private POS pos = null;
 		private OrganizationalUnit organizationalUnit = null;
 		private final Pricelist priceGroup = null;
-		private double grossTotalAmount = 0;
-		private double netTotalAmount = 0;
-		private double taxAmount = 0;
-		private double grossRevenueAmount = 0;
-		private double netRevenueAmount = 0;
-		private double receiptDiscountAmount = 0;
-		private double receiptDiscountGrossAmount = 0;
-		private double receiptDiscountNetAmount = 0;
-		private double zCount = 0;
+		private BigDecimal grossTotalAmount = null;
+		private BigDecimal netTotalAmount = null;
+		private BigDecimal taxAmount = null;
+		private BigDecimal grossRevenueAmount = null;
+		private BigDecimal netRevenueAmount = null;
+		private BigDecimal receiptDiscountAmount = null;
+		private BigDecimal receiptDiscountGrossAmount = null;
+		private BigDecimal receiptDiscountNetAmount = null;
+		private BigDecimal zCount = null;
 		private boolean voided = false;
 		private Customer customer = null;
 
@@ -92,19 +93,19 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 			return self();
 		}
 
-		public T grossTotalAmount(final double value)
+		public T grossTotalAmount(final BigDecimal value)
 		{
 			this.grossTotalAmount = value;
 			return self();
 		}
 
-		public T netTotalAmount(final double value)
+		public T netTotalAmount(final BigDecimal value)
 		{
 			this.netTotalAmount = value;
 			return self();
 		}
 
-		public T taxAmount(final double value)
+		public T taxAmount(final BigDecimal value)
 		{
 			this.taxAmount = value;
 			return self();
@@ -122,37 +123,37 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 			return self();
 		}
 
-		public T grossRevenueAmount(final double value)
+		public T grossRevenueAmount(final BigDecimal value)
 		{
 			this.grossRevenueAmount = value;
 			return self();
 		}
 
-		public T netRevenueAmount(final double value)
+		public T netRevenueAmount(final BigDecimal value)
 		{
 			this.netRevenueAmount = value;
 			return self();
 		}
 
-		public T receiptDiscountAmount(final double value)
+		public T receiptDiscountAmount(final BigDecimal value)
 		{
 			this.receiptDiscountAmount = value;
 			return self();
 		}
 
-		public T receiptDiscountGrossAmount(final double value)
+		public T receiptDiscountGrossAmount(final BigDecimal value)
 		{
 			this.receiptDiscountGrossAmount = value;
 			return self();
 		}
 
-		public T receiptDiscountNetAmount(final double value)
+		public T receiptDiscountNetAmount(final BigDecimal value)
 		{
 			this.receiptDiscountNetAmount = value;
 			return self();
 		}
 
-		public T zCount(final double value)
+		public T zCount(final BigDecimal value)
 		{
 			this.zCount = value;
 			return self();
@@ -291,92 +292,92 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 		this.orderNumber = orderNumber;
 	}
 
-	public double getGrossTotalAmount()
+	public BigDecimal getGrossTotalAmount()
 	{
 		return grossTotalAmount;
 	}
 
-	public void setGrossTotalAmount(final double grossTotalAmount)
+	public void setGrossTotalAmount(final BigDecimal grossTotalAmount)
 	{
 		this.grossTotalAmount = grossTotalAmount;
 	}
 
-	public double getNetTotalAmount()
+	public BigDecimal getNetTotalAmount()
 	{
 		return netTotalAmount;
 	}
 
-	public void setNetTotalAmount(final double netTotalAmount)
+	public void setNetTotalAmount(final BigDecimal netTotalAmount)
 	{
 		this.netTotalAmount = netTotalAmount;
 	}
 
-	public double getTaxAmount()
+	public BigDecimal getTaxAmount()
 	{
 		return taxAmount;
 	}
 
-	public void setTaxAmount(final double taxAmount)
+	public void setTaxAmount(final BigDecimal taxAmount)
 	{
 		this.taxAmount = taxAmount;
 	}
 
-	public double getGrossRevenueAmount()
+	public BigDecimal getGrossRevenueAmount()
 	{
 		return grossRevenueAmount;
 	}
 
-	public void setGrossRevenueAmount(final double grossRevenueAmount)
+	public void setGrossRevenueAmount(final BigDecimal grossRevenueAmount)
 	{
 		this.grossRevenueAmount = grossRevenueAmount;
 	}
 
-	public double getNetRevenueAmount()
+	public BigDecimal getNetRevenueAmount()
 	{
 		return netRevenueAmount;
 	}
 
-	public void setNetRevenueAmount(final double netRevenueAmount)
+	public void setNetRevenueAmount(final BigDecimal netRevenueAmount)
 	{
 		this.netRevenueAmount = netRevenueAmount;
 	}
 
-	public double getReceiptDiscountAmount()
+	public BigDecimal getReceiptDiscountAmount()
 	{
 		return receiptDiscountAmount;
 	}
 
-	public void setReceiptDiscountAmount(final double receiptDiscountAmount)
+	public void setReceiptDiscountAmount(final BigDecimal receiptDiscountAmount)
 	{
 		this.receiptDiscountAmount = receiptDiscountAmount;
 	}
 
-	public double getReceiptDiscountGrossAmount()
+	public BigDecimal getReceiptDiscountGrossAmount()
 	{
 		return receiptDiscountGrossAmount;
 	}
 
-	public void setReceiptDiscountGrossAmount(final double receiptDiscountGrossAmount)
+	public void setReceiptDiscountGrossAmount(final BigDecimal receiptDiscountGrossAmount)
 	{
 		this.receiptDiscountGrossAmount = receiptDiscountGrossAmount;
 	}
 
-	public double getReceiptDiscountNetAmount()
+	public BigDecimal getReceiptDiscountNetAmount()
 	{
 		return receiptDiscountNetAmount;
 	}
 
-	public void setReceiptDiscountNetAmount(final double receiptDiscountNetAmount)
+	public void setReceiptDiscountNetAmount(final BigDecimal receiptDiscountNetAmount)
 	{
 		this.receiptDiscountNetAmount = receiptDiscountNetAmount;
 	}
 
-	public double getzCount()
+	public BigDecimal getzCount()
 	{
 		return zCount;
 	}
 
-	public void setzCount(final double zCount)
+	public void setzCount(final BigDecimal zCount)
 	{
 		this.zCount = zCount;
 	}
@@ -492,17 +493,17 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 			.cashier(cash)
 			.customerGroup(cGrp)
 			.customer(cust)
-			.receiptDiscountGrossAmount(obj.getDouble("receiptDiscountGrossAmount"))
+			.receiptDiscountGrossAmount(prepareBigDecimal(obj, "receiptDiscountGrossAmount"))
 			.voided(obj.getBoolean("voided"))
 			.id(obj.getString("uuid"))
-			.grossTotalAmount(obj.getDouble("grossTotalAmount"))
-			.netTotalAmount(obj.getDouble("netTotalAmount"))
-			.taxAmount(obj.getDouble("taxAmount"))
-			.grossRevenueAmount(obj.getDouble("grossRevenueAmount"))
-			.netRevenueAmount(obj.getDouble("netRevenueAmount"))
-			.receiptDiscountAmount(obj.getDouble("receiptDiscountAmount"))
-			.receiptDiscountGrossAmount(obj.getDouble("receiptDiscountGrossAmount"))
-			.receiptDiscountNetAmount(obj.getDouble("receiptDiscountNetAmount"))
+			.grossTotalAmount(prepareBigDecimal(obj, "grossTotalAmount"))
+			.netTotalAmount(prepareBigDecimal(obj, "netTotalAmount"))
+			.taxAmount(prepareBigDecimal(obj, "taxAmount"))
+			.grossRevenueAmount(prepareBigDecimal(obj, "grossRevenueAmount"))
+			.netRevenueAmount(prepareBigDecimal(obj, "netRevenueAmount"))
+			.receiptDiscountAmount(prepareBigDecimal(obj, "receiptDiscountAmount"))
+			.receiptDiscountGrossAmount(prepareBigDecimal(obj, "receiptDiscountGrossAmount"))
+			.receiptDiscountNetAmount(prepareBigDecimal(obj, "receiptDiscountNetAmount"))
 			.creatTime(inputDf.parse(obj.getString("createTime")))
 			.modifiedTime(inputDf.parse(obj.getString("modifiedTime")))
 			.finishTime(inputDf.parse(obj.getString("finishTime")))

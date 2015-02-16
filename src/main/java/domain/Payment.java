@@ -1,5 +1,6 @@
 package domain;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Date;
 
@@ -10,7 +11,7 @@ import org.codehaus.jettison.json.JSONObject;
 public class Payment extends AbstractApiObject<Payment>
 {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -3413202913572354611L;
 	private Cashier cashier;
@@ -23,7 +24,7 @@ public class Payment extends AbstractApiObject<Payment>
 	private double baseItemPrice;
 	private String receiptNumber;
 	private String serialNumber;
-	private double amount;
+	private BigDecimal amount;
 	private Date transactionTime;
 	private POS pos;
 	private PaymentMethod paymentMethod;
@@ -40,7 +41,7 @@ public class Payment extends AbstractApiObject<Payment>
 		private double itemPrice = 0;
 		private int itemNumber = 0;
 		private Date transactionTime = null;
-		private double amount = 0;
+		private BigDecimal amount = null;
 		private double netItemPrice = 0;
 		private double baseItemPrice = 0;
 		private String serialNumber = null;
@@ -61,7 +62,7 @@ public class Payment extends AbstractApiObject<Payment>
 			return self();
 		}
 
-		public T amount(final double value)
+		public T amount(final BigDecimal value)
 		{
 			amount = value;
 			return self();
@@ -297,12 +298,12 @@ public class Payment extends AbstractApiObject<Payment>
 		this.receipt = receipt;
 	}
 
-	public double getAmount()
+	public BigDecimal getAmount()
 	{
 		return amount;
 	}
 
-	public void setAmount(final double amount)
+	public void setAmount(final BigDecimal amount)
 	{
 		this.amount = amount;
 	}
@@ -412,7 +413,7 @@ public class Payment extends AbstractApiObject<Payment>
 		final Payment pay = new Payment.Builder().deleted(obj.getBoolean("deleted"))
 			.revision(obj.getLong("revision"))
 			.id(obj.getString("uuid"))
-			.amount(obj.getDouble("amount"))
+			.amount(prepareBigDecimal(obj, "amount"))
 			.transactionTime(tTime)
 			.cashier(cash)
 			.receipt(rec)

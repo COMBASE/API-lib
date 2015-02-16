@@ -1,13 +1,16 @@
 package domain;
 
+import java.math.BigDecimal;
+
 
 public class TaxPayments
 {
 	private String salesTax;
-	private double currentTaxRate;
-	private double amount;
+	private BigDecimal currentTaxRate;
+	private BigDecimal amount;
 
-	public TaxPayments(final String salesTax, final double currentTaxRate, final double amount)
+	public TaxPayments(final String salesTax, final BigDecimal currentTaxRate,
+		final BigDecimal amount)
 	{
 		super();
 		this.salesTax = salesTax;
@@ -25,22 +28,22 @@ public class TaxPayments
 		this.salesTax = salesTax;
 	}
 
-	public double getCurrentTaxRate()
+	public BigDecimal getCurrentTaxRate()
 	{
 		return currentTaxRate;
 	}
 
-	public void setCurrentTaxRate(final double currentTaxRate)
+	public void setCurrentTaxRate(final BigDecimal currentTaxRate)
 	{
 		this.currentTaxRate = currentTaxRate;
 	}
 
-	public double getAmount()
+	public BigDecimal getAmount()
 	{
 		return amount;
 	}
 
-	public void setAmount(final double amount)
+	public void setAmount(final BigDecimal amount)
 	{
 		this.amount = amount;
 	}
