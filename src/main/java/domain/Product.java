@@ -72,7 +72,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 
 		private Boolean preparationArticle = null;
 
-		private final List<Tag> tags = new ArrayList<Tag>();
+		private List<Tag> tags = new ArrayList<Tag>();
 
 		public T packaging(final Boolean value)
 		{
@@ -223,17 +223,16 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 			return self();
 		}
 
-		public T tags(final Collection<Tag> coll)
+		public T tags(final List<Tag> value)
 		{
-			for (final Tag tag : coll)
-			{
-				tags.add(tag);
-			}
+			tags = value;
 			return self();
 		}
 
 		public T tags(final Tag tag)
 		{
+			if (tags == null)
+				tags = new ArrayList<Tag>();
 			tags.add(tag);
 			return self();
 		}

@@ -10,8 +10,8 @@ import java.net.URL;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -26,13 +26,13 @@ import org.codehaus.jettison.json.JSONObject;
 import domain.DataType;
 import domain.ReferenceType;
 import error.ApiNotReachableException;
-import error.ArticleCodeMustBeUniqueException;
+import error.PostAllException;
 
 /**
  * This Class is our Interface to the Cloud
- * 
+ *
  * @author Gordon Bosch
- * 
+ *
  */
 public class ApiConnector
 {
@@ -72,7 +72,7 @@ public class ApiConnector
 
 	/**
 	 * Gets an Object from the Cloud
-	 * 
+	 *
 	 * @param type
 	 * @param reference
 	 * @return
@@ -88,11 +88,10 @@ public class ApiConnector
 			slash = "/";
 
 		if (refType.equals(ReferenceType.auth))
-			url = cloudURL + slash + refType.getType() + "/" +
-					reference;
+			url = cloudURL + slash + refType.getType() + "/" + reference;
 		else
-			url = cloudURL + slash + token + "/" + type.getReference() + "/" + refType.getType() + "/" +
-					reference;
+			url = cloudURL + slash + token + "/" + type.getReference() + "/" + refType.getType() +
+				"/" + reference;
 
 		HttpURLConnection con = null;
 
@@ -151,14 +150,13 @@ public class ApiConnector
 
 	/**
 	 * saves a JSONArray in the Cloud
-	 * 
+	 *
 	 * @param type
 	 * @param obj
 	 * @return
-	 * @throws ArticleCodeMustBeUniqueException
+	 * @throws PostAllException
 	 */
-	public String postData(final DataType type, final JSONArray obj)
-		throws ArticleCodeMustBeUniqueException
+	public String postData(final DataType type, final JSONArray obj) throws PostAllException
 	{
 		String slash = "";
 		if (!cloudURL.endsWith("/"))
@@ -226,20 +224,18 @@ public class ApiConnector
 						final JSONArray errorList = responseJson.getJSONArray("errorList");
 
 						// contains all error objects
-						final Set<String> errorSet = new HashSet<String>();
+						final Map<String, String> errorMap = new HashMap<String, String>();
 
 						for (int i = 0; i < errorList.length(); i++)
 						{
 
-							final String errorString = errorList.getString(i);
+							final String[] errorMapping = errorList.getString(i).split(":");
 
-							final String[] errorStrings = errorString.split(":", 2);
-
-							errorSet.add(errorStrings[1]);
+							errorMap.put(errorMapping[0], errorMapping[1]);
 
 						}
 
-						throw new ArticleCodeMustBeUniqueException(null, errorSet);
+						throw new PostAllException(null, errorMap);
 
 					}
 
@@ -283,7 +279,7 @@ public class ApiConnector
 
 	/**
 	 * saves a JSONObject in the Cloud
-	 * 
+	 *
 	 * @param type
 	 * @param obj
 	 * @return

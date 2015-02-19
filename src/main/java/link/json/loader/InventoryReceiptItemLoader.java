@@ -14,6 +14,7 @@ import domain.Inventory;
 import domain.InventoryReceipt;
 import domain.InventoryReceiptItem;
 import error.ApiNotReachableException;
+import error.PostAllException;
 
 public class InventoryReceiptItemLoader extends AbstractHasIdJsonLoader<InventoryReceiptItem>
 {
@@ -32,7 +33,7 @@ public class InventoryReceiptItemLoader extends AbstractHasIdJsonLoader<Inventor
 
 	/**
 	 * Posting complete Inventory Report
-	 * 
+	 *
 	 * @param items
 	 * @param receipts
 	 * @param inventories
@@ -41,11 +42,13 @@ public class InventoryReceiptItemLoader extends AbstractHasIdJsonLoader<Inventor
 	 * @throws JSONException
 	 * @throws ParseException
 	 * @throws ApiNotReachableException
+	 * @throws PostAllException
 	 */
 	public List<InventoryReceiptItem> postList(final List<InventoryReceiptItem> items,
 		List<InventoryReceipt> receipts, List<Inventory> inventories, final int limit,
-		final int threads) throws JSONException, ParseException, ApiNotReachableException
-	{
+		final int threads) throws JSONException, ParseException, ApiNotReachableException,
+		PostAllException
+		{
 
 		inventories = inventoryLoader.postList(inventories, limit, threads);
 
@@ -64,7 +67,7 @@ public class InventoryReceiptItemLoader extends AbstractHasIdJsonLoader<Inventor
 
 		return super.postList(items, limit, threads);
 
-	}
+		}
 
 	@Override
 	public JSONObject toJSON(final InventoryReceiptItem value) throws JSONException
