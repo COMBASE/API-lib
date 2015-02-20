@@ -26,6 +26,7 @@ import org.codehaus.jettison.json.JSONObject;
 import domain.DataType;
 import domain.ReferenceType;
 import error.ApiNotReachableException;
+import error.InvalidTokenException;
 import error.PostAllException;
 
 /**
@@ -91,7 +92,7 @@ public class ApiConnector
 			url = cloudURL + slash + refType.getType() + "/" + reference;
 		else
 			url = cloudURL + slash + token + "/" + type.getReference() + "/" + refType.getType() +
-				"/" + reference;
+			"/" + reference;
 
 		HttpURLConnection con = null;
 
@@ -149,14 +150,69 @@ public class ApiConnector
 	}
 
 	/**
+	 *
+	 * @param responseJson
+	 * @throws JSONException
+	 * @throws PostAllException
+	 * @throws InvalidTokenException
+	 */
+	private void interpretResponse(final JSONObject responseJson) throws JSONException,
+		PostAllException, InvalidTokenException
+	{
+
+		try
+		{
+			// API Exception Handling
+			if (!responseJson.isNull("error"))
+			{
+
+				final String errorStr = responseJson.getString("error");
+
+				if (errorStr.equalsIgnoreCase("Invalid Token"))
+					throw new InvalidTokenException(null);
+
+			}
+
+			// API Exception Handling
+			if (!responseJson.isNull("errorList"))
+			{
+				final JSONArray errorList = responseJson.getJSONArray("errorList");
+
+				// contains all error objects
+				final Map<String, String> errorMap = new HashMap<String, String>();
+
+				for (int i = 0; i < errorList.length(); i++)
+				{
+
+					final String[] errorMapping = errorList.getString(i).split(":");
+
+					errorMap.put(errorMapping[0], errorMapping[1]);
+
+				}
+
+				throw new PostAllException(null, errorMap);
+
+			}
+		}
+		catch (final JSONException e)
+		{
+			LOGGER.error("missing error or errorList key: " + responseJson.toString(), e);
+		}
+
+
+	}
+
+	/**
 	 * saves a JSONArray in the Cloud
 	 *
 	 * @param type
 	 * @param obj
 	 * @return
 	 * @throws PostAllException
+	 * @throws InvalidTokenException
 	 */
-	public String postData(final DataType type, final JSONArray obj) throws PostAllException
+	public String postData(final DataType type, final JSONArray obj) throws PostAllException,
+		InvalidTokenException
 	{
 		String slash = "";
 		if (!cloudURL.endsWith("/"))
@@ -207,43 +263,18 @@ public class ApiConnector
 
 				try
 				{
+
 					final JSONObject responseJson = new JSONObject(response.toString());
 
-					// API Exception Handling
-					if (!responseJson.isNull("error"))
-					{
-						final JSONObject error = responseJson.getJSONObject("error");
-						// TODO implement simple error block
-						LOGGER.warn("ToDo");
 
-					}
-
-					// API Exception Handling
-					if (!responseJson.isNull("errorList"))
-					{
-						final JSONArray errorList = responseJson.getJSONArray("errorList");
-
-						// contains all error objects
-						final Map<String, String> errorMap = new HashMap<String, String>();
-
-						for (int i = 0; i < errorList.length(); i++)
-						{
-
-							final String[] errorMapping = errorList.getString(i).split(":");
-
-							errorMap.put(errorMapping[0], errorMapping[1]);
-
-						}
-
-						throw new PostAllException(null, errorMap);
-
-					}
+					interpretResponse(responseJson);
 
 
 				}
 				catch (final JSONException e)
 				{
-					LOGGER.error("Could not interpret responseMessage from API! Malformed JSONSyntax");
+					LOGGER.error("Could not interpret responseMessage from API! Malformed JSON syntax: " +
+						response.toString());
 				}
 
 
@@ -283,8 +314,11 @@ public class ApiConnector
 	 * @param type
 	 * @param obj
 	 * @return
+	 * @throws InvalidTokenException
+	 * @throws PostAllException
 	 */
-	public String postData(final DataType type, final JSONObject obj)
+	public String postData(final DataType type, final JSONObject obj) throws PostAllException,
+	InvalidTokenException
 	{
 
 		String slash = "";
@@ -346,9 +380,24 @@ public class ApiConnector
 				}
 				in.close();
 
+
 				LOGGER.error("APICON:FAILED POST -> Type:" + type.getReference() + " JSON=" +
 					obj.toString());
 				con.disconnect(); // Disconnect
+
+				try
+				{
+
+					final JSONObject responseJson = new JSONObject(response.toString());
+
+					interpretResponse(responseJson);
+
+				}
+				catch (final JSONException e)
+				{
+					LOGGER.error("Could not interpret responseMessage from API! Malformed JSONSyntax");
+				}
+
 				LOGGER.error(con.getResponseMessage() + ":" + con.getResponseCode());
 				return response.toString();
 			}

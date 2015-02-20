@@ -6,17 +6,28 @@ import org.codehaus.jettison.json.JSONObject;
 
 public class Pricelist extends AbstractNameAndNumberApiObject<Pricelist>
 {
-	private static final long serialVersionUID = 563916800781375676L;
-	private boolean netPrices;
-	private String uuidOfCurrency;
+	public static class Builder extends Init<Builder>
+	{
 
+		@Override
+		protected Builder self()
+		{
+			return this;
+		}
 
+	}
 	protected static abstract class Init<T extends Init<T>> extends
-		AbstractNameAndNumberApiObject.Init<T>
+	AbstractNameAndNumberApiObject.Init<T>
 	{
 		private String uuidOfCurrency = null;
-		private boolean netPrices = false;
+		private Boolean netPrices = null;
 
+
+		@Override
+		public Pricelist build()
+		{
+			return new Pricelist(this);
+		}
 
 		public T netPrices(final boolean value)
 		{
@@ -29,24 +40,35 @@ public class Pricelist extends AbstractNameAndNumberApiObject<Pricelist>
 			this.uuidOfCurrency = value;
 			return self();
 		}
-
-		@Override
-		public Pricelist build()
-		{
-			return new Pricelist(this);
-		}
 	}
 
-	public static class Builder extends Init<Builder>
+	private static final long serialVersionUID = 563916800781375676L;
+
+
+	public static Pricelist fromJSON(JSONObject obj) throws JSONException
 	{
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
 
-		@Override
-		protected Builder self()
-		{
-			return this;
-		}
+		final Pricelist priceList = new Pricelist.Builder().name(obj.getString("name"))
+			.uuidOfCurrency(obj.getString("currency"))
+			.deleted(obj.getBoolean("deleted"))
+			.id(obj.getString("uuid"))
+			.build();
+		if (obj.has("number"))
+			priceList.setNumber(obj.getString("number"));
 
+		return priceList;
 	}
+
+	private Boolean netPrices;
+
+	private String uuidOfCurrency;
+
+// public static Pricelist fromJSON(JSONObject obj) throws JSONException
+// {
+//
+// }
 
 	public Pricelist(final Init<?> init)
 	{
@@ -55,15 +77,32 @@ public class Pricelist extends AbstractNameAndNumberApiObject<Pricelist>
 		this.uuidOfCurrency = init.uuidOfCurrency;
 	}
 
-// public static Pricelist fromJSON(JSONObject obj) throws JSONException
-// {
-//
-// }
+	@Override
+	public boolean equals(final Object obj)
+	{
+
+		return obj.hashCode() == this.hashCode();
+	}
 
 	public String getUuidOfCurrency()
 	{
 		return uuidOfCurrency;
 	}
+
+// public boolean post() throws ApiNotReachableException
+// {
+// boolean result = false;
+// if (uuid == null)
+// {
+// result = CloudLink.getConnector().postData(DataType.priceList, this.toJSON());
+// if (number != null)
+// uuid = CloudLink.getUUIDByNumber(DataType.priceList, number);
+// else
+// uuid = CloudLink.getUUIDByName(DataType.priceList, name);
+// }
+// return result;
+//
+// }
 
 	@Override
 	public int hashCode()
@@ -83,21 +122,6 @@ public class Pricelist extends AbstractNameAndNumberApiObject<Pricelist>
 		return netPrices;
 	}
 
-// public boolean post() throws ApiNotReachableException
-// {
-// boolean result = false;
-// if (uuid == null)
-// {
-// result = CloudLink.getConnector().postData(DataType.priceList, this.toJSON());
-// if (number != null)
-// uuid = CloudLink.getUUIDByNumber(DataType.priceList, number);
-// else
-// uuid = CloudLink.getUUIDByName(DataType.priceList, name);
-// }
-// return result;
-//
-// }
-
 	public void setNetPrices(final boolean netPrices)
 	{
 		this.netPrices = netPrices;
@@ -106,13 +130,6 @@ public class Pricelist extends AbstractNameAndNumberApiObject<Pricelist>
 	public void setUuidOfCurrency(final String uuidOfCurrency)
 	{
 		this.uuidOfCurrency = uuidOfCurrency;
-	}
-
-	@Override
-	public boolean equals(final Object obj)
-	{
-
-		return obj.hashCode() == this.hashCode();
 	}
 
 	@Override
@@ -125,21 +142,5 @@ public class Pricelist extends AbstractNameAndNumberApiObject<Pricelist>
 		obj.put("currency", uuidOfCurrency);
 
 		return obj;
-	}
-
-	public static Pricelist fromJSON(JSONObject obj) throws JSONException
-	{
-		if (obj.has("result") && obj.getString("result") != null)
-			obj = obj.getJSONObject("result");
-
-		final Pricelist priceList = new Pricelist.Builder().name(obj.getString("name"))
-			.uuidOfCurrency(obj.getString("currency"))
-			.deleted(obj.getBoolean("deleted"))
-			.id(obj.getString("uuid"))
-			.build();
-		if (obj.has("number"))
-			priceList.setNumber(obj.getString("number"));
-
-		return priceList;
 	}
 }

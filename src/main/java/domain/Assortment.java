@@ -19,7 +19,7 @@ public class Assortment extends AbstractNameAndNumberApiObject<Assortment>
 	protected static abstract class Init<T extends Init<T>> extends
 		AbstractNameAndNumberApiObject.Init<T>
 	{
-		private String description;
+		private String description = null;
 
 		@Override
 		public Assortment build()
@@ -35,6 +35,21 @@ public class Assortment extends AbstractNameAndNumberApiObject<Assortment>
 	}
 
 	private static final long serialVersionUID = 4119884542878721366L;
+
+	public static Assortment fromJSON(JSONObject obj) throws JSONException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
+
+
+		final Assortment assortment = new Assortment.Builder().name(obj.getString("name"))
+			.deleted(obj.getBoolean("deleted"))
+			.number(obj.getString("number"))
+			.id(obj.getString("uuid"))
+			.revision(obj.getLong("revision"))
+			.build();
+		return assortment;
+	}
 
 	private String description;
 
@@ -73,20 +88,10 @@ public class Assortment extends AbstractNameAndNumberApiObject<Assortment>
 		return result;
 	}
 
+
 	public void setDescription(final String description)
 	{
 		this.description = description;
-	}
-
-
-	@Override
-	public String toString()
-	{
-		final StringBuilder builder = new StringBuilder();
-
-		super.toString(builder);
-
-		return builder.toString();
 	}
 
 	@Override
@@ -100,18 +105,13 @@ public class Assortment extends AbstractNameAndNumberApiObject<Assortment>
 		return obj;
 	}
 
-	public static Assortment fromJSON(JSONObject obj) throws JSONException
+	@Override
+	public String toString()
 	{
-		if (obj.has("result") && obj.getString("result") != null)
-			obj = obj.getJSONObject("result");
+		final StringBuilder builder = new StringBuilder();
 
+		super.toString(builder);
 
-		final Assortment assortment = new Assortment.Builder().name(obj.getString("name"))
-			.deleted(obj.getBoolean("deleted"))
-			.number(obj.getString("number"))
-			.id(obj.getString("uuid"))
-			.revision(obj.getLong("revision"))
-			.build();
-		return assortment;
+		return builder.toString();
 	}
 }

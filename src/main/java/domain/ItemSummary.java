@@ -5,35 +5,22 @@ import org.codehaus.jettison.json.JSONObject;
 
 /**
  * used by domain.PosBalance
- * 
+ *
  * @author mas
- * 
+ *
  */
 public class ItemSummary
 {
-	private PaymentMethod paymentMethod;
-	private double actualItemTotal;
-	private double expectedItemTotal;
-	private double absoluteDifference;
-
-	public ItemSummary(final Builder builder)
-	{
-		this.paymentMethod = builder.paymentMethod;
-		this.actualItemTotal = builder.actualItemTotal;
-		this.expectedItemTotal = builder.expectedItemTotal;
-		this.absoluteDifference = builder.absoluteDifference;
-	}
-
 	public static class Builder
 	{
 		private PaymentMethod paymentMethod = null;
-		private double actualItemTotal = 0;
-		private double expectedItemTotal = 0;
-		private double absoluteDifference = 0;
+		private Double actualItemTotal = null;
+		private Double expectedItemTotal = null;
+		private Double absoluteDifference = null;
 
-		public Builder paymentMethod(final PaymentMethod value)
+		public Builder absoluteDifference(final double value)
 		{
-			this.paymentMethod = value;
+			this.absoluteDifference = value;
 			return this;
 		}
 
@@ -43,21 +30,21 @@ public class ItemSummary
 			return this;
 		}
 
+		public ItemSummary build()
+		{
+			return new ItemSummary(this);
+		}
+
 		public Builder expectedItemTotal(final double value)
 		{
 			this.expectedItemTotal = value;
 			return this;
 		}
 
-		public Builder absoluteDifference(final double value)
+		public Builder paymentMethod(final PaymentMethod value)
 		{
-			this.absoluteDifference = value;
+			this.paymentMethod = value;
 			return this;
-		}
-
-		public ItemSummary build()
-		{
-			return new ItemSummary(this);
 		}
 
 	}
@@ -85,44 +72,19 @@ public class ItemSummary
 
 	}
 
-	public PaymentMethod getPaymentMethod()
-	{
-		return paymentMethod;
-	}
+	private PaymentMethod paymentMethod;
+	private Double actualItemTotal;
 
-	public void setPaymentMethod(final PaymentMethod paymentMethod)
-	{
-		this.paymentMethod = paymentMethod;
-	}
+	private Double expectedItemTotal;
 
-	public double getActualItemTotal()
-	{
-		return actualItemTotal;
-	}
+	private Double absoluteDifference;
 
-	public void setActualItemTotal(final double actualItemTotal)
+	public ItemSummary(final Builder builder)
 	{
-		this.actualItemTotal = actualItemTotal;
-	}
-
-	public double getExpectedItemTotal()
-	{
-		return expectedItemTotal;
-	}
-
-	public void setExpectedItemTotal(final double expectedItemTotal)
-	{
-		this.expectedItemTotal = expectedItemTotal;
-	}
-
-	public double getAbsoluteDifference()
-	{
-		return absoluteDifference;
-	}
-
-	public void setAbsoluteDifference(final double absoluteDifference)
-	{
-		this.absoluteDifference = absoluteDifference;
+		this.paymentMethod = builder.paymentMethod;
+		this.actualItemTotal = builder.actualItemTotal;
+		this.expectedItemTotal = builder.expectedItemTotal;
+		this.absoluteDifference = builder.absoluteDifference;
 	}
 
 	@Override
@@ -130,5 +92,45 @@ public class ItemSummary
 	{
 
 		return obj.hashCode() == this.hashCode();
+	}
+
+	public double getAbsoluteDifference()
+	{
+		return absoluteDifference;
+	}
+
+	public double getActualItemTotal()
+	{
+		return actualItemTotal;
+	}
+
+	public double getExpectedItemTotal()
+	{
+		return expectedItemTotal;
+	}
+
+	public PaymentMethod getPaymentMethod()
+	{
+		return paymentMethod;
+	}
+
+	public void setAbsoluteDifference(final double absoluteDifference)
+	{
+		this.absoluteDifference = absoluteDifference;
+	}
+
+	public void setActualItemTotal(final double actualItemTotal)
+	{
+		this.actualItemTotal = actualItemTotal;
+	}
+
+	public void setExpectedItemTotal(final double expectedItemTotal)
+	{
+		this.expectedItemTotal = expectedItemTotal;
+	}
+
+	public void setPaymentMethod(final PaymentMethod paymentMethod)
+	{
+		this.paymentMethod = paymentMethod;
 	}
 }

@@ -14,10 +14,12 @@ import domain.DataType;
 import domain.interfaces.HasId;
 import domain.interfaces.HasNumber;
 import error.ApiNotReachableException;
+import error.InvalidTokenException;
+import error.PostAllException;
 import error.SubObjectInitializationException;
 
 public abstract class AbstractHasNumberJsonLoader<T extends HasId & HasNumber> extends
-	AbstractHasIdJsonLoader<T>
+AbstractHasIdJsonLoader<T>
 {
 
 	private final Map<String, T> numberCache = new HashMap<String, T>();
@@ -28,7 +30,7 @@ public abstract class AbstractHasNumberJsonLoader<T extends HasId & HasNumber> e
 	}
 
 	/**
-	 * 
+	 *
 	 * @param number
 	 * @return
 	 * @throws ApiNotReachableException
@@ -37,7 +39,7 @@ public abstract class AbstractHasNumberJsonLoader<T extends HasId & HasNumber> e
 	 * @throws SubObjectInitializationException
 	 */
 	public T downloadByNumber(final String number) throws ApiNotReachableException, JSONException,
-		ParseException, SubObjectInitializationException
+	ParseException, SubObjectInitializationException
 	{
 		final T cachedObject = numberCache.get(number);
 		if (cachedObject != null)
@@ -50,16 +52,6 @@ public abstract class AbstractHasNumberJsonLoader<T extends HasId & HasNumber> e
 		final T downloaded = fromJSON(jDownloaded);
 		numberCache.put(number, downloaded);
 		return downloaded;
-	}
-
-	@Override
-	public T post(final T obj) throws ApiNotReachableException, JSONException, ParseException
-
-	{
-// if (obj == null || (obj.getNumber() == null && obj.getId() == null))
-// throw new PostWithNoReferenceSetException(null);
-// else
-		return upload(obj);
 	}
 
 	@Override
@@ -77,12 +69,14 @@ public abstract class AbstractHasNumberJsonLoader<T extends HasId & HasNumber> e
 	}
 
 	@Override
-	public void updateCache(final T obj)
-	{
-		if (obj.getNumber() != null)
-			numberCache.put(obj.getNumber(), obj);
+	public T post(final T obj) throws ApiNotReachableException, JSONException, ParseException,
+		PostAllException, InvalidTokenException
 
-		super.updateCache(obj);
+	{
+// if (obj == null || (obj.getNumber() == null && obj.getId() == null))
+// throw new PostWithNoReferenceSetException(null);
+// else
+		return upload(obj);
 	}
 
 	@Override
@@ -96,5 +90,14 @@ public abstract class AbstractHasNumberJsonLoader<T extends HasId & HasNumber> e
 
 		super.updateCache(objs);
 
+	}
+
+	@Override
+	public void updateCache(final T obj)
+	{
+		if (obj.getNumber() != null)
+			numberCache.put(obj.getNumber(), obj);
+
+		super.updateCache(obj);
 	}
 }

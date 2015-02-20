@@ -20,6 +20,7 @@ import domain.DataType;
 import domain.interfaces.HasId;
 import error.ApiNotReachableException;
 import error.ArticleCodeMustBeUniqueException;
+import error.InvalidTokenException;
 import error.PostAllException;
 import error.PostWithNoReferenceSetException;
 import error.SubObjectInitializationException;
@@ -53,8 +54,6 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 		this.dataType = dataType;
 	}
 
-
-	public abstract T fromJSON(JSONObject obj) throws JSONException, ParseException;
 
 	protected JSONArray createJsonArray(final String jStr) throws ApiNotReachableException
 	{
@@ -126,42 +125,6 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 		return jArray;
 	}
 
-	public String downloadJSONStringByOffset(final long revision, final int amountPerPage,
-		int offset) throws ApiNotReachableException
-	{
-		final String jStr = cloudLink.getJSONByOffset(getDataType(), Long.toString(revision),
-			amountPerPage, offset);
-		if (jStr == null)
-			return null;
-		offset += amountPerPage;
-		return jStr;
-	}
-
-	/**
-	 * Downloads the next amountPerPage objects from the cloud starting by the next lowest revision
-	 * provided to this method. The Offset is the page controller iterating over pages by
-	 * offset+amountPerPage.
-	 *
-	 * @param revision
-	 * @param amountPerPage
-	 * @param offset
-	 * @return JSONArray
-	 * @throws ApiNotReachableException
-	 */
-	public JSONArray downloadByOffset(final long revision, final int amountPerPage, int offset)
-		throws ApiNotReachableException
-	{
-		final String jStr = cloudLink.getJSONByOffset(getDataType(), Long.toString(revision),
-			amountPerPage, offset);
-		final JSONArray jArray = createJsonArray(jStr);
-		if (jArray == null)
-			return null;
-		offset += amountPerPage;
-
-		return jArray;
-	}
-
-
 	/**
 	 * for proper use you have to ensure that the JSONDownloader Object is kept alive as long you
 	 * haven't got all needed JsonObjects!
@@ -188,6 +151,30 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	}
 
 	/**
+	 * Downloads the next amountPerPage objects from the cloud starting by the next lowest revision
+	 * provided to this method. The Offset is the page controller iterating over pages by
+	 * offset+amountPerPage.
+	 *
+	 * @param revision
+	 * @param amountPerPage
+	 * @param offset
+	 * @return JSONArray
+	 * @throws ApiNotReachableException
+	 */
+	public JSONArray downloadByOffset(final long revision, final int amountPerPage, int offset)
+		throws ApiNotReachableException
+	{
+		final String jStr = cloudLink.getJSONByOffset(getDataType(), Long.toString(revision),
+			amountPerPage, offset);
+		final JSONArray jArray = createJsonArray(jStr);
+		if (jArray == null)
+			return null;
+		offset += amountPerPage;
+
+		return jArray;
+	}
+
+	/**
 	 * Returns an org.jettison.JSONArray of all JSONObjects equal or greater than given revision.
 	 *
 	 * @param number
@@ -201,6 +188,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 		return jArray;
 	}
 
+
 	/**
 	 * returns the corresponding org.jettison.JSONObject by UUID from KORONA.POS Cloud
 	 *
@@ -211,7 +199,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	 * @throws SubObjectInitializationException
 	 */
 	public T downloadByUUID(final String uuid) throws ApiNotReachableException, JSONException,
-	ParseException, SubObjectInitializationException
+		ParseException, SubObjectInitializationException
 	{
 		final T cachedObject = idCache.get(uuid);
 		if (cachedObject != null)
@@ -229,6 +217,79 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	}
 
 	/**
+	 * helper method for downloadAllExisting
+	 *
+	 * @param jArray
+	 * @param offset
+	 * @param limit
+	 * @return
+	 * @throws ApiNotReachableException
+	 */
+	protected JSONArray downloadExistingJSONArrayBuilder(JSONArray jArray, final int offset,
+		final int limit) throws ApiNotReachableException
+	{
+
+		final String jStr = cloudLink.getJSONPageByOffset(getDataType(), limit, offset);
+		try
+		{
+			final JSONObject newStuff = new JSONObject(jStr);
+
+			if (!newStuff.getString("resultList").equalsIgnoreCase("null"))
+			{
+
+				final JSONArray newStuffArray = newStuff.getJSONArray("resultList");
+				for (int i = 0; i <= newStuffArray.length() - 1; i++)
+					jArray.put(newStuffArray.getJSONObject(i));
+				jArray = downloadExistingJSONArrayBuilder(jArray, offset + limit, limit);
+
+			}
+		}
+		catch (final JSONException e)
+		{
+			e.printStackTrace();
+		}
+		return jArray;
+	}
+
+	public String downloadJSONStringByOffset(final long revision, final int amountPerPage,
+		int offset) throws ApiNotReachableException
+	{
+		final String jStr = cloudLink.getJSONByOffset(getDataType(), Long.toString(revision),
+			amountPerPage, offset);
+		if (jStr == null)
+			return null;
+		offset += amountPerPage;
+		return jStr;
+	}
+
+	public abstract T fromJSON(JSONObject obj) throws JSONException, ParseException;
+
+	/**
+	 * gets the corresponding object out of the cache
+	 *
+	 * @param id
+	 * @return the corresponding object
+	 */
+	public T getCachedObject(final T object)
+	{
+
+		if (object != null && object.getId() != null)
+			return idCache.get(object.getId());
+
+		return null;
+	}
+
+	protected DataType getDataType()
+	{
+		return dataType;
+	}
+
+	public Iterator<JSONObject> iterator(final long revision) throws ApiNotReachableException
+	{
+		return new CloudResultIterator(this, revision);
+	}
+
+	/**
 	 * Puts the object into ID, Number and Name caches overriding existing objects with same ID,
 	 * Number or Name. Invoking this method will automatically try to update all caches by calling
 	 * super method super.post(obj).
@@ -238,44 +299,19 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	 * @throws ApiNotReachableException
 	 * @throws JSONException
 	 * @throws ParseException
+	 * @throws InvalidTokenException
+	 * @throws PostAllException
 	 * @throws ArticleCodeMustBeUniqueException
 	 * @throws PostWithNoReferenceSetException
 	 */
-	public T post(final T obj) throws ApiNotReachableException, JSONException, ParseException
+	public T post(final T obj) throws ApiNotReachableException, JSONException, ParseException,
+		PostAllException, InvalidTokenException
 	{
 // if (obj == null || obj.getId() == null)
 // throw new PostWithNoReferenceSetException(null);
 // else
 		return upload(obj);
 
-	}
-
-	protected T upload(final T obj) throws JSONException, ParseException
-	{
-		updateCache(obj);
-
-		final String result = CloudLink.getConnector().postData(getDataType(), toJSON(obj));
-		T ret;
-		try
-		{
-			final JSONObject jObj = new JSONObject(result);
-			ret = fromJSON(jObj);
-		}
-		catch (final JSONException e)
-		{
-			LOGGER.error("Malformed JSON Syntax inside response Message. Returning null.", e);
-			return null;
-		}
-
-		final T cachedObject = getCachedObject(ret);
-		if (cachedObject != null)
-		{
-			cachedObject.setId(ret.getId());
-			updateCache(cachedObject);
-			return cachedObject;
-		}
-
-		return ret;
 	}
 
 	/**
@@ -288,12 +324,14 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	 * @throws ParseException
 	 * @throws ApiNotReachableException
 	 * @throws PostAllException
+	 * @throws InvalidTokenException
 	 * @throws ExecutionException
 	 * @throws InterruptedException
 	 */
 	public List<T> postList(final List<? extends T> objs, final int limit, final int threads)
-		throws JSONException, ParseException, ApiNotReachableException, PostAllException
-		{
+		throws JSONException, ParseException, ApiNotReachableException, PostAllException,
+		InvalidTokenException
+	{
 
 		final List<T> objects = new ArrayList<T>();
 
@@ -342,52 +380,6 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 		updateCache(objects);
 
 		return objects;
-		}
-
-	/**
-	 * gets the corresponding object out of the cache
-	 *
-	 * @param id
-	 * @return the corresponding object
-	 */
-	public T getCachedObject(final T object)
-	{
-
-		if (object != null && object.getId() != null)
-			return idCache.get(object.getId());
-
-		return null;
-	}
-
-	/**
-	 * updates given obj corresponding cached version for future loader actions.
-	 *
-	 * @param obj
-	 */
-	public void updateCache(final T obj)
-	{
-		if (obj.getId() != null)
-			idCache.put(obj.getId(), obj);
-	}
-
-	public void updateCache(final List<T> objs)
-	{
-		for (final T obj : objs)
-		{
-			if (obj.getId() != null)
-				idCache.put(obj.getId(), obj);
-		}
-
-	}
-
-	public Iterator<JSONObject> iterator(final long revision) throws ApiNotReachableException
-	{
-		return new CloudResultIterator(this, revision);
-	}
-
-	protected DataType getDataType()
-	{
-		return dataType;
 	}
 
 	/**
@@ -427,42 +419,57 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 		return jArray;
 	}
 
-	/**
-	 * helper method for downloadAllExisting
-	 *
-	 * @param jArray
-	 * @param offset
-	 * @param limit
-	 * @return
-	 * @throws ApiNotReachableException
-	 */
-	protected JSONArray downloadExistingJSONArrayBuilder(JSONArray jArray, final int offset,
-		final int limit) throws ApiNotReachableException
-	{
+	public abstract JSONObject toJSON(T value) throws JSONException;
 
-		final String jStr = cloudLink.getJSONPageByOffset(getDataType(), limit, offset);
+	public void updateCache(final List<T> objs)
+	{
+		for (final T obj : objs)
+		{
+			if (obj.getId() != null)
+				idCache.put(obj.getId(), obj);
+		}
+
+	}
+
+	/**
+	 * updates given obj corresponding cached version for future loader actions.
+	 *
+	 * @param obj
+	 */
+	public void updateCache(final T obj)
+	{
+		if (obj.getId() != null)
+			idCache.put(obj.getId(), obj);
+	}
+
+	protected T upload(final T obj) throws JSONException, ParseException, PostAllException,
+	InvalidTokenException
+	{
+		updateCache(obj);
+
+		final String result = CloudLink.getConnector().postData(getDataType(), toJSON(obj));
+		T ret;
 		try
 		{
-			final JSONObject newStuff = new JSONObject(jStr);
-
-			if (!newStuff.getString("resultList").equalsIgnoreCase("null"))
-			{
-
-				final JSONArray newStuffArray = newStuff.getJSONArray("resultList");
-				for (int i = 0; i <= newStuffArray.length() - 1; i++)
-					jArray.put(newStuffArray.getJSONObject(i));
-				jArray = downloadExistingJSONArrayBuilder(jArray, offset + limit, limit);
-
-			}
+			final JSONObject jObj = new JSONObject(result);
+			ret = fromJSON(jObj);
 		}
 		catch (final JSONException e)
 		{
-			e.printStackTrace();
+			LOGGER.error("Malformed JSON Syntax inside response Message. Returning null.", e);
+			return null;
 		}
-		return jArray;
-	}
 
-	public abstract JSONObject toJSON(T value) throws JSONException;
+		final T cachedObject = getCachedObject(ret);
+		if (cachedObject != null)
+		{
+			cachedObject.setId(ret.getId());
+			updateCache(cachedObject);
+			return cachedObject;
+		}
+
+		return ret;
+	}
 
 
 }

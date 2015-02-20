@@ -14,6 +14,7 @@ import domain.Inventory;
 import domain.InventoryReceipt;
 import domain.InventoryReceiptItem;
 import error.ApiNotReachableException;
+import error.InvalidTokenException;
 import error.PostAllException;
 
 public class InventoryReceiptItemLoader extends AbstractHasIdJsonLoader<InventoryReceiptItem>
@@ -31,6 +32,13 @@ public class InventoryReceiptItemLoader extends AbstractHasIdJsonLoader<Inventor
 		inventoryReceiptLoader = new InventoryReceiptLoader(cloudLink);
 	}
 
+	@Override
+	public InventoryReceiptItem fromJSON(final JSONObject obj) throws JSONException, ParseException
+	{
+		final InventoryReceiptItem inventoryReceiptItem = InventoryReceiptItem.fromJSON(obj);
+		return inventoryReceiptItem;
+	}
+
 	/**
 	 * Posting complete Inventory Report
 	 *
@@ -43,12 +51,13 @@ public class InventoryReceiptItemLoader extends AbstractHasIdJsonLoader<Inventor
 	 * @throws ParseException
 	 * @throws ApiNotReachableException
 	 * @throws PostAllException
+	 * @throws InvalidTokenException
 	 */
 	public List<InventoryReceiptItem> postList(final List<InventoryReceiptItem> items,
 		List<InventoryReceipt> receipts, List<Inventory> inventories, final int limit,
 		final int threads) throws JSONException, ParseException, ApiNotReachableException,
-		PostAllException
-		{
+		PostAllException, InvalidTokenException
+	{
 
 		inventories = inventoryLoader.postList(inventories, limit, threads);
 
@@ -67,20 +76,13 @@ public class InventoryReceiptItemLoader extends AbstractHasIdJsonLoader<Inventor
 
 		return super.postList(items, limit, threads);
 
-		}
+	}
 
 	@Override
 	public JSONObject toJSON(final InventoryReceiptItem value) throws JSONException
 	{
 		final JSONObject obj = value.toJSON();
 		return obj;
-	}
-
-	@Override
-	public InventoryReceiptItem fromJSON(final JSONObject obj) throws JSONException, ParseException
-	{
-		final InventoryReceiptItem inventoryReceiptItem = InventoryReceiptItem.fromJSON(obj);
-		return inventoryReceiptItem;
 	}
 
 }

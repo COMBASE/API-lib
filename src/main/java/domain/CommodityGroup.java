@@ -6,17 +6,28 @@ import org.codehaus.jettison.json.JSONObject;
 
 public class CommodityGroup extends AbstractNameAndNumberApiObject<CommodityGroup>
 {
-	private static final long serialVersionUID = -1157923369749796851L;
-	private boolean hasChildren;
-	private String key;
-	private CommodityGroup parent;
+	public static class Builder extends Init<Builder>
+	{
 
+		@Override
+		protected Builder self()
+		{
+			return this;
+		}
+
+	}
 	protected static abstract class Init<T extends Init<T>> extends
 		AbstractNameAndNumberApiObject.Init<T>
 	{
-		private boolean hasChildren;
-		private String key;
-		private CommodityGroup parent;
+		private Boolean hasChildren = null;
+		private String key = null;
+		private CommodityGroup parent = null;
+
+		@Override
+		public CommodityGroup build()
+		{
+			return new CommodityGroup(this);
+		}
 
 		public T hasChildren(final boolean value)
 		{
@@ -35,35 +46,32 @@ public class CommodityGroup extends AbstractNameAndNumberApiObject<CommodityGrou
 			parent = group;
 			return self();
 		}
-
-		@Override
-		public CommodityGroup build()
-		{
-			return new CommodityGroup(this);
-		}
 	}
 
-	public static class Builder extends Init<Builder>
+	private static final long serialVersionUID = -1157923369749796851L;
+
+	public static CommodityGroup fromJSON(JSONObject obj) throws JSONException
 	{
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
+		final CommodityGroup grp = new CommodityGroup.Builder().name(obj.getString("name"))
+			.revision(obj.getLong("revision"))
+			.deleted(obj.getBoolean("deleted"))
+			.build();
+		if (obj.has("number"))
+			grp.setNumber(obj.getString("number"));
+		if (obj.has("uuid"))
+			grp.setId(obj.getString("uuid"));
 
-		@Override
-		protected Builder self()
-		{
-			return this;
-		}
-
+		return grp;
 	}
 
+	private Boolean hasChildren;
 
-	private CommodityGroup(final Init<?> init)
-	{
-		super(init);
-		hasChildren = init.hasChildren;
-		key = init.key;
-		parent = init.parent;
+	private String key;
 
 
-	}
+	private CommodityGroup parent;
 
 // public JSONObject toJSON()
 // {
@@ -106,34 +114,14 @@ public class CommodityGroup extends AbstractNameAndNumberApiObject<CommodityGrou
 // return result;
 // }
 
-	public boolean isHasChildren()
+	private CommodityGroup(final Init<?> init)
 	{
-		return hasChildren;
-	}
+		super(init);
+		hasChildren = init.hasChildren;
+		key = init.key;
+		parent = init.parent;
 
-	public void setHasChildren(final boolean hasChildren)
-	{
-		this.hasChildren = hasChildren;
-	}
 
-	public String getKey()
-	{
-		return key;
-	}
-
-	public void setKey(final String key)
-	{
-		this.key = key;
-	}
-
-	public CommodityGroup getParent()
-	{
-		return parent;
-	}
-
-	public void setParent(final CommodityGroup parent)
-	{
-		this.parent = parent;
 	}
 
 	@Override
@@ -141,6 +129,16 @@ public class CommodityGroup extends AbstractNameAndNumberApiObject<CommodityGrou
 	{
 
 		return obj.hashCode() == this.hashCode();
+	}
+
+	public String getKey()
+	{
+		return key;
+	}
+
+	public CommodityGroup getParent()
+	{
+		return parent;
 	}
 
 	@Override
@@ -158,6 +156,26 @@ public class CommodityGroup extends AbstractNameAndNumberApiObject<CommodityGrou
 		return result;
 	}
 
+	public boolean isHasChildren()
+	{
+		return hasChildren;
+	}
+
+	public void setHasChildren(final boolean hasChildren)
+	{
+		this.hasChildren = hasChildren;
+	}
+
+	public void setKey(final String key)
+	{
+		this.key = key;
+	}
+
+	public void setParent(final CommodityGroup parent)
+	{
+		this.parent = parent;
+	}
+
 	@Override
 	public JSONObject toJSON() throws JSONException
 	{
@@ -170,21 +188,5 @@ public class CommodityGroup extends AbstractNameAndNumberApiObject<CommodityGrou
 			obj.put("parentCommodityGroup", parent.getId());
 
 		return obj;
-	}
-
-	public static CommodityGroup fromJSON(JSONObject obj) throws JSONException
-	{
-		if (obj.has("result") && obj.getString("result") != null)
-			obj = obj.getJSONObject("result");
-		final CommodityGroup grp = new CommodityGroup.Builder().name(obj.getString("name"))
-			.revision(obj.getLong("revision"))
-			.deleted(obj.getBoolean("deleted"))
-			.build();
-		if (obj.has("number"))
-			grp.setNumber(obj.getString("number"));
-		if (obj.has("uuid"))
-			grp.setId(obj.getString("uuid"));
-
-		return grp;
 	}
 }

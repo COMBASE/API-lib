@@ -6,70 +6,44 @@ import org.codehaus.jettison.json.JSONObject;
 
 public class POS extends AbstractNameAndNumberApiObject<POS>
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -7976248646395275345L;
-	private int autoLogoutDelay;
-	private boolean autoReceiptPrint;
-	private String customerDisplayOfflineText;
-	private String customerDisplayOnlineText;
-	private String distributerCode;
-	private CustomerGroup defaultCustomerGroup;
-	private Payment defaultPaymentMethod;
-	private EconomicZone economicZone;
-	private boolean forceClosedDrawer;
-	private CustomerGroup friendsBonusCustomerGroup;
-	private String friendsbonusIdentification;
-	private String friendsbonusSecret;
-	private int maxBalanceAttempts;
-	private String name;
-	private boolean orderNumberRequired;
-	private OrganizationalUnit organizationalUnit;
-	// private WareHouse warehous;
-	private String secret;
-	private String systemHash;
-	private String automaticEndOfDayIntervalStr;
-	private boolean centInput;
-	private boolean requirePaymentAmountInput;
-	private boolean kioskMode;
-	private String automaticPaymentFinalization;
-	private String StringbloyalDeviceKey;
+	public static class Builder extends Init<Builder>
+	{
 
+		@Override
+		protected Builder self()
+		{
+			return this;
+		}
+
+	}
 	protected static abstract class Init<T extends Init<T>> extends
 		AbstractNameAndNumberApiObject.Init<T>
 	{
-		private int autoLogoutDelay = 0;
-		private boolean autoReceiptPrint = false;
+		private Integer autoLogoutDelay = null;
+		private Boolean autoReceiptPrint = null;
 		private String customerDisplayOfflineText = null;
 		private String customerDisplayOnlineText = null;
 		private String distributerCode = null;
 		private CustomerGroup defaultCustomerGroup = null;
 		private Payment defaultPaymentMethod = null;
 		private EconomicZone economicZone = null;
-		private boolean forceClosedDrawer = false;
+		private Boolean forceClosedDrawer = null;
 		private CustomerGroup friendsBonusCustomerGroup = null;
 		private String friendsbonusIdentification = null;
 		private String friendsbonusSecret = null;
-		private int maxBalanceAttempts = 0;
+		private Integer maxBalanceAttempts = null;
 		private String name = null;
-		private boolean orderNumberRequired = false;
+		private Boolean orderNumberRequired = null;
 		private OrganizationalUnit organizationalUnit = null;
 		// private WareHouse warehous=null;
 		private String secret = null;
 		private String systemHash = null;
 		private String automaticEndOfDayIntervalStr = null;
-		private boolean centInput = false;
-		private boolean requirePaymentAmountInput = false;
-		private boolean kioskMode = false;
-		private final String automaticPaymentization = null;
+		private Boolean centInput = null;
+		private Boolean requirePaymentAmountInput = null;
+		private Boolean kioskMode = null;
+		private String automaticPaymentization = null;
 		private String StringbloyalDeviceKey = null;
-
-		public T organizationalUnit(final OrganizationalUnit orgUnit)
-		{
-			organizationalUnit = orgUnit;
-			return self();
-		}
 
 		public T autoLogoutDelay(final int value)
 		{
@@ -77,9 +51,27 @@ public class POS extends AbstractNameAndNumberApiObject<POS>
 			return self();
 		}
 
+		public T automaticEndOfDayIntervalStr(final String value)
+		{
+			this.automaticEndOfDayIntervalStr = value;
+			return self();
+		}
+
 		public T autoReceiptPrint(final boolean value)
 		{
 			this.autoReceiptPrint = value;
+			return self();
+		}
+
+		@Override
+		public POS build()
+		{
+			return new POS(this);
+		}
+
+		public T centInput(final boolean value)
+		{
+			this.centInput = value;
 			return self();
 		}
 
@@ -95,12 +87,6 @@ public class POS extends AbstractNameAndNumberApiObject<POS>
 			return self();
 		}
 
-		public T distributerCode(final String value)
-		{
-			this.distributerCode = value;
-			return self();
-		}
-
 		public T defaultCustomerGroup(final CustomerGroup value)
 		{
 			this.defaultCustomerGroup = value;
@@ -110,6 +96,12 @@ public class POS extends AbstractNameAndNumberApiObject<POS>
 		public T defaultPaymentMethod(final Payment value)
 		{
 			this.defaultPaymentMethod = value;
+			return self();
+		}
+
+		public T distributerCode(final String value)
+		{
+			this.distributerCode = value;
 			return self();
 		}
 
@@ -143,6 +135,17 @@ public class POS extends AbstractNameAndNumberApiObject<POS>
 			return self();
 		}
 
+		public String getAutomaticPaymentization()
+		{
+			return automaticPaymentization;
+		}
+
+		public T kioskMode(final boolean value)
+		{
+			this.kioskMode = value;
+			return self();
+		}
+
 		public T maxBalanceAttempts(final int value)
 		{
 			this.maxBalanceAttempts = value;
@@ -162,28 +165,9 @@ public class POS extends AbstractNameAndNumberApiObject<POS>
 			return self();
 		}
 
-		// private WareHouse warehous=null;
-		public T secret(final String value)
+		public T organizationalUnit(final OrganizationalUnit orgUnit)
 		{
-			this.secret = value;
-			return self();
-		}
-
-		public T systemHash(final String value)
-		{
-			this.systemHash = value;
-			return self();
-		}
-
-		public T automaticEndOfDayIntervalStr(final String value)
-		{
-			this.automaticEndOfDayIntervalStr = value;
-			return self();
-		}
-
-		public T centInput(final boolean value)
-		{
-			this.centInput = value;
+			organizationalUnit = orgUnit;
 			return self();
 		}
 
@@ -193,10 +177,16 @@ public class POS extends AbstractNameAndNumberApiObject<POS>
 			return self();
 		}
 
-		public T kioskMode(final boolean value)
+		// private WareHouse warehous=null;
+		public T secret(final String value)
 		{
-			this.kioskMode = value;
+			this.secret = value;
 			return self();
+		}
+
+		public void setAutomaticPaymentization(final String automaticPaymentization)
+		{
+			this.automaticPaymentization = automaticPaymentization;
 		}
 
 		public T StringbloyalDeviceKey(final String value)
@@ -205,29 +195,62 @@ public class POS extends AbstractNameAndNumberApiObject<POS>
 			return self();
 		}
 
-		@Override
-		public POS build()
+		public T systemHash(final String value)
 		{
-			return new POS(this);
+			this.systemHash = value;
+			return self();
 		}
 	}
 
-	public static class Builder extends Init<Builder>
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = -7976248646395275345L;
+
+	public static POS fromJSON(JSONObject obj) throws JSONException
 	{
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
+		final OrganizationalUnit orgUnit = new OrganizationalUnit.Builder().build();
+		orgUnit.setId(obj.getString("organizationalUnit"));
 
-		@Override
-		protected Builder self()
-		{
-			return this;
-		}
+		final POS pos = new POS.Builder().number(obj.getString("number"))
+			.organizationalUnit(orgUnit)
+			.id(obj.getString("uuid"))
 
+
+			.build();
+		return pos;
 	}
 
-	private POS(final Init<?> init)
-	{
-		super(init);
-		organizationalUnit = init.organizationalUnit;
-	}
+	private Integer autoLogoutDelay;
+	private Boolean autoReceiptPrint;
+	private String customerDisplayOfflineText;
+	private String customerDisplayOnlineText;
+	private String distributerCode;
+	private CustomerGroup defaultCustomerGroup;
+	private Payment defaultPaymentMethod;
+	private EconomicZone economicZone;
+	private Boolean forceClosedDrawer;
+	private CustomerGroup friendsBonusCustomerGroup;
+	private String friendsbonusIdentification;
+	private String friendsbonusSecret;
+	private Integer maxBalanceAttempts;
+	private String name;
+	private Boolean orderNumberRequired;
+	private OrganizationalUnit organizationalUnit;
+	// private WareHouse warehous;
+	private String secret;
+	private String systemHash;
+	private String automaticEndOfDayIntervalStr;
+	private Boolean centInput;
+	private Boolean requirePaymentAmountInput;
+
+	private Boolean kioskMode;
+
+	private String automaticPaymentFinalization;
+
+	private String StringbloyalDeviceKey;
 
 // public JSONObject toJSON()
 // {
@@ -258,24 +281,32 @@ public class POS extends AbstractNameAndNumberApiObject<POS>
 // return CloudLink.getConnector().postData(DataType.pos, this.toJSON());
 // }
 
+	private POS(final Init<?> init)
+	{
+		super(init);
+		organizationalUnit = init.organizationalUnit;
+	}
+
+	@Override
+	public boolean equals(final Object obj)
+	{
+
+		return obj.hashCode() == this.hashCode();
+	}
+
 	public int getAutoLogoutDelay()
 	{
 		return autoLogoutDelay;
 	}
 
-	public void setAutoLogoutDelay(final int autoLogoutDelay)
+	public String getAutomaticEndOfDayIntervalStr()
 	{
-		this.autoLogoutDelay = autoLogoutDelay;
+		return automaticEndOfDayIntervalStr;
 	}
 
-	public boolean isAutoReceiptPrint()
+	public String getAutomaticPaymentFinalization()
 	{
-		return autoReceiptPrint;
-	}
-
-	public void setAutoReceiptPrint(final boolean autoReceiptPrint)
-	{
-		this.autoReceiptPrint = autoReceiptPrint;
+		return automaticPaymentFinalization;
 	}
 
 	public String getCustomerDisplayOfflineText()
@@ -283,29 +314,9 @@ public class POS extends AbstractNameAndNumberApiObject<POS>
 		return customerDisplayOfflineText;
 	}
 
-	public void setCustomerDisplayOfflineText(final String customerDisplayOfflineText)
-	{
-		this.customerDisplayOfflineText = customerDisplayOfflineText;
-	}
-
 	public String getCustomerDisplayOnlineText()
 	{
 		return customerDisplayOnlineText;
-	}
-
-	public void setCustomerDisplayOnlineText(final String customerDisplayOnlineText)
-	{
-		this.customerDisplayOnlineText = customerDisplayOnlineText;
-	}
-
-	public String getDistributerCode()
-	{
-		return distributerCode;
-	}
-
-	public void setDistributerCode(final String distributerCode)
-	{
-		this.distributerCode = distributerCode;
 	}
 
 	public CustomerGroup getDefaultCustomerGroup()
@@ -313,19 +324,14 @@ public class POS extends AbstractNameAndNumberApiObject<POS>
 		return defaultCustomerGroup;
 	}
 
-	public void setDefaultCustomerGroup(final CustomerGroup defaultCustomerGroup)
-	{
-		this.defaultCustomerGroup = defaultCustomerGroup;
-	}
-
 	public Payment getDefaultPaymentMethod()
 	{
 		return defaultPaymentMethod;
 	}
 
-	public void setDefaultPaymentMethod(final Payment defaultPaymentMethod)
+	public String getDistributerCode()
 	{
-		this.defaultPaymentMethod = defaultPaymentMethod;
+		return distributerCode;
 	}
 
 	public EconomicZone getEconomicZone()
@@ -333,29 +339,9 @@ public class POS extends AbstractNameAndNumberApiObject<POS>
 		return economicZone;
 	}
 
-	public void setEconomicZone(final EconomicZone economicZone)
-	{
-		this.economicZone = economicZone;
-	}
-
-	public boolean isForceClosedDrawer()
-	{
-		return forceClosedDrawer;
-	}
-
-	public void setForceClosedDrawer(final boolean forceClosedDrawer)
-	{
-		this.forceClosedDrawer = forceClosedDrawer;
-	}
-
 	public CustomerGroup getFriendsBonusCustomerGroup()
 	{
 		return friendsBonusCustomerGroup;
-	}
-
-	public void setFriendsBonusCustomerGroup(final CustomerGroup friendsBonusCustomerGroup)
-	{
-		this.friendsBonusCustomerGroup = friendsBonusCustomerGroup;
 	}
 
 	public String getFriendsbonusIdentification()
@@ -363,29 +349,14 @@ public class POS extends AbstractNameAndNumberApiObject<POS>
 		return friendsbonusIdentification;
 	}
 
-	public void setFriendsbonusIdentification(final String friendsbonusIdentification)
-	{
-		this.friendsbonusIdentification = friendsbonusIdentification;
-	}
-
 	public String getFriendsbonusSecret()
 	{
 		return friendsbonusSecret;
 	}
 
-	public void setFriendsbonusSecret(final String friendsbonusSecret)
-	{
-		this.friendsbonusSecret = friendsbonusSecret;
-	}
-
 	public int getMaxBalanceAttempts()
 	{
 		return maxBalanceAttempts;
-	}
-
-	public void setMaxBalanceAttempts(final int maxBalanceAttempts)
-	{
-		this.maxBalanceAttempts = maxBalanceAttempts;
 	}
 
 	@Override
@@ -394,30 +365,9 @@ public class POS extends AbstractNameAndNumberApiObject<POS>
 		return name;
 	}
 
-	@Override
-	public void setName(final String name)
-	{
-		this.name = name;
-	}
-
-	public boolean isOrderNumberRequired()
-	{
-		return orderNumberRequired;
-	}
-
-	public void setOrderNumberRequired(final boolean orderNumberRequired)
-	{
-		this.orderNumberRequired = orderNumberRequired;
-	}
-
 	public OrganizationalUnit getOrganizationalUnit()
 	{
 		return organizationalUnit;
-	}
-
-	public void setOrganizationalUnit(final OrganizationalUnit organizationalUnit)
-	{
-		this.organizationalUnit = organizationalUnit;
 	}
 
 	public String getSecret()
@@ -425,86 +375,14 @@ public class POS extends AbstractNameAndNumberApiObject<POS>
 		return secret;
 	}
 
-	public void setSecret(final String secret)
-	{
-		this.secret = secret;
-	}
-
-	public String getSystemHash()
-	{
-		return systemHash;
-	}
-
-	public void setSystemHash(final String systemHash)
-	{
-		this.systemHash = systemHash;
-	}
-
-	public String getAutomaticEndOfDayIntervalStr()
-	{
-		return automaticEndOfDayIntervalStr;
-	}
-
-	public void setAutomaticEndOfDayIntervalStr(final String automaticEndOfDayIntervalStr)
-	{
-		this.automaticEndOfDayIntervalStr = automaticEndOfDayIntervalStr;
-	}
-
-	public boolean isCentInput()
-	{
-		return centInput;
-	}
-
-	public void setCentInput(final boolean centInput)
-	{
-		this.centInput = centInput;
-	}
-
-	public boolean isRequirePaymentAmountInput()
-	{
-		return requirePaymentAmountInput;
-	}
-
-	public void setRequirePaymentAmountInput(final boolean requirePaymentAmountInput)
-	{
-		this.requirePaymentAmountInput = requirePaymentAmountInput;
-	}
-
-	public boolean isKioskMode()
-	{
-		return kioskMode;
-	}
-
-	public void setKioskMode(final boolean kioskMode)
-	{
-		this.kioskMode = kioskMode;
-	}
-
-	public String getAutomaticPaymentFinalization()
-	{
-		return automaticPaymentFinalization;
-	}
-
-	public void setAutomaticPaymentFinalization(final String automaticPaymentFinalization)
-	{
-		this.automaticPaymentFinalization = automaticPaymentFinalization;
-	}
-
 	public String getStringbloyalDeviceKey()
 	{
 		return StringbloyalDeviceKey;
 	}
 
-	public void setStringbloyalDeviceKey(final String stringbloyalDeviceKey)
+	public String getSystemHash()
 	{
-		StringbloyalDeviceKey = stringbloyalDeviceKey;
-	}
-
-	@Override
-	public boolean equals(final Object obj)
-	{
-
-		return obj.hashCode() == this.hashCode();
+		return systemHash;
 	}
 
 	@Override
@@ -554,6 +432,157 @@ public class POS extends AbstractNameAndNumberApiObject<POS>
 		return result;
 	}
 
+	public boolean isAutoReceiptPrint()
+	{
+		return autoReceiptPrint;
+	}
+
+	public boolean isCentInput()
+	{
+		return centInput;
+	}
+
+	public boolean isForceClosedDrawer()
+	{
+		return forceClosedDrawer;
+	}
+
+	public boolean isKioskMode()
+	{
+		return kioskMode;
+	}
+
+	public boolean isOrderNumberRequired()
+	{
+		return orderNumberRequired;
+	}
+
+	public boolean isRequirePaymentAmountInput()
+	{
+		return requirePaymentAmountInput;
+	}
+
+	public void setAutoLogoutDelay(final int autoLogoutDelay)
+	{
+		this.autoLogoutDelay = autoLogoutDelay;
+	}
+
+	public void setAutomaticEndOfDayIntervalStr(final String automaticEndOfDayIntervalStr)
+	{
+		this.automaticEndOfDayIntervalStr = automaticEndOfDayIntervalStr;
+	}
+
+	public void setAutomaticPaymentFinalization(final String automaticPaymentFinalization)
+	{
+		this.automaticPaymentFinalization = automaticPaymentFinalization;
+	}
+
+	public void setAutoReceiptPrint(final boolean autoReceiptPrint)
+	{
+		this.autoReceiptPrint = autoReceiptPrint;
+	}
+
+	public void setCentInput(final boolean centInput)
+	{
+		this.centInput = centInput;
+	}
+
+	public void setCustomerDisplayOfflineText(final String customerDisplayOfflineText)
+	{
+		this.customerDisplayOfflineText = customerDisplayOfflineText;
+	}
+
+	public void setCustomerDisplayOnlineText(final String customerDisplayOnlineText)
+	{
+		this.customerDisplayOnlineText = customerDisplayOnlineText;
+	}
+
+	public void setDefaultCustomerGroup(final CustomerGroup defaultCustomerGroup)
+	{
+		this.defaultCustomerGroup = defaultCustomerGroup;
+	}
+
+	public void setDefaultPaymentMethod(final Payment defaultPaymentMethod)
+	{
+		this.defaultPaymentMethod = defaultPaymentMethod;
+	}
+
+	public void setDistributerCode(final String distributerCode)
+	{
+		this.distributerCode = distributerCode;
+	}
+
+	public void setEconomicZone(final EconomicZone economicZone)
+	{
+		this.economicZone = economicZone;
+	}
+
+	public void setForceClosedDrawer(final boolean forceClosedDrawer)
+	{
+		this.forceClosedDrawer = forceClosedDrawer;
+	}
+
+	public void setFriendsBonusCustomerGroup(final CustomerGroup friendsBonusCustomerGroup)
+	{
+		this.friendsBonusCustomerGroup = friendsBonusCustomerGroup;
+	}
+
+	public void setFriendsbonusIdentification(final String friendsbonusIdentification)
+	{
+		this.friendsbonusIdentification = friendsbonusIdentification;
+	}
+
+	public void setFriendsbonusSecret(final String friendsbonusSecret)
+	{
+		this.friendsbonusSecret = friendsbonusSecret;
+	}
+
+	public void setKioskMode(final boolean kioskMode)
+	{
+		this.kioskMode = kioskMode;
+	}
+
+	public void setMaxBalanceAttempts(final int maxBalanceAttempts)
+	{
+		this.maxBalanceAttempts = maxBalanceAttempts;
+	}
+
+	@Override
+	public void setName(final String name)
+	{
+		this.name = name;
+	}
+
+	public void setOrderNumberRequired(final boolean orderNumberRequired)
+	{
+		this.orderNumberRequired = orderNumberRequired;
+	}
+
+	public void setOrganizationalUnit(final OrganizationalUnit organizationalUnit)
+	{
+		this.organizationalUnit = organizationalUnit;
+	}
+
+	public void setRequirePaymentAmountInput(final boolean requirePaymentAmountInput)
+	{
+		this.requirePaymentAmountInput = requirePaymentAmountInput;
+	}
+
+	public void setSecret(final String secret)
+	{
+		this.secret = secret;
+	}
+
+	public void setStringbloyalDeviceKey(final String stringbloyalDeviceKey)
+	{
+		StringbloyalDeviceKey = stringbloyalDeviceKey;
+	}
+
+	public void setSystemHash(final String systemHash)
+	{
+		this.systemHash = systemHash;
+	}
+
 	@Override
 	public JSONObject toJSON() throws JSONException
 	{
@@ -572,21 +601,5 @@ public class POS extends AbstractNameAndNumberApiObject<POS>
 			obj.put("friendsBonusCustomerGroup", friendsBonusCustomerGroup.getId());
 
 		return obj;
-	}
-
-	public static POS fromJSON(JSONObject obj) throws JSONException
-	{
-		if (obj.has("result") && obj.getString("result") != null)
-			obj = obj.getJSONObject("result");
-		final OrganizationalUnit orgUnit = new OrganizationalUnit.Builder().build();
-		orgUnit.setId(obj.getString("organizationalUnit"));
-
-		final POS pos = new POS.Builder().number(obj.getString("number"))
-			.organizationalUnit(orgUnit)
-			.id(obj.getString("uuid"))
-
-
-			.build();
-		return pos;
 	}
 }
