@@ -15,10 +15,12 @@ import domain.interfaces.HasId;
 import domain.interfaces.HasName;
 import domain.interfaces.HasNumber;
 import error.ApiNotReachableException;
+import error.InvalidTokenException;
+import error.PostAllException;
 import error.SubObjectInitializationException;
 
 public abstract class AbstractHasNameJsonLoader<T extends HasId & HasNumber & HasName> extends
-	AbstractHasNumberJsonLoader<T>
+AbstractHasNumberJsonLoader<T>
 {
 
 	private final Map<String, T> nameCache = new HashMap<String, T>();
@@ -29,7 +31,7 @@ public abstract class AbstractHasNameJsonLoader<T extends HasId & HasNumber & Ha
 	}
 
 	public T downloadByName(final String name) throws ApiNotReachableException, JSONException,
-		ParseException, SubObjectInitializationException
+	ParseException, SubObjectInitializationException
 	{
 		final T cachedObject = nameCache.get(name);
 		if (cachedObject != null)
@@ -42,16 +44,6 @@ public abstract class AbstractHasNameJsonLoader<T extends HasId & HasNumber & Ha
 		final T downloaded = fromJSON(jDownloaded);
 		nameCache.put(name, downloaded);
 		return downloaded;
-	}
-
-	@Override
-	public T post(final T obj) throws ApiNotReachableException, JSONException, ParseException
-	{
-// if (obj == null ||
-// (obj.getName() == null && obj.getNumber() == null && obj.getId() == null))
-// throw new PostWithNoReferenceSetException(null);
-// else
-		return upload(obj);
 	}
 
 	@Override
@@ -69,12 +61,14 @@ public abstract class AbstractHasNameJsonLoader<T extends HasId & HasNumber & Ha
 	}
 
 	@Override
-	public void updateCache(final T obj)
+	public T post(final T obj) throws ApiNotReachableException, JSONException, ParseException,
+		PostAllException, InvalidTokenException
 	{
-		if (obj.getName() != null)
-			nameCache.put(obj.getName(), obj);
-
-		super.updateCache(obj);
+// if (obj == null ||
+// (obj.getName() == null && obj.getNumber() == null && obj.getId() == null))
+// throw new PostWithNoReferenceSetException(null);
+// else
+		return upload(obj);
 	}
 
 	@Override
@@ -88,6 +82,15 @@ public abstract class AbstractHasNameJsonLoader<T extends HasId & HasNumber & Ha
 
 		super.updateCache(objs);
 
+	}
+
+	@Override
+	public void updateCache(final T obj)
+	{
+		if (obj.getName() != null)
+			nameCache.put(obj.getName(), obj);
+
+		super.updateCache(obj);
 	}
 
 }

@@ -12,12 +12,6 @@ import org.codehaus.jettison.json.JSONObject;
 public class FullReceipt extends AbstractNumberApiObject<FullReceipt>
 {
 
-	private static final long serialVersionUID = -9145829363016175720L;
-	private Receipt receipt;
-	private Collection<AccountTransaction> accountTransaction;
-	private Collection<Payment> payment;
-	private Collection<Sale> sale;
-
 	public static class Builder extends Init<Builder>
 	{
 
@@ -30,17 +24,11 @@ public class FullReceipt extends AbstractNumberApiObject<FullReceipt>
 	}
 	protected static abstract class Init<T extends Init<T>> extends AbstractNumberApiObject.Init<T>
 	{
-		private Receipt receipt;
-		private Collection<AccountTransaction> accountTransaction;
-		private Collection<Payment> payment;
-		private Collection<Sale> sale;
+		private Receipt receipt = null;
+		private Collection<AccountTransaction> accountTransaction = null;
+		private Collection<Payment> payment = null;
+		private Collection<Sale> sale = null;
 
-
-		public T receipt(final Receipt receipt)
-		{
-			this.receipt = receipt;
-			return self();
-		}
 
 		public T accountTransaction(final AccountTransaction accountTransaction)
 		{
@@ -54,10 +42,10 @@ public class FullReceipt extends AbstractNumberApiObject<FullReceipt>
 			return self();
 		}
 
-		public T payment(final Payment payment)
+		@Override
+		public FullReceipt build()
 		{
-			this.payment.add(payment);
-			return self();
+			return new FullReceipt(this);
 		}
 
 		public T payment(final Collection<Payment> col)
@@ -66,9 +54,15 @@ public class FullReceipt extends AbstractNumberApiObject<FullReceipt>
 			return self();
 		}
 
-		public T sale(final Sale sale)
+		public T payment(final Payment payment)
 		{
-			this.sale.add(sale);
+			this.payment.add(payment);
+			return self();
+		}
+
+		public T receipt(final Receipt receipt)
+		{
+			this.receipt = receipt;
 			return self();
 		}
 
@@ -79,104 +73,14 @@ public class FullReceipt extends AbstractNumberApiObject<FullReceipt>
 		}
 
 
-		@Override
-		public FullReceipt build()
+		public T sale(final Sale sale)
 		{
-			return new FullReceipt(this);
+			this.sale.add(sale);
+			return self();
 		}
 	}
 
-	public FullReceipt(final Init<?> init)
-	{
-		super(init);
-		this.receipt = init.receipt;
-		this.accountTransaction = init.accountTransaction;
-		this.payment = init.payment;
-		this.sale = init.sale;
-
-	}
-
-	public Receipt getReceipt()
-	{
-		return receipt;
-	}
-
-	public void setReceipt(final Receipt receipt)
-	{
-		this.receipt = receipt;
-	}
-
-	public Collection<AccountTransaction> getAccountTransaction()
-	{
-		return accountTransaction;
-	}
-
-	public void setAccountTransaction(final Collection<AccountTransaction> accountTransaction)
-	{
-		this.accountTransaction = accountTransaction;
-	}
-
-	public void addAccountTransaction(final AccountTransaction accountTransaction)
-	{
-		if (this.accountTransaction == null)
-			this.accountTransaction = new ArrayList<AccountTransaction>();
-		this.accountTransaction.add(accountTransaction);
-	}
-
-	public Collection<Payment> getPayment()
-	{
-		return payment;
-	}
-
-	public void setPayment(final Collection<Payment> payment)
-	{
-		this.payment = payment;
-	}
-
-	public void addPayment(final Payment payment)
-	{
-		if (this.payment == null)
-			this.payment = new ArrayList<Payment>();
-		this.payment.add(payment);
-	}
-
-	public Collection<Sale> getSale()
-	{
-		return sale;
-	}
-
-	public void setSale(final Collection<Sale> sale)
-	{
-		this.sale = sale;
-	}
-
-	public void addSale(final Sale sale)
-	{
-		if (this.sale == null)
-			this.sale = new ArrayList<Sale>();
-		this.sale.add(sale);
-	}
-
-	@Override
-	public boolean equals(final Object obj)
-	{
-
-		return obj.hashCode() == this.hashCode();
-	}
-
-	@Override
-	public int hashCode()
-	{
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((this.receipt == null) ? 0 : this.receipt.hashCode());
-		result = prime * result +
-			((this.accountTransaction == null) ? 0 : this.accountTransaction.hashCode());
-		result = prime * result + ((this.payment == null) ? 0 : this.payment.hashCode());
-		result = prime * result + ((this.sale == null) ? 0 : this.sale.hashCode());
-
-		return result;
-	}
+	private static final long serialVersionUID = -9145829363016175720L;
 
 	public static FullReceipt fromJSON(JSONObject obj) throws JSONException, ParseException
 	{
@@ -282,6 +186,105 @@ public class FullReceipt extends AbstractNumberApiObject<FullReceipt>
 		}
 
 		return fullReceipt;
+	}
+
+	private Receipt receipt;
+
+	private Collection<AccountTransaction> accountTransaction;
+	private Collection<Payment> payment;
+
+	private Collection<Sale> sale;
+
+	public FullReceipt(final Init<?> init)
+	{
+		super(init);
+		this.receipt = init.receipt;
+		this.accountTransaction = init.accountTransaction;
+		this.payment = init.payment;
+		this.sale = init.sale;
+
+	}
+
+	public void addAccountTransaction(final AccountTransaction accountTransaction)
+	{
+		if (this.accountTransaction == null)
+			this.accountTransaction = new ArrayList<AccountTransaction>();
+		this.accountTransaction.add(accountTransaction);
+	}
+
+	public void addPayment(final Payment payment)
+	{
+		if (this.payment == null)
+			this.payment = new ArrayList<Payment>();
+		this.payment.add(payment);
+	}
+
+	public void addSale(final Sale sale)
+	{
+		if (this.sale == null)
+			this.sale = new ArrayList<Sale>();
+		this.sale.add(sale);
+	}
+
+	@Override
+	public boolean equals(final Object obj)
+	{
+
+		return obj.hashCode() == this.hashCode();
+	}
+
+	public Collection<AccountTransaction> getAccountTransaction()
+	{
+		return accountTransaction;
+	}
+
+	public Collection<Payment> getPayment()
+	{
+		return payment;
+	}
+
+	public Receipt getReceipt()
+	{
+		return receipt;
+	}
+
+	public Collection<Sale> getSale()
+	{
+		return sale;
+	}
+
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((this.receipt == null) ? 0 : this.receipt.hashCode());
+		result = prime * result +
+			((this.accountTransaction == null) ? 0 : this.accountTransaction.hashCode());
+		result = prime * result + ((this.payment == null) ? 0 : this.payment.hashCode());
+		result = prime * result + ((this.sale == null) ? 0 : this.sale.hashCode());
+
+		return result;
+	}
+
+	public void setAccountTransaction(final Collection<AccountTransaction> accountTransaction)
+	{
+		this.accountTransaction = accountTransaction;
+	}
+
+	public void setPayment(final Collection<Payment> payment)
+	{
+		this.payment = payment;
+	}
+
+	public void setReceipt(final Receipt receipt)
+	{
+		this.receipt = receipt;
+	}
+
+	public void setSale(final Collection<Sale> sale)
+	{
+		this.sale = sale;
 	}
 
 	@Override

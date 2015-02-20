@@ -11,44 +11,21 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-
 public class Product extends AbstractNameAndNumberApiObject<Product>
 {
-	private static final long serialVersionUID = -4259851643720605829L;
-	private Boolean activeAssortment;
-	private Date activeAssortmentFrom;
-	private int costs;
-	private Boolean discountable;
-	private Boolean priceChangeable;
-	private BigDecimal basePriceMax;
-	private BigDecimal basePriceMin;
-	private Boolean requiresSerialNumber;
-	private Boolean trackInventory;
-	private List<SupplierItemPrice> supplierItemPrices = null;
+	public static class Builder extends Init<Builder>
+	{
 
-	private CommodityGroup commodityGroup;
+		@Override
+		protected Builder self()
+		{
+			return this;
+		}
 
-	private Sector sector;
-
-	private Sector altsector;
-
-	private List<Price> prices;
-
-	private List<Product_Text> texts;
-
-	private Assortment assortment;
-
-	private List<Product_Code> codes;
-
-	private Boolean packaging;
-
-	private Boolean preparationArticle;
-
-	private Collection<Tag> tags;
-
+	}
 
 	protected static abstract class Init<T extends Init<T>> extends
-		AbstractNameAndNumberApiObject.Init<T>
+			AbstractNameAndNumberApiObject.Init<T>
 
 	{
 		private Boolean activeAssortment = null;
@@ -56,8 +33,10 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		private int costs = 0;
 		private Boolean discountable = null;
 		private Boolean priceChangeable = null;
-		private BigDecimal basePriceMax = new BigDecimal(String.valueOf("9999.99"));
-		private BigDecimal basePriceMin = new BigDecimal(String.valueOf("-9999.99"));
+		private BigDecimal basePriceMax = new BigDecimal(
+				String.valueOf("9999.99"));
+		private BigDecimal basePriceMin = new BigDecimal(
+				String.valueOf("-9999.99"));
 		private Boolean requiresSerialNumber = null;
 		private Boolean trackInventory = null;
 		private CommodityGroup commodityGroup = null;
@@ -72,19 +51,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 
 		private Boolean preparationArticle = null;
 
-		private Collection<Tag> tags = new ArrayList<Tag>();
-
-		public T packaging(final Boolean value)
-		{
-			packaging = value;
-			return self();
-		}
-
-		public T preparationArticle(final Boolean value)
-		{
-			preparationArticle = value;
-			return self();
-		}
+		private List<Tag> tags = new ArrayList<Tag>();
 
 		public T activeAssortment(final Boolean value)
 		{
@@ -108,6 +75,24 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		{
 			assortment = value;
 			return self();
+		}
+
+		public T basePriceMax(final BigDecimal value)
+		{
+			basePriceMax = value;
+			return self();
+		}
+
+		public T basePriceMin(final BigDecimal value)
+		{
+			basePriceMin = value;
+			return self();
+		}
+
+		@Override
+		public Product build()
+		{
+			return new Product(this);
 		}
 
 		public T codes(final Collection<Product_Code> coll)
@@ -143,21 +128,21 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 			return self();
 		}
 
+		public T packaging(final Boolean value)
+		{
+			packaging = value;
+			return self();
+		}
+
+		public T preparationArticle(final Boolean value)
+		{
+			preparationArticle = value;
+			return self();
+		}
+
 		public T priceChangeable(final Boolean value)
 		{
 			priceChangeable = value;
-			return self();
-		}
-
-		public T basePriceMin(final BigDecimal value)
-		{
-			basePriceMin = value;
-			return self();
-		}
-
-		public T basePriceMax(final BigDecimal value)
-		{
-			basePriceMax = value;
 			return self();
 		}
 
@@ -188,6 +173,34 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 			return self();
 		}
 
+		public T supplierItemPrice(final List<SupplierItemPrice> value)
+		{
+			supplierItemPrices = value;
+			return self();
+		}
+
+		public T supplierItemPrice(final SupplierItemPrice value)
+		{
+			if (supplierItemPrices == null)
+				supplierItemPrices = new ArrayList<SupplierItemPrice>();
+			supplierItemPrices.add(value);
+			return self();
+		}
+
+		public T tags(final List<Tag> value)
+		{
+			tags = value;
+			return self();
+		}
+
+		public T tags(final Tag tag)
+		{
+			if (tags == null)
+				tags = new ArrayList<Tag>();
+			tags.add(tag);
+			return self();
+		}
+
 		public T texts(final Collection<Product_Text> coll)
 		{
 			for (final Product_Text text : coll)
@@ -209,52 +222,163 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 			return self();
 		}
 
-		public T supplierItemPrice(final List<SupplierItemPrice> value)
-		{
-			supplierItemPrices = value;
-			return self();
-		}
-
-		public T supplierItemPrice(final SupplierItemPrice value)
-		{
-			if (supplierItemPrices == null)
-				supplierItemPrices = new ArrayList<SupplierItemPrice>();
-			supplierItemPrices.add(value);
-			return self();
-		}
-
-		public T tags(final Collection<Tag> tags)
-		{
-			this.tags = tags;
-			return self();
-		}
-
-		public T tags(final Tag tag)
-		{
-			if (tags == null)
-				tags = new ArrayList<Tag>();
-			tags.add(tag);
-			return self();
-		}
-
-		@Override
-		public Product build()
-		{
-			return new Product(this);
-		}
-
 	}
 
-	public static class Builder extends Init<Builder>
+	// TODO implement BD fields basePriceMax basePriceMin in from/to JSON
+	// TODO implement SupplierItemPrice
+	public static Product fromJSON(JSONObject obj) throws JSONException,
+			ParseException
 	{
+		if (obj.has("result") && obj.getString("result") != null)
+			obj = obj.getJSONObject("result");
 
-		@Override
-		protected Builder self()
+		final Assortment assortment = new Assortment.Builder().build();
+		if (!obj.isNull("assortment"))
+			assortment.setId(obj.getString("assortment"));
+
+		final Sector sector = new Sector.Builder().build();
+		if (!obj.isNull("sector"))
+			sector.setId(obj.getString("sector"));
+
+		final Sector altSector = new Sector.Builder().build();
+		if (!obj.isNull("alternativeSector"))
+			altSector.setId(obj.getString("alternativeSector"));
+
+		final CommodityGroup commodityGroup = new CommodityGroup.Builder().id(
+				obj.getString("commodityGroup")).build();
+
+		final Product prod = new Product.Builder().name(obj.getString("name"))
+				.id(obj.getString("uuid")).sector(sector)
+				.deleted(obj.getBoolean("deleted")).altsector(altSector)
+				.revision(obj.getLong("revision"))
+				.commodityGroup(commodityGroup).assortment(assortment)
+				.preparationArticle(obj.getBoolean("preparationArticle"))
+				.packaging(obj.getBoolean("packaging")).build();
+
+		if (obj.has("number"))
+			prod.setNumber(obj.getString("number"));
+
+		if (!obj.isNull("articleCodes")
+				&& !obj.getString("articleCodes").equalsIgnoreCase("null"))
 		{
-			return this;
+			JSONArray jACode = new JSONArray();
+			jACode = obj.getJSONArray("articleCodes");
+			JSONObject jCode = new JSONObject();
+			final List<Product_Code> codeList = new ArrayList<Product_Code>();
+			Product_Code productCode = null;
+			for (int i = 0; i <= jACode.length() - 1; i++)
+			{
+				jCode = (JSONObject) jACode.get(i);
+				final BigDecimal quantity = new BigDecimal(
+						jCode.getDouble("quantity"));
+				if (!jCode.isNull("code"))
+				{
+					productCode = new Product_Code(jCode.getString("code"),
+							quantity);
+					codeList.add(productCode);
+				}
+
+			}
+			prod.setCodes(codeList);
 		}
 
+		if (!obj.isNull("articleTexts")
+				&& !obj.getString("articleTexts").equalsIgnoreCase("null"))
+		{
+			JSONArray jAText = new JSONArray();
+			jAText = obj.getJSONArray("articleTexts");
+			JSONObject jText = new JSONObject();
+			final List<Product_Text> textList = new ArrayList<Product_Text>();
+			Product_Text productText = null;
+			ProductText_Type type = null;
+			final ProductText_Type[] possibleTypes = ProductText_Type.values();
+			for (int i = 0; i <= jAText.length() - 1; i++)
+			{
+				jText = jAText.getJSONObject(i);
+				if (!jText.isNull("text") && !jText.isNull("type"))
+				{
+					for (int j = 0; j < possibleTypes.length; j++)
+					{
+						if (possibleTypes[j].getReference().equalsIgnoreCase(
+								jText.getString("type")))
+						{
+							type = possibleTypes[j];
+							break;
+						}
+					}
+					productText = new Product_Text(jText.getString("text"),
+							type);
+					textList.add(productText);
+				}
+
+			}
+			prod.setTexts(textList);
+		}
+
+		if (!obj.isNull("prices")
+				&& !obj.getString("prices").equalsIgnoreCase("null"))
+		{
+			final JSONArray jPrices = obj.getJSONArray("prices");
+			final List<Price> prices = new ArrayList<Price>();
+			JSONObject jPrice;
+			for (int i = 0; i <= jPrices.length() - 1; i++)
+			{
+				jPrice = jPrices.getJSONObject(i);
+
+				final BigDecimal value = new BigDecimal(
+						jPrice.getDouble("value"));
+				final Pricelist pricelist = new Pricelist.Builder().id(
+						jPrice.getString("priceList")).build();
+				if (!jPrice.isNull("organizationalUnit"))
+				{
+					final OrganizationalUnit organizationalUnit = new OrganizationalUnit.Builder()
+							.id(jPrice.getString("organizationalUnit")).build();
+
+					prices.add(new Price(pricelist, prepareDate(jPrice,
+							"validFrom"), value, organizationalUnit));
+				} else
+					prices.add(new Price(pricelist, prepareDate(jPrice,
+							"validFrom"), value, null));
+			}
+			prod.setPrices(prices);
+		}
+		return prod;
 	}
+
+	private static final long serialVersionUID = -4259851643720605829L;
+	private Boolean activeAssortment;
+	private Date activeAssortmentFrom;
+	private int costs;
+	private Boolean discountable;
+	private Boolean priceChangeable;
+	private BigDecimal basePriceMax;
+	private BigDecimal basePriceMin;
+
+	private Boolean requiresSerialNumber;
+
+	private Boolean trackInventory;
+
+	private List<SupplierItemPrice> supplierItemPrices = null;
+
+	private CommodityGroup commodityGroup;
+
+	private Sector sector;
+
+	private Sector altsector;
+
+	private List<Price> prices;
+
+	private List<Product_Text> texts;
+
+	private Assortment assortment;
+
+	private List<Product_Code> codes;
+
+	private Boolean packaging;
+
+	private Boolean preparationArticle;
+
+	private List<Tag> tags;
 
 	private Product(final Init<?> init)
 	{
@@ -281,6 +405,29 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		tags = init.tags;
 	}
 
+	public void addCodes(final Collection<Product_Code> coll)
+	{
+		for (final Product_Code code : coll)
+		{
+			this.codes.add(code);
+		}
+	}
+
+	public void addTexts(final Collection<Product_Text> texts)
+	{
+		for (final Product_Text product_Text : texts)
+		{
+			this.texts.add(product_Text);
+		}
+	}
+
+	@Override
+	public boolean equals(final Object obj)
+	{
+
+		return obj.hashCode() == this.hashCode();
+	}
+
 	public Date getActiveAssortmentFrom()
 	{
 		return activeAssortmentFrom;
@@ -296,11 +443,21 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		return assortment;
 	}
 
+	public BigDecimal getBasePriceMax()
+	{
+		return basePriceMax;
+	}
+
+	public BigDecimal getBasePriceMin()
+	{
+		return basePriceMin;
+	}
+
 	public List<Product_Code> getCodes()
 	{
 		if (codes == null)
 			codes = new ArrayList<Product_Code>();
-		return codes;
+			return codes;
 	}
 
 	public CommodityGroup getCommodityGroup()
@@ -313,25 +470,44 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		return costs;
 	}
 
+	public Boolean getPackaging()
+	{
+		return packaging;
+	}
+
+	public Boolean getPreparationArticle()
+	{
+		return preparationArticle;
+	}
+
 	public List<Price> getPrices()
 	{
 		return prices;
 	}
-
 
 	public Sector getSector()
 	{
 		return sector;
 	}
 
+	public List<SupplierItemPrice> getSupplierItemPrices()
+	{
+		return supplierItemPrices;
+	}
+
+	public List<SupplierItemPrice> getSuppliers()
+	{
+		return supplierItemPrices;
+	}
+
+	public List<Tag> getTags()
+	{
+		return tags;
+	}
+
 	public List<Product_Text> getTexts()
 	{
 		return texts;
-	}
-
-	public Collection<Tag> getTags()
-	{
-		return tags;
 	}
 
 	@Override
@@ -341,14 +517,22 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		int result = 1;
 
 		result = super.hashCode(result);
-		result = prime * result + ((this.altsector == null) ? 0 : this.altsector.hashCode());
-		result = prime * result + ((this.assortment == null) ? 0 : this.assortment.hashCode());
-		result = prime * result + ((this.codes == null) ? 0 : this.codes.hashCode());
-		result = prime * result +
-			((this.commodityGroup == null) ? 0 : this.commodityGroup.hashCode());
-		// result = prime * result + ((this.prices == null) ? 0 : this.prices.hashCode());
-		result = prime * result + ((this.sector == null) ? 0 : this.sector.hashCode());
-		result = prime * result + ((this.tags == null) ? 0 : this.tags.hashCode());
+		result = prime * result
+				+ ((this.altsector == null) ? 0 : this.altsector.hashCode());
+		result = prime * result
+				+ ((this.assortment == null) ? 0 : this.assortment.hashCode());
+		result = prime * result
+				+ ((this.codes == null) ? 0 : this.codes.hashCode());
+		result = prime
+				* result
+				+ ((this.commodityGroup == null) ? 0 : this.commodityGroup
+						.hashCode());
+		// result = prime * result + ((this.prices == null) ? 0 :
+		// this.prices.hashCode());
+		result = prime * result
+				+ ((this.sector == null) ? 0 : this.sector.hashCode());
+		result = prime * result
+				+ ((this.tags == null) ? 0 : this.tags.hashCode());
 
 		return result;
 	}
@@ -398,12 +582,14 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		this.assortment = assortment;
 	}
 
-	public void addCodes(final Collection<Product_Code> coll)
+	public void setBasePriceMax(final BigDecimal basePriceMax)
 	{
-		for (final Product_Code code : coll)
-		{
-			this.codes.add(code);
-		}
+		this.basePriceMax = basePriceMax;
+	}
+
+	public void setBasePriceMin(final BigDecimal basePriceMin)
+	{
+		this.basePriceMin = basePriceMin;
 	}
 
 	public void setCodes(final List<Product_Code> codes)
@@ -426,6 +612,16 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		this.discountable = discountable;
 	}
 
+	public void setPackaging(final Boolean packaging)
+	{
+		this.packaging = packaging;
+	}
+
+	public void setPreparationArticle(final Boolean preparationArticle)
+	{
+		this.preparationArticle = preparationArticle;
+	}
+
 	public void setPriceChangeable(final Boolean priceChangeable)
 	{
 		this.priceChangeable = priceChangeable;
@@ -446,62 +642,15 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		this.sector = sector;
 	}
 
-	public void setTexts(final List<Product_Text> texts)
-	{
-		this.texts = texts;
-	}
-
-	public void addTexts(final Collection<Product_Text> texts)
-	{
-		for (final Product_Text product_Text : texts)
-		{
-			this.texts.add(product_Text);
-		}
-	}
-
-	public void setTrackInventory(final Boolean trackInventory)
-	{
-		this.trackInventory = trackInventory;
-	}
-
-	public BigDecimal getBasePriceMax()
-	{
-		return basePriceMax;
-	}
-
-	public void setBasePriceMax(final BigDecimal basePriceMax)
-	{
-		this.basePriceMax = basePriceMax;
-	}
-
-	public List<SupplierItemPrice> getSupplierItemPrices()
-	{
-		return supplierItemPrices;
-	}
-
-	public void setSupplierItemPrices(final List<SupplierItemPrice> supplierItemPrices)
+	public void setSupplierItemPrices(
+			final List<SupplierItemPrice> supplierItemPrices)
 	{
 		this.supplierItemPrices = supplierItemPrices;
 	}
 
-	public Boolean getPackaging()
+	public void setSuppliers(final List<SupplierItemPrice> suppliers)
 	{
-		return packaging;
-	}
-
-	public void setPackaging(final Boolean packaging)
-	{
-		this.packaging = packaging;
-	}
-
-	public Boolean getPreparationArticle()
-	{
-		return preparationArticle;
-	}
-
-	public void setPreparationArticle(final Boolean preparationArticle)
-	{
-		this.preparationArticle = preparationArticle;
+		this.supplierItemPrices = suppliers;
 	}
 
 	public void setTags(final List<Tag> tags)
@@ -509,19 +658,14 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		this.tags = tags;
 	}
 
-	@Override
-	public boolean equals(final Object obj)
+	public void setTexts(final List<Product_Text> texts)
 	{
-
-		return obj.hashCode() == this.hashCode();
+		this.texts = texts;
 	}
 
-	@Override
-	public String toString()
+	public void setTrackInventory(final Boolean trackInventory)
 	{
-		final StringBuilder stringBuilder = new StringBuilder();
-		super.toString(stringBuilder);
-		return stringBuilder.toString();
+		this.trackInventory = trackInventory;
 	}
 
 	@Override
@@ -532,7 +676,8 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 
 		obj.put("activeAssortment", activeAssortment);
 		if (activeAssortmentFrom != null)
-			obj.put("activeAssortmentFrom", inputDf.format(activeAssortmentFrom));
+			obj.put("activeAssortmentFrom",
+					inputDf.format(activeAssortmentFrom));
 		obj.put("costs", costs);
 		obj.put("discountable", discountable);
 		obj.put("priceChangeable", priceChangeable);
@@ -549,7 +694,6 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 			obj.put("sector", sector.getId());
 		if (altsector != null)
 			obj.put("alternativeSector", altsector.getId());
-
 
 		if (supplierItemPrices != null && !supplierItemPrices.isEmpty())
 		{
@@ -602,141 +746,11 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		return obj;
 	}
 
-	// TODO implement BD fields basePriceMax basePriceMin in from/to JSON
-	// TODO implement SupplierItemPrice
-	public static Product fromJSON(JSONObject obj) throws JSONException, ParseException
+	@Override
+	public String toString()
 	{
-		if (obj.has("result") && obj.getString("result") != null)
-			obj = obj.getJSONObject("result");
-
-		final Assortment assortment = new Assortment.Builder().build();
-		if (!obj.isNull("assortment"))
-			assortment.setId(obj.getString("assortment"));
-
-		final Sector sector = new Sector.Builder().build();
-		if (!obj.isNull("sector"))
-			sector.setId(obj.getString("sector"));
-
-		final Sector altSector = new Sector.Builder().build();
-		if (!obj.isNull("alternativeSector"))
-			altSector.setId(obj.getString("alternativeSector"));
-
-		final CommodityGroup commodityGroup = new CommodityGroup.Builder().id(
-			obj.getString("commodityGroup")).build();
-
-		final Product prod = new Product.Builder().name(obj.getString("name"))
-			.id(obj.getString("uuid"))
-			.sector(sector)
-			.deleted(obj.getBoolean("deleted"))
-			.altsector(altSector)
-			.revision(obj.getLong("revision"))
-			.commodityGroup(commodityGroup)
-			.assortment(assortment)
-			.preparationArticle(obj.getBoolean("preparationArticle"))
-			.packaging(obj.getBoolean("packaging"))
-			.build();
-
-		if (obj.has("number"))
-			prod.setNumber(obj.getString("number"));
-
-		if (!obj.isNull("articleCodes") && !obj.getString("articleCodes").equalsIgnoreCase("null"))
-		{
-			JSONArray jACode = new JSONArray();
-			jACode = obj.getJSONArray("articleCodes");
-			JSONObject jCode = new JSONObject();
-			final List<Product_Code> codeList = new ArrayList<Product_Code>();
-			Product_Code productCode = null;
-			for (int i = 0; i <= jACode.length() - 1; i++)
-			{
-				jCode = (JSONObject)jACode.get(i);
-				final BigDecimal quantity = new BigDecimal(jCode.getDouble("quantity"));
-				if (!jCode.isNull("code"))
-				{
-					productCode = new Product_Code(jCode.getString("code"), quantity);
-					codeList.add(productCode);
-				}
-
-			}
-			prod.setCodes(codeList);
-		}
-
-		if (!obj.isNull("articleTexts") && !obj.getString("articleTexts").equalsIgnoreCase("null"))
-		{
-			JSONArray jAText = new JSONArray();
-			jAText = obj.getJSONArray("articleTexts");
-			JSONObject jText = new JSONObject();
-			final List<Product_Text> textList = new ArrayList<Product_Text>();
-			Product_Text productText = null;
-			ProductText_Type type = null;
-			final ProductText_Type[] possibleTypes = ProductText_Type.values();
-			for (int i = 0; i <= jAText.length() - 1; i++)
-			{
-				jText = jAText.getJSONObject(i);
-				if (!jText.isNull("text") && !jText.isNull("type"))
-				{
-					for (int j = 0; j < possibleTypes.length; j++)
-					{
-						if (possibleTypes[j].getReference().equalsIgnoreCase(
-							jText.getString("type")))
-						{
-							type = possibleTypes[j];
-							break;
-						}
-					}
-					productText = new Product_Text(jText.getString("text"), type);
-					textList.add(productText);
-				}
-
-			}
-			prod.setTexts(textList);
-		}
-
-		if (!obj.isNull("prices") && !obj.getString("prices").equalsIgnoreCase("null"))
-		{
-			final JSONArray jPrices = obj.getJSONArray("prices");
-			final List<Price> prices = new ArrayList<Price>();
-			JSONObject jPrice;
-			for (int i = 0; i <= jPrices.length() - 1; i++)
-			{
-				jPrice = jPrices.getJSONObject(i);
-
-				final BigDecimal value = new BigDecimal(jPrice.getDouble("value"));
-				final Pricelist pricelist = new Pricelist.Builder().id(
-					jPrice.getString("priceList")).build();
-				if (!jPrice.isNull("organizationalUnit"))
-				{
-					final OrganizationalUnit organizationalUnit = new OrganizationalUnit.Builder().id(
-						jPrice.getString("organizationalUnit"))
-						.build();
-
-					prices.add(new Price(pricelist, prepareDate(jPrice, "validFrom"), value,
-						organizationalUnit));
-				}
-				else
-					prices.add(new Price(pricelist, prepareDate(jPrice, "validFrom"), value, null));
-			}
-			prod.setPrices(prices);
-		}
-		return prod;
-	}
-
-	public List<SupplierItemPrice> getSuppliers()
-	{
-		return supplierItemPrices;
-	}
-
-	public void setSuppliers(final List<SupplierItemPrice> suppliers)
-	{
-		this.supplierItemPrices = suppliers;
-	}
-
-	public BigDecimal getBasePriceMin()
-	{
-		return basePriceMin;
-	}
-
-	public void setBasePriceMin(final BigDecimal basePriceMin)
-	{
-		this.basePriceMin = basePriceMin;
+		final StringBuilder stringBuilder = new StringBuilder();
+		super.toString(stringBuilder);
+		return stringBuilder.toString();
 	}
 }

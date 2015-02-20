@@ -9,48 +9,30 @@ import org.codehaus.jettison.json.JSONObject;
 
 public class AccountTransaction extends AbstractApiObject<AccountTransaction>
 {
-	private static final long serialVersionUID = -6707310291148051948L;
-	private Account account;
-	private Receipt receipt;
-	private Cashier cashier;
-	private POS pos;
-	private BigDecimal amount;
-	private Date bookingTime;
-	private int receiptIndex;
-	private String description;
+	public static class Builder extends Init<Builder>
+	{
 
+		@Override
+		protected Builder self()
+		{
+			return this;
+		}
+
+	}
 	protected static abstract class Init<T extends Init<T>> extends AbstractApiObject.Init<T>
 	{
-		private Account account;
-		private Receipt receipt;
-		private Cashier cashier;
-		private POS pos;
-		private BigDecimal amount;
-		private Date bookingTime;
-		private int receiptIndex;
-		private String description;
+		private Account account = null;
+		private Receipt receipt = null;
+		private Cashier cashier = null;
+		private POS pos = null;
+		private BigDecimal amount = null;
+		private Date bookingTime = null;
+		private Integer receiptIndex = null;
+		private String description = null;
 
 		public T account(final Account acc)
 		{
 			account = acc;
-			return self();
-		}
-
-		public T receipt(final Receipt rec)
-		{
-			receipt = rec;
-			return self();
-		}
-
-		public T cashier(final Cashier cash)
-		{
-			cashier = cash;
-			return self();
-		}
-
-		public T pos(final POS posy)
-		{
-			pos = posy;
 			return self();
 		}
 
@@ -66,9 +48,15 @@ public class AccountTransaction extends AbstractApiObject<AccountTransaction>
 			return self();
 		}
 
-		public T receiptIndex(final int value)
+		@Override
+		public AccountTransaction build()
 		{
-			receiptIndex = value;
+			return new AccountTransaction(this);
+		}
+
+		public T cashier(final Cashier cash)
+		{
+			cashier = cash;
 			return self();
 		}
 
@@ -78,162 +66,26 @@ public class AccountTransaction extends AbstractApiObject<AccountTransaction>
 			return self();
 		}
 
-		@Override
-		public AccountTransaction build()
+		public T pos(final POS posy)
 		{
-			return new AccountTransaction(this);
+			pos = posy;
+			return self();
+		}
+
+		public T receipt(final Receipt rec)
+		{
+			receipt = rec;
+			return self();
+		}
+
+		public T receiptIndex(final int value)
+		{
+			receiptIndex = value;
+			return self();
 		}
 	}
 
-	public static class Builder extends Init<Builder>
-	{
-
-		@Override
-		protected Builder self()
-		{
-			return this;
-		}
-
-	}
-
-	public AccountTransaction(final Init<?> init)
-	{
-		super(init);
-		account = init.account;
-		receipt = init.receipt;
-		cashier = init.cashier;
-		pos = init.pos;
-		amount = init.amount;
-		bookingTime = init.bookingTime;
-		receiptIndex = init.receiptIndex;
-		description = init.description;
-	}
-
-	public Receipt getReceipt()
-	{
-		return receipt;
-	}
-
-	public void setReceipt(final Receipt receipt)
-	{
-		this.receipt = receipt;
-	}
-
-	public Cashier getCashier()
-	{
-		return cashier;
-	}
-
-	public void setCashier(final Cashier cashier)
-	{
-		this.cashier = cashier;
-	}
-
-	public POS getPos()
-	{
-		return pos;
-	}
-
-	public void setPos(final POS pos)
-	{
-		this.pos = pos;
-	}
-
-	public BigDecimal getAmount()
-	{
-		return amount;
-	}
-
-	public void setAmount(final BigDecimal amount)
-	{
-		this.amount = amount;
-	}
-
-	public Date getBookingTime()
-	{
-		return bookingTime;
-	}
-
-	public void setBookingTime(final Date bookingTime)
-	{
-		this.bookingTime = bookingTime;
-	}
-
-	public int getReceiptIndex()
-	{
-		return receiptIndex;
-	}
-
-	public void setReceiptIndex(final int receiptIndex)
-	{
-		this.receiptIndex = receiptIndex;
-	}
-
-	public String getDescription()
-	{
-		return description;
-	}
-
-	public void setDescription(final String description)
-	{
-		this.description = description;
-	}
-
-	public Account getAccount()
-	{
-		return account;
-	}
-
-	public void setAccount(final Account account)
-	{
-		this.account = account;
-	}
-
-	@Override
-	public boolean equals(final Object obj)
-	{
-
-		return obj.hashCode() == this.hashCode();
-	}
-
-	@Override
-	public int hashCode()
-	{
-		final int prime = 31;
-		int result = 1;
-
-		result = super.hashCode();
-
-		result = prime * result + ((this.description == null) ? 0 : this.description.hashCode());
-		result = prime * result + ((this.account == null) ? 0 : this.account.hashCode());
-		result = prime * result + ((this.bookingTime == null) ? 0 : this.bookingTime.hashCode());
-		result = prime * result + ((this.cashier == null) ? 0 : this.cashier.hashCode());
-		result = prime * result + ((this.pos == null) ? 0 : this.pos.hashCode());
-		result = prime * result + ((this.receipt == null) ? 0 : this.receipt.hashCode());
-		result = prime * result + ((this.amount == null) ? 0 : this.amount.hashCode());
-		result = prime * result + ((this.receiptIndex == 0) ? 0 : 1);
-
-		return result;
-	}
-
-	@Override
-	public JSONObject toJSON() throws JSONException
-	{
-		JSONObject obj = new JSONObject();
-
-		obj = super.appendJSON(obj);
-
-		obj.put("account", account.getId());
-		obj.put("receipt", receipt.getId());
-		obj.put("cashier", cashier.getId());
-		obj.put("pos", pos.getId());
-		obj.put("amount", amount);
-		obj.put("bookingTime", bookingTime);
-		obj.put("receiptIndex", receiptIndex);
-		obj.put("description", description);
-
-		return obj;
-	}
+	private static final long serialVersionUID = -6707310291148051948L;
 
 	public static AccountTransaction fromJSON(JSONObject obj) throws JSONException, ParseException
 	{
@@ -272,6 +124,157 @@ public class AccountTransaction extends AbstractApiObject<AccountTransaction>
 			.description(obj.getString("description"))
 			.build();
 		return accountTransaction;
+	}
+
+	private Account account;
+	private Receipt receipt;
+	private Cashier cashier;
+	private POS pos;
+	private BigDecimal amount;
+
+	private Date bookingTime;
+
+	private Integer receiptIndex;
+
+	private String description;
+
+	public AccountTransaction(final Init<?> init)
+	{
+		super(init);
+		account = init.account;
+		receipt = init.receipt;
+		cashier = init.cashier;
+		pos = init.pos;
+		amount = init.amount;
+		bookingTime = init.bookingTime;
+		receiptIndex = init.receiptIndex;
+		description = init.description;
+	}
+
+	@Override
+	public boolean equals(final Object obj)
+	{
+
+		return obj.hashCode() == this.hashCode();
+	}
+
+	public Account getAccount()
+	{
+		return account;
+	}
+
+	public BigDecimal getAmount()
+	{
+		return amount;
+	}
+
+	public Date getBookingTime()
+	{
+		return bookingTime;
+	}
+
+	public Cashier getCashier()
+	{
+		return cashier;
+	}
+
+	public String getDescription()
+	{
+		return description;
+	}
+
+	public POS getPos()
+	{
+		return pos;
+	}
+
+	public Receipt getReceipt()
+	{
+		return receipt;
+	}
+
+	public int getReceiptIndex()
+	{
+		return receiptIndex;
+	}
+
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+
+		result = super.hashCode();
+
+		result = prime * result + ((this.description == null) ? 0 : this.description.hashCode());
+		result = prime * result + ((this.account == null) ? 0 : this.account.hashCode());
+		result = prime * result + ((this.bookingTime == null) ? 0 : this.bookingTime.hashCode());
+		result = prime * result + ((this.cashier == null) ? 0 : this.cashier.hashCode());
+		result = prime * result + ((this.pos == null) ? 0 : this.pos.hashCode());
+		result = prime * result + ((this.receipt == null) ? 0 : this.receipt.hashCode());
+		result = prime * result + ((this.amount == null) ? 0 : this.amount.hashCode());
+		result = prime * result + ((this.receiptIndex == 0) ? 0 : 1);
+
+		return result;
+	}
+
+	public void setAccount(final Account account)
+	{
+		this.account = account;
+	}
+
+	public void setAmount(final BigDecimal amount)
+	{
+		this.amount = amount;
+	}
+
+	public void setBookingTime(final Date bookingTime)
+	{
+		this.bookingTime = bookingTime;
+	}
+
+	public void setCashier(final Cashier cashier)
+	{
+		this.cashier = cashier;
+	}
+
+	public void setDescription(final String description)
+	{
+		this.description = description;
+	}
+
+	public void setPos(final POS pos)
+	{
+		this.pos = pos;
+	}
+
+	public void setReceipt(final Receipt receipt)
+	{
+		this.receipt = receipt;
+	}
+
+	public void setReceiptIndex(final int receiptIndex)
+	{
+		this.receiptIndex = receiptIndex;
+	}
+
+	@Override
+	public JSONObject toJSON() throws JSONException
+	{
+		JSONObject obj = new JSONObject();
+
+		obj = super.appendJSON(obj);
+
+		obj.put("account", account.getId());
+		obj.put("receipt", receipt.getId());
+		obj.put("cashier", cashier.getId());
+		obj.put("pos", pos.getId());
+		obj.put("amount", amount);
+		obj.put("bookingTime", bookingTime);
+		obj.put("receiptIndex", receiptIndex);
+		obj.put("description", description);
+
+		return obj;
 	}
 
 
