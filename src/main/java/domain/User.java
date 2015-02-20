@@ -13,57 +13,15 @@ import org.codehaus.jettison.json.JSONObject;
 public class User extends AbstractNumberApiObject<User>
 {
 
-	private static final long serialVersionUID = 6155723487145223684L;
-
-	private Date created;
-
-	private String email;
-
-	private String requestedEmail;
-
-	private int emailChangeCount;
-
-	private String firstname;
-
-	private List<OrganizationalUnit> orgs = new ArrayList<OrganizationalUnit>();
-
-	private String passwordHash;
-
-	private String passwordSalt;
-
-	private List<UserPermissions> permissions = new ArrayList<UserPermissions>();
-
-	// private final Set<LoginTicketReadable> loginTickets = new TreeSet<LoginTicketReadable>();
-
-	private String surname;
-
-	// private UserRoleReadable role;
-
-	private String locale;
-
-	private OrganizationalUnit selectedOrg;
-
-	private User(final Init<?> init)
+	public static class Builder extends Init<Builder>
 	{
-		super(init);
 
-		this.created = init.created;
+		@Override
+		protected Builder self()
+		{
+			return this;
+		}
 
-		this.email = init.email;
-
-		this.requestedEmail = init.requestedEmail;
-
-		this.firstname = init.firstname;
-
-		this.orgs = init.orgs;
-
-		this.permissions = init.permissions;
-
-		// private final Set<LoginTicketReadable> loginTickets = new TreeSet<LoginTicketReadable>();
-
-		this.surname = init.surname;
-
-		// private UserRoleReadable role;
 
 	}
 
@@ -99,6 +57,12 @@ public class User extends AbstractNumberApiObject<User>
 		private OrganizationalUnit selectedOrg = null;
 
 
+		@Override
+		public User build()
+		{
+			return new User(this);
+		}
+
 		public T created(final Date value)
 		{
 			this.created = value;
@@ -111,12 +75,6 @@ public class User extends AbstractNumberApiObject<User>
 			return self();
 		}
 
-		public T requestedEmail(final String value)
-		{
-			requestedEmail = value;
-			return self();
-		}
-
 		public T emailChangeCount(final Integer value)
 		{
 			emailChangeCount = value;
@@ -126,6 +84,12 @@ public class User extends AbstractNumberApiObject<User>
 		public T firstname(final String value)
 		{
 			firstname = value;
+			return self();
+		}
+
+		public T locale(final String value)
+		{
+			locale = value;
 			return self();
 		}
 
@@ -157,15 +121,9 @@ public class User extends AbstractNumberApiObject<User>
 			return self();
 		}
 
-		public T surname(final String value)
+		public T requestedEmail(final String value)
 		{
-			surname = value;
-			return self();
-		}
-
-		public T locale(final String value)
-		{
-			locale = value;
+			requestedEmail = value;
 			return self();
 		}
 
@@ -175,135 +133,122 @@ public class User extends AbstractNumberApiObject<User>
 			return self();
 		}
 
-		@Override
-		public User build()
+		public T surname(final String value)
 		{
-			return new User(this);
+			surname = value;
+			return self();
 		}
 
 	}
 
-	public static class Builder extends Init<Builder>
-	{
+	private static final long serialVersionUID = 6155723487145223684L;
 
-		@Override
-		protected Builder self()
+	public static User fromJSON(final JSONObject obj) throws JSONException, ParseException
+	{
+		final Collection<OrganizationalUnit> organizationalUnits = new ArrayList<OrganizationalUnit>();
+		if (!obj.isNull("orgs"))
 		{
-			return this;
+			final JSONArray jArray = obj.getJSONArray("orgs");
+			for (int i = 0; i < jArray.length(); i++)
+			{
+				final String orgId = jArray.getString(i);
+				final OrganizationalUnit organizationalUnit = new OrganizationalUnit.Builder().id(
+					orgId).build();
+				organizationalUnits.add(organizationalUnit);
+			}
 		}
 
+		final Collection<UserPermissions> permissions = new ArrayList<UserPermissions>();
+		if (obj.isNull("permissions"))
+		{
+			final JSONArray jsonArray = obj.getJSONArray("permissions");
+			for (int i = 0; i < jsonArray.length(); i++)
+			{
+				final String permissionString = jsonArray.getString(i);
+				final UserPermissions permission = UserPermissions.valueOf(permissionString);
+				permissions.add(permission);
+			}
+		}
 
+// final OrganizationalUnit selectedOrg = new OrganizationalUnit.Builder().id(
+// obj.getString("selectedOrg")).build();
+
+		final User user = new User.Builder().created(inputDf.parse(obj.getString("created")))
+			.deleted(obj.getBoolean("deleted"))
+			.email(obj.getString("email"))
+			.firstname(obj.getString("firstname"))
+			.id(obj.getString("uuid"))
+			.number(obj.getString("number"))
+			.orgs(organizationalUnits)
+			.permissions(permissions)
+			.revision(obj.getLong("revision"))
+			.surname(obj.getString("surname"))
+			.build();
+
+		return user;
 	}
 
+	private Date created;
 
-	public Date getCreated()
-	{
-		return created;
-	}
+	private String email;
 
-	public void setCreated(final Date created)
-	{
-		this.created = created;
-	}
+	private String requestedEmail;
 
-	public String getEmail()
-	{
-		return email;
-	}
+	private int emailChangeCount;
 
-	public void setEmail(final String email)
-	{
-		this.email = email;
-	}
+	private String firstname;
 
-	public String getRequestedEmail()
-	{
-		return requestedEmail;
-	}
+	private List<OrganizationalUnit> orgs = new ArrayList<OrganizationalUnit>();
 
-	public void setRequestedEmail(final String requestedEmail)
-	{
-		this.requestedEmail = requestedEmail;
-	}
+	// private final Set<LoginTicketReadable> loginTickets = new TreeSet<LoginTicketReadable>();
 
-	public int getEmailChangeCount()
-	{
-		return emailChangeCount;
-	}
+	private String passwordHash;
 
-	public void setEmailChangeCount(final int emailChangeCount)
-	{
-		this.emailChangeCount = emailChangeCount;
-	}
+	// private UserRoleReadable role;
 
-	public String getFirstname()
-	{
-		return firstname;
-	}
+	private String passwordSalt;
 
-	public void setFirstname(final String firstname)
-	{
-		this.firstname = firstname;
-	}
+	private List<UserPermissions> permissions = new ArrayList<UserPermissions>();
 
-	public String getPasswordHash()
-	{
-		return passwordHash;
-	}
+	private String surname;
 
-	public void setPasswordHash(final String passwordHash)
-	{
-		this.passwordHash = passwordHash;
-	}
+	private String locale;
 
-	public String getPasswordSalt()
-	{
-		return passwordSalt;
-	}
+	private OrganizationalUnit selectedOrg;
 
-	public void setPasswordSalt(final String passwordSalt)
-	{
-		this.passwordSalt = passwordSalt;
-	}
 
-	public String getSurname()
+	private User(final Init<?> init)
 	{
-		return surname;
-	}
+		super(init);
 
-	public void setSurname(final String surname)
-	{
-		this.surname = surname;
-	}
+		this.created = init.created;
 
-	public String getLocale()
-	{
-		return locale;
-	}
+		this.email = init.email;
 
-	public void setLocale(final String locale)
-	{
-		this.locale = locale;
-	}
+		this.requestedEmail = init.requestedEmail;
 
-	public OrganizationalUnit getSelectedOrg()
-	{
-		return selectedOrg;
-	}
+		this.firstname = init.firstname;
 
-	public void setSelectedOrg(final OrganizationalUnit selectedOrg)
-	{
-		this.selectedOrg = selectedOrg;
-	}
+		this.orgs = init.orgs;
 
-	public List<OrganizationalUnit> getOrgs()
-	{
-		return orgs;
-	}
+		this.permissions = init.permissions;
 
-	public List<UserPermissions> getPermissions()
-	{
-		return permissions;
+		// private final Set<LoginTicketReadable> loginTickets = new TreeSet<LoginTicketReadable>();
+
+		this.surname = init.surname;
+
+		// private UserRoleReadable role;
+
+		this.emailChangeCount = init.emailChangeCount;
+
+		this.passwordHash = init.passwordHash;
+
+		this.passwordSalt = init.passwordSalt;
+
+		this.locale = init.locale;
+
+		this.selectedOrg = init.selectedOrg;
+
 	}
 
 	@Override
@@ -311,6 +256,66 @@ public class User extends AbstractNumberApiObject<User>
 	{
 
 		return obj.hashCode() == this.hashCode();
+	}
+
+	public Date getCreated()
+	{
+		return created;
+	}
+
+	public String getEmail()
+	{
+		return email;
+	}
+
+	public int getEmailChangeCount()
+	{
+		return emailChangeCount;
+	}
+
+	public String getFirstname()
+	{
+		return firstname;
+	}
+
+	public String getLocale()
+	{
+		return locale;
+	}
+
+	public List<OrganizationalUnit> getOrgs()
+	{
+		return orgs;
+	}
+
+	public String getPasswordHash()
+	{
+		return passwordHash;
+	}
+
+	public String getPasswordSalt()
+	{
+		return passwordSalt;
+	}
+
+	public List<UserPermissions> getPermissions()
+	{
+		return permissions;
+	}
+
+	public String getRequestedEmail()
+	{
+		return requestedEmail;
+	}
+
+	public OrganizationalUnit getSelectedOrg()
+	{
+		return selectedOrg;
+	}
+
+	public String getSurname()
+	{
+		return surname;
 	}
 
 	@Override
@@ -350,6 +355,56 @@ public class User extends AbstractNumberApiObject<User>
 		result = prime * result + ((selectedOrg == null) ? 0 : this.created.hashCode());
 
 		return result;
+	}
+
+	public void setCreated(final Date created)
+	{
+		this.created = created;
+	}
+
+	public void setEmail(final String email)
+	{
+		this.email = email;
+	}
+
+	public void setEmailChangeCount(final int emailChangeCount)
+	{
+		this.emailChangeCount = emailChangeCount;
+	}
+
+	public void setFirstname(final String firstname)
+	{
+		this.firstname = firstname;
+	}
+
+	public void setLocale(final String locale)
+	{
+		this.locale = locale;
+	}
+
+	public void setPasswordHash(final String passwordHash)
+	{
+		this.passwordHash = passwordHash;
+	}
+
+	public void setPasswordSalt(final String passwordSalt)
+	{
+		this.passwordSalt = passwordSalt;
+	}
+
+	public void setRequestedEmail(final String requestedEmail)
+	{
+		this.requestedEmail = requestedEmail;
+	}
+
+	public void setSelectedOrg(final OrganizationalUnit selectedOrg)
+	{
+		this.selectedOrg = selectedOrg;
+	}
+
+	public void setSurname(final String surname)
+	{
+		this.surname = surname;
 	}
 
 	@Override
@@ -402,51 +457,6 @@ public class User extends AbstractNumberApiObject<User>
 			obj.put("selectedOrg", selectedOrg.getId());
 
 		return obj;
-	}
-
-	public static User fromJSON(final JSONObject obj) throws JSONException, ParseException
-	{
-		final Collection<OrganizationalUnit> organizationalUnits = new ArrayList<OrganizationalUnit>();
-		if (!obj.isNull("orgs"))
-		{
-			final JSONArray jArray = obj.getJSONArray("orgs");
-			for (int i = 0; i < jArray.length(); i++)
-			{
-				final String orgId = jArray.getString(i);
-				final OrganizationalUnit organizationalUnit = new OrganizationalUnit.Builder().id(
-					orgId).build();
-				organizationalUnits.add(organizationalUnit);
-			}
-		}
-
-		final Collection<UserPermissions> permissions = new ArrayList<UserPermissions>();
-		if (obj.isNull("permissions"))
-		{
-			final JSONArray jsonArray = obj.getJSONArray("permissions");
-			for (int i = 0; i < jsonArray.length(); i++)
-			{
-				final String permissionString = jsonArray.getString(i);
-				final UserPermissions permission = UserPermissions.valueOf(permissionString);
-				permissions.add(permission);
-			}
-		}
-
-// final OrganizationalUnit selectedOrg = new OrganizationalUnit.Builder().id(
-// obj.getString("selectedOrg")).build();
-
-		final User user = new User.Builder().created(inputDf.parse(obj.getString("created")))
-			.deleted(obj.getBoolean("deleted"))
-			.email(obj.getString("email"))
-			.firstname(obj.getString("firstname"))
-			.id(obj.getString("uuid"))
-			.number(obj.getString("number"))
-			.orgs(organizationalUnits)
-			.permissions(permissions)
-			.revision(obj.getLong("revision"))
-			.surname(obj.getString("surname"))
-			.build();
-
-		return user;
 	}
 
 }

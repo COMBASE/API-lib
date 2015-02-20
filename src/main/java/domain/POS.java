@@ -285,6 +285,31 @@ public class POS extends AbstractNameAndNumberApiObject<POS>
 	{
 		super(init);
 		organizationalUnit = init.organizationalUnit;
+		autoLogoutDelay = init.autoLogoutDelay;
+		autoReceiptPrint = init.autoReceiptPrint;
+		customerDisplayOfflineText = init.customerDisplayOfflineText;
+		customerDisplayOnlineText = init.customerDisplayOnlineText;
+		distributerCode = init.distributerCode;
+		defaultCustomerGroup = init.defaultCustomerGroup;
+		defaultPaymentMethod = init.defaultPaymentMethod;
+		economicZone = init.economicZone;
+		forceClosedDrawer = init.forceClosedDrawer;
+		friendsBonusCustomerGroup = init.friendsBonusCustomerGroup;
+		friendsbonusIdentification = init.friendsbonusIdentification;
+		friendsbonusSecret = init.friendsbonusSecret;
+		maxBalanceAttempts = init.maxBalanceAttempts;
+		name = init.name;
+		orderNumberRequired = init.orderNumberRequired;
+		organizationalUnit = init.organizationalUnit;
+		// private WareHouse warehous=null;
+		secret = init.secret;
+		systemHash = init.systemHash;
+		automaticEndOfDayIntervalStr = init.automaticEndOfDayIntervalStr;
+		centInput = init.centInput;
+		requirePaymentAmountInput = init.requirePaymentAmountInput;
+		kioskMode = init.kioskMode;
+		automaticPaymentFinalization = init.automaticPaymentization;
+		StringbloyalDeviceKey = init.StringbloyalDeviceKey;
 	}
 
 	@Override
