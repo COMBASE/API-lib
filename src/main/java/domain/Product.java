@@ -44,7 +44,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 
 	private Boolean preparationArticle;
 
-	private List<Tag> tags;
+	private Collection<Tag> tags;
 
 
 	protected static abstract class Init<T extends Init<T>> extends
@@ -72,7 +72,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 
 		private Boolean preparationArticle = null;
 
-		private List<Tag> tags = new ArrayList<Tag>();
+		private Collection<Tag> tags = new ArrayList<Tag>();
 
 		public T packaging(final Boolean value)
 		{
@@ -223,9 +223,9 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 			return self();
 		}
 
-		public T tags(final List<Tag> value)
+		public T tags(final Collection<Tag> tags)
 		{
-			tags = value;
+			this.tags = tags;
 			return self();
 		}
 
@@ -329,7 +329,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		return texts;
 	}
 
-	public List<Tag> getTags()
+	public Collection<Tag> getTags()
 	{
 		return tags;
 	}
