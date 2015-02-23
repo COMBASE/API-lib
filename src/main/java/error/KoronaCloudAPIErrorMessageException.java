@@ -12,23 +12,29 @@ import java.util.Map;
  * @author mas
  *
  */
-public class PostAllException extends Exception
+public class KoronaCloudAPIErrorMessageException extends Exception
 {
 
 	private static final long serialVersionUID = 4569447626999614413L;
 
-	Map<String, String> errorObjects = new HashMap<String, String>();
+	Map<String, String> errorMap = new HashMap<String, String>();
 
-	public Map<String, String> getErrorObjects()
+	/**
+	 * returns a Map containing the error message as key and concerned items as value.
+	 * 
+	 * @return Map<String,String>
+	 */
+	public Map<String, String> getErrorMap()
 	{
-		return errorObjects;
+		return errorMap;
 	}
 
-	public PostAllException(final Throwable cause, final Map<String, String> errorsObjects)
+	public KoronaCloudAPIErrorMessageException(final Throwable cause,
+		final Map<String, String> errorsObjects)
 	{
 
 		super(cause);
-		this.errorObjects = errorsObjects;
+		this.errorMap = errorsObjects;
 
 	}
 
@@ -37,7 +43,7 @@ public class PostAllException extends Exception
 	{
 		final StringBuilder ret = new StringBuilder();
 		ret.append("KORONA.CLOUD.API has returned error codes");
-		ret.append(errorObjects.toString());
+		ret.append(errorMap.toString());
 
 		return ret.toString();
 	}

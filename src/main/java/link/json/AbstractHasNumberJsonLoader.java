@@ -15,7 +15,7 @@ import domain.interfaces.HasId;
 import domain.interfaces.HasNumber;
 import error.ApiNotReachableException;
 import error.InvalidTokenException;
-import error.PostAllException;
+import error.KoronaCloudAPIErrorMessageException;
 import error.SubObjectInitializationException;
 
 public abstract class AbstractHasNumberJsonLoader<T extends HasId & HasNumber> extends
@@ -37,9 +37,12 @@ AbstractHasIdJsonLoader<T>
 	 * @throws JSONException
 	 * @throws ParseException
 	 * @throws SubObjectInitializationException
+	 * @throws InvalidTokenException
+	 * @throws KoronaCloudAPIErrorMessageException
 	 */
-	public T downloadByNumber(final String number) throws ApiNotReachableException, JSONException,
-	ParseException, SubObjectInitializationException
+	public T downloadByNumber(final String number) throws ApiNotReachableException, ParseException,
+		SubObjectInitializationException, KoronaCloudAPIErrorMessageException,
+	InvalidTokenException
 	{
 		final T cachedObject = numberCache.get(number);
 		if (cachedObject != null)
@@ -49,7 +52,23 @@ AbstractHasIdJsonLoader<T>
 		final JSONObject jDownloaded = createJsonObject(jStr);
 		if (jDownloaded == null)
 			throw new SubObjectInitializationException(number, getDataType(), null);
-		final T downloaded = fromJSON(jDownloaded);
+
+		final T downloaded;
+		try
+		{
+
+			downloaded = fromJSON(jDownloaded);
+
+		}
+		catch (final JSONException e)
+		{
+
+			LOGGER.error("KORONA.CLOUD.API returned malformed JSON", e);
+
+			return null;
+
+		}
+
 		numberCache.put(number, downloaded);
 		return downloaded;
 	}
@@ -70,7 +89,7 @@ AbstractHasIdJsonLoader<T>
 
 	@Override
 	public T post(final T obj) throws ApiNotReachableException, JSONException, ParseException,
-		PostAllException, InvalidTokenException
+		KoronaCloudAPIErrorMessageException, InvalidTokenException
 
 	{
 // if (obj == null || (obj.getNumber() == null && obj.getId() == null))

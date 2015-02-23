@@ -14,6 +14,8 @@ import domain.DataType;
 import domain.Product;
 import domain.Product_Code;
 import error.ApiNotReachableException;
+import error.InvalidTokenException;
+import error.KoronaCloudAPIErrorMessageException;
 import error.SubObjectInitializationException;
 
 /**
@@ -23,6 +25,24 @@ import error.SubObjectInitializationException;
  */
 public class ProductLoader extends AbstractHasNameJsonLoader<Product>
 {
+
+	@Override
+	public Product post(final Product obj) throws ApiNotReachableException, JSONException,
+		ParseException, InvalidTokenException, KoronaCloudAPIErrorMessageException
+	{
+
+		try
+		{
+
+			return upload(obj);
+
+		}
+		catch (final KoronaCloudAPIErrorMessageException e)
+		{
+			throw new KoronaCloudAPIErrorMessageException(e.getCause(), null);
+		}
+
+	}
 
 	private final Map<String, Product> codeCache = new HashMap<String, Product>();
 
@@ -48,7 +68,8 @@ public class ProductLoader extends AbstractHasNameJsonLoader<Product>
 	}
 
 	public Product downloadByCode(final String code) throws ApiNotReachableException,
-	JSONException, ParseException, SubObjectInitializationException
+		JSONException, ParseException, SubObjectInitializationException,
+		KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		final Product cachedObject = codeCache.get(code);
 		if (cachedObject != null)

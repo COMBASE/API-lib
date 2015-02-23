@@ -174,6 +174,7 @@ public class Payment extends AbstractApiObject<Payment>
 			.pos(pos)
 			.currency(cur)
 			.paymentMethod(payMeth)
+			.receiptIndex(obj.getInt("receiptIndex"))
 			.build();
 		return pay;
 	}

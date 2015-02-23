@@ -229,7 +229,7 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 	private CustomerGroup customerGroup;
 	private Date finishTime;
 	private Date modifiedTime;
-	private int orderNumber;
+	private Integer orderNumber;
 	private POS pos;
 	private OrganizationalUnit organizationalUnit;
 	private Pricelist priceGroup;

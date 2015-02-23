@@ -8,6 +8,8 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import error.ApiNotReachableException;
+import error.InvalidTokenException;
+import error.KoronaCloudAPIErrorMessageException;
 
 /**
  * Iterates over org.codehaus.jettison.json.JSONArray buffer automatically loaded from KORONA.Cloud
@@ -34,9 +36,13 @@ public class CloudResultIterator implements Iterator<JSONObject>
 	 * @param jsonDownloader
 	 * @param revision
 	 * @throws ApiNotReachableException
+	 * @throws InvalidTokenException
+	 * @throws KoronaCloudAPIErrorMessageException
+	 * @throws JSONException
 	 */
 	public CloudResultIterator(final AbstractHasIdJsonLoader<?> jsonDownloader, final long revision)
-		throws ApiNotReachableException
+		throws ApiNotReachableException, JSONException, KoronaCloudAPIErrorMessageException,
+		InvalidTokenException
 	{
 		this.revision = revision;
 		currentBufferIndex = -1;
@@ -71,13 +77,29 @@ public class CloudResultIterator implements Iterator<JSONObject>
 				e.printStackTrace();
 				return false;
 			}
+			catch (final JSONException e)
+			{
+				e.printStackTrace();
+				return false;
+			}
+			catch (final KoronaCloudAPIErrorMessageException e)
+			{
+				e.printStackTrace();
+				return false;
+			}
+			catch (final InvalidTokenException e)
+			{
+				e.printStackTrace();
+				return false;
+			}
 			return hasNext();
 		}
 
 		return true;
 	}
 
-	private void refreshBuffer() throws ApiNotReachableException
+	private void refreshBuffer() throws ApiNotReachableException, JSONException,
+	KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		buffer = downloader.downloadByOffset(revision);
 		currentBufferIndex = -1;

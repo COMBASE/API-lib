@@ -26,8 +26,9 @@ import org.codehaus.jettison.json.JSONObject;
 import domain.DataType;
 import domain.ReferenceType;
 import error.ApiNotReachableException;
+import error.ArticleCodeMustBeUniqueException;
 import error.InvalidTokenException;
-import error.PostAllException;
+import error.KoronaCloudAPIErrorMessageException;
 
 /**
  * This Class is our Interface to the Cloud
@@ -77,10 +78,14 @@ public class ApiConnector
 	 * @param type
 	 * @param reference
 	 * @return
+	 * @throws InvalidTokenException
+	 * @throws KoronaCloudAPIErrorMessageException
+	 * @throws JSONException
 	 * @throws IOException
 	 */
 	public String fetchData(final DataType type, final domain.ReferenceType refType,
-		final String reference) throws ApiNotReachableException
+		final String reference) throws ApiNotReachableException,
+		KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		String url;
 		String slash = "";
@@ -92,7 +97,7 @@ public class ApiConnector
 			url = cloudURL + slash + refType.getType() + "/" + reference;
 		else
 			url = cloudURL + slash + token + "/" + type.getReference() + "/" + refType.getType() +
-			"/" + reference;
+				"/" + reference;
 
 		HttpURLConnection con = null;
 
@@ -127,6 +132,14 @@ public class ApiConnector
 			{
 				LOGGER.info("APICON:GET -> Type:" + type.getReference() + " JSON=" + obj.toString());
 
+				try
+				{
+					interpretResponse(new JSONObject(response.toString()));
+				}
+				catch (final JSONException e)
+				{
+				}
+
 				return response.toString();
 			}
 			else
@@ -153,16 +166,17 @@ public class ApiConnector
 	 *
 	 * @param responseJson
 	 * @throws JSONException
-	 * @throws PostAllException
+	 * @throws KoronaCloudAPIErrorMessageException
 	 * @throws InvalidTokenException
+	 * @throws ArticleCodeMustBeUniqueException
 	 */
 	private void interpretResponse(final JSONObject responseJson) throws JSONException,
-		PostAllException, InvalidTokenException
+		KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 
 		try
 		{
-			// API Exception Handling
+			// Invalid Token
 			if (!responseJson.isNull("error"))
 			{
 
@@ -170,6 +184,22 @@ public class ApiConnector
 
 				if (errorStr.equalsIgnoreCase("Invalid Token"))
 					throw new InvalidTokenException(null);
+				else
+				{
+
+					final Map<String, String> errorMap = new HashMap<String, String>();
+
+					final String[] errorMapping = errorStr.split(":");
+
+					if (errorMapping.length == 1)
+						errorMap.put(errorMapping[0],
+							"KORONA.CLOUD.API haven't returned any values corresponding to this error key");
+					else
+						errorMap.put(errorMapping[0], errorMapping[1]);
+
+					throw new KoronaCloudAPIErrorMessageException(null, errorMap);
+
+				}
 
 			}
 
@@ -188,9 +218,12 @@ public class ApiConnector
 
 					errorMap.put(errorMapping[0], errorMapping[1]);
 
+					if (errorMap.containsKey("Invalid Token"))
+						throw new InvalidTokenException(null);
+
 				}
 
-				throw new PostAllException(null, errorMap);
+				throw new KoronaCloudAPIErrorMessageException(null, errorMap);
 
 			}
 		}
@@ -208,11 +241,12 @@ public class ApiConnector
 	 * @param type
 	 * @param obj
 	 * @return
-	 * @throws PostAllException
+	 * @throws KoronaCloudAPIErrorMessageException
 	 * @throws InvalidTokenException
 	 */
-	public String postData(final DataType type, final JSONArray obj) throws PostAllException,
-		InvalidTokenException
+	public String postData(final DataType type, final JSONArray obj)
+		throws KoronaCloudAPIErrorMessageException, InvalidTokenException
+
 	{
 		String slash = "";
 		if (!cloudURL.endsWith("/"))
@@ -315,10 +349,10 @@ public class ApiConnector
 	 * @param obj
 	 * @return
 	 * @throws InvalidTokenException
-	 * @throws PostAllException
+	 * @throws KoronaCloudAPIErrorMessageException
 	 */
-	public String postData(final DataType type, final JSONObject obj) throws PostAllException,
-	InvalidTokenException
+	public String postData(final DataType type, final JSONObject obj)
+		throws KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 
 		String slash = "";

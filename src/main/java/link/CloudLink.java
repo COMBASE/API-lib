@@ -9,8 +9,9 @@ import org.codehaus.jettison.json.JSONObject;
 import domain.DataType;
 import domain.ReferenceType;
 import error.ApiNotReachableException;
+import error.ArticleCodeMustBeUniqueException;
 import error.InvalidTokenException;
-import error.PostAllException;
+import error.KoronaCloudAPIErrorMessageException;
 
 /**
  * This is the most important Class of this library right after the JSONLoader classes. You
@@ -42,9 +43,12 @@ public class CloudLink
 	 * @param type
 	 * @param reference
 	 * @return
+	 * @throws InvalidTokenException
+	 * @throws KoronaCloudAPIErrorMessageException
 	 * @throws IOException
 	 */
 	public static String getNumberByName(final DataType type, String reference)
+		throws KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		if (ApiCon == null)
 			LOGGER.error("Please initiliaze a CloudLink Object first!");
@@ -87,7 +91,7 @@ public class CloudLink
 	}
 
 	public static String getNumberByUuid(final DataType type, final String reference)
-		throws ApiNotReachableException
+		throws ApiNotReachableException, KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		if (ApiCon == null)
 			LOGGER.error("Please initiliaze a CloudLink Object first!");
@@ -121,8 +125,11 @@ public class CloudLink
 	 * @param type
 	 * @param reference
 	 * @return
+	 * @throws InvalidTokenException
+	 * @throws KoronaCloudAPIErrorMessageException
 	 */
 	public static String getUUIDByName(final DataType type, String reference)
+		throws KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		if (ApiCon == null)
 			LOGGER.error("Please initiliaze a CloudLink Object first!");
@@ -166,7 +173,7 @@ public class CloudLink
 	}
 
 	public static String getUUIDByNumber(final DataType type, final String reference)
-		throws ApiNotReachableException
+		throws ApiNotReachableException, KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		if (ApiCon == null)
 			LOGGER.error("Please initiliaze a CloudLink Object first!");
@@ -214,8 +221,12 @@ public class CloudLink
 	 * @param reference
 	 * @return Product JSON String
 	 * @throws ApiNotReachableException
+	 * @throws InvalidTokenException
+	 * @throws KoronaCloudAPIErrorMessageException
+	 * @throws JSONException
 	 */
-	public String getJSONByCode(String reference) throws ApiNotReachableException
+	public String getJSONByCode(String reference) throws ApiNotReachableException, JSONException,
+	KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		reference = reference.replaceAll(" ", "%20");
 		reference = reference.replaceAll("/", "%2F");
@@ -231,8 +242,12 @@ public class CloudLink
 	 *            first and last name are necessary divided by a white space for a successful
 	 * @return
 	 * @throws ApiNotReachableException
+	 * @throws InvalidTokenException
+	 * @throws KoronaCloudAPIErrorMessageException
+	 * @throws JSONException
 	 */
-	public String getJSONByCustomerName(String reference) throws ApiNotReachableException
+	public String getJSONByCustomerName(String reference) throws ApiNotReachableException,
+	JSONException, KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		final String[] names = reference.split(" ");
 		reference = names[0] + "/" + names[1];
@@ -247,9 +262,12 @@ public class CloudLink
 	 * @param reference
 	 * @return
 	 * @throws ApiNotReachableException
+	 * @throws InvalidTokenException
+	 * @throws KoronaCloudAPIErrorMessageException
+	 * @throws JSONException
 	 */
 	public String getJSONByName(final DataType type, String reference)
-		throws ApiNotReachableException
+		throws ApiNotReachableException, KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		reference = reference.replaceAll(" ", "%20");
 		reference = reference.replaceAll("/", "%2F");
@@ -261,7 +279,7 @@ public class CloudLink
 
 
 	public String getJSONByNumber(final DataType type, final String reference)
-		throws ApiNotReachableException
+		throws ApiNotReachableException, KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		return new String(ApiCon.fetchData(type, ReferenceType.number, reference));
 	}
@@ -278,9 +296,13 @@ public class CloudLink
 	 *            (defines the page to be loaded i.e. offset=0 means all objects from 0 to limit)
 	 * @return
 	 * @throws ApiNotReachableException
+	 * @throws InvalidTokenException
+	 * @throws KoronaCloudAPIErrorMessageException
+	 * @throws JSONException
 	 */
 	public String getJSONByOffset(final DataType type, final String revision, final int limit,
-		final int offset) throws ApiNotReachableException
+		final int offset) throws ApiNotReachableException, KoronaCloudAPIErrorMessageException,
+		InvalidTokenException
 	{
 		final String reference = revision + "/" + limit + "/" + offset;
 		return new String(ApiCon.fetchData(type, ReferenceType.offset, reference));
@@ -293,15 +315,17 @@ public class CloudLink
 	 * @param reference
 	 * @return
 	 * @throws ApiNotReachableException
+	 * @throws InvalidTokenException
+	 * @throws KoronaCloudAPIErrorMessageException
 	 */
 	public String getJSONByRevision(final DataType type, final String reference)
-		throws ApiNotReachableException
+		throws ApiNotReachableException, KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		return new String(ApiCon.fetchData(type, ReferenceType.revision, reference));
 	}
 
 	public String getJSONByUuid(final DataType type, final String reference)
-		throws ApiNotReachableException
+		throws ApiNotReachableException, KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		return new String(ApiCon.fetchData(type, ReferenceType.uuid, reference));
 	}
@@ -314,16 +338,18 @@ public class CloudLink
 	 * @param offset
 	 * @return
 	 * @throws ApiNotReachableException
+	 * @throws InvalidTokenException
+	 * @throws KoronaCloudAPIErrorMessageException
 	 */
 	public String getJSONPageByOffset(final DataType type, final int limit, final int offset)
-		throws ApiNotReachableException
+		throws ApiNotReachableException, KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		final String reference = limit + "/" + offset;
 		return new String(ApiCon.fetchData(type, ReferenceType.page, reference));
 	}
 
 	public String getTokenByAuthData(final DataType type, final String reference)
-		throws ApiNotReachableException
+		throws ApiNotReachableException, KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		if (ApiCon == null)
 			LOGGER.error("Please initiliaze a CloudLink Object first!");
@@ -345,10 +371,12 @@ public class CloudLink
 	 * @param obj
 	 * @return
 	 * @throws InvalidTokenException
-	 * @throws PostAllException
+	 * @throws KoronaCloudAPIErrorMessageException
+	 * @throws ArticleCodeMustBeUniqueException
 	 */
-	public String postJSON(final DataType type, final JSONObject obj) throws PostAllException,
-		InvalidTokenException
+	public String postJSON(final DataType type, final JSONObject obj)
+		throws KoronaCloudAPIErrorMessageException, InvalidTokenException,
+		ArticleCodeMustBeUniqueException
 	{
 		return ApiCon.postData(type, obj);
 	}
