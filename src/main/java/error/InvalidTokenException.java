@@ -18,7 +18,7 @@ public class InvalidTokenException extends Exception
 	{
 		final StringBuilder ret = new StringBuilder();
 		ret.append("Invalid cloud token!");
-		ret.append("Please check your authentication.");
+		ret.append(" Please check your authentication.");
 
 		return ret.toString();
 	}

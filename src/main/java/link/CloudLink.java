@@ -9,7 +9,6 @@ import org.codehaus.jettison.json.JSONObject;
 import domain.DataType;
 import domain.ReferenceType;
 import error.ApiNotReachableException;
-import error.ArticleCodeMustBeUniqueException;
 import error.InvalidTokenException;
 import error.KoronaCloudAPIErrorMessageException;
 
@@ -226,7 +225,7 @@ public class CloudLink
 	 * @throws JSONException
 	 */
 	public String getJSONByCode(String reference) throws ApiNotReachableException, JSONException,
-	KoronaCloudAPIErrorMessageException, InvalidTokenException
+		KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		reference = reference.replaceAll(" ", "%20");
 		reference = reference.replaceAll("/", "%2F");
@@ -247,7 +246,7 @@ public class CloudLink
 	 * @throws JSONException
 	 */
 	public String getJSONByCustomerName(String reference) throws ApiNotReachableException,
-	JSONException, KoronaCloudAPIErrorMessageException, InvalidTokenException
+		JSONException, KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		final String[] names = reference.split(" ");
 		reference = names[0] + "/" + names[1];
@@ -375,8 +374,7 @@ public class CloudLink
 	 * @throws ArticleCodeMustBeUniqueException
 	 */
 	public String postJSON(final DataType type, final JSONObject obj)
-		throws KoronaCloudAPIErrorMessageException, InvalidTokenException,
-		ArticleCodeMustBeUniqueException
+		throws KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		return ApiCon.postData(type, obj);
 	}

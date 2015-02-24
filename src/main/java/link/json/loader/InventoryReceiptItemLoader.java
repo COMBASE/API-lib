@@ -14,7 +14,6 @@ import domain.Inventory;
 import domain.InventoryReceipt;
 import domain.InventoryReceiptItem;
 import error.ApiNotReachableException;
-import error.ArticleCodeMustBeUniqueException;
 import error.InvalidTokenException;
 import error.KoronaCloudAPIErrorMessageException;
 
@@ -58,8 +57,8 @@ public class InventoryReceiptItemLoader extends AbstractHasIdJsonLoader<Inventor
 	public List<InventoryReceiptItem> postList(final List<InventoryReceiptItem> items,
 		List<InventoryReceipt> receipts, List<Inventory> inventories, final int limit,
 		final int threads) throws JSONException, ParseException, ApiNotReachableException,
-		KoronaCloudAPIErrorMessageException, InvalidTokenException, ArticleCodeMustBeUniqueException
-		{
+		KoronaCloudAPIErrorMessageException, InvalidTokenException
+	{
 
 		inventories = inventoryLoader.postList(inventories, limit, threads);
 
@@ -78,7 +77,7 @@ public class InventoryReceiptItemLoader extends AbstractHasIdJsonLoader<Inventor
 
 		return super.postList(items, limit, threads);
 
-		}
+	}
 
 	@Override
 	public JSONObject toJSON(final InventoryReceiptItem value) throws JSONException

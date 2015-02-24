@@ -15,9 +15,9 @@ import domain.interfaces.HasId;
 import domain.interfaces.HasName;
 import domain.interfaces.HasNumber;
 import error.ApiNotReachableException;
+import error.ErrorMessages;
 import error.InvalidTokenException;
 import error.KoronaCloudAPIErrorMessageException;
-import error.SubObjectInitializationException;
 
 public abstract class AbstractHasNameJsonLoader<T extends HasId & HasNumber & HasName> extends
 	AbstractHasNumberJsonLoader<T>
@@ -30,18 +30,46 @@ public abstract class AbstractHasNameJsonLoader<T extends HasId & HasNumber & Ha
 		super(dataType, cloudLink);
 	}
 
+	/**
+	 *
+	 * @param name
+	 * @return
+	 * @throws ApiNotReachableException
+	 * @throws ParseException
+	 * @throws KoronaCloudAPIErrorMessageException
+	 * @throws InvalidTokenException
+	 */
 	public T downloadByName(final String name) throws ApiNotReachableException, ParseException,
-	SubObjectInitializationException, KoronaCloudAPIErrorMessageException,
-		InvalidTokenException
+	KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		final T cachedObject = nameCache.get(name);
+
 		if (cachedObject != null)
 			return cachedObject;
 
-		final String jStr = cloudLink.getJSONByName(getDataType(), name);
+
+		final String jStr;
+
+		try
+		{
+
+			jStr = cloudLink.getJSONByName(getDataType(), name);
+
+		}
+		catch (final KoronaCloudAPIErrorMessageException e)
+		{
+
+			final Map<String, String> errorMap = e.getErrorMap();
+
+			if (errorMap.containsKey(ErrorMessages.No_Object_found_for_name.getErrorString()))
+				return null;
+			else
+				throw new KoronaCloudAPIErrorMessageException(e, errorMap);
+
+		}
+
 		final JSONObject jDownloaded = createJsonObject(jStr);
-		if (jDownloaded == null)
-			throw new SubObjectInitializationException(name, getDataType(), null);
+
 		T downloaded;
 
 		try

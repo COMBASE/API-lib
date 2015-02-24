@@ -2,6 +2,7 @@ package link.json.loader;
 
 import java.text.ParseException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import link.CloudLink;
@@ -14,9 +15,9 @@ import domain.DataType;
 import domain.Product;
 import domain.Product_Code;
 import error.ApiNotReachableException;
+import error.ErrorMessages;
 import error.InvalidTokenException;
 import error.KoronaCloudAPIErrorMessageException;
-import error.SubObjectInitializationException;
 
 /**
  *
@@ -27,8 +28,33 @@ public class ProductLoader extends AbstractHasNameJsonLoader<Product>
 {
 
 	@Override
+	public List<Product> postList(final List<? extends Product> objs, final int limit,
+		final int threads) throws JSONException, ParseException, ApiNotReachableException,
+		KoronaCloudAPIErrorMessageException, InvalidTokenException
+	{
+
+		try
+		{
+
+			return super.postList(objs, limit, threads);
+
+		}
+		catch (final KoronaCloudAPIErrorMessageException e)
+		{
+
+			final Map<String, String> errorMap = e.getErrorMap();
+
+			if (errorMap.containsKey(ErrorMessages.articlecode_must_be_unique.getErrorString()))
+				LOGGER.error("Some articles were not posted! Article Code already in use.");
+
+			throw new KoronaCloudAPIErrorMessageException(e, e.getErrorMap());
+
+		}
+	}
+
+	@Override
 	public Product post(final Product obj) throws ApiNotReachableException, JSONException,
-		ParseException, InvalidTokenException, KoronaCloudAPIErrorMessageException
+	ParseException, InvalidTokenException, KoronaCloudAPIErrorMessageException
 	{
 
 		try
@@ -68,20 +94,43 @@ public class ProductLoader extends AbstractHasNameJsonLoader<Product>
 	}
 
 	public Product downloadByCode(final String code) throws ApiNotReachableException,
-		JSONException, ParseException, SubObjectInitializationException,
-		KoronaCloudAPIErrorMessageException, InvalidTokenException
+		JSONException, ParseException, KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
+
 		final Product cachedObject = codeCache.get(code);
+
 		if (cachedObject != null)
 			return cachedObject;
 
-		final String jStr = cloudLink.getJSONByCode(code);
+		final String jStr;
+
+		try
+		{
+
+			jStr = cloudLink.getJSONByCode(code);
+
+		}
+		catch (final KoronaCloudAPIErrorMessageException e)
+		{
+
+			final Map<String, String> errrorMap = e.getErrorMap();
+
+			if (errrorMap.containsKey("No object found for code"))
+				return null;
+			else
+				throw new KoronaCloudAPIErrorMessageException(e, errrorMap);
+
+		}
+
 		final JSONObject jDownloaded = createJsonObject(jStr);
-		if (jDownloaded == null)
-			throw new SubObjectInitializationException(code, getDataType(), null);
+
+
 		final Product downloaded = fromJSON(jDownloaded);
+
 		updateCache(downloaded);
+
 		return downloaded;
+
 	}
 
 	@Override

@@ -16,12 +16,9 @@ public class Price
 	private BigDecimal value;
 	private OrganizationalUnit organizationalUnit;
 
-	public Price(final Pricelist priceList, final Date validFrom, final BigDecimal value,
-		final OrganizationalUnit organizationalUnit)
+	public Price(final OrganizationalUnit organizationalUnit, final BigDecimal value)
 	{
 		super();
-		this.priceList = priceList;
-		this.validFrom = validFrom;
 		this.value = value;
 		this.organizationalUnit = organizationalUnit;
 	}
@@ -44,23 +41,32 @@ public class Price
 	// TODO replace new Date(0) with null after release 30.01.15
 	public JSONObject toJSON()
 	{
+
 		final JSONObject obj = new JSONObject();
+
 		try
 		{
-			obj.put("priceList", priceList.getId());
+			if (priceList != null)
+				obj.put("priceList", priceList.getId());
+
 			if (validFrom != null)
 				obj.put("validFrom", inputDf.format(validFrom));
-			else
-				obj.put("validFrom", new Date(0));
+
 			obj.put("value", value);
+
 			if (organizationalUnit != null)
 				obj.put("organizationalUnit", organizationalUnit.getId());
+
 			return obj;
+
 		}
 		catch (final JSONException e)
 		{
+
 			e.printStackTrace();
+
 			return null;
+
 		}
 	}
 

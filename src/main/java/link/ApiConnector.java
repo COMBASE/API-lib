@@ -9,7 +9,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,7 +25,7 @@ import org.codehaus.jettison.json.JSONObject;
 import domain.DataType;
 import domain.ReferenceType;
 import error.ApiNotReachableException;
-import error.ArticleCodeMustBeUniqueException;
+import error.ErrorMessages;
 import error.InvalidTokenException;
 import error.KoronaCloudAPIErrorMessageException;
 
@@ -39,7 +38,6 @@ import error.KoronaCloudAPIErrorMessageException;
 public class ApiConnector
 {
 	private final static Logger LOGGER = Logger.getLogger(ApiConnector.class);
-	private final SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy'T'HH:mm:ss");
 	private final String cloudURL;
 	private final String token;
 
@@ -97,7 +95,7 @@ public class ApiConnector
 			url = cloudURL + slash + refType.getType() + "/" + reference;
 		else
 			url = cloudURL + slash + token + "/" + type.getReference() + "/" + refType.getType() +
-				"/" + reference;
+			"/" + reference;
 
 		HttpURLConnection con = null;
 
@@ -171,7 +169,7 @@ public class ApiConnector
 	 * @throws ArticleCodeMustBeUniqueException
 	 */
 	private void interpretResponse(final JSONObject responseJson) throws JSONException,
-		KoronaCloudAPIErrorMessageException, InvalidTokenException
+	KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 
 		try
@@ -182,8 +180,9 @@ public class ApiConnector
 
 				final String errorStr = responseJson.getString("error");
 
-				if (errorStr.equalsIgnoreCase("Invalid Token"))
+				if (errorStr.equalsIgnoreCase(ErrorMessages.Invalid_Token.getErrorString()))
 					throw new InvalidTokenException(null);
+
 				else
 				{
 
@@ -216,7 +215,17 @@ public class ApiConnector
 
 					final String[] errorMapping = errorList.getString(i).split(":");
 
-					errorMap.put(errorMapping[0], errorMapping[1]);
+					if (errorMap.containsKey(errorMapping[0]))
+					{
+
+						final String errorValue = errorMap.get(errorMapping[0]);
+
+						errorMap.put(errorMapping[0], errorValue + ", " + errorMapping[1]);
+
+					}
+					else
+						errorMap.put(errorMapping[0], errorMapping[1]);
+
 
 					if (errorMap.containsKey("Invalid Token"))
 						throw new InvalidTokenException(null);

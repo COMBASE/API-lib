@@ -14,12 +14,12 @@ import domain.DataType;
 import domain.interfaces.HasId;
 import domain.interfaces.HasNumber;
 import error.ApiNotReachableException;
+import error.ErrorMessages;
 import error.InvalidTokenException;
 import error.KoronaCloudAPIErrorMessageException;
-import error.SubObjectInitializationException;
 
 public abstract class AbstractHasNumberJsonLoader<T extends HasId & HasNumber> extends
-AbstractHasIdJsonLoader<T>
+	AbstractHasIdJsonLoader<T>
 {
 
 	private final Map<String, T> numberCache = new HashMap<String, T>();
@@ -41,17 +41,32 @@ AbstractHasIdJsonLoader<T>
 	 * @throws KoronaCloudAPIErrorMessageException
 	 */
 	public T downloadByNumber(final String number) throws ApiNotReachableException, ParseException,
-		SubObjectInitializationException, KoronaCloudAPIErrorMessageException,
-	InvalidTokenException
+	KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		final T cachedObject = numberCache.get(number);
 		if (cachedObject != null)
 			return cachedObject;
 
-		final String jStr = cloudLink.getJSONByNumber(getDataType(), number);
+		String jStr = null;
+		try
+		{
+
+			jStr = cloudLink.getJSONByNumber(getDataType(), number);
+
+		}
+		catch (final KoronaCloudAPIErrorMessageException e)
+		{
+
+			final Map<String, String> errorMap = e.getErrorMap();
+
+			if (errorMap.containsKey(ErrorMessages.No_object_found_for_number.getErrorString()))
+				return null;
+			else
+				throw new KoronaCloudAPIErrorMessageException(e, errorMap);
+
+		}
+
 		final JSONObject jDownloaded = createJsonObject(jStr);
-		if (jDownloaded == null)
-			throw new SubObjectInitializationException(number, getDataType(), null);
 
 		final T downloaded;
 		try
@@ -89,7 +104,7 @@ AbstractHasIdJsonLoader<T>
 
 	@Override
 	public T post(final T obj) throws ApiNotReachableException, JSONException, ParseException,
-		KoronaCloudAPIErrorMessageException, InvalidTokenException
+	KoronaCloudAPIErrorMessageException, InvalidTokenException
 
 	{
 // if (obj == null || (obj.getNumber() == null && obj.getId() == null))

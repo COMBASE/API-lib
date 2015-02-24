@@ -19,11 +19,10 @@ import org.codehaus.jettison.json.JSONObject;
 import domain.DataType;
 import domain.interfaces.HasId;
 import error.ApiNotReachableException;
-import error.ArticleCodeMustBeUniqueException;
+import error.ErrorMessages;
 import error.InvalidTokenException;
 import error.KoronaCloudAPIErrorMessageException;
 import error.PostWithNoReferenceSetException;
-import error.SubObjectInitializationException;
 
 /**
  * Initialize this class or extend it in order to shortcut proper JSON formatting. Offers several
@@ -211,24 +210,43 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	 * @return
 	 * @throws ApiNotReachableException
 	 * @throws ParseException
-	 * @throws SubObjectInitializationException
 	 * @throws InvalidTokenException
 	 * @throws KoronaCloudAPIErrorMessageException
 	 */
 	public T downloadByUUID(final String uuid) throws ApiNotReachableException, ParseException,
-		SubObjectInitializationException, KoronaCloudAPIErrorMessageException,
-		InvalidTokenException
+		KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
+
 		final T cachedObject = idCache.get(uuid);
+
 		if (cachedObject != null)
 		{
+
 			return cachedObject;
+
 		}
 
-		final String jStr = cloudLink.getJSONByUuid(getDataType(), uuid);
+		final String jStr;
+
+		try
+		{
+
+			jStr = cloudLink.getJSONByUuid(getDataType(), uuid);
+
+		}
+		catch (final KoronaCloudAPIErrorMessageException e)
+		{
+
+			final Map<String, String> errorMap = new HashMap<String, String>();
+
+			if (errorMap.containsKey(ErrorMessages.No_object_found_for_id.getErrorString()))
+				return null;
+			else
+				throw new KoronaCloudAPIErrorMessageException(e, errorMap);
+
+		}
+
 		final JSONObject jObject = createJsonObject(jStr);
-		if (jObject == null)
-			throw new SubObjectInitializationException(uuid, getDataType(), null);
 
 		final T downloaded;
 		try
@@ -247,7 +265,9 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 		}
 
 		idCache.put(uuid, downloaded);
+
 		return downloaded;
+
 	}
 
 	/**
@@ -383,6 +403,13 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 
 		int offset = 0;
 		int i = 0;
+
+		if (objs.size() == 0)
+			LOGGER.info("NO OBJECTS POSTED");
+		else
+			LOGGER.info("posting " + objs.size() + " " + getDataType() + "s");
+
+
 		while (i < objs.size())
 		{
 			jArray = new JSONArray();
