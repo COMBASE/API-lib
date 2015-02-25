@@ -136,9 +136,15 @@ public class Sector extends AbstractNameAndNumberApiObject<Sector>
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
 
-		final JSONArray jTaxItems = obj.getJSONArray("items");
+		JSONArray jTaxItems = null;
+		
+		if (!obj.isNull("items"))
+		{
+			jTaxItems = obj.getJSONArray("items");
+		}
 		Tax tax = null;
-		if (jTaxItems.length() != 0)
+		
+		if (jTaxItems != null && jTaxItems.length() != 0)
 		{
 			final JSONObject jTaxItem = jTaxItems.getJSONObject(0);
 
