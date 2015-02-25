@@ -12,7 +12,7 @@ public enum DataType
 								"timeTrackings"), user("users"), pos("pos"), fullReceipt("fullReceipts"), posBalance(
 									"posBalances"), inventory("inventories"), inventoryReceipt("inventoryReceipts"), inventoryReceiptItem(
 										"inventoryReceiptItems"), endOfDayStatement("endOfDayStatements"), auth(
-		"authenticationRequest");
+		"authenticationRequest"), priceStandalone("prices");
 
 	private final String reference;
 

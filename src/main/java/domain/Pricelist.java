@@ -17,7 +17,7 @@ public class Pricelist extends AbstractNameAndNumberApiObject<Pricelist>
 
 	}
 	protected static abstract class Init<T extends Init<T>> extends
-	AbstractNameAndNumberApiObject.Init<T>
+		AbstractNameAndNumberApiObject.Init<T>
 	{
 		private String uuidOfCurrency = null;
 		private Boolean netPrices = null;
@@ -112,7 +112,7 @@ public class Pricelist extends AbstractNameAndNumberApiObject<Pricelist>
 		result = super.hashCode(result);
 		result = prime * result +
 			((this.uuidOfCurrency == null) ? 0 : this.uuidOfCurrency.hashCode());
-		result = prime * result + ((this.netPrices == null) ? 0 : 1);
+		result = prime * result + ((this.netPrices == null) ? 0 : this.netPrices.hashCode());
 
 		return result;
 	}

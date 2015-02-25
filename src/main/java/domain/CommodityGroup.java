@@ -151,7 +151,7 @@ public class CommodityGroup extends AbstractNameAndNumberApiObject<CommodityGrou
 
 		result = prime * result + ((this.key == null) ? 0 : this.key.hashCode());
 		result = prime * result + ((this.parent == null) ? 0 : this.parent.hashCode());
-		result = prime * result + ((this.hasChildren == false) ? 0 : 1);
+		result = prime * result + ((this.hasChildren == null) ? 0 : this.hasChildren.hashCode());
 
 		return result;
 	}

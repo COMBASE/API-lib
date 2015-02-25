@@ -18,7 +18,7 @@ public class TimeTrackingEntities extends AbstractNameAndNumberApiObject<TimeTra
 
 	}
 	protected static abstract class Init<T extends Init<T>> extends
-	AbstractNameAndNumberApiObject.Init<T>
+		AbstractNameAndNumberApiObject.Init<T>
 	{
 		private Boolean paidTime = null;
 
@@ -85,7 +85,7 @@ public class TimeTrackingEntities extends AbstractNameAndNumberApiObject<TimeTra
 		int result = 1;
 
 		result = super.hashCode(result);
-		result = prime * result + ((this.paidTime == false) ? 0 : 1);
+		result = prime * result + ((this.paidTime == null) ? 0 : this.paidTime.hashCode());
 
 
 		return result;

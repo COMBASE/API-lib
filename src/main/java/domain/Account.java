@@ -18,7 +18,7 @@ public class Account extends AbstractNameAndNumberApiObject<Account>
 	}
 
 	protected static abstract class Init<T extends Init<T>> extends
-	AbstractNameAndNumberApiObject.Init<T>
+		AbstractNameAndNumberApiObject.Init<T>
 	{
 		private String type = null;
 
@@ -114,8 +114,10 @@ public class Account extends AbstractNameAndNumberApiObject<Account>
 		result = super.hashCode(result);
 
 		result = prime * result + ((this.type == null) ? 0 : this.type.hashCode());
-		result = prime * result + ((this.requiresSerialNumber == false) ? 0 : 1);
-		result = prime * result + ((this.denominationInput == false) ? 0 : 1);
+		result = prime * result +
+			((this.requiresSerialNumber == null) ? 0 : this.requiresSerialNumber.hashCode());
+		result = prime * result +
+			((this.denominationInput == null) ? 0 : this.denominationInput.hashCode());
 
 		return result;
 	}

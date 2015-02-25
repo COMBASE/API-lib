@@ -213,7 +213,7 @@ public class AccountTransaction extends AbstractApiObject<AccountTransaction>
 		result = prime * result + ((this.pos == null) ? 0 : this.pos.hashCode());
 		result = prime * result + ((this.receipt == null) ? 0 : this.receipt.hashCode());
 		result = prime * result + ((this.amount == null) ? 0 : this.amount.hashCode());
-		result = prime * result + ((this.receiptIndex == 0) ? 0 : 1);
+		result = prime * result + ((this.receiptIndex == 0) ? 0 : this.receiptIndex.hashCode());
 
 		return result;
 	}

@@ -62,7 +62,10 @@ public abstract class AbstractHasNumberJsonLoader<T extends HasId & HasNumber> e
 			if (errorMap.containsKey(ErrorMessages.No_object_found_for_number.getErrorString()))
 				return null;
 			else
+			{
+				LOGGER.error(getDataType() + " could not be downloaded");
 				throw new KoronaCloudAPIErrorMessageException(e, errorMap);
+			}
 
 		}
 
