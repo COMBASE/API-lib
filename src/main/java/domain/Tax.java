@@ -59,6 +59,7 @@ public class Tax extends AbstractNameAndNumberApiObject<Tax>
 
 		public T rateList(final Rate rate)
 		{
+			if (rateList == null) rateList = new ArrayList<Rate>(); 
 			rateList.add(rate);
 			return self();
 		}
@@ -73,16 +74,24 @@ public class Tax extends AbstractNameAndNumberApiObject<Tax>
 	{
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
+		JSONArray jRates = null;
 
-		final JSONArray jRates = obj.getJSONArray("rates");
+		if (!obj.isNull("rates"))
+		{
+			jRates = obj.getJSONArray("rates");
+		}
+		
 		final List<Rate> rates = new ArrayList<Rate>();
 
-		for (int i = 0; i < jRates.length(); i++)
+		if (jRates != null)
 		{
-			final JSONObject jRate = jRates.getJSONObject(i);
-			final Rate rate = new Rate(new BigDecimal(jRate.getString("rate")),
-				inputDf.parse(jRate.getString("validFrom")));
-			rates.add(rate);
+			for (int i = 0; i < jRates.length(); i++)
+			{
+				final JSONObject jRate = jRates.getJSONObject(i);
+				final Rate rate = new Rate(new BigDecimal(jRate.getString("rate")),
+					inputDf.parse(jRate.getString("validFrom")));
+				rates.add(rate);
+			}
 		}
 		final EconomicZone economicZone = new EconomicZone.Builder().build();
 		economicZone.setId(obj.getString("economicZone"));
