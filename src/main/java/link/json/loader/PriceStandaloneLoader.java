@@ -11,6 +11,11 @@ import org.codehaus.jettison.json.JSONObject;
 import domain.DataType;
 import domain.PriceStandalone;
 
+/**
+ *
+ * @author mas
+ *
+ */
 public class PriceStandaloneLoader extends AbstractHasNumberJsonLoader<PriceStandalone>
 {
 

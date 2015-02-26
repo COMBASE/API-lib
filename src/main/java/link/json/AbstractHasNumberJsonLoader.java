@@ -19,7 +19,7 @@ import error.InvalidTokenException;
 import error.KoronaCloudAPIErrorMessageException;
 
 public abstract class AbstractHasNumberJsonLoader<T extends HasId & HasNumber> extends
-	AbstractHasIdJsonLoader<T>
+AbstractHasIdJsonLoader<T>
 {
 
 	private final Map<String, T> numberCache = new HashMap<String, T>();
@@ -41,7 +41,7 @@ public abstract class AbstractHasNumberJsonLoader<T extends HasId & HasNumber> e
 	 * @throws KoronaCloudAPIErrorMessageException
 	 */
 	public T downloadByNumber(final String number) throws ApiNotReachableException, ParseException,
-	KoronaCloudAPIErrorMessageException, InvalidTokenException
+		KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		final T cachedObject = numberCache.get(number);
 		if (cachedObject != null)
@@ -60,7 +60,14 @@ public abstract class AbstractHasNumberJsonLoader<T extends HasId & HasNumber> e
 			final Map<String, String> errorMap = e.getErrorMap();
 
 			if (errorMap.containsKey(ErrorMessages.No_object_found_for_number.getErrorString()))
+			{
+
+				LOGGER.warn(ErrorMessages.No_object_found_for_number.getErrorString() + ": " +
+					number + " TYPE: " + getDataType());
+
 				return null;
+
+			}
 			else
 			{
 				LOGGER.error(getDataType() + " could not be downloaded");
@@ -107,7 +114,7 @@ public abstract class AbstractHasNumberJsonLoader<T extends HasId & HasNumber> e
 
 	@Override
 	public T post(final T obj) throws ApiNotReachableException, JSONException, ParseException,
-	KoronaCloudAPIErrorMessageException, InvalidTokenException
+		KoronaCloudAPIErrorMessageException, InvalidTokenException
 
 	{
 // if (obj == null || (obj.getNumber() == null && obj.getId() == null))

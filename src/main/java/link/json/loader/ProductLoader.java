@@ -31,7 +31,7 @@ public class ProductLoader extends AbstractHasNameJsonLoader<Product>
 	public List<Product> postList(final List<? extends Product> objs, final int limit,
 		final int threads) throws JSONException, ParseException, ApiNotReachableException,
 		KoronaCloudAPIErrorMessageException, InvalidTokenException
-	{
+		{
 
 		try
 		{
@@ -50,11 +50,11 @@ public class ProductLoader extends AbstractHasNameJsonLoader<Product>
 			throw new KoronaCloudAPIErrorMessageException(e, e.getErrorMap());
 
 		}
-	}
+		}
 
 	@Override
 	public Product post(final Product obj) throws ApiNotReachableException, JSONException,
-	ParseException, InvalidTokenException, KoronaCloudAPIErrorMessageException
+		ParseException, InvalidTokenException, KoronaCloudAPIErrorMessageException
 	{
 
 		try
@@ -93,8 +93,19 @@ public class ProductLoader extends AbstractHasNameJsonLoader<Product>
 		return product;
 	}
 
+	/**
+	 * Returns Product referenced by code or null if there is no product referenced by this code.
+	 * 
+	 * @param code
+	 * @return Product
+	 * @throws ApiNotReachableException
+	 * @throws JSONException
+	 * @throws ParseException
+	 * @throws KoronaCloudAPIErrorMessageException
+	 * @throws InvalidTokenException
+	 */
 	public Product downloadByCode(final String code) throws ApiNotReachableException,
-		JSONException, ParseException, KoronaCloudAPIErrorMessageException, InvalidTokenException
+	JSONException, ParseException, KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 
 		final Product cachedObject = codeCache.get(code);
@@ -115,8 +126,15 @@ public class ProductLoader extends AbstractHasNameJsonLoader<Product>
 
 			final Map<String, String> errrorMap = e.getErrorMap();
 
-			if (errrorMap.containsKey("No object found for code"))
+			if (errrorMap.containsKey(ErrorMessages.No_product_found_for_code.getErrorString()))
+			{
+
+				LOGGER.warn(ErrorMessages.No_product_found_for_code.getErrorString() + ": " + code +
+					" TYPE: " + getDataType());
+
 				return null;
+
+			}
 			else
 				throw new KoronaCloudAPIErrorMessageException(e, errrorMap);
 
