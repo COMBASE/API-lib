@@ -2,22 +2,13 @@ package link.json;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import link.CloudLink;
-import link.thread.PostListThread;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
@@ -401,111 +392,44 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	 * @throws InterruptedException
 	 */
 	public List<T> postList(final List<? extends T> objs, final int limit, final int threads)
-		throws JSONException, ParseException, ApiNotReachableException,
-		KoronaCloudAPIErrorMessageException, InvalidTokenException
+		throws KoronaCloudAPIErrorMessageException, InvalidTokenException, JSONException,
+		ParseException, ApiNotReachableException
+	{
+
+		if (objs == null || objs.size() == 0)
+			return null;
+
+		final JSONArray jsonObjs = new JSONArray();
+
+		for (final T t : objs)
 		{
 
-		final Date date1 = new Date();
-		LOGGER.info("start: " + date1);
-
-		JSONArray jArray = new JSONArray();
-
-		final ExecutorService exec = Executors.newFixedThreadPool(threads);
-
-		final Set<Future<String>> set = new HashSet<Future<String>>();
-
-		int offset = 0;
-		int i = 0;
-
-		if (objs.size() == 0)
-			LOGGER.info("NO OBJECTS POSTED");
-		else
-			LOGGER.info("posting " + objs.size() + " " + getDataType() + "s");
-
-
-		while (i < objs.size())
-		{
-			jArray = new JSONArray();
-			offset = offset + limit;
-			while (i < offset && i < objs.size())
-			{
-				final T obj = objs.get(i);
-
-				jArray.put(toJSON(obj));
-
-				i++;
-			}
-
-			final Callable<String> callable = new PostListThread(getDataType(), jArray);
-
-			final Future<String> future = exec.submit(callable);
-			set.add(future);
-
-
-// final String responseJsonString = CloudLink.getConnector().postData(getDataType(),
-// jArray);
-//
-// final JSONObject responseJson = new JSONObject(responseJsonString);
-//
-// if (responseJson.has("resultList") && !responseJson.isNull("resultList"))
-// {
-// final JSONArray jsonArray = responseJson.getJSONArray("resultList");
-// for (int j = 0; j < jsonArray.length(); j++)
-// {
-// final T obj = fromJSON(jsonArray.getJSONObject(j));
-// objects.add(obj);
-// }
-// }
-
+			jsonObjs.put(toJSON(t));
 
 		}
 
-		final List<T> objects = new ArrayList<T>();
-		for (final Future<String> future : set)
+		final JSONArray result = CloudLink.getConnector().postData(getDataType(), jsonObjs, limit,
+			threads);
+
+		List<T> ret = null;
+
+		for (int i = 0; result.length() < i; i++)
 		{
-			JSONObject jsonObject;
-			try
-			{
-				jsonObject = new JSONObject(future.get());
 
+			final JSONObject resultObj = result.getJSONObject(i);
 
-				if (jsonObject.has("resultList") && !jsonObject.isNull("resultList"))
-				{
-					final JSONArray jsonArray = jsonObject.getJSONArray("resultList");
-					for (int j = 0; j < jsonArray.length(); j++)
-					{
-						final T obj = fromJSON(jsonArray.getJSONObject(j));
-						objects.add(obj);
-					}
-				}
+			final T obj = fromJSON(resultObj);
 
-				exec.shutdown();
+			if (ret == null)
+				ret = new ArrayList<>();
 
-			}
-			catch (final CancellationException e)
-			{
-				System.out.println("exception3");
-				e.printStackTrace();
-			}
-			catch (final InterruptedException e)
-			{
-				System.out.println("exception1");
-				e.printStackTrace();
-			}
-			catch (final ExecutionException e)
-			{
-				System.out.println("exception2");
-				e.printStackTrace();
-			}
+			ret.add(obj);
+
 		}
 
-		final Date date2 = new Date();
-		LOGGER.info("end: " + date2);
+		return ret;
 
-		updateCache(objects);
-
-		return objects;
-		}
+	}
 
 	/**
 	 * recursive helper method for downloadByOffset
@@ -599,5 +523,88 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 		return ret;
 	}
 
+	/**
+	 *
+	 * @param responseJson
+	 * @throws JSONException
+	 * @throws KoronaCloudAPIErrorMessageException
+	 * @throws InvalidTokenException
+	 * @throws ArticleCodeMustBeUniqueException
+	 */
+	private void interpretResponse(final JSONObject responseJson) throws JSONException,
+	KoronaCloudAPIErrorMessageException, InvalidTokenException
+	{
+
+		try
+		{
+			// Invalid Token
+			if (!responseJson.isNull("error"))
+			{
+
+				final String errorStr = responseJson.getString("error");
+
+				if (errorStr.equalsIgnoreCase(ErrorMessages.Invalid_Token.getErrorString()))
+					throw new InvalidTokenException(null);
+
+				else
+				{
+
+					final Map<String, String> errorMap = new HashMap<String, String>();
+
+					final String[] errorMapping = errorStr.split(":");
+
+					if (errorMapping.length == 1)
+						errorMap.put(errorMapping[0],
+							"KORONA.CLOUD.API haven't returned any values corresponding to this error key");
+					else
+						errorMap.put(errorMapping[0], errorMapping[1]);
+
+					throw new KoronaCloudAPIErrorMessageException(null, errorMap);
+
+				}
+
+			}
+
+			// API Exception Handling
+			if (!responseJson.isNull("errorList"))
+			{
+				final JSONArray errorList = responseJson.getJSONArray("errorList");
+
+				// contains all error objects
+				final Map<String, String> errorMap = new HashMap<String, String>();
+
+				for (int i = 0; i < errorList.length(); i++)
+				{
+
+					final String[] errorMapping = errorList.getString(i).split(":");
+
+					if (errorMap.containsKey(errorMapping[0]))
+					{
+
+						final String errorValue = errorMap.get(errorMapping[0]);
+
+						errorMap.put(errorMapping[0], errorValue + ", " + errorMapping[1]);
+
+					}
+					else
+						errorMap.put(errorMapping[0], errorMapping[1]);
+
+
+					if (errorMap.containsKey("Invalid Token"))
+						throw new InvalidTokenException(null);
+
+				}
+
+				throw new KoronaCloudAPIErrorMessageException(null, errorMap);
+
+			}
+		}
+		catch (final JSONException e)
+		{
+			LOGGER.error("missing error or errorList key: " + responseJson.toString(), e);
+		}
+
+
+	}
 
 }

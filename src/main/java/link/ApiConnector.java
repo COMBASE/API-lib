@@ -10,12 +10,22 @@ import java.net.URL;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+
+import link.thread.PostListThread;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
@@ -95,7 +105,7 @@ public class ApiConnector
 			url = cloudURL + slash + refType.getType() + "/" + reference;
 		else
 			url = cloudURL + slash + token + "/" + type.getReference() + "/" + refType.getType() +
-			"/" + reference;
+				"/" + reference;
 
 		HttpURLConnection con = null;
 
@@ -169,7 +179,7 @@ public class ApiConnector
 	 * @throws ArticleCodeMustBeUniqueException
 	 */
 	private void interpretResponse(final JSONObject responseJson) throws JSONException,
-	KoronaCloudAPIErrorMessageException, InvalidTokenException
+		KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 
 		try
@@ -207,11 +217,16 @@ public class ApiConnector
 			{
 				final JSONArray errorList = responseJson.getJSONArray("errorList");
 
+
 				// contains all error objects
 				final Map<String, String> errorMap = new HashMap<String, String>();
 
 				for (int i = 0; i < errorList.length(); i++)
 				{
+
+					if (errorList.getString(i).equalsIgnoreCase(
+						ErrorMessages.Invalid_Token.getErrorString()))
+						throw new InvalidTokenException(null);
 
 					final String[] errorMapping = errorList.getString(i).split(":");
 
@@ -252,103 +267,103 @@ public class ApiConnector
 	 * @return
 	 * @throws KoronaCloudAPIErrorMessageException
 	 * @throws InvalidTokenException
+	 * @throws ApiNotReachableException
 	 */
-	public String postData(final DataType type, final JSONArray obj)
-		throws KoronaCloudAPIErrorMessageException, InvalidTokenException
+	public JSONArray postData(final DataType type, final JSONArray obj, final int limit,
+		final int threads) throws KoronaCloudAPIErrorMessageException, InvalidTokenException,
+		ApiNotReachableException
 
 	{
-		String slash = "";
-		if (!cloudURL.endsWith("/"))
-			slash = "/";
-		final String url = cloudURL + slash + token + "/" + type.getReference() + "/saveAll/";
-		try
+
+		final ExecutorService exec = Executors.newFixedThreadPool(threads);
+
+		final Set<Future<String>> set = new HashSet<Future<String>>();
+
+		int offset = 0;
+
+		int i = 0;
+
+		if (obj.length() == 0)
+			LOGGER.info("NO OBJECTS POSTED");
+		else
+			LOGGER.info("posting " + obj.length() + " " + type + "s");
+
+		while (i < obj.length())
 		{
-			final URL posturl = new URL(url);
-			HttpURLConnection con;
-			if (cloudURL.contains("https"))
-			{
-				setupConnection();
-				con = (HttpsURLConnection)posturl.openConnection();
-			}
-			else
-			{
-				con = (HttpURLConnection)posturl.openConnection();
-			}
-			con.setRequestMethod("POST");
-			con.setDoOutput(true);
-			con.setConnectTimeout(3000000);
-			con.setReadTimeout(3000000);
-			con.setUseCaches(false);
-			con.setRequestProperty("Content-Type", "application/json");
-			con.connect();
 
-			final OutputStream out = con.getOutputStream();
-			final OutputStreamWriter wr = new OutputStreamWriter(out, "UTF-8");
-			wr.write(obj.toString());
-			wr.flush();
-			wr.close();
-			if (out != null)
-				out.close();
-			if (con.getResponseCode() == 200)
+			final JSONArray threadedJson = new JSONArray();
+
+			offset = offset + limit;
+
+			while (i < offset && i < obj.length())
 			{
-				final BufferedReader in = new BufferedReader(new InputStreamReader(
-					con.getInputStream(), "UTF-8"));
-				String inputLine;
-				final StringBuilder response = new StringBuilder();
-				while ((inputLine = in.readLine()) != null)
-				{
-					response.append(inputLine);
-				}
-				in.close();
-				LOGGER.info("APICON:POST -> Type:" + type.getReference());
-				con.disconnect(); // Disconnect
-
-
 				try
 				{
 
-					final JSONObject responseJson = new JSONObject(response.toString());
-
-
-					interpretResponse(responseJson);
-
+					threadedJson.put(obj.get(i));
 
 				}
 				catch (final JSONException e)
 				{
-					LOGGER.error("Could not interpret responseMessage from API! Malformed JSON syntax: " +
-						response.toString());
+
+					LOGGER.error("could not split JSONArray into threads", e);
+
 				}
 
+				i++;
 
-				return response.toString();
 			}
 
-			// ErrorCode 400 handling
-			else
-			{
-				final BufferedReader in = new BufferedReader(new InputStreamReader(
-					con.getInputStream(), "UTF-8"));
-				String inputLine;
-				final StringBuilder response = new StringBuilder();
-				while ((inputLine = in.readLine()) != null)
-				{
-					response.append(inputLine);
-				}
-				in.close();
+			final Callable<String> callable = new PostListThread(cloudURL, token, type, obj);
 
-				LOGGER.error("APICON:FAILED POST -> Type:" + type.getReference());
+			final Future<String> future = exec.submit(callable);
 
-				con.disconnect(); // Disconnect
-				LOGGER.error(con.getResponseCode());
-				return response.toString();
-			}
+			set.add(future);
+
 		}
-		catch (final IOException e)
+		JSONArray ret = null;
+		for (final Future<String> future : set)
 		{
-			LOGGER.error(type.toString() + obj.toString(), e);
-			return null;
+			JSONObject jsonObject;
+			try
+			{
+
+				final String jsonStr = future.get();
+
+				jsonObject = new JSONObject(jsonStr);
+
+				interpretResponse(jsonObject);
+
+				if (jsonObject.has("resultList") && !jsonObject.isNull("resultList"))
+				{
+					ret = jsonObject.getJSONArray("resultList");
+
+				}
+
+				exec.shutdown();
+
+			}
+			catch (final JSONException e)
+			{
+				LOGGER.error("Could not interpret KORONA.CLOUD.API response message", e);
+			}
+			catch (final CancellationException e)
+			{
+				LOGGER.error(e);
+			}
+			catch (final InterruptedException e)
+			{
+				LOGGER.error(e);
+			}
+			catch (final ExecutionException e)
+			{
+				throw new ApiNotReachableException(cloudURL, e.getCause());
+			}
+
 		}
+
+		return ret;
+
 	}
 
 	/**

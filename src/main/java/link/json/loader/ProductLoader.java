@@ -29,8 +29,8 @@ public class ProductLoader extends AbstractHasNameJsonLoader<Product>
 
 	@Override
 	public List<Product> postList(final List<? extends Product> objs, final int limit,
-		final int threads) throws JSONException, ParseException, ApiNotReachableException,
-		KoronaCloudAPIErrorMessageException, InvalidTokenException
+		final int threads) throws JSONException, ParseException,
+		KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException
 	{
 
 		try

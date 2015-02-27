@@ -21,7 +21,7 @@ public class KoronaCloudAPIErrorMessageException extends Exception
 
 	/**
 	 * returns a Map containing the error message as key and concerned items as value.
-	 * 
+	 *
 	 * @return Map<String,String>
 	 */
 	public Map<String, String> getErrorMap()
