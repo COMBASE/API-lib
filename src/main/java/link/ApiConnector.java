@@ -105,7 +105,7 @@ public class ApiConnector
 			url = cloudURL + slash + refType.getType() + "/" + reference;
 		else
 			url = cloudURL + slash + token + "/" + type.getReference() + "/" + refType.getType() +
-			"/" + reference;
+				"/" + reference;
 
 		HttpURLConnection con = null;
 
@@ -179,7 +179,7 @@ public class ApiConnector
 	 * @throws ArticleCodeMustBeUniqueException
 	 */
 	private void interpretResponse(final JSONObject responseJson) throws JSONException,
-	KoronaCloudAPIErrorMessageException, InvalidTokenException
+		KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 
 		try
@@ -356,7 +356,8 @@ public class ApiConnector
 			}
 			catch (final ExecutionException e)
 			{
-				throw new ApiNotReachableException(cloudURL, e.getCause());
+				if (e.getCause() instanceof ApiNotReachableException)
+					throw new ApiNotReachableException(cloudURL, e.getCause());
 			}
 
 		}
