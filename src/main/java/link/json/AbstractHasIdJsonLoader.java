@@ -123,9 +123,8 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	public JSONArray downloadAllExisting() throws ApiNotReachableException,
 		KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
-		final String jStr = cloudLink.getJSONPageByOffset(getDataType(), limit, 0);
-		JSONArray jArray = createJsonArray(jStr);
-		jArray = downloadExistingJSONArrayBuilder(jArray, limit, limit);
+		JSONArray jArray = new JSONArray();
+		jArray = downloadExistingJSONArrayBuilder(jArray, 0, limit);
 
 		return jArray;
 	}
@@ -301,7 +300,8 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 				final JSONArray newStuffArray = newStuff.getJSONArray("resultList");
 				for (int i = 0; i <= newStuffArray.length() - 1; i++)
 					jArray.put(newStuffArray.getJSONObject(i));
-				jArray = downloadExistingJSONArrayBuilder(jArray, offset + limit, limit);
+				if (newStuff.length() >= limit)
+					jArray = downloadExistingJSONArrayBuilder(jArray, offset + limit, limit);
 
 			}
 		}
