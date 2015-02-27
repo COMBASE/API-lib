@@ -102,7 +102,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	 * @throws JSONException
 	 */
 	public JSONArray downloadAllByOffset(final long revision) throws ApiNotReachableException,
-		KoronaCloudAPIErrorMessageException, InvalidTokenException
+	KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		final String jStr = cloudLink.getJSONByOffset(getDataType(), Long.toString(revision),
 			limit, 0);
@@ -120,7 +120,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	 * @throws KoronaCloudAPIErrorMessageException
 	 */
 	public JSONArray downloadAllExisting() throws ApiNotReachableException,
-	KoronaCloudAPIErrorMessageException, InvalidTokenException
+		KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		JSONArray jArray = new JSONArray();
 		jArray = downloadExistingJSONArrayBuilder(jArray, 0, limit);
@@ -145,7 +145,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	 * @throws JSONException
 	 */
 	public JSONArray downloadByOffset(final long revision) throws ApiNotReachableException,
-		KoronaCloudAPIErrorMessageException, InvalidTokenException
+	KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		final String jStr = cloudLink.getJSONByOffset(getDataType(), Long.toString(revision),
 			limit, offset);
@@ -193,7 +193,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	 * @throws KoronaCloudAPIErrorMessageException
 	 */
 	public JSONArray downloadByRevision(final long revision) throws ApiNotReachableException,
-		KoronaCloudAPIErrorMessageException, InvalidTokenException
+	KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		final String jStr = cloudLink.getJSONByRevision(getDataType(), Long.toString(revision));
 		final JSONArray jArray = createJsonArray(jStr);
@@ -212,7 +212,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	 * @throws KoronaCloudAPIErrorMessageException
 	 */
 	public T downloadByUUID(final String uuid) throws ApiNotReachableException, ParseException,
-		KoronaCloudAPIErrorMessageException, InvalidTokenException
+	KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 
 		final T cachedObject = idCache.get(uuid);
@@ -346,7 +346,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	}
 
 	public Iterator<JSONObject> iterator(final long revision) throws ApiNotReachableException,
-	JSONException, KoronaCloudAPIErrorMessageException, InvalidTokenException
+		JSONException, KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		return new CloudResultIterator(this, revision);
 	}
@@ -367,7 +367,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	 * @throws PostWithNoReferenceSetException
 	 */
 	public T post(final T obj) throws ApiNotReachableException, JSONException, ParseException,
-	KoronaCloudAPIErrorMessageException, InvalidTokenException
+		KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 // if (obj == null || obj.getId() == null)
 // throw new PostWithNoReferenceSetException(null);
@@ -394,7 +394,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	public List<T> postList(final List<? extends T> objs, final int limit, final int threads)
 		throws KoronaCloudAPIErrorMessageException, InvalidTokenException, JSONException,
 		ParseException, ApiNotReachableException
-	{
+		{
 
 		if (objs == null || objs.size() == 0)
 			return null;
@@ -413,23 +413,24 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 
 		List<T> ret = null;
 
-		for (int i = 0; result.length() < i; i++)
-		{
+		if (result != null)
+			for (int i = 0; result.length() < i; i++)
+			{
 
-			final JSONObject resultObj = result.getJSONObject(i);
+				final JSONObject resultObj = result.getJSONObject(i);
 
-			final T obj = fromJSON(resultObj);
+				final T obj = fromJSON(resultObj);
 
-			if (ret == null)
-				ret = new ArrayList<>();
+				if (ret == null)
+					ret = new ArrayList<>();
 
-			ret.add(obj);
+				ret.add(obj);
 
-		}
+			}
 
 		return ret;
 
-	}
+		}
 
 	/**
 	 * recursive helper method for downloadByOffset
@@ -495,7 +496,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	}
 
 	protected T upload(final T obj) throws JSONException, ParseException,
-		KoronaCloudAPIErrorMessageException, InvalidTokenException
+	KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		updateCache(obj);
 
@@ -532,7 +533,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	 * @throws ArticleCodeMustBeUniqueException
 	 */
 	private void interpretResponse(final JSONObject responseJson) throws JSONException,
-	KoronaCloudAPIErrorMessageException, InvalidTokenException
+		KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 
 		try
