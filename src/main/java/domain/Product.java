@@ -25,12 +25,12 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 	}
 
 	protected static abstract class Init<T extends Init<T>> extends
-		AbstractNameAndNumberApiObject.Init<T>
+	AbstractNameAndNumberApiObject.Init<T>
 
 	{
 		private Boolean activeAssortment = null;
 		private Date activeAssortmentFrom = null;
-		private int costs = 0;
+		private Integer costs = null;
 		private Boolean discountable = null;
 		private Boolean priceChangeable = null;
 		private BigDecimal basePriceMax = new BigDecimal(String.valueOf("9999.99"));
@@ -342,7 +342,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 	private static final long serialVersionUID = -4259851643720605829L;
 	private Boolean activeAssortment;
 	private Date activeAssortmentFrom;
-	private int costs;
+	private Integer costs;
 	private Boolean discountable;
 	private Boolean priceChangeable;
 	private BigDecimal basePriceMax;
@@ -418,8 +418,154 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 	@Override
 	public boolean equals(final Object obj)
 	{
-
-		return obj.hashCode() == this.hashCode();
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final Product other = (Product)obj;
+		if (activeAssortment == null)
+		{
+			if (other.activeAssortment != null)
+				return false;
+		}
+		else if (!activeAssortment.equals(other.activeAssortment))
+			return false;
+		if (activeAssortmentFrom == null)
+		{
+			if (other.activeAssortmentFrom != null)
+				return false;
+		}
+		else if (!activeAssortmentFrom.equals(other.activeAssortmentFrom))
+			return false;
+		if (altsector == null)
+		{
+			if (other.altsector != null)
+				return false;
+		}
+		else if (!altsector.equals(other.altsector))
+			return false;
+		if (assortment == null)
+		{
+			if (other.assortment != null)
+				return false;
+		}
+		else if (!assortment.equals(other.assortment))
+			return false;
+		if (basePriceMax == null)
+		{
+			if (other.basePriceMax != null)
+				return false;
+		}
+		else if (!basePriceMax.equals(other.basePriceMax))
+			return false;
+		if (basePriceMin == null)
+		{
+			if (other.basePriceMin != null)
+				return false;
+		}
+		else if (!basePriceMin.equals(other.basePriceMin))
+			return false;
+		if (codes == null)
+		{
+			if (other.codes != null)
+				return false;
+		}
+		else if (!codes.equals(other.codes))
+			return false;
+		if (commodityGroup == null)
+		{
+			if (other.commodityGroup != null)
+				return false;
+		}
+		else if (!commodityGroup.equals(other.commodityGroup))
+			return false;
+		if (costs == null)
+		{
+			if (other.costs != null)
+				return false;
+		}
+		else if (!costs.equals(other.costs))
+			return false;
+		if (discountable == null)
+		{
+			if (other.discountable != null)
+				return false;
+		}
+		else if (!discountable.equals(other.discountable))
+			return false;
+		if (packaging == null)
+		{
+			if (other.packaging != null)
+				return false;
+		}
+		else if (!packaging.equals(other.packaging))
+			return false;
+		if (preparationArticle == null)
+		{
+			if (other.preparationArticle != null)
+				return false;
+		}
+		else if (!preparationArticle.equals(other.preparationArticle))
+			return false;
+		if (priceChangeable == null)
+		{
+			if (other.priceChangeable != null)
+				return false;
+		}
+		else if (!priceChangeable.equals(other.priceChangeable))
+			return false;
+		if (prices == null)
+		{
+			if (other.prices != null)
+				return false;
+		}
+		else if (!prices.equals(other.prices))
+			return false;
+		if (requiresSerialNumber == null)
+		{
+			if (other.requiresSerialNumber != null)
+				return false;
+		}
+		else if (!requiresSerialNumber.equals(other.requiresSerialNumber))
+			return false;
+		if (sector == null)
+		{
+			if (other.sector != null)
+				return false;
+		}
+		else if (!sector.equals(other.sector))
+			return false;
+		if (supplierItemPrices == null)
+		{
+			if (other.supplierItemPrices != null)
+				return false;
+		}
+		else if (!supplierItemPrices.equals(other.supplierItemPrices))
+			return false;
+		if (tags == null)
+		{
+			if (other.tags != null)
+				return false;
+		}
+		else if (!tags.equals(other.tags))
+			return false;
+		if (texts == null)
+		{
+			if (other.texts != null)
+				return false;
+		}
+		else if (!texts.equals(other.texts))
+			return false;
+		if (trackInventory == null)
+		{
+			if (other.trackInventory != null)
+				return false;
+		}
+		else if (!trackInventory.equals(other.trackInventory))
+			return false;
+		return true;
 	}
 
 	public Date getActiveAssortmentFrom()
@@ -451,7 +597,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 	{
 		if (codes == null)
 			codes = new ArrayList<Product_Code>();
-		return codes;
+			return codes;
 	}
 
 	public CommodityGroup getCommodityGroup()
@@ -509,18 +655,30 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 	{
 		final int prime = 31;
 		int result = 1;
-
-		result = super.hashCode(result);
-		result = prime * result + ((this.altsector == null) ? 0 : this.altsector.hashCode());
-		result = prime * result + ((this.assortment == null) ? 0 : this.assortment.hashCode());
-		result = prime * result + ((this.codes == null) ? 0 : this.codes.hashCode());
+		result = prime * result + ((activeAssortment == null) ? 0 : activeAssortment.hashCode());
 		result = prime * result +
-			((this.commodityGroup == null) ? 0 : this.commodityGroup.hashCode());
-		// result = prime * result + ((this.prices == null) ? 0 :
-		// this.prices.hashCode());
-		result = prime * result + ((this.sector == null) ? 0 : this.sector.hashCode());
-		result = prime * result + ((this.tags == null) ? 0 : this.tags.hashCode());
-
+			((activeAssortmentFrom == null) ? 0 : activeAssortmentFrom.hashCode());
+		result = prime * result + ((altsector == null) ? 0 : altsector.hashCode());
+		result = prime * result + ((assortment == null) ? 0 : assortment.hashCode());
+		result = prime * result + ((basePriceMax == null) ? 0 : basePriceMax.hashCode());
+		result = prime * result + ((basePriceMin == null) ? 0 : basePriceMin.hashCode());
+		result = prime * result + ((codes == null) ? 0 : codes.hashCode());
+		result = prime * result + ((commodityGroup == null) ? 0 : commodityGroup.hashCode());
+		result = prime * result + ((costs == null) ? 0 : costs.hashCode());
+		result = prime * result + ((discountable == null) ? 0 : discountable.hashCode());
+		result = prime * result + ((packaging == null) ? 0 : packaging.hashCode());
+		result = prime * result +
+			((preparationArticle == null) ? 0 : preparationArticle.hashCode());
+		result = prime * result + ((priceChangeable == null) ? 0 : priceChangeable.hashCode());
+		result = prime * result + ((prices == null) ? 0 : prices.hashCode());
+		result = prime * result +
+			((requiresSerialNumber == null) ? 0 : requiresSerialNumber.hashCode());
+		result = prime * result + ((sector == null) ? 0 : sector.hashCode());
+		result = prime * result +
+			((supplierItemPrices == null) ? 0 : supplierItemPrices.hashCode());
+		result = prime * result + ((tags == null) ? 0 : tags.hashCode());
+		result = prime * result + ((texts == null) ? 0 : texts.hashCode());
+		result = prime * result + ((trackInventory == null) ? 0 : trackInventory.hashCode());
 		return result;
 	}
 

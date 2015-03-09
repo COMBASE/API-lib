@@ -169,7 +169,7 @@ public class PostListThread implements Callable<String>
 		}
 		catch (final IOException e)
 		{
-			// LOGGER.error(type.toString() + obj.toString(), e);
+			LOGGER.error(type.toString() + obj.toString(), e);
 			throw new ApiNotReachableException(url, null);
 		}
 	}

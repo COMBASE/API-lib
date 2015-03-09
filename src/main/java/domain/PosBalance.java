@@ -111,13 +111,19 @@ public class PosBalance extends AbstractApiObject<PosBalance>
 			obj = obj.getJSONObject("result");
 
 		final Collection<ItemSummary> itemSummaryObjs = new ArrayList<ItemSummary>();
-		final JSONArray itemSummaries = obj.getJSONArray("itemSummaries");
 
-		for (int i = 0; i <= itemSummaries.length() - 1; i++)
+		JSONArray itemSummaries = null;
+		if (!obj.isNull("itemSummaries"))
 		{
-			final JSONObject itemSummary = itemSummaries.getJSONObject(i);
-			final ItemSummary itemSummaryObj = ItemSummary.fromJSON(itemSummary);
-			itemSummaryObjs.add(itemSummaryObj);
+			itemSummaries = obj.getJSONArray("itemSummaries");
+
+
+			for (int i = 0; i <= itemSummaries.length() - 1; i++)
+			{
+				final JSONObject itemSummary = itemSummaries.getJSONObject(i);
+				final ItemSummary itemSummaryObj = ItemSummary.fromJSON(itemSummary);
+				itemSummaryObjs.add(itemSummaryObj);
+			}
 		}
 
 		final POS pos = new POS.Builder().id(obj.getString("pos")).build();
@@ -161,13 +167,13 @@ public class PosBalance extends AbstractApiObject<PosBalance>
 	private Date createTime;
 	private Date finishTime;
 	private Collection<ItemSummary> itemSummaries;
-	private int balanceAttempts;
+	private Integer balanceAttempts;
 
-	private double expectedTotal;
+	private Double expectedTotal;
 
-	private double actualTotal;
+	private Double actualTotal;
 
-	private int zCount;
+	private Integer zCount;
 
 	public PosBalance(final Init<?> init)
 	{

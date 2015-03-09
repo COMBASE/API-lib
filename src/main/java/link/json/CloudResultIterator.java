@@ -99,9 +99,19 @@ public class CloudResultIterator implements Iterator<JSONObject>
 	}
 
 	private void refreshBuffer() throws ApiNotReachableException, JSONException,
-	KoronaCloudAPIErrorMessageException, InvalidTokenException
+		KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
-		buffer = downloader.downloadByOffset(revision);
+		try
+		{
+			buffer = downloader.downloadByOffset(revision);
+		}
+		catch (final KoronaCloudAPIErrorMessageException e)
+		{
+			if (e.getErrorMap().containsKey("No receipts found for the revision"))
+				buffer = null;
+			else
+				throw new KoronaCloudAPIErrorMessageException(e, e.getErrorMap());
+		}
 		currentBufferIndex = -1;
 		if (buffer == null)
 			emptyData = true;

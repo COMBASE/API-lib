@@ -387,7 +387,7 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 		return taxAmount;
 	}
 
-	public boolean getVoided()
+	public Boolean getVoided()
 	{
 		return voided;
 	}
