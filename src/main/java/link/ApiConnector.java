@@ -138,7 +138,7 @@ public class ApiConnector
 			in.close();
 			if (con.getResponseCode() == 200)
 			{
-				LOGGER.info("APICON:GET -> Type:" + type.getReference() + " JSON=" + obj.toString());
+				LOGGER.debug("APICON:GET -> Type:" + type.getReference() + " JSON=" + obj.toString());
 
 				try
 				{
@@ -152,7 +152,7 @@ public class ApiConnector
 			}
 			else
 			{
-				LOGGER.error("ERR: APICON:GET -> Type:" + type.getReference() + " JSON=" +
+				LOGGER.debug("ERR: APICON:GET -> Type:" + type.getReference() + " JSON=" +
 					obj.toString());
 				LOGGER.error(con.getResponseMessage() + ":" + con.getResponseCode());
 
@@ -254,7 +254,7 @@ public class ApiConnector
 		}
 		catch (final JSONException e)
 		{
-			LOGGER.error("missing error or errorList key: " + responseJson.toString(), e);
+			LOGGER.error("Missing error or errorList key: " + responseJson.toString(), e);
 		}
 
 

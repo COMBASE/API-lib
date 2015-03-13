@@ -25,7 +25,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 	}
 
 	protected static abstract class Init<T extends Init<T>> extends
-	AbstractNameAndNumberApiObject.Init<T>
+			AbstractNameAndNumberApiObject.Init<T>
 
 	{
 		private Boolean activeAssortment = null;
@@ -242,19 +242,14 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 			altSector.setId(obj.getString("alternativeSector"));
 
 		final CommodityGroup commodityGroup = new CommodityGroup.Builder().id(
-			obj.getString("commodityGroup")).build();
+				obj.getString("commodityGroup")).build();
 
 		final Product prod = new Product.Builder().name(obj.getString("name"))
-			.id(obj.getString("uuid"))
-			.sector(sector)
-			.deleted(obj.getBoolean("deleted"))
-			.altsector(altSector)
-			.revision(obj.getLong("revision"))
-			.commodityGroup(commodityGroup)
-			.assortment(assortment)
-			.preparationArticle(obj.getBoolean("preparationArticle"))
-			.packaging(obj.getBoolean("packaging"))
-			.build();
+				.id(obj.getString("uuid")).sector(sector).deleted(obj.getBoolean("deleted"))
+				.altsector(altSector).revision(obj.getLong("revision"))
+				.commodityGroup(commodityGroup).assortment(assortment)
+				.preparationArticle(obj.getBoolean("preparationArticle"))
+				.packaging(obj.getBoolean("packaging")).build();
 
 		if (obj.has("number"))
 			prod.setNumber(obj.getString("number"));
@@ -268,7 +263,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 			Product_Code productCode = null;
 			for (int i = 0; i <= jACode.length() - 1; i++)
 			{
-				jCode = (JSONObject)jACode.get(i);
+				jCode = (JSONObject) jACode.get(i);
 				final BigDecimal quantity = new BigDecimal(jCode.getDouble("quantity"));
 				if (!jCode.isNull("code"))
 				{
@@ -297,7 +292,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 					for (int j = 0; j < possibleTypes.length; j++)
 					{
 						if (possibleTypes[j].getReference().equalsIgnoreCase(
-							jText.getString("type")))
+								jText.getString("type")))
 						{
 							type = possibleTypes[j];
 							break;
@@ -322,16 +317,14 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 
 				final BigDecimal value = new BigDecimal(jPrice.getDouble("value"));
 				final Pricelist pricelist = new Pricelist.Builder().id(
-					jPrice.getString("priceList")).build();
+						jPrice.getString("priceList")).build();
 				if (!jPrice.isNull("organizationalUnit"))
 				{
-					final OrganizationalUnit organizationalUnit = new OrganizationalUnit.Builder().id(
-						jPrice.getString("organizationalUnit"))
-						.build();
+					final OrganizationalUnit organizationalUnit = new OrganizationalUnit.Builder()
+							.id(jPrice.getString("organizationalUnit")).build();
 
 					prices.add(new Price(organizationalUnit, value));
-				}
-				else
+				} else
 					prices.add(new Price(pricelist, prepareDate(jPrice, "validFrom"), value));
 			}
 			prod.setPrices(prices);
@@ -424,146 +417,126 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		final Product other = (Product)obj;
+		final Product other = (Product) obj;
 		if (activeAssortment == null)
 		{
 			if (other.activeAssortment != null)
 				return false;
-		}
-		else if (!activeAssortment.equals(other.activeAssortment))
+		} else if (!activeAssortment.equals(other.activeAssortment))
 			return false;
 		if (activeAssortmentFrom == null)
 		{
 			if (other.activeAssortmentFrom != null)
 				return false;
-		}
-		else if (!activeAssortmentFrom.equals(other.activeAssortmentFrom))
+		} else if (!activeAssortmentFrom.equals(other.activeAssortmentFrom))
 			return false;
 		if (altsector == null)
 		{
 			if (other.altsector != null)
 				return false;
-		}
-		else if (!altsector.equals(other.altsector))
+		} else if (!altsector.equals(other.altsector))
 			return false;
 		if (assortment == null)
 		{
 			if (other.assortment != null)
 				return false;
-		}
-		else if (!assortment.equals(other.assortment))
+		} else if (!assortment.equals(other.assortment))
 			return false;
 		if (basePriceMax == null)
 		{
 			if (other.basePriceMax != null)
 				return false;
-		}
-		else if (!basePriceMax.equals(other.basePriceMax))
+		} else if (!basePriceMax.equals(other.basePriceMax))
 			return false;
 		if (basePriceMin == null)
 		{
 			if (other.basePriceMin != null)
 				return false;
-		}
-		else if (!basePriceMin.equals(other.basePriceMin))
+		} else if (!basePriceMin.equals(other.basePriceMin))
 			return false;
 		if (codes == null)
 		{
 			if (other.codes != null)
 				return false;
-		}
-		else if (!codes.equals(other.codes))
+		} else if (!codes.equals(other.codes))
 			return false;
 		if (commodityGroup == null)
 		{
 			if (other.commodityGroup != null)
 				return false;
-		}
-		else if (!commodityGroup.equals(other.commodityGroup))
+		} else if (!commodityGroup.equals(other.commodityGroup))
 			return false;
 		if (costs == null)
 		{
 			if (other.costs != null)
 				return false;
-		}
-		else if (!costs.equals(other.costs))
+		} else if (!costs.equals(other.costs))
 			return false;
 		if (discountable == null)
 		{
 			if (other.discountable != null)
 				return false;
-		}
-		else if (!discountable.equals(other.discountable))
+		} else if (!discountable.equals(other.discountable))
 			return false;
 		if (packaging == null)
 		{
 			if (other.packaging != null)
 				return false;
-		}
-		else if (!packaging.equals(other.packaging))
+		} else if (!packaging.equals(other.packaging))
 			return false;
 		if (preparationArticle == null)
 		{
 			if (other.preparationArticle != null)
 				return false;
-		}
-		else if (!preparationArticle.equals(other.preparationArticle))
+		} else if (!preparationArticle.equals(other.preparationArticle))
 			return false;
 		if (priceChangeable == null)
 		{
 			if (other.priceChangeable != null)
 				return false;
-		}
-		else if (!priceChangeable.equals(other.priceChangeable))
+		} else if (!priceChangeable.equals(other.priceChangeable))
 			return false;
 		if (prices == null)
 		{
 			if (other.prices != null)
 				return false;
-		}
-		else if (!prices.equals(other.prices))
+		} else if (!prices.equals(other.prices))
 			return false;
 		if (requiresSerialNumber == null)
 		{
 			if (other.requiresSerialNumber != null)
 				return false;
-		}
-		else if (!requiresSerialNumber.equals(other.requiresSerialNumber))
+		} else if (!requiresSerialNumber.equals(other.requiresSerialNumber))
 			return false;
 		if (sector == null)
 		{
 			if (other.sector != null)
 				return false;
-		}
-		else if (!sector.equals(other.sector))
+		} else if (!sector.equals(other.sector))
 			return false;
 		if (supplierItemPrices == null)
 		{
 			if (other.supplierItemPrices != null)
 				return false;
-		}
-		else if (!supplierItemPrices.equals(other.supplierItemPrices))
+		} else if (!supplierItemPrices.equals(other.supplierItemPrices))
 			return false;
 		if (tags == null)
 		{
 			if (other.tags != null)
 				return false;
-		}
-		else if (!tags.equals(other.tags))
+		} else if (!tags.equals(other.tags))
 			return false;
 		if (texts == null)
 		{
 			if (other.texts != null)
 				return false;
-		}
-		else if (!texts.equals(other.texts))
+		} else if (!texts.equals(other.texts))
 			return false;
 		if (trackInventory == null)
 		{
 			if (other.trackInventory != null)
 				return false;
-		}
-		else if (!trackInventory.equals(other.trackInventory))
+		} else if (!trackInventory.equals(other.trackInventory))
 			return false;
 		return true;
 	}
@@ -597,7 +570,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 	{
 		if (codes == null)
 			codes = new ArrayList<Product_Code>();
-			return codes;
+		return codes;
 	}
 
 	public CommodityGroup getCommodityGroup()
@@ -656,8 +629,8 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((activeAssortment == null) ? 0 : activeAssortment.hashCode());
-		result = prime * result +
-			((activeAssortmentFrom == null) ? 0 : activeAssortmentFrom.hashCode());
+		result = prime * result
+				+ ((activeAssortmentFrom == null) ? 0 : activeAssortmentFrom.hashCode());
 		result = prime * result + ((altsector == null) ? 0 : altsector.hashCode());
 		result = prime * result + ((assortment == null) ? 0 : assortment.hashCode());
 		result = prime * result + ((basePriceMax == null) ? 0 : basePriceMax.hashCode());
@@ -667,15 +640,15 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		result = prime * result + ((costs == null) ? 0 : costs.hashCode());
 		result = prime * result + ((discountable == null) ? 0 : discountable.hashCode());
 		result = prime * result + ((packaging == null) ? 0 : packaging.hashCode());
-		result = prime * result +
-			((preparationArticle == null) ? 0 : preparationArticle.hashCode());
+		result = prime * result
+				+ ((preparationArticle == null) ? 0 : preparationArticle.hashCode());
 		result = prime * result + ((priceChangeable == null) ? 0 : priceChangeable.hashCode());
 		result = prime * result + ((prices == null) ? 0 : prices.hashCode());
-		result = prime * result +
-			((requiresSerialNumber == null) ? 0 : requiresSerialNumber.hashCode());
+		result = prime * result
+				+ ((requiresSerialNumber == null) ? 0 : requiresSerialNumber.hashCode());
 		result = prime * result + ((sector == null) ? 0 : sector.hashCode());
-		result = prime * result +
-			((supplierItemPrices == null) ? 0 : supplierItemPrices.hashCode());
+		result = prime * result
+				+ ((supplierItemPrices == null) ? 0 : supplierItemPrices.hashCode());
 		result = prime * result + ((tags == null) ? 0 : tags.hashCode());
 		result = prime * result + ((texts == null) ? 0 : texts.hashCode());
 		result = prime * result + ((trackInventory == null) ? 0 : trackInventory.hashCode());
@@ -843,36 +816,39 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 			final JSONArray array = new JSONArray();
 			for (final SupplierItemPrice supplierItemPrice : supplierItemPrices)
 			{
-				array.put(supplierItemPrice.toJSON());
+				if (supplierItemPrice != null)
+					array.put(supplierItemPrice.toJSON());
 			}
 			obj.put("supplierItemPrices", array);
 		}
 
-		if (!prices.isEmpty())
+		if (prices != null && !prices.isEmpty())
 		{
 			final JSONArray array = new JSONArray();
 			for (final Price p : prices)
 			{
-				array.put(p.toJSON());
+				if (p != null)
+					array.put(p.toJSON());
 			}
 			obj.put("prices", array);
 		}
-		if (!codes.isEmpty())
+		if (codes != null && !codes.isEmpty())
 		{
 			final JSONArray array = new JSONArray();
 			for (final Product_Code code : codes)
 			{
-				if (!code.getCode().equalsIgnoreCase(""))
+				if (code != null && !code.getCode().equalsIgnoreCase(""))
 					array.put(code.toJSON());
 			}
 			obj.put("articleCodes", array);
 		}
-		if (!texts.isEmpty())
+		if (texts != null && !texts.isEmpty())
 		{
 			final JSONArray array = new JSONArray();
 			for (final Product_Text text : texts)
 			{
-				array.put(text.toJSON());
+				if (text != null)
+					array.put(text.toJSON());
 			}
 			obj.put("articleTexts", array);
 		}
@@ -881,7 +857,8 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 			final JSONArray array = new JSONArray();
 			for (final Tag tag : tags)
 			{
-				array.put(tag.toJSON());
+				if (tag != null)
+					array.put(tag.toJSON());
 			}
 			obj.put("tags", array);
 		}
