@@ -10,10 +10,11 @@ public class Customer extends AbstractNumberApiObject<Customer>
 {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 2258389891494944765L;
 	private CustomerGroup customerGroup;
+	private String company;
 	private String firstName;
 	private String lastName;
 	private String gender;
@@ -31,6 +32,7 @@ public class Customer extends AbstractNumberApiObject<Customer>
 		private String firstName = null;
 		private String lastName = null;
 		private String gender = null;
+		private String company = null;
 		private String addressLine1 = null;
 		private String city = null;
 		private String zipCode = null;
@@ -38,6 +40,12 @@ public class Customer extends AbstractNumberApiObject<Customer>
 		private String email = null;
 		private String phone = null;
 		private Date birthday = null;
+
+		public T company(final String value)
+		{
+			company = value;
+			return self();
+		}
 
 		public T customerGroup(final CustomerGroup grp)
 		{
@@ -138,6 +146,7 @@ public class Customer extends AbstractNumberApiObject<Customer>
 		email = init.email;
 		phone = init.phone;
 		birthday = init.birthday;
+		company = init.company;
 	}
 
 // public static Customer fromJSON(JSONObject obj) throws JSONException
@@ -329,6 +338,7 @@ public class Customer extends AbstractNumberApiObject<Customer>
 		obj.put("email", email);
 		obj.put("phone", phone);
 		obj.put("birthday", birthday);
+		obj.put("company", company);
 
 		return obj;
 	}
@@ -354,8 +364,19 @@ public class Customer extends AbstractNumberApiObject<Customer>
 			.country(obj.getString("country"))
 			.phone(obj.getString("phone"))
 			.birthday(prepareDate(obj, "birthday"))
+			.company(obj.getString("company"))
 			.build();
 
 		return cust;
+	}
+
+	public String getCompany()
+	{
+		return company;
+	}
+
+	public void setCompany(final String company)
+	{
+		this.company = company;
 	}
 }
