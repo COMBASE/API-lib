@@ -3,21 +3,19 @@ package domain;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-
 public class CommodityGroup extends AbstractNameAndNumberApiObject<CommodityGroup>
 {
 	public static class Builder extends Init<Builder>
 	{
-
 		@Override
 		protected Builder self()
 		{
 			return this;
 		}
-
 	}
+
 	protected static abstract class Init<T extends Init<T>> extends
-		AbstractNameAndNumberApiObject.Init<T>
+			AbstractNameAndNumberApiObject.Init<T>
 	{
 		private Boolean hasChildren = null;
 		private String key = null;
@@ -55,9 +53,7 @@ public class CommodityGroup extends AbstractNameAndNumberApiObject<CommodityGrou
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
 		final CommodityGroup grp = new CommodityGroup.Builder().name(obj.getString("name"))
-			.revision(obj.getLong("revision"))
-			.deleted(obj.getBoolean("deleted"))
-			.build();
+				.revision(obj.getLong("revision")).deleted(obj.getBoolean("deleted")).build();
 		if (obj.has("number"))
 			grp.setNumber(obj.getString("number"));
 		if (obj.has("uuid"))
@@ -70,49 +66,50 @@ public class CommodityGroup extends AbstractNameAndNumberApiObject<CommodityGrou
 
 	private String key;
 
-
 	private CommodityGroup parent;
 
-// public JSONObject toJSON()
-// {
-// final JSONObject obj = new JSONObject();
-// try
-// {
+	// public JSONObject toJSON()
+	// {
+	// final JSONObject obj = new JSONObject();
+	// try
+	// {
 
-// return obj;
-// }
-// catch (final JSONException e)
-// {
-// e.printStackTrace();
-// return null;
-// }
-// }
+	// return obj;
+	// }
+	// catch (final JSONException e)
+	// {
+	// e.printStackTrace();
+	// return null;
+	// }
+	// }
 
-// public static CommodityGroup fromJSON(JSONObject obj) throws JSONException
-// {
-//
-//
-//
-// }
+	// public static CommodityGroup fromJSON(JSONObject obj) throws
+	// JSONException
+	// {
+	//
+	//
+	//
+	// }
 
-// public boolean post() throws ApiNotReachableException
-// {
-// if (parent != null)
-// {
-// parent.hasChildren = true;
-// if (parent.getUuid() == null)
-// {
-// parent.post();
-// }
-// }
-// final boolean result = CloudLink.getConnector().postData(DataType.commodityGroup,
-// this.toJSON());
-// if (number != null)
-// uuid = CloudLink.getUUIDByNumber(DataType.commodityGroup, number);
-// else
-// uuid = CloudLink.getUUIDByName(DataType.commodityGroup, name);
-// return result;
-// }
+	// public boolean post() throws ApiNotReachableException
+	// {
+	// if (parent != null)
+	// {
+	// parent.hasChildren = true;
+	// if (parent.getUuid() == null)
+	// {
+	// parent.post();
+	// }
+	// }
+	// final boolean result =
+	// CloudLink.getConnector().postData(DataType.commodityGroup,
+	// this.toJSON());
+	// if (number != null)
+	// uuid = CloudLink.getUUIDByNumber(DataType.commodityGroup, number);
+	// else
+	// uuid = CloudLink.getUUIDByName(DataType.commodityGroup, name);
+	// return result;
+	// }
 
 	private CommodityGroup(final Init<?> init)
 	{
@@ -120,7 +117,6 @@ public class CommodityGroup extends AbstractNameAndNumberApiObject<CommodityGrou
 		hasChildren = init.hasChildren;
 		key = init.key;
 		parent = init.parent;
-
 
 	}
 
