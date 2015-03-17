@@ -3,12 +3,8 @@ package domain;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-
 public class Tag extends AbstractNameAndNumberApiObject<Assortment>
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 5955525950261593638L;
 
 	public static class Builder extends Init<Builder>
@@ -21,8 +17,9 @@ public class Tag extends AbstractNameAndNumberApiObject<Assortment>
 		}
 
 	}
+
 	protected static abstract class Init<T extends Init<T>> extends
-		AbstractNameAndNumberApiObject.Init<T>
+			AbstractNameAndNumberApiObject.Init<T>
 	{
 		@Override
 		public Tag build()
@@ -80,11 +77,8 @@ public class Tag extends AbstractNameAndNumberApiObject<Assortment>
 		if (obj.has("result") && obj.getString("result") != null)
 			obj = obj.getJSONObject("result");
 
-
 		final Tag tag = new Tag.Builder().name(obj.getString("name"))
-			.number(obj.getString("number"))
-			.id(obj.getString("uuid"))
-			.build();
+				.number(obj.getString("number")).id(obj.getString("uuid")).build();
 		return tag;
 	}
 }

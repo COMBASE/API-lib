@@ -15,18 +15,15 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 {
 	public static class Builder extends Init<Builder>
 	{
-
 		@Override
 		protected Builder self()
 		{
 			return this;
 		}
-
 	}
 
 	protected static abstract class Init<T extends Init<T>> extends
 			AbstractNameAndNumberApiObject.Init<T>
-
 	{
 		private Boolean activeAssortment = null;
 		private Date activeAssortmentFrom = null;
@@ -46,6 +43,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		private final List<Product_Code> codes = new ArrayList<Product_Code>();
 		private List<SupplierItemPrice> supplierItemPrices = null;
 		private Boolean packaging = null;
+		private List<SubProduct> subProducts = new ArrayList<SubProduct>();
 
 		private Boolean preparationArticle = null;
 
@@ -199,6 +197,20 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 			return self();
 		}
 
+		public T subProducts(final List<SubProduct> sp)
+		{
+			subProducts = sp;
+			return self();
+		}
+
+		public T subProducts(final SubProduct sp)
+		{
+			if (sp == null)
+				subProducts = new ArrayList<SubProduct>();
+			subProducts.add(sp);
+			return self();
+		}
+
 		public T texts(final Collection<Product_Text> coll)
 		{
 			for (final Product_Text text : coll)
@@ -273,6 +285,61 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 
 			}
 			prod.setCodes(codeList);
+		}
+
+		if (!obj.isNull("subarticleRelations") && !obj.getString("subarticleRelations").equalsIgnoreCase("null"))
+		{
+			JSONArray jSProducts = new JSONArray();
+			jSProducts = obj.getJSONArray("subarticleRelations");
+			JSONObject jProduct = new JSONObject();
+
+			final List<SubProduct> spList = new ArrayList<SubProduct>();
+			SubProduct sp = null;
+			for (int i = 0; i < jSProducts.length(); i++)
+			{
+				sp = new SubProduct();
+				jProduct = (JSONObject) jSProducts.get(i);
+				if (!jProduct.isNull("amount")
+						&& !jProduct.getString("amount").equalsIgnoreCase("null"))
+				{
+					final BigDecimal amount = new BigDecimal(jProduct.getDouble("amount"));
+					sp.setAmount(amount);
+				}
+
+				if (!jProduct.isNull("article")
+						&& !jProduct.getString("article").equalsIgnoreCase("null"))
+				{
+					final String article = jProduct.getString("article");
+					sp.setArticle(article);
+				}
+
+				if (!jProduct.isNull("position")
+						&& !jProduct.getString("position").equalsIgnoreCase("null"))
+				{
+					final Integer position = jProduct.getInt("position");
+					sp.setPosition(position);
+				}
+
+				if (!jProduct.isNull("prices")
+						&& !jProduct.getString("prices").equalsIgnoreCase("null"))
+				{
+					final JSONArray jPrices = obj.getJSONArray("prices");
+					final List<Price> prices = new ArrayList<Price>();
+					JSONObject jPrice;
+					for (int j = 0; j < jPrices.length(); j++)
+					{
+						jPrice = jPrices.getJSONObject(j);
+
+						final BigDecimal value = new BigDecimal(jPrice.getDouble("value"));
+						final Pricelist pricelist = new Pricelist.Builder().id(
+								jPrice.getString("priceList")).build();
+						prices.add(new Price(pricelist, prepareDate(jPrice, "validFrom"), value));
+					}
+					sp.setPrices(prices);
+				}
+				spList.add(sp);
+			}
+			prod.setSubProducts(spList);
 		}
 
 		if (!obj.isNull("articleTexts") && !obj.getString("articleTexts").equalsIgnoreCase("null"))
@@ -367,6 +434,8 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 
 	private List<Tag> tags;
 
+	private List<SubProduct> subProducts;
+
 	private Product(final Init<?> init)
 	{
 		super(init);
@@ -390,6 +459,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		preparationArticle = init.preparationArticle;
 		packaging = init.packaging;
 		tags = init.tags;
+		subProducts = init.subProducts;
 	}
 
 	public void addCodes(final Collection<Product_Code> coll)
@@ -538,6 +608,13 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 				return false;
 		} else if (!trackInventory.equals(other.trackInventory))
 			return false;
+
+		if (subProducts == null)
+		{
+			if (other.subProducts != null)
+				return false;
+		} else if (!subProducts.equals(other.subProducts))
+			return false;
 		return true;
 	}
 
@@ -603,6 +680,16 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		return sector;
 	}
 
+	public List<SubProduct> getSubProducts()
+	{
+		return subProducts;
+	}
+
+	public void setSubProducts(List<SubProduct> subProducts)
+	{
+		this.subProducts = subProducts;
+	}
+
 	public List<SupplierItemPrice> getSupplierItemPrices()
 	{
 		return supplierItemPrices;
@@ -652,6 +739,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		result = prime * result + ((tags == null) ? 0 : tags.hashCode());
 		result = prime * result + ((texts == null) ? 0 : texts.hashCode());
 		result = prime * result + ((trackInventory == null) ? 0 : trackInventory.hashCode());
+		result = prime * result + ((subProducts == null) ? 0 : subProducts.hashCode());
 		return result;
 	}
 
@@ -832,6 +920,18 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 			}
 			obj.put("prices", array);
 		}
+
+		if (subProducts != null && !subProducts.isEmpty())
+		{
+			final JSONArray array = new JSONArray();
+			for (final SubProduct sp : subProducts)
+			{
+				if (sp != null)
+					array.put(sp.toJSON());
+			}
+			obj.put("subarticleRelations", array);
+		}
+
 		if (codes != null && !codes.isEmpty())
 		{
 			final JSONArray array = new JSONArray();
