@@ -110,7 +110,7 @@ public class FullReceipt extends AbstractNumberApiObject<FullReceipt>
 			.build();
 		receipt.setOrganizationalUnit(organizationalUnit);
 
-		if (!obj.isNull("customer"))
+		if (!obj.isNull("receipt") && !obj.getJSONObject("receipt").isNull("customer"))
 		{
 			final Customer customer = new Customer.Builder().id(jReceipt.getString("customer"))
 				.number(jReceipt.getString("customerNr"))
