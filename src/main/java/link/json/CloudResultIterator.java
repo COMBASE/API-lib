@@ -8,6 +8,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import error.ApiNotReachableException;
+import error.ErrorMessages;
 import error.InvalidTokenException;
 import error.KoronaCloudAPIErrorMessageException;
 
@@ -99,7 +100,7 @@ public class CloudResultIterator implements Iterator<JSONObject>
 	}
 
 	private void refreshBuffer() throws ApiNotReachableException, JSONException,
-		KoronaCloudAPIErrorMessageException, InvalidTokenException
+	KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		try
 		{
@@ -107,7 +108,8 @@ public class CloudResultIterator implements Iterator<JSONObject>
 		}
 		catch (final KoronaCloudAPIErrorMessageException e)
 		{
-			if (e.getErrorMap().containsKey("No receipts found for the revision"))
+			if (e.getErrorMap().containsKey(
+				ErrorMessages.No_object_found_for_revision.getErrorString()))
 				buffer = null;
 			else
 				throw new KoronaCloudAPIErrorMessageException(e, e.getErrorMap());

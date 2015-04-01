@@ -138,7 +138,8 @@ public class ApiConnector
 			in.close();
 			if (con.getResponseCode() == 200)
 			{
-				LOGGER.debug("APICON:GET -> Type:" + type.getReference() + " JSON=" + obj.toString());
+				LOGGER.debug("APICON:GET -> Type:" + type.getReference() + " JSON=" +
+					obj.toString());
 
 				try
 				{
@@ -202,8 +203,7 @@ public class ApiConnector
 					final String[] errorMapping = errorStr.split(":");
 
 					if (errorMapping.length == 1)
-						errorMap.put(errorMapping[0],
-							"KORONA.CLOUD.API haven't returned any values corresponding to this error key");
+						errorMap.put(errorMapping[0], "no further information");
 					else
 						errorMap.put(errorMapping[0], errorMapping[1]);
 
@@ -314,7 +314,8 @@ public class ApiConnector
 
 			}
 
-			final Callable<String> callable = new PostListThread(cloudURL, token, type, obj);
+			final Callable<String> callable = new PostListThread(cloudURL, token, type,
+				threadedJson);
 
 			final Future<String> future = exec.submit(callable);
 
