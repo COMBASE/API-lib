@@ -114,7 +114,7 @@ public class FullReceipt extends AbstractNumberApiObject<FullReceipt>
 		{
 			final Customer customer = new Customer.Builder().id(jReceipt.getString("customer"))
 				.number(jReceipt.getString("customerNr"))
-				.zipCode("customerZip")
+				.zipCode(jReceipt.getString("customerZip"))
 				.build();
 			receipt.setCustomer(customer);
 		}
