@@ -8,8 +8,8 @@ import link.json.AbstractHasNameJsonLoader;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import domain.DataType;
 import domain.PaymentMethod;
+import domain.enums.DataType;
 
 public class PaymentMethodLoader extends AbstractHasNameJsonLoader<PaymentMethod>
 {

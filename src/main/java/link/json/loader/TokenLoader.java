@@ -5,7 +5,7 @@ import link.CloudLink;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.StringUtils;
 
-import domain.DataType;
+import domain.enums.DataType;
 import error.ApiNotReachableException;
 import error.InvalidTokenException;
 import error.KoronaCloudAPIErrorMessageException;

@@ -8,8 +8,8 @@ import link.json.AbstractHasNumberJsonLoader;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import domain.DataType;
 import domain.InventoryReceipt;
+import domain.enums.DataType;
 
 public class InventoryReceiptLoader extends AbstractHasNumberJsonLoader<InventoryReceipt>
 {

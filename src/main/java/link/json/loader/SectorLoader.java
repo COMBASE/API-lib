@@ -8,8 +8,8 @@ import link.json.AbstractHasNameJsonLoader;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import domain.DataType;
 import domain.Sector;
+import domain.enums.DataType;
 
 public class SectorLoader extends AbstractHasNameJsonLoader<Sector>
 {

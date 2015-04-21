@@ -32,8 +32,8 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import domain.DataType;
-import domain.ReferenceType;
+import domain.enums.DataType;
+import domain.enums.ReferenceType;
 import error.ApiNotReachableException;
 import error.ErrorMessages;
 import error.InvalidTokenException;
@@ -91,7 +91,7 @@ public class ApiConnector
 	 * @throws JSONException
 	 * @throws IOException
 	 */
-	public String fetchData(final DataType type, final domain.ReferenceType refType,
+	public String fetchData(final DataType type, final domain.enums.ReferenceType refType,
 		final String reference) throws ApiNotReachableException,
 		KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{

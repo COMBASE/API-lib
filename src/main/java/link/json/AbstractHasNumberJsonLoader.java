@@ -10,7 +10,7 @@ import link.CloudLink;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import domain.DataType;
+import domain.enums.DataType;
 import domain.interfaces.HasId;
 import domain.interfaces.HasNumber;
 import error.ApiNotReachableException;

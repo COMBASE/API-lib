@@ -11,9 +11,9 @@ import link.json.AbstractHasNameJsonLoader;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import domain.DataType;
 import domain.Product;
 import domain.Product_Code;
+import domain.enums.DataType;
 import error.ApiNotReachableException;
 import error.ErrorMessages;
 import error.InvalidTokenException;

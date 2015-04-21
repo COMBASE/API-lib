@@ -7,7 +7,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import domain.Assortment;
-import domain.DataType;
+import domain.enums.DataType;
 
 /**
  * 

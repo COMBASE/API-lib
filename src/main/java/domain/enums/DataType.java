@@ -1,4 +1,4 @@
-package domain;
+package domain.enums;
 
 public enum DataType
 {
@@ -12,7 +12,8 @@ public enum DataType
 								"timeTrackings"), user("users"), pos("pos"), fullReceipt("fullReceipts"), posBalance(
 									"posBalances"), inventory("inventories"), inventoryReceipt("inventoryReceipts"), inventoryReceiptItem(
 										"inventoryReceiptItems"), endOfDayStatement("endOfDayStatements"), auth(
-		"authenticationRequest"), priceStandalone("prices");
+											"authenticationRequest"), priceStandalone("prices"), financialAccountingItem(
+												"financialAccountingItems");
 
 	private final String reference;
 

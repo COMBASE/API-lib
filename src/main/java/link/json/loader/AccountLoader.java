@@ -7,7 +7,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import domain.Account;
-import domain.DataType;
+import domain.enums.DataType;
 
 public class AccountLoader extends AbstractHasNameJsonLoader<Account>
 {
