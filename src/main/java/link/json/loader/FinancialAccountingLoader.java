@@ -28,16 +28,16 @@ public class FinancialAccountingLoader
 	}
 
 	/**
-	 * Returns an org.jettison.JSONArray of all JSONObjects greater than given revision.
+	 * Returns an org.jettison.JSONObject of all items greater than given revision.
 	 *
 	 * @param number
-	 * @return org.jettison.JSONArray
+	 * @return org.jettison.JSONObject
 	 * @throws ApiNotReachableException
 	 * @throws InvalidTokenException
 	 * @throws KoronaCloudAPIErrorMessageException
 	 */
 	public JSONObject downloadByRevision(final long revision) throws ApiNotReachableException,
-	KoronaCloudAPIErrorMessageException, InvalidTokenException
+		KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		final String jStr = cloudLink.getJSONByRevision(getDataType(), Long.toString(revision));
 		final JSONObject jObj = createJsonObject(jStr);
