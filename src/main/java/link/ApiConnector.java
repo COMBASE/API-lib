@@ -274,40 +274,27 @@ public class ApiConnector
 			}
 			catch (final JSONException e)
 			{
-
-				exec.shutdown();
-
 				LOGGER.error("Could not interpret KORONA.CLOUD.API response message", e);
 			}
 			catch (final CancellationException e)
 			{
-
-				exec.shutdown();
-
 				LOGGER.error(e);
 			}
 			catch (final InterruptedException e)
 			{
-
-				exec.shutdown();
-
 				LOGGER.error(e);
 			}
 			catch (final ExecutionException e)
 			{
-
-				exec.shutdown();
-
 				if (e.getCause() instanceof ApiNotReachableException)
 					throw new ApiNotReachableException(cloudURL, e.getCause());
-
 			}
 
-
+			finally
+			{
+				exec.shutdown();
+			}
 		}
-
-		exec.shutdown();
-
 		return ret;
 
 	}
@@ -427,7 +414,7 @@ public class ApiConnector
 	 * @throws ArticleCodeMustBeUniqueException
 	 */
 	private void interpretResponse(final JSONObject responseJson) throws JSONException,
-		KoronaCloudAPIErrorMessageException, InvalidTokenException
+	KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 
 		try

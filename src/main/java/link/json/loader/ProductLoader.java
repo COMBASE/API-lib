@@ -27,49 +27,6 @@ import error.KoronaCloudAPIErrorMessageException;
 public class ProductLoader extends AbstractHasNameJsonLoader<Product>
 {
 
-	@Override
-	public List<Product> postList(final List<? extends Product> objs, final int limit,
-		final int threads) throws JSONException, ParseException,
-		KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException
-	{
-
-		try
-		{
-
-			return super.postList(objs, limit, threads);
-
-		}
-		catch (final KoronaCloudAPIErrorMessageException e)
-		{
-
-			final Map<String, String> errorMap = e.getErrorMap();
-
-			if (errorMap.containsKey(ErrorMessages.articlecode_must_be_unique.getErrorString()))
-				LOGGER.error("Some articles were not posted! Article Code already in use.");
-
-			throw new KoronaCloudAPIErrorMessageException(e, e.getErrorMap());
-
-		}
-	}
-
-	@Override
-	public Product post(final Product obj) throws ApiNotReachableException, JSONException,
-	ParseException, InvalidTokenException, KoronaCloudAPIErrorMessageException
-	{
-
-		try
-		{
-
-			return upload(obj);
-
-		}
-		catch (final KoronaCloudAPIErrorMessageException e)
-		{
-			throw new KoronaCloudAPIErrorMessageException(e.getCause(), null);
-		}
-
-	}
-
 	private final Map<String, Product> codeCache = new HashMap<String, Product>();
 
 	public ProductLoader(final CloudLink cloudLink)
@@ -77,24 +34,8 @@ public class ProductLoader extends AbstractHasNameJsonLoader<Product>
 		super(DataType.product, cloudLink);
 	}
 
-	@Override
-	public JSONObject toJSON(final Product value) throws JSONException
-	{
-		final JSONObject obj = value.toJSON();
-
-		return obj;
-	}
-
-	@Override
-	public Product fromJSON(final JSONObject obj) throws JSONException, ParseException
-	{
-		final Product product = Product.fromJSON(obj);
-
-		return product;
-	}
-
 	public Product downloadByCode(final String code) throws ApiNotReachableException,
-		JSONException, ParseException, KoronaCloudAPIErrorMessageException, InvalidTokenException
+	JSONException, ParseException, KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 
 		final Product cachedObject = codeCache.get(code);
@@ -134,6 +75,14 @@ public class ProductLoader extends AbstractHasNameJsonLoader<Product>
 	}
 
 	@Override
+	public Product fromJSON(final JSONObject obj) throws JSONException, ParseException
+	{
+		final Product product = Product.fromJSON(obj);
+
+		return product;
+	}
+
+	@Override
 	public Product getCachedObject(final Product object)
 	{
 
@@ -148,13 +97,68 @@ public class ProductLoader extends AbstractHasNameJsonLoader<Product>
 	}
 
 	@Override
+	public Product post(final Product obj) throws ApiNotReachableException, JSONException,
+		ParseException, InvalidTokenException, KoronaCloudAPIErrorMessageException
+	{
+
+		try
+		{
+
+			return upload(obj);
+
+		}
+		catch (final KoronaCloudAPIErrorMessageException e)
+		{
+			throw new KoronaCloudAPIErrorMessageException(e.getCause(), null);
+		}
+
+	}
+
+	@Override
+	public List<Product> postList(final List<? extends Product> objs, final int limit,
+		final int threads) throws JSONException, ParseException,
+		KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException
+		{
+
+		try
+		{
+
+			return super.postList(objs, limit, threads);
+
+		}
+		catch (final KoronaCloudAPIErrorMessageException e)
+		{
+
+			final Map<String, String> errorMap = e.getErrorMap();
+
+			if (errorMap.containsKey(ErrorMessages.articlecode_must_be_unique.getErrorString()))
+			{
+				LOGGER.debug("Some articles were not posted! Article Code already in use.");
+			}
+
+			throw new KoronaCloudAPIErrorMessageException(e, e.getErrorMap());
+
+		}
+		}
+
+	@Override
+	public JSONObject toJSON(final Product value) throws JSONException
+	{
+		final JSONObject obj = value.toJSON();
+
+		return obj;
+	}
+
+	@Override
 	public void updateCache(final Product obj)
 	{
 		if (obj.getCodes() != null && !obj.getCodes().isEmpty())
+		{
 			for (final Product_Code code : obj.getCodes())
 			{
 				codeCache.put(code.getCode(), obj);
 			}
+		}
 
 		super.updateCache(obj);
 	}
