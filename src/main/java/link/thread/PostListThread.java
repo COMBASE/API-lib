@@ -20,7 +20,7 @@ import org.codehaus.jettison.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import domain.DataType;
+import domain.enums.DataType;
 import error.ApiNotReachableException;
 
 public class PostListThread implements Callable<String>

@@ -9,10 +9,10 @@ import link.json.AbstractHasIdJsonLoader;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import domain.DataType;
 import domain.Inventory;
 import domain.InventoryReceipt;
 import domain.InventoryReceiptItem;
+import domain.enums.DataType;
 import error.ApiNotReachableException;
 import error.InvalidTokenException;
 import error.KoronaCloudAPIErrorMessageException;

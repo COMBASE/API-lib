@@ -8,8 +8,8 @@ import link.json.AbstractHasIdJsonLoader;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import domain.DataType;
 import domain.TimeTracking;
+import domain.enums.DataType;
 
 public class TimeTrackingLoader extends AbstractHasIdJsonLoader<TimeTracking>
 {

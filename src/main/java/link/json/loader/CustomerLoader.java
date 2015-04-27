@@ -9,7 +9,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import domain.Customer;
-import domain.DataType;
+import domain.enums.DataType;
 
 public class CustomerLoader extends AbstractHasNumberJsonLoader<Customer>
 {

@@ -32,8 +32,8 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import domain.DataType;
-import domain.ReferenceType;
+import domain.enums.DataType;
+import domain.enums.ReferenceType;
 import error.ApiNotReachableException;
 import error.ErrorMessages;
 import error.InvalidTokenException;
@@ -91,7 +91,7 @@ public class ApiConnector
 	 * @throws JSONException
 	 * @throws IOException
 	 */
-	public String fetchData(final DataType type, final domain.ReferenceType refType,
+	public String fetchData(final DataType type, final domain.enums.ReferenceType refType,
 		final String reference) throws ApiNotReachableException,
 		KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
@@ -99,13 +99,19 @@ public class ApiConnector
 		String slash = "";
 
 		if (!cloudURL.endsWith("/"))
+		{
 			slash = "/";
+		}
 
 		if (refType.equals(ReferenceType.auth))
+		{
 			url = cloudURL + slash + refType.getType() + "/" + reference;
+		}
 		else
+		{
 			url = cloudURL + slash + token + "/" + type.getReference() + "/" + refType.getType() +
-			"/" + reference;
+				"/" + reference;
+		}
 
 		HttpURLConnection con = null;
 
@@ -168,96 +174,10 @@ public class ApiConnector
 		finally
 		{
 			if (con != null)
+			{
 				con.disconnect();
-		}
-	}
-
-	/**
-	 *
-	 * @param responseJson
-	 * @throws JSONException
-	 * @throws KoronaCloudAPIErrorMessageException
-	 * @throws InvalidTokenException
-	 * @throws ArticleCodeMustBeUniqueException
-	 */
-	private void interpretResponse(final JSONObject responseJson) throws JSONException,
-	KoronaCloudAPIErrorMessageException, InvalidTokenException
-	{
-
-		try
-		{
-			// Invalid Token
-			if (!responseJson.isNull("error"))
-			{
-
-				final String errorStr = responseJson.getString("error");
-
-				if (errorStr.equalsIgnoreCase(ErrorMessages.Invalid_Token.getErrorString()))
-					throw new InvalidTokenException(null);
-
-				else
-				{
-
-					final Map<String, String> errorMap = new HashMap<String, String>();
-
-					final String[] errorMapping = errorStr.split(":");
-
-					if (errorMapping.length == 1)
-						errorMap.put(errorMapping[0], "no further information");
-					else
-						errorMap.put(errorMapping[0], errorMapping[1]);
-
-					throw new KoronaCloudAPIErrorMessageException(null, errorMap);
-
-				}
-
-			}
-
-			// API Exception Handling
-			if (!responseJson.isNull("errorList"))
-			{
-				final JSONArray errorList = responseJson.getJSONArray("errorList");
-
-
-				// contains all error objects
-				final Map<String, String> errorMap = new HashMap<String, String>();
-
-				for (int i = 0; i < errorList.length(); i++)
-				{
-
-					if (errorList.getString(i).equalsIgnoreCase(
-						ErrorMessages.Invalid_Token.getErrorString()))
-						throw new InvalidTokenException(null);
-
-					final String[] errorMapping = errorList.getString(i).split(":");
-
-					if (errorMap.containsKey(errorMapping[0]))
-					{
-
-						final String errorValue = errorMap.get(errorMapping[0]);
-
-						errorMap.put(errorMapping[0], errorValue + ", " + errorMapping[1]);
-
-					}
-					else
-						errorMap.put(errorMapping[0], errorMapping[1]);
-
-
-					if (errorMap.containsKey("Invalid Token"))
-						throw new InvalidTokenException(null);
-
-				}
-
-				throw new KoronaCloudAPIErrorMessageException(null, errorMap);
-
 			}
 		}
-		catch (final JSONException e)
-		{
-			LOGGER.error("Missing error or errorList key: " + responseJson.toString(), e);
-		}
-
-
 	}
 
 	/**
@@ -284,9 +204,13 @@ public class ApiConnector
 		int i = 0;
 
 		if (obj.length() == 0)
+		{
 			LOGGER.info("NO OBJECTS POSTED");
+		}
 		else
+		{
 			LOGGER.info("posting " + obj.length() + " " + type + "s");
+		}
 
 		while (i < obj.length())
 		{
@@ -337,11 +261,15 @@ public class ApiConnector
 
 				if (jsonObject.has("resultList") && !jsonObject.isNull("resultList"))
 				{
-					ret = jsonObject.getJSONArray("resultList");
+					if (ret == null)
+					{
+						ret = new JSONArray();
+					}
+
+					ret.put(jsonObject.getJSONArray("resultList"));
 
 				}
 
-				exec.shutdown();
 
 			}
 			catch (final JSONException e)
@@ -362,8 +290,11 @@ public class ApiConnector
 					throw new ApiNotReachableException(cloudURL, e.getCause());
 			}
 
+			finally
+			{
+				exec.shutdown();
+			}
 		}
-
 		return ret;
 
 	}
@@ -383,7 +314,9 @@ public class ApiConnector
 
 		String slash = "";
 		if (!cloudURL.endsWith("/"))
+		{
 			slash = "/";
+		}
 		final String url = cloudURL + slash + token + "/" + type.getReference() + "/save/";
 		try
 		{
@@ -411,7 +344,9 @@ public class ApiConnector
 			wr.flush();
 			wr.close();
 			if (out != null)
+			{
 				out.close();
+			}
 			if (con.getResponseCode() == 200)
 			{
 				final BufferedReader in = new BufferedReader(new InputStreamReader(
@@ -468,6 +403,100 @@ public class ApiConnector
 
 			return null;
 		}
+	}
+
+	/**
+	 *
+	 * @param responseJson
+	 * @throws JSONException
+	 * @throws KoronaCloudAPIErrorMessageException
+	 * @throws InvalidTokenException
+	 * @throws ArticleCodeMustBeUniqueException
+	 */
+	private void interpretResponse(final JSONObject responseJson) throws JSONException,
+	KoronaCloudAPIErrorMessageException, InvalidTokenException
+	{
+
+		try
+		{
+			// Invalid Token
+			if (!responseJson.isNull("error"))
+			{
+
+				final String errorStr = responseJson.getString("error");
+
+				if (errorStr.equalsIgnoreCase(ErrorMessages.Invalid_Token.getErrorString()))
+					throw new InvalidTokenException(null);
+
+				else
+				{
+
+					final Map<String, String> errorMap = new HashMap<String, String>();
+
+					final String[] errorMapping = errorStr.split(":");
+
+					if (errorMapping.length == 1)
+					{
+						errorMap.put(errorMapping[0], "no further information");
+					}
+					else
+					{
+						errorMap.put(errorMapping[0], errorMapping[1]);
+					}
+
+					throw new KoronaCloudAPIErrorMessageException(null, errorMap);
+
+				}
+
+			}
+
+			// API Exception Handling
+			if (!responseJson.isNull("errorList"))
+			{
+				final JSONArray errorList = responseJson.getJSONArray("errorList");
+
+
+				// contains all error objects
+				final Map<String, String> errorMap = new HashMap<String, String>();
+
+				for (int i = 0; i < errorList.length(); i++)
+				{
+
+					if (errorList.getString(i).equalsIgnoreCase(
+						ErrorMessages.Invalid_Token.getErrorString()))
+						throw new InvalidTokenException(null);
+
+					final String[] errorMapping = errorList.getString(i).split(":");
+
+					if (errorMap.containsKey(errorMapping[0]))
+					{
+
+						final String errorValue = errorMap.get(errorMapping[0]);
+
+						errorMap.put(errorMapping[0], errorValue + ", " + errorMapping[1]);
+
+					}
+					else
+					{
+						errorMap.put(errorMapping[0], errorMapping[1]);
+					}
+
+
+					if (errorMap.containsKey("Invalid Token"))
+						throw new InvalidTokenException(null);
+
+				}
+
+				throw new KoronaCloudAPIErrorMessageException(null, errorMap);
+
+			}
+		}
+		catch (final JSONException e)
+		{
+			LOGGER.error("Missing error or errorList key: " + responseJson.toString(), e);
+		}
+
+
 	}
 
 	/**

@@ -9,7 +9,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import domain.CommodityGroup;
-import domain.DataType;
+import domain.enums.DataType;
 
 public class CommodityGroupLoader extends AbstractHasNameJsonLoader<CommodityGroup>
 {

@@ -8,8 +8,8 @@ import link.json.AbstractHasNumberJsonLoader;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import domain.DataType;
 import domain.User;
+import domain.enums.DataType;
 
 public class UserLoader extends AbstractHasNumberJsonLoader<User>
 {
