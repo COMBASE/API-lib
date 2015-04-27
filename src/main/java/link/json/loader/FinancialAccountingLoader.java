@@ -37,7 +37,7 @@ public class FinancialAccountingLoader
 	 * @throws KoronaCloudAPIErrorMessageException
 	 */
 	public JSONObject downloadByRevision(final long revision) throws ApiNotReachableException,
-		KoronaCloudAPIErrorMessageException, InvalidTokenException
+	KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		final String jStr = cloudLink.getJSONByRevision(getDataType(), Long.toString(revision));
 		final JSONObject jObj = createJsonObject(jStr);
