@@ -8,10 +8,11 @@ import java.util.Date;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-public class FinancialAccountingItem
+public class FinancialAccountingPosBalanceItem
 {
 	public static class Builder
 	{
+
 		private Date day = null;
 		private String costCenter = null;
 		private String revenueAccount = null;
@@ -20,9 +21,9 @@ public class FinancialAccountingItem
 		private String taxId = null;
 		private BigDecimal value = null;
 
-		public FinancialAccountingItem build()
+		public FinancialAccountingPosBalanceItem build()
 		{
-			return new FinancialAccountingItem(this);
+			return new FinancialAccountingPosBalanceItem(this);
 		}
 
 		public Builder costCenter(final String value)
@@ -66,98 +67,28 @@ public class FinancialAccountingItem
 			this.value = value;
 			return this;
 		}
-
 	}
 
 	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd");
 
-
 	private Date day;
-
 	private String costCenter;
-
 	private String revenueAccount;
-
 	private String type;
-
 	private String typeDescription;
-
 	private String taxId;
 
 	private BigDecimal value;
 
-	public FinancialAccountingItem(final Builder builder)
+	public FinancialAccountingPosBalanceItem(final Builder builder)
 	{
-		super();
-		this.day = builder.day;
 		this.costCenter = builder.costCenter;
+		this.day = builder.day;
 		this.revenueAccount = builder.revenueAccount;
+		this.taxId = builder.taxId;
 		this.type = builder.type;
 		this.typeDescription = builder.typeDescription;
-		this.taxId = builder.taxId;
 		this.value = builder.value;
-	}
-
-	@Override
-	public boolean equals(final Object obj)
-	{
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		final FinancialAccountingItem other = (FinancialAccountingItem)obj;
-		if (costCenter == null)
-		{
-			if (other.costCenter != null)
-				return false;
-		}
-		else if (!costCenter.equals(other.costCenter))
-			return false;
-		if (day == null)
-		{
-			if (other.day != null)
-				return false;
-		}
-		else if (!day.equals(other.day))
-			return false;
-		if (revenueAccount == null)
-		{
-			if (other.revenueAccount != null)
-				return false;
-		}
-		else if (!revenueAccount.equals(other.revenueAccount))
-			return false;
-		if (taxId == null)
-		{
-			if (other.taxId != null)
-				return false;
-		}
-		else if (!taxId.equals(other.taxId))
-			return false;
-		if (type == null)
-		{
-			if (other.type != null)
-				return false;
-		}
-		else if (!type.equals(other.type))
-			return false;
-		if (typeDescription == null)
-		{
-			if (other.typeDescription != null)
-				return false;
-		}
-		else if (!typeDescription.equals(other.typeDescription))
-			return false;
-		if (value == null)
-		{
-			if (other.value != null)
-				return false;
-		}
-		else if (!value.equals(other.value))
-			return false;
-		return true;
 	}
 
 	public String getCostCenter()
@@ -180,34 +111,19 @@ public class FinancialAccountingItem
 		return taxId;
 	}
 
+	public String getType()
+	{
+		return type;
+	}
+
 	public String getTypeDescription()
 	{
 		return typeDescription;
 	}
 
-	public String getTypes()
-	{
-		return type;
-	}
-
 	public BigDecimal getValue()
 	{
 		return value;
-	}
-
-	@Override
-	public int hashCode()
-	{
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((costCenter == null) ? 0 : costCenter.hashCode());
-		result = prime * result + ((day == null) ? 0 : day.hashCode());
-		result = prime * result + ((revenueAccount == null) ? 0 : revenueAccount.hashCode());
-		result = prime * result + ((taxId == null) ? 0 : taxId.hashCode());
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
-		result = prime * result + ((typeDescription == null) ? 0 : typeDescription.hashCode());
-		result = prime * result + ((value == null) ? 0 : value.hashCode());
-		return result;
 	}
 
 	public void setCostCenter(final String costCenter)
@@ -230,14 +146,14 @@ public class FinancialAccountingItem
 		this.taxId = taxId;
 	}
 
+	public void setType(final String type)
+	{
+		this.type = type;
+	}
+
 	public void setTypeDescription(final String typeDescription)
 	{
 		this.typeDescription = typeDescription;
-	}
-
-	public void setTypes(final String types)
-	{
-		this.type = types;
 	}
 
 	public void setValue(final BigDecimal value)
@@ -245,10 +161,10 @@ public class FinancialAccountingItem
 		this.value = value;
 	}
 
-	public static FinancialAccountingItem fromJSON(final JSONObject jObj) throws JSONException,
-		ParseException
+	public static FinancialAccountingPosBalanceItem fromJSON(final JSONObject jObj)
+		throws JSONException, ParseException
 	{
-		final FinancialAccountingItem financialAccountingItem = new FinancialAccountingItem.Builder().costCenter(
+		final FinancialAccountingPosBalanceItem accountingPosBalanceItem = new FinancialAccountingPosBalanceItem.Builder().costCenter(
 			jObj.getString("costCenter"))
 			.day(prepareDate(jObj, "day"))
 			.revenueAccount(jObj.getString("revenueAccount"))
@@ -258,7 +174,7 @@ public class FinancialAccountingItem
 			.value(prepareBigDecimal(jObj, "value"))
 			.build();
 
-		return financialAccountingItem;
+		return accountingPosBalanceItem;
 	}
 
 	private static BigDecimal prepareBigDecimal(final JSONObject obj, final String bigDecimalString)

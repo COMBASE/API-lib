@@ -67,11 +67,22 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	public JSONArray downloadAllByOffset(final long revision) throws ApiNotReachableException,
 	KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
-		final String jStr = cloudLink.getJSONByOffset(getDataType(), Long.toString(revision),
-			limit, 0);
-		JSONArray jArray = createJsonArray(jStr);
-		jArray = recursiveOffsetIterator(jArray, limit, revision, limit);
-		return jArray;
+		try
+		{
+			final String jStr = cloudLink.getJSONByOffset(getDataType(), Long.toString(revision),
+				limit, 0);
+			JSONArray jArray = createJsonArray(jStr);
+			jArray = recursiveOffsetIterator(jArray, limit, revision, limit);
+			return jArray;
+		}
+		catch (final KoronaCloudAPIErrorMessageException e)
+		{
+			if (e.getErrorMap().containsKey(
+				ErrorMessages.No_object_found_for_revision.getErrorString()))
+				return null;
+			else
+				throw new KoronaCloudAPIErrorMessageException(e, e.getErrorMap());
+		}
 	}
 
 	/**
@@ -85,10 +96,21 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	public JSONArray downloadAllExisting() throws ApiNotReachableException,
 		KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
-		JSONArray jArray = new JSONArray();
-		jArray = downloadExistingJSONArrayBuilder(jArray, 0, limit);
+		try
+		{
+			JSONArray jArray = new JSONArray();
+			jArray = downloadExistingJSONArrayBuilder(jArray, 0, limit);
 
-		return jArray;
+			return jArray;
+		}
+		catch (final KoronaCloudAPIErrorMessageException e)
+		{
+			if (e.getErrorMap().containsKey(
+				ErrorMessages.No_object_found_for_revision.getErrorString()))
+				return null;
+			else
+				throw new KoronaCloudAPIErrorMessageException(e, e.getErrorMap());
+		}
 	}
 
 	/**
@@ -110,14 +132,25 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	public JSONArray downloadByOffset(final long revision) throws ApiNotReachableException,
 	KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
-		final String jStr = cloudLink.getJSONByOffset(getDataType(), Long.toString(revision),
-			limit, offset);
-		final JSONArray jArray = createJsonArray(jStr);
-		if (jArray == null)
-			return null;
-		offset += limit;
+		try
+		{
+			final String jStr = cloudLink.getJSONByOffset(getDataType(), Long.toString(revision),
+				limit, offset);
+			final JSONArray jArray = createJsonArray(jStr);
+			if (jArray == null)
+				return null;
+			offset += limit;
 
-		return jArray;
+			return jArray;
+		}
+		catch (final KoronaCloudAPIErrorMessageException e)
+		{
+			if (e.getErrorMap().containsKey(
+				ErrorMessages.No_object_found_for_revision.getErrorString()))
+				return null;
+			else
+				throw new KoronaCloudAPIErrorMessageException(e, e.getErrorMap());
+		}
 	}
 
 	/**
@@ -136,14 +169,25 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	public JSONArray downloadByOffset(final long revision, final int amountPerPage, int offset)
 		throws ApiNotReachableException, KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
-		final String jStr = cloudLink.getJSONByOffset(getDataType(), Long.toString(revision),
-			amountPerPage, offset);
-		final JSONArray jArray = createJsonArray(jStr);
-		if (jArray == null)
-			return null;
-		offset += amountPerPage;
+		try
+		{
+			final String jStr = cloudLink.getJSONByOffset(getDataType(), Long.toString(revision),
+				amountPerPage, offset);
+			final JSONArray jArray = createJsonArray(jStr);
+			if (jArray == null)
+				return null;
+			offset += amountPerPage;
 
-		return jArray;
+			return jArray;
+		}
+		catch (final KoronaCloudAPIErrorMessageException e)
+		{
+			if (e.getErrorMap().containsKey(
+				ErrorMessages.No_object_found_for_revision.getErrorString()))
+				return null;
+			else
+				throw new KoronaCloudAPIErrorMessageException(e, e.getErrorMap());
+		}
 	}
 
 	/**
@@ -158,9 +202,20 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	public JSONArray downloadByRevision(final long revision) throws ApiNotReachableException,
 	KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
-		final String jStr = cloudLink.getJSONByRevision(getDataType(), Long.toString(revision));
-		final JSONArray jArray = createJsonArray(jStr);
-		return jArray;
+		try
+		{
+			final String jStr = cloudLink.getJSONByRevision(getDataType(), Long.toString(revision));
+			final JSONArray jArray = createJsonArray(jStr);
+			return jArray;
+		}
+		catch (final KoronaCloudAPIErrorMessageException e)
+		{
+			if (e.getErrorMap().containsKey(
+				ErrorMessages.No_object_found_for_revision.getErrorString()))
+				return null;
+			else
+				throw new KoronaCloudAPIErrorMessageException(e, e.getErrorMap());
+		}
 	}
 
 	/**
@@ -194,12 +249,10 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 		catch (final KoronaCloudAPIErrorMessageException e)
 		{
 
-			final Map<String, String> errorMap = new HashMap<String, String>();
-
-			if (errorMap.containsKey(ErrorMessages.No_object_found_for_id.getErrorString()))
+			if (e.getErrorMap().containsKey(ErrorMessages.No_object_found_for_id.getErrorString()))
 				return null;
 			else
-				throw new KoronaCloudAPIErrorMessageException(e, errorMap);
+				throw new KoronaCloudAPIErrorMessageException(e, e.getErrorMap());
 
 		}
 
@@ -231,12 +284,23 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 		int offset) throws ApiNotReachableException, KoronaCloudAPIErrorMessageException,
 		InvalidTokenException
 	{
-		final String jStr = cloudLink.getJSONByOffset(getDataType(), Long.toString(revision),
-			amountPerPage, offset);
-		if (jStr == null)
-			return null;
-		offset += amountPerPage;
-		return jStr;
+		try
+		{
+			final String jStr = cloudLink.getJSONByOffset(getDataType(), Long.toString(revision),
+				amountPerPage, offset);
+			if (jStr == null)
+				return null;
+			offset += amountPerPage;
+			return jStr;
+		}
+		catch (final KoronaCloudAPIErrorMessageException e)
+		{
+			if (e.getErrorMap().containsKey(
+				ErrorMessages.No_object_found_for_revision.getErrorString()))
+				return null;
+			else
+				throw new KoronaCloudAPIErrorMessageException(e, e.getErrorMap());
+		}
 	}
 
 

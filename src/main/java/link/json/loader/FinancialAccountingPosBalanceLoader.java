@@ -8,21 +8,21 @@ import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import domain.FinancialAccounting;
+import domain.FinancialAccountingPosBalance;
 import domain.enums.DataType;
 import error.ApiNotReachableException;
 import error.ErrorMessages;
 import error.InvalidTokenException;
 import error.KoronaCloudAPIErrorMessageException;
 
-public class FinancialAccountingLoader
+public class FinancialAccountingPosBalanceLoader
 {
 
-	public static final Logger LOGGER = Logger.getLogger(FinancialAccountingLoader.class);
+	public static final Logger LOGGER = Logger.getLogger(FinancialAccountingPosBalanceLoader.class);
 
 	private final CloudLink cloudLink;
 
-	public FinancialAccountingLoader(final CloudLink cloudLink)
+	public FinancialAccountingPosBalanceLoader(final CloudLink cloudLink)
 	{
 		super();
 		this.cloudLink = cloudLink;
@@ -38,7 +38,7 @@ public class FinancialAccountingLoader
 	 * @throws KoronaCloudAPIErrorMessageException
 	 */
 	public JSONObject downloadByRevision(final long revision) throws ApiNotReachableException,
-		KoronaCloudAPIErrorMessageException, InvalidTokenException
+	KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		try
 		{
@@ -56,10 +56,11 @@ public class FinancialAccountingLoader
 		}
 	}
 
-	public FinancialAccounting fromJSON(final JSONObject obj) throws JSONException, ParseException
+	public FinancialAccountingPosBalance fromJSON(final JSONObject obj) throws JSONException,
+	ParseException
 	{
-		final FinancialAccounting financialAccounting = FinancialAccounting.fromJSON(obj);
-		return financialAccounting;
+		final FinancialAccountingPosBalance accountingPosBalance = FinancialAccountingPosBalance.fromJSON(obj);
+		return accountingPosBalance;
 	}
 
 	private JSONObject createJsonObject(final String jStr) throws ApiNotReachableException
@@ -73,13 +74,13 @@ public class FinancialAccountingLoader
 		}
 		catch (final JSONException e)
 		{
-			// JsonDownloader.LOGGER.warn("Empty JSON String.");
+			LOGGER.warn("Empty JSON String.");
 			return null;
 		}
 	}
 
 	private DataType getDataType()
 	{
-		return DataType.financialAccountingItem;
+		return DataType.financialAccountingPosBalances;
 	}
 }

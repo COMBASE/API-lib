@@ -13,7 +13,8 @@ public enum DataType
 									"posBalances"), inventory("inventories"), inventoryReceipt("inventoryReceipts"), inventoryReceiptItem(
 										"inventoryReceiptItems"), endOfDayStatement("endOfDayStatements"), auth(
 											"authenticationRequest"), priceStandalone("prices"), financialAccountingItem(
-												"financialAccountingItems");
+												"financialAccountingItems"), financialAccountingPosBalances(
+													"financialAccountingPosBalances");
 
 	private final String reference;
 
