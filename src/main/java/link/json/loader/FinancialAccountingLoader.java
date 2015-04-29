@@ -38,7 +38,7 @@ public class FinancialAccountingLoader
 	 * @throws KoronaCloudAPIErrorMessageException
 	 */
 	public JSONObject downloadByRevision(final long revision) throws ApiNotReachableException,
-		KoronaCloudAPIErrorMessageException, InvalidTokenException
+	KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		try
 		{

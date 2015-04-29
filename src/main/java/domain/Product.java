@@ -899,7 +899,12 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 			.commodityGroup(commodityGroup)
 			.assortment(assortment)
 			.preparationArticle(obj.getBoolean("preparationArticle"))
+			.requiresSerialNumber(obj.getBoolean("requiresSerialNumber"))
+			.discountable(obj.getBoolean("discountable"))
+			.trackInventory(obj.getBoolean("trackInventory"))
+			.preparationArticle(obj.getBoolean("preparationArticle"))
 			.packaging(obj.getBoolean("packaging"))
+			.priceChangeable(obj.getBoolean("priceChangeable"))
 			.build();
 
 		if (obj.has("number"))
