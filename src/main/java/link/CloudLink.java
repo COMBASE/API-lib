@@ -54,12 +54,12 @@ public class CloudLink
 		if (reference == null)
 			return null;
 
+		reference = reference.replaceAll("%", "%20");
 		reference = reference.replaceAll(" ", "%20");
 		reference = reference.replaceAll("/", "%2F");
 		reference = reference.replaceAll("&", "%26");
 		reference = reference.replaceAll("#", "%23");
 		reference = reference.replaceAll("!", "%21");
-		reference = reference.replaceAll("%", "%20");
 
 		try
 		{
@@ -136,12 +136,12 @@ public class CloudLink
 		if (reference == null)
 			return null;
 
+		reference = reference.replaceAll("%", "%20");
 		reference = reference.replaceAll(" ", "%20");
 		reference = reference.replaceAll("/", "%2F");
 		reference = reference.replaceAll("&", "%26");
 		reference = reference.replaceAll("#", "%23");
 		reference = reference.replaceAll("!", "%21");
-		reference = reference.replaceAll("%", "%20");
 
 		try
 		{
@@ -229,12 +229,12 @@ public class CloudLink
 	public String getJSONByCode(String reference) throws ApiNotReachableException, JSONException,
 		KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
+		reference = reference.replaceAll("%", "%20");
 		reference = reference.replaceAll(" ", "%20");
 		reference = reference.replaceAll("/", "%2F");
 		reference = reference.replaceAll("&", "%26");
 		reference = reference.replaceAll("#", "%23");
 		reference = reference.replaceAll("!", "%21");
-		reference = reference.replaceAll("%", "%20");
 		return new String(ApiCon.fetchData(DataType.product, ReferenceType.code, reference));
 	}
 
@@ -271,12 +271,12 @@ public class CloudLink
 	public String getJSONByName(final DataType type, String reference)
 		throws ApiNotReachableException, KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
+		reference = reference.replaceAll("%", "%20");
 		reference = reference.replaceAll(" ", "%20");
 		reference = reference.replaceAll("/", "%2F");
 		reference = reference.replaceAll("&", "%26");
 		reference = reference.replaceAll("#", "%23");
 		reference = reference.replaceAll("!", "%21");
-		reference = reference.replaceAll("%", "%20");
 		return new String(ApiCon.fetchData(type, ReferenceType.name, reference));
 	}
 
