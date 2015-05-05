@@ -28,6 +28,24 @@ public class FinancialAccountingLoader
 		this.cloudLink = cloudLink;
 	}
 
+	public JSONObject downloadByDay(final int year, final int month, final int dayOfMonth)
+		throws ApiNotReachableException, KoronaCloudAPIErrorMessageException, InvalidTokenException
+	{
+		try
+		{
+			final String jStr = cloudLink.getJSONByDay(getDataType(), year, month, dayOfMonth);
+			final JSONObject jObj = createJsonObject(jStr);
+			return jObj;
+		}
+		catch (final KoronaCloudAPIErrorMessageException e)
+		{
+			if (e.getErrorMap().containsKey(ErrorMessages.No_object_found_for_day.getErrorString()))
+				return null;
+			else
+				throw new KoronaCloudAPIErrorMessageException(e, e.getErrorMap());
+		}
+	}
+
 	/**
 	 * Returns an org.jettison.JSONObject of all items greater than given revision.
 	 *
@@ -62,7 +80,7 @@ public class FinancialAccountingLoader
 		return financialAccounting;
 	}
 
-	private JSONObject createJsonObject(final String jStr) throws ApiNotReachableException
+	private JSONObject createJsonObject(final String jStr)
 	{
 
 		try

@@ -25,182 +25,6 @@ public class CloudLink
 	private static ApiConnector ApiCon;
 
 	/**
-	 * Gives us our Connector, which is the interface we need to interact with the Cloud
-	 *
-	 * @return
-	 */
-	public static ApiConnector getConnector()
-	{
-		if (ApiCon == null)
-			LOGGER.error("Please initiliaze a CloudLink Object first!");
-		return ApiCon;
-	}
-
-	/**
-	 * Gets the number of an Object in the Cloud By Name/Uuid
-	 *
-	 * @param type
-	 * @param reference
-	 * @return
-	 * @throws InvalidTokenException
-	 * @throws KoronaCloudAPIErrorMessageException
-	 * @throws IOException
-	 */
-	public static String getNumberByName(final DataType type, String reference)
-		throws KoronaCloudAPIErrorMessageException, InvalidTokenException
-	{
-		if (ApiCon == null)
-			LOGGER.error("Please initiliaze a CloudLink Object first!");
-		if (reference == null)
-			return null;
-
-		reference = reference.replaceAll("%", "%20");
-		reference = reference.replaceAll(" ", "%20");
-		reference = reference.replaceAll("/", "%2F");
-		reference = reference.replaceAll("&", "%26");
-		reference = reference.replaceAll("#", "%23");
-		reference = reference.replaceAll("!", "%21");
-
-		try
-		{
-			JSONObject obj = null;
-			try
-			{
-				obj = new JSONObject(ApiCon.fetchData(type, ReferenceType.name, reference)
-					.toString());
-			}
-			catch (final ApiNotReachableException e)
-			{
-				e.printStackTrace();
-				return null;
-			}
-			if (obj.has("result") && !obj.opt("result").equals(null))
-			{
-				obj = obj.getJSONObject("result");
-				if (obj.has("number") && !obj.opt("number").equals(null))
-				{
-					return obj.getString("number");
-				}
-			}
-		}
-		catch (final JSONException e)
-		{
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	public static String getNumberByUuid(final DataType type, final String reference)
-		throws ApiNotReachableException, KoronaCloudAPIErrorMessageException, InvalidTokenException
-	{
-		if (ApiCon == null)
-			LOGGER.error("Please initiliaze a CloudLink Object first!");
-		if (reference == null)
-			return null;
-		try
-		{
-			JSONObject obj = new JSONObject(ApiCon.fetchData(type, ReferenceType.number, reference)
-				.toString());
-			if (obj.has("result") && !obj.opt("result").equals(null))
-			{
-				obj = obj.getJSONObject("result");
-				if (obj.has("number") && !obj.opt("number").equals(null))
-				{
-					return obj.getString("number");
-				}
-			}
-		}
-		catch (final JSONException e)
-		{
-			e.printStackTrace();
-			return null;
-
-		}
-		return null;
-	}
-
-	/**
-	 * Gets the UUID of an Object in the Cloud by Name/Number
-	 *
-	 * @param type
-	 * @param reference
-	 * @return
-	 * @throws InvalidTokenException
-	 * @throws KoronaCloudAPIErrorMessageException
-	 */
-	public static String getUUIDByName(final DataType type, String reference)
-		throws KoronaCloudAPIErrorMessageException, InvalidTokenException
-	{
-		if (ApiCon == null)
-			LOGGER.error("Please initiliaze a CloudLink Object first!");
-		if (reference == null)
-			return null;
-
-		reference = reference.replaceAll("%", "%20");
-		reference = reference.replaceAll(" ", "%20");
-		reference = reference.replaceAll("/", "%2F");
-		reference = reference.replaceAll("&", "%26");
-		reference = reference.replaceAll("#", "%23");
-		reference = reference.replaceAll("!", "%21");
-
-		try
-		{
-
-			JSONObject obj = null;
-			try
-			{
-				obj = new JSONObject(ApiCon.fetchData(type, ReferenceType.name, reference)
-					.toString());
-			}
-			catch (final ApiNotReachableException e)
-			{
-				LOGGER.error(e);
-				return null;
-			}
-			if (obj.has("result") && !obj.opt("result").equals(null))
-			{
-				obj = obj.getJSONObject("result");
-				if (obj.has("uuid") && !obj.opt("uuid").equals(null))
-				{
-					return obj.get("uuid").toString();
-				}
-			}
-		}
-		catch (final JSONException e)
-		{
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	public static String getUUIDByNumber(final DataType type, final String reference)
-		throws ApiNotReachableException, KoronaCloudAPIErrorMessageException, InvalidTokenException
-	{
-		if (ApiCon == null)
-			LOGGER.error("Please initiliaze a CloudLink Object first!");
-		if (reference == null)
-			return null;
-		try
-		{
-			JSONObject obj = new JSONObject(ApiCon.fetchData(type, ReferenceType.number, reference)
-				.toString());
-			if (obj.has("result") && !obj.opt("result").equals(null))
-			{
-				obj = obj.getJSONObject("result");
-				if (obj.has("uuid") && !obj.opt("uuid").equals(null))
-				{
-					return obj.get("uuid").toString();
-				}
-			}
-		}
-		catch (final JSONException e)
-		{
-			return null;
-		}
-		return null;
-	}
-
-	/**
 	 * initializes the Link to the Cloud with the URL of the Cloud and the Token to Authenticate to
 	 * generate the Token read this: http://www.combase-usa.com/qa/api-authentication/
 	 *
@@ -211,7 +35,9 @@ public class CloudLink
 	{
 		super();
 		if (!cloudUrl.endsWith("/api/v1"))
+		{
 			cloudUrl = cloudUrl + "/api/v1";
+		}
 		ApiCon = new ApiConnector(cloudUrl, token);
 	}
 
@@ -257,6 +83,14 @@ public class CloudLink
 			ApiCon.fetchData(DataType.customer, ReferenceType.customerName, reference));
 	}
 
+	public String getJSONByDay(final DataType type, final int year, final int month,
+		final int dayOfMonth) throws ApiNotReachableException, KoronaCloudAPIErrorMessageException,
+		InvalidTokenException
+	{
+		final String reference = year + "/" + month + "/" + dayOfMonth;
+		return new String(ApiCon.fetchData(type, ReferenceType.day, reference));
+	}
+
 	/**
 	 * gets jsonstring by name.
 	 *
@@ -279,7 +113,6 @@ public class CloudLink
 		reference = reference.replaceAll("!", "%21");
 		return new String(ApiCon.fetchData(type, ReferenceType.name, reference));
 	}
-
 
 	public String getJSONByNumber(final DataType type, final String reference)
 		throws ApiNotReachableException, KoronaCloudAPIErrorMessageException, InvalidTokenException
@@ -333,6 +166,7 @@ public class CloudLink
 		return new String(ApiCon.fetchData(type, ReferenceType.uuid, reference));
 	}
 
+
 	/**
 	 * Gets a JSONString from the cloud by offset, calling the page reference.
 	 *
@@ -355,7 +189,9 @@ public class CloudLink
 		throws ApiNotReachableException, KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		if (ApiCon == null)
+		{
 			LOGGER.error("Please initiliaze a CloudLink Object first!");
+		}
 		if (reference == null)
 			return null;
 
@@ -381,6 +217,184 @@ public class CloudLink
 		throws KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		return ApiCon.postData(type, obj);
+	}
+
+	/**
+	 * Gives us our Connector, which is the interface we need to interact with the Cloud
+	 *
+	 * @return
+	 */
+	public static ApiConnector getConnector()
+	{
+		if (ApiCon == null)
+		{
+			LOGGER.error("Please initiliaze a CloudLink Object first!");
+		}
+		return ApiCon;
+	}
+
+	/**
+	 * Gets the number of an Object in the Cloud By Name/Uuid
+	 *
+	 * @param type
+	 * @param reference
+	 * @return
+	 * @throws InvalidTokenException
+	 * @throws KoronaCloudAPIErrorMessageException
+	 * @throws IOException
+	 */
+	public static String getNumberByName(final DataType type, String reference)
+		throws KoronaCloudAPIErrorMessageException, InvalidTokenException
+	{
+		if (ApiCon == null)
+		{
+			LOGGER.error("Please initiliaze a CloudLink Object first!");
+		}
+		if (reference == null)
+			return null;
+
+		reference = reference.replaceAll("%", "%20");
+		reference = reference.replaceAll(" ", "%20");
+		reference = reference.replaceAll("/", "%2F");
+		reference = reference.replaceAll("&", "%26");
+		reference = reference.replaceAll("#", "%23");
+		reference = reference.replaceAll("!", "%21");
+
+		try
+		{
+			JSONObject obj = null;
+			try
+			{
+				obj = new JSONObject(ApiCon.fetchData(type, ReferenceType.name, reference)
+					.toString());
+			}
+			catch (final ApiNotReachableException e)
+			{
+				e.printStackTrace();
+				return null;
+			}
+			if (obj.has("result") && !obj.opt("result").equals(null))
+			{
+				obj = obj.getJSONObject("result");
+				if (obj.has("number") && !obj.opt("number").equals(null))
+					return obj.getString("number");
+			}
+		}
+		catch (final JSONException e)
+		{
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static String getNumberByUuid(final DataType type, final String reference)
+		throws ApiNotReachableException, KoronaCloudAPIErrorMessageException, InvalidTokenException
+	{
+		if (ApiCon == null)
+		{
+			LOGGER.error("Please initiliaze a CloudLink Object first!");
+		}
+		if (reference == null)
+			return null;
+		try
+		{
+			JSONObject obj = new JSONObject(ApiCon.fetchData(type, ReferenceType.number, reference)
+				.toString());
+			if (obj.has("result") && !obj.opt("result").equals(null))
+			{
+				obj = obj.getJSONObject("result");
+				if (obj.has("number") && !obj.opt("number").equals(null))
+					return obj.getString("number");
+			}
+		}
+		catch (final JSONException e)
+		{
+			e.printStackTrace();
+			return null;
+
+		}
+		return null;
+	}
+
+	/**
+	 * Gets the UUID of an Object in the Cloud by Name/Number
+	 *
+	 * @param type
+	 * @param reference
+	 * @return
+	 * @throws InvalidTokenException
+	 * @throws KoronaCloudAPIErrorMessageException
+	 */
+	public static String getUUIDByName(final DataType type, String reference)
+		throws KoronaCloudAPIErrorMessageException, InvalidTokenException
+	{
+		if (ApiCon == null)
+		{
+			LOGGER.error("Please initiliaze a CloudLink Object first!");
+		}
+		if (reference == null)
+			return null;
+
+		reference = reference.replaceAll("%", "%20");
+		reference = reference.replaceAll(" ", "%20");
+		reference = reference.replaceAll("/", "%2F");
+		reference = reference.replaceAll("&", "%26");
+		reference = reference.replaceAll("#", "%23");
+		reference = reference.replaceAll("!", "%21");
+
+		try
+		{
+
+			JSONObject obj = null;
+			try
+			{
+				obj = new JSONObject(ApiCon.fetchData(type, ReferenceType.name, reference)
+					.toString());
+			}
+			catch (final ApiNotReachableException e)
+			{
+				LOGGER.error(e);
+				return null;
+			}
+			if (obj.has("result") && !obj.opt("result").equals(null))
+			{
+				obj = obj.getJSONObject("result");
+				if (obj.has("uuid") && !obj.opt("uuid").equals(null))
+					return obj.get("uuid").toString();
+			}
+		}
+		catch (final JSONException e)
+		{
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static String getUUIDByNumber(final DataType type, final String reference)
+		throws ApiNotReachableException, KoronaCloudAPIErrorMessageException, InvalidTokenException
+	{
+		if (ApiCon == null)
+		{
+			LOGGER.error("Please initiliaze a CloudLink Object first!");
+		}
+		if (reference == null)
+			return null;
+		try
+		{
+			JSONObject obj = new JSONObject(ApiCon.fetchData(type, ReferenceType.number, reference)
+				.toString());
+			if (obj.has("result") && !obj.opt("result").equals(null))
+			{
+				obj = obj.getJSONObject("result");
+				if (obj.has("uuid") && !obj.opt("uuid").equals(null))
+					return obj.get("uuid").toString();
+			}
+		}
+		catch (final JSONException e)
+		{
+			return null;
+		}
+		return null;
 	}
 
 }

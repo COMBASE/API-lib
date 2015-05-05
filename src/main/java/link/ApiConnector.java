@@ -205,11 +205,11 @@ public class ApiConnector
 
 		if (obj.length() == 0)
 		{
-			LOGGER.info("NO OBJECTS POSTED");
+			LOGGER.debug("NO OBJECTS POSTED");
 		}
 		else
 		{
-			LOGGER.info("posting " + obj.length() + " " + type + "s");
+			LOGGER.debug("posting " + obj.length() + " " + type + "s");
 		}
 
 		while (i < obj.length())
@@ -414,7 +414,7 @@ public class ApiConnector
 	 * @throws ArticleCodeMustBeUniqueException
 	 */
 	private void interpretResponse(final JSONObject responseJson) throws JSONException,
-	KoronaCloudAPIErrorMessageException, InvalidTokenException
+		KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 
 		try
