@@ -95,28 +95,7 @@ public class CloudResultIterator implements Iterator<JSONObject>
 			}
 			return hasNext();
 		}
-
 		return true;
-	}
-
-	private void refreshBuffer() throws ApiNotReachableException, JSONException,
-	KoronaCloudAPIErrorMessageException, InvalidTokenException
-	{
-		try
-		{
-			buffer = downloader.downloadByOffset(revision);
-		}
-		catch (final KoronaCloudAPIErrorMessageException e)
-		{
-			if (e.getErrorMap().containsKey(
-				ErrorMessages.No_object_found_for_revision.getErrorString()))
-				buffer = null;
-			else
-				throw new KoronaCloudAPIErrorMessageException(e, e.getErrorMap());
-		}
-		currentBufferIndex = -1;
-		if (buffer == null)
-			emptyData = true;
 	}
 
 	@Override
@@ -146,6 +125,30 @@ public class CloudResultIterator implements Iterator<JSONObject>
 	public void remove()
 	{
 
+	}
+
+	private void refreshBuffer() throws ApiNotReachableException, JSONException,
+	KoronaCloudAPIErrorMessageException, InvalidTokenException
+	{
+		try
+		{
+			buffer = downloader.downloadByOffset(revision);
+		}
+		catch (final KoronaCloudAPIErrorMessageException e)
+		{
+			if (e.getErrorMap().containsKey(
+				ErrorMessages.No_object_found_for_revision.getErrorString()))
+			{
+				buffer = null;
+			}
+			else
+				throw new KoronaCloudAPIErrorMessageException(e, e.getErrorMap());
+		}
+		currentBufferIndex = -1;
+		if (buffer == null)
+		{
+			emptyData = true;
+		}
 	}
 
 }
