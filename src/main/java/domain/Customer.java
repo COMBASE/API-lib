@@ -9,23 +9,16 @@ import org.codehaus.jettison.json.JSONObject;
 public class Customer extends AbstractNumberApiObject<Customer>
 {
 
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = 2258389891494944765L;
-	private CustomerGroup customerGroup;
-	private String company;
-	private String firstName;
-	private String lastName;
-	private String gender;
-	private String addressLine1;
-	private String city;
-	private String zipCode;
-	private String country;
-	private String email;
-	private String phone;
-	private Date birthday;
+	public static class Builder extends Init<Builder>
+	{
 
+		@Override
+		protected Builder self()
+		{
+			return this;
+		}
+
+	}
 	protected static abstract class Init<T extends Init<T>> extends AbstractNumberApiObject.Init<T>
 	{
 		private CustomerGroup customerGroup = null;
@@ -36,74 +29,15 @@ public class Customer extends AbstractNumberApiObject<Customer>
 		private String addressLine1 = null;
 		private String city = null;
 		private String zipCode = null;
+		private String state = null;
 		private String country = null;
 		private String email = null;
 		private String phone = null;
 		private Date birthday = null;
 
-		public T company(final String value)
-		{
-			company = value;
-			return self();
-		}
-
-		public T customerGroup(final CustomerGroup grp)
-		{
-			customerGroup = grp;
-			return self();
-		}
-
-		public T firstName(final String value)
-		{
-			firstName = value;
-			return self();
-		}
-
-		public T lastName(final String value)
-		{
-			lastName = value;
-			return self();
-		}
-
-		public T gender(final String value)
-		{
-			gender = value;
-			return self();
-		}
-
 		public T addressLine1(final String value)
 		{
 			addressLine1 = value;
-			return self();
-		}
-
-		public T city(final String value)
-		{
-			city = value;
-			return self();
-		}
-
-		public T zipCode(final String value)
-		{
-			zipCode = value;
-			return self();
-		}
-
-		public T country(final String value)
-		{
-			country = value;
-			return self();
-		}
-
-		public T email(final String value)
-		{
-			email = value;
-			return self();
-		}
-
-		public T phone(final String value)
-		{
-			phone = value;
 			return self();
 		}
 
@@ -118,18 +52,93 @@ public class Customer extends AbstractNumberApiObject<Customer>
 		{
 			return new Customer(this);
 		}
-	}
 
-	public static class Builder extends Init<Builder>
-	{
-
-		@Override
-		protected Builder self()
+		public T city(final String value)
 		{
-			return this;
+			city = value;
+			return self();
 		}
 
+		public T company(final String value)
+		{
+			company = value;
+			return self();
+		}
+
+		public T country(final String value)
+		{
+			country = value;
+			return self();
+		}
+
+		public T customerGroup(final CustomerGroup grp)
+		{
+			customerGroup = grp;
+			return self();
+		}
+
+		public T email(final String value)
+		{
+			email = value;
+			return self();
+		}
+
+		public T firstName(final String value)
+		{
+			firstName = value;
+			return self();
+		}
+
+		public T gender(final String value)
+		{
+			gender = value;
+			return self();
+		}
+
+		public T lastName(final String value)
+		{
+			lastName = value;
+			return self();
+		}
+
+		public T phone(final String value)
+		{
+			phone = value;
+			return self();
+		}
+
+		public T state(final String value)
+		{
+			state = value;
+			return self();
+		}
+
+		public T zipCode(final String value)
+		{
+			zipCode = value;
+			return self();
+		}
 	}
+
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 2258389891494944765L;
+	private CustomerGroup customerGroup;
+	private String company;
+	private String firstName;
+	private String lastName;
+	private String gender;
+	private String addressLine1;
+	private String city;
+	private String zipCode;
+	private String country;
+	private String email;
+
+	private String phone;
+
+	private Date birthday;
+	private String state;
 
 	public Customer(final Init<?> init)
 	{
@@ -147,6 +156,7 @@ public class Customer extends AbstractNumberApiObject<Customer>
 		phone = init.phone;
 		birthday = init.birthday;
 		company = init.company;
+		setState(init.state);
 	}
 
 // public static Customer fromJSON(JSONObject obj) throws JSONException
@@ -180,34 +190,11 @@ public class Customer extends AbstractNumberApiObject<Customer>
 // return CloudLink.getConnector().postData(DataType.customer, this.toJSON());
 // }
 
-	public String getFirstName()
+	@Override
+	public boolean equals(final Object obj)
 	{
-		return firstName;
-	}
 
-	public void setFirstName(final String firstName)
-	{
-		this.firstName = firstName;
-	}
-
-	public String getLastName()
-	{
-		return lastName;
-	}
-
-	public void setLastName(final String lastName)
-	{
-		this.lastName = lastName;
-	}
-
-	public String getGender()
-	{
-		return gender;
-	}
-
-	public void setGender(final String gender)
-	{
-		this.gender = gender;
+		return obj.hashCode() == this.hashCode();
 	}
 
 	public String getAddressLine1()
@@ -215,9 +202,9 @@ public class Customer extends AbstractNumberApiObject<Customer>
 		return addressLine1;
 	}
 
-	public void setAddressLine1(final String addressLine1)
+	public Date getBirthday()
 	{
-		this.addressLine1 = addressLine1;
+		return birthday;
 	}
 
 	public String getCity()
@@ -225,19 +212,9 @@ public class Customer extends AbstractNumberApiObject<Customer>
 		return city;
 	}
 
-	public void setCity(final String city)
+	public String getCompany()
 	{
-		this.city = city;
-	}
-
-	public String getZipCode()
-	{
-		return zipCode;
-	}
-
-	public void setZipCode(final String zipCode)
-	{
-		this.zipCode = zipCode;
+		return company;
 	}
 
 	public String getCountry()
@@ -245,9 +222,9 @@ public class Customer extends AbstractNumberApiObject<Customer>
 		return country;
 	}
 
-	public void setCountry(final String country)
+	public CustomerGroup getCustomerGroup()
 	{
-		this.country = country;
+		return customerGroup;
 	}
 
 	public String getEmail()
@@ -255,9 +232,19 @@ public class Customer extends AbstractNumberApiObject<Customer>
 		return email;
 	}
 
-	public void setEmail(final String email)
+	public String getFirstName()
 	{
-		this.email = email;
+		return firstName;
+	}
+
+	public String getGender()
+	{
+		return gender;
+	}
+
+	public String getLastName()
+	{
+		return lastName;
 	}
 
 	public String getPhone()
@@ -265,36 +252,14 @@ public class Customer extends AbstractNumberApiObject<Customer>
 		return phone;
 	}
 
-	public void setPhone(final String phone)
+	public String getState()
 	{
-		this.phone = phone;
+		return state;
 	}
 
-	public CustomerGroup getCustomerGroup()
+	public String getZipCode()
 	{
-		return customerGroup;
-	}
-
-	public void setCustomerGroup(final CustomerGroup customerGroup)
-	{
-		this.customerGroup = customerGroup;
-	}
-
-	public Date getBirthday()
-	{
-		return birthday;
-	}
-
-	public void setBirthday(final Date birthday)
-	{
-		this.birthday = birthday;
-	}
-
-	@Override
-	public boolean equals(final Object obj)
-	{
-
-		return obj.hashCode() == this.hashCode();
+		return zipCode;
 	}
 
 	@Override
@@ -321,6 +286,71 @@ public class Customer extends AbstractNumberApiObject<Customer>
 		return result;
 	}
 
+	public void setAddressLine1(final String addressLine1)
+	{
+		this.addressLine1 = addressLine1;
+	}
+
+	public void setBirthday(final Date birthday)
+	{
+		this.birthday = birthday;
+	}
+
+	public void setCity(final String city)
+	{
+		this.city = city;
+	}
+
+	public void setCompany(final String company)
+	{
+		this.company = company;
+	}
+
+	public void setCountry(final String country)
+	{
+		this.country = country;
+	}
+
+	public void setCustomerGroup(final CustomerGroup customerGroup)
+	{
+		this.customerGroup = customerGroup;
+	}
+
+	public void setEmail(final String email)
+	{
+		this.email = email;
+	}
+
+	public void setFirstName(final String firstName)
+	{
+		this.firstName = firstName;
+	}
+
+	public void setGender(final String gender)
+	{
+		this.gender = gender;
+	}
+
+	public void setLastName(final String lastName)
+	{
+		this.lastName = lastName;
+	}
+
+	public void setPhone(final String phone)
+	{
+		this.phone = phone;
+	}
+
+	public void setState(final String state)
+	{
+		this.state = state;
+	}
+
+	public void setZipCode(final String zipCode)
+	{
+		this.zipCode = zipCode;
+	}
+
 	@Override
 	public JSONObject toJSON() throws JSONException
 	{
@@ -339,6 +369,7 @@ public class Customer extends AbstractNumberApiObject<Customer>
 		obj.put("phone", phone);
 		obj.put("birthday", birthday);
 		obj.put("company", company);
+		obj.put("state", state);
 
 		return obj;
 	}
@@ -361,22 +392,14 @@ public class Customer extends AbstractNumberApiObject<Customer>
 			.zipCode(obj.getString("zipCode"))
 			.addressLine1(obj.getString("addressLine1"))
 			.city(obj.getString("city"))
+			.state(obj.getString("state"))
 			.country(obj.getString("country"))
 			.phone(obj.getString("phone"))
 			.birthday(prepareDate(obj, "birthday"))
 			.company(obj.getString("company"))
+			.birthday(prepareDate(obj, "birthday"))
 			.build();
 
 		return cust;
-	}
-
-	public String getCompany()
-	{
-		return company;
-	}
-
-	public void setCompany(final String company)
-	{
-		this.company = company;
 	}
 }

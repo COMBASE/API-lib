@@ -10,10 +10,6 @@ import org.codehaus.jettison.json.JSONObject;
 
 public class Supplier extends AbstractNameAndNumberApiObject<Supplier>
 {
-	private static final long serialVersionUID = 5411304390291780800L;
-
-	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
-
 	public static class Builder extends Init<Builder>
 	{
 		@Override
@@ -24,7 +20,7 @@ public class Supplier extends AbstractNameAndNumberApiObject<Supplier>
 	}
 
 	protected static abstract class Init<T extends Init<T>> extends
-		AbstractNameAndNumberApiObject.Init<T>
+	AbstractNameAndNumberApiObject.Init<T>
 	{
 		private String customerNumber;
 		private String additionalInformation;
@@ -57,9 +53,9 @@ public class Supplier extends AbstractNameAndNumberApiObject<Supplier>
 		private String iban;
 		private String creditorIdentifier;
 
-		public T customerNumber(final String value)
+		public T accountNumber(final String value)
 		{
-			customerNumber = value;
+			accountNumber = value;
 			return self();
 		}
 
@@ -69,21 +65,27 @@ public class Supplier extends AbstractNameAndNumberApiObject<Supplier>
 			return self();
 		}
 
-		public T contactPersonSalutation(final String value)
+		public T bank(final String value)
 		{
-			contactPersonSalutation = value;
+			bank = value;
 			return self();
 		}
 
-		public T contactPersonFirstname(final String value)
+		public T bic(final String value)
 		{
-			contactPersonFirstname = value;
+			bic = value;
 			return self();
 		}
 
-		public T contactPersonSurname(final String value)
+		@Override
+		public Supplier build()
 		{
-			contactPersonSurname = value;
+			return new Supplier(this);
+		}
+
+		public T contactEmail(final String value)
+		{
+			contactEmail = value;
 			return self();
 		}
 
@@ -93,15 +95,33 @@ public class Supplier extends AbstractNameAndNumberApiObject<Supplier>
 			return self();
 		}
 
-		public T contactPersonPhone(final String value)
+		public T contactPersonFirstname(final String value)
 		{
-			contactPersonPhone = value;
+			contactPersonFirstname = value;
 			return self();
 		}
 
 		public T contactPersonMobile(final String value)
 		{
 			contactPersonMobile = value;
+			return self();
+		}
+
+		public T contactPersonPhone(final String value)
+		{
+			contactPersonPhone = value;
+			return self();
+		}
+
+		public T contactPersonSalutation(final String value)
+		{
+			contactPersonSalutation = value;
+			return self();
+		}
+
+		public T contactPersonSurname(final String value)
+		{
+			contactPersonSurname = value;
 			return self();
 		}
 
@@ -123,21 +143,45 @@ public class Supplier extends AbstractNameAndNumberApiObject<Supplier>
 			return self();
 		}
 
-		public T contactEmail(final String value)
-		{
-			contactEmail = value;
-			return self();
-		}
-
 		public T contactWebsite(final String value)
 		{
 			contactWebsite = value;
 			return self();
 		}
 
-		public T orderPhone(final String value)
+		public T creditorIdentifier(final String value)
 		{
-			orderPhone = value;
+			creditorIdentifier = value;
+			return self();
+		}
+
+		public T customerNumber(final String value)
+		{
+			customerNumber = value;
+			return self();
+		}
+
+		public T delayedDeliveryStarting(final BigDecimal value)
+		{
+			delayedDeliveryStarting = value;
+			return self();
+		}
+
+		public T deliveryTime(final BigDecimal value)
+		{
+			deliveryTime = value;
+			return self();
+		}
+
+		public T deliveryWeekdays(final BigDecimal value)
+		{
+			deliveryWeekdays = value;
+			return self();
+		}
+
+		public T iban(final String value)
+		{
+			iban = value;
 			return self();
 		}
 
@@ -147,9 +191,9 @@ public class Supplier extends AbstractNameAndNumberApiObject<Supplier>
 			return self();
 		}
 
-		public T orderWeekdays(final BigDecimal value)
+		public T orderPhone(final String value)
 		{
-			orderWeekdays = value;
+			orderPhone = value;
 			return self();
 		}
 
@@ -165,27 +209,9 @@ public class Supplier extends AbstractNameAndNumberApiObject<Supplier>
 			return self();
 		}
 
-		public T deliveryWeekdays(final BigDecimal value)
+		public T orderWeekdays(final BigDecimal value)
 		{
-			deliveryWeekdays = value;
-			return self();
-		}
-
-		public T deliveryTime(final BigDecimal value)
-		{
-			deliveryTime = value;
-			return self();
-		}
-
-		public T delayedDeliveryStarting(final BigDecimal value)
-		{
-			delayedDeliveryStarting = value;
-			return self();
-		}
-
-		public T shipper(final String value)
-		{
-			shipper = value;
+			orderWeekdays = value;
 			return self();
 		}
 
@@ -201,48 +227,22 @@ public class Supplier extends AbstractNameAndNumberApiObject<Supplier>
 			return self();
 		}
 
-		public T bank(final String value)
-		{
-			bank = value;
-			return self();
-		}
-
 		public T rountingCode(final String value)
 		{
 			rountingCode = value;
 			return self();
 		}
 
-		public T bic(final String value)
+		public T shipper(final String value)
 		{
-			bic = value;
+			shipper = value;
 			return self();
-		}
-
-		public T accountNumber(final String value)
-		{
-			accountNumber = value;
-			return self();
-		}
-
-		public T iban(final String value)
-		{
-			iban = value;
-			return self();
-		}
-
-		public T creditorIdentifier(final String value)
-		{
-			creditorIdentifier = value;
-			return self();
-		}
-
-		@Override
-		public Supplier build()
-		{
-			return new Supplier(this);
 		}
 	}
+
+	private static final long serialVersionUID = 5411304390291780800L;
+
+	private static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 
 	private String customerNumber;
 	private String additionalInformation;
@@ -311,14 +311,9 @@ public class Supplier extends AbstractNameAndNumberApiObject<Supplier>
 		creditorIdentifier = init.creditorIdentifier;
 	}
 
-	public String getCustomerNumber()
+	public String getAccountNumber()
 	{
-		return customerNumber;
-	}
-
-	public void setCustomerNumber(String customerNumber)
-	{
-		this.customerNumber = customerNumber;
+		return accountNumber;
 	}
 
 	public String getAdditionalInformation()
@@ -326,249 +321,9 @@ public class Supplier extends AbstractNameAndNumberApiObject<Supplier>
 		return additionalInformation;
 	}
 
-	public void setAdditionalInformation(String additionalInformation)
-	{
-		this.additionalInformation = additionalInformation;
-	}
-
-	public String getContactPersonSalutation()
-	{
-		return contactPersonSalutation;
-	}
-
-	public void setContactPersonSalutation(String contactPersonSalutation)
-	{
-		this.contactPersonSalutation = contactPersonSalutation;
-	}
-
-	public String getContactPersonFirstname()
-	{
-		return contactPersonFirstname;
-	}
-
-	public void setContactPersonFirstname(String contactPersonFirstname)
-	{
-		this.contactPersonFirstname = contactPersonFirstname;
-	}
-
-	public String getContactPersonSurname()
-	{
-		return contactPersonSurname;
-	}
-
-	public void setContactPersonSurname(String contactPersonSurname)
-	{
-		this.contactPersonSurname = contactPersonSurname;
-	}
-
-	public String getContactPersonEmail()
-	{
-		return contactPersonEmail;
-	}
-
-	public void setContactPersonEmail(String contactPersonEmail)
-	{
-		this.contactPersonEmail = contactPersonEmail;
-	}
-
-	public String getContactPersonPhone()
-	{
-		return contactPersonPhone;
-	}
-
-	public void setContactPersonPhone(String contactPersonPhone)
-	{
-		this.contactPersonPhone = contactPersonPhone;
-	}
-
-	public String getContactPersonMobile()
-	{
-		return contactPersonMobile;
-	}
-
-	public void setContactPersonMobile(String contactPersonMobile)
-	{
-		this.contactPersonMobile = contactPersonMobile;
-	}
-
-	public String getContactPersonTelefax()
-	{
-		return contactPersonTelefax;
-	}
-
-	public void setContactPersonTelefax(String contactPersonTelefax)
-	{
-		this.contactPersonTelefax = contactPersonTelefax;
-	}
-
-	public String getContactPhone()
-	{
-		return contactPhone;
-	}
-
-	public void setContactPhone(String contactPhone)
-	{
-		this.contactPhone = contactPhone;
-	}
-
-	public String getContactTelefax()
-	{
-		return contactTelefax;
-	}
-
-	public void setContactTelefax(String contactTelefax)
-	{
-		this.contactTelefax = contactTelefax;
-	}
-
-	public String getContactEmail()
-	{
-		return contactEmail;
-	}
-
-	public void setContactEmail(String contactEmail)
-	{
-		this.contactEmail = contactEmail;
-	}
-
-	public String getContactWebsite()
-	{
-		return contactWebsite;
-	}
-
-	public void setContactWebsite(String contactWebsite)
-	{
-		this.contactWebsite = contactWebsite;
-	}
-
-	public String getOrderPhone()
-	{
-		return orderPhone;
-	}
-
-	public void setOrderPhone(String orderPhone)
-	{
-		this.orderPhone = orderPhone;
-	}
-
-	public String getOrderEmail()
-	{
-		return orderEmail;
-	}
-
-	public void setOrderEmail(String orderEmail)
-	{
-		this.orderEmail = orderEmail;
-	}
-
-	public BigDecimal getOrderWeekdays()
-	{
-		return orderWeekdays;
-	}
-
-	public void setOrderWeekdays(BigDecimal orderWeekdays)
-	{
-		this.orderWeekdays = orderWeekdays;
-	}
-
-	public Date getOrderTimeFrom()
-	{
-		return orderTimeFrom;
-	}
-
-	public void setOrderTimeFrom(Date orderTimeFrom)
-	{
-		this.orderTimeFrom = orderTimeFrom;
-	}
-
-	public Date getOrderTimeTo()
-	{
-		return orderTimeTo;
-	}
-
-	public void setOrderTimeTo(Date orderTimeTo)
-	{
-		this.orderTimeTo = orderTimeTo;
-	}
-
-	public BigDecimal getDeliveryWeekdays()
-	{
-		return deliveryWeekdays;
-	}
-
-	public void setDeliveryWeekdays(BigDecimal deliveryWeekdays)
-	{
-		this.deliveryWeekdays = deliveryWeekdays;
-	}
-
-	public BigDecimal getDeliveryTime()
-	{
-		return deliveryTime;
-	}
-
-	public void setDeliveryTime(BigDecimal deliveryTime)
-	{
-		this.deliveryTime = deliveryTime;
-	}
-
-	public BigDecimal getDelayedDeliveryStarting()
-	{
-		return delayedDeliveryStarting;
-	}
-
-	public void setDelayedDeliveryStarting(BigDecimal delayedDeliveryStarting)
-	{
-		this.delayedDeliveryStarting = delayedDeliveryStarting;
-	}
-
-	public String getShipper()
-	{
-		return shipper;
-	}
-
-	public void setShipper(String shipper)
-	{
-		this.shipper = shipper;
-	}
-
-	public Currency getPaymentCurrency()
-	{
-		return paymentCurrency;
-	}
-
-	public void setPaymentCurrency(Currency paymentCurrency)
-	{
-		this.paymentCurrency = paymentCurrency;
-	}
-
-	public String getPaymentMethod()
-	{
-		return paymentMethod;
-	}
-
-	public void setPaymentMethod(String paymentMethod)
-	{
-		this.paymentMethod = paymentMethod;
-	}
-
 	public String getBank()
 	{
 		return bank;
-	}
-
-	public void setBank(String bank)
-	{
-		this.bank = bank;
-	}
-
-	public String getRountingCode()
-	{
-		return rountingCode;
-	}
-
-	public void setRountingCode(String rountingCode)
-	{
-		this.rountingCode = rountingCode;
 	}
 
 	public String getBic()
@@ -576,29 +331,59 @@ public class Supplier extends AbstractNameAndNumberApiObject<Supplier>
 		return bic;
 	}
 
-	public void setBic(String bic)
+	public String getContactEmail()
 	{
-		this.bic = bic;
+		return contactEmail;
 	}
 
-	public String getAccountNumber()
+	public String getContactPersonEmail()
 	{
-		return accountNumber;
+		return contactPersonEmail;
 	}
 
-	public void setAccountNumber(String accountNumber)
+	public String getContactPersonFirstname()
 	{
-		this.accountNumber = accountNumber;
+		return contactPersonFirstname;
 	}
 
-	public String getIban()
+	public String getContactPersonMobile()
 	{
-		return iban;
+		return contactPersonMobile;
 	}
 
-	public void setIban(String iban)
+	public String getContactPersonPhone()
 	{
-		this.iban = iban;
+		return contactPersonPhone;
+	}
+
+	public String getContactPersonSalutation()
+	{
+		return contactPersonSalutation;
+	}
+
+	public String getContactPersonSurname()
+	{
+		return contactPersonSurname;
+	}
+
+	public String getContactPersonTelefax()
+	{
+		return contactPersonTelefax;
+	}
+
+	public String getContactPhone()
+	{
+		return contactPhone;
+	}
+
+	public String getContactTelefax()
+	{
+		return contactTelefax;
+	}
+
+	public String getContactWebsite()
+	{
+		return contactWebsite;
 	}
 
 	public String getCreditorIdentifier()
@@ -606,9 +391,224 @@ public class Supplier extends AbstractNameAndNumberApiObject<Supplier>
 		return creditorIdentifier;
 	}
 
-	public void setCreditorIdentifier(String creditorIdentifier)
+	public String getCustomerNumber()
+	{
+		return customerNumber;
+	}
+
+	public BigDecimal getDelayedDeliveryStarting()
+	{
+		return delayedDeliveryStarting;
+	}
+
+	public BigDecimal getDeliveryTime()
+	{
+		return deliveryTime;
+	}
+
+	public BigDecimal getDeliveryWeekdays()
+	{
+		return deliveryWeekdays;
+	}
+
+	public String getIban()
+	{
+		return iban;
+	}
+
+	public String getOrderEmail()
+	{
+		return orderEmail;
+	}
+
+	public String getOrderPhone()
+	{
+		return orderPhone;
+	}
+
+	public Date getOrderTimeFrom()
+	{
+		return orderTimeFrom;
+	}
+
+	public Date getOrderTimeTo()
+	{
+		return orderTimeTo;
+	}
+
+	public BigDecimal getOrderWeekdays()
+	{
+		return orderWeekdays;
+	}
+
+	public Currency getPaymentCurrency()
+	{
+		return paymentCurrency;
+	}
+
+	public String getPaymentMethod()
+	{
+		return paymentMethod;
+	}
+
+	public String getRountingCode()
+	{
+		return rountingCode;
+	}
+
+	public String getShipper()
+	{
+		return shipper;
+	}
+
+	public void setAccountNumber(final String accountNumber)
+	{
+		this.accountNumber = accountNumber;
+	}
+
+	public void setAdditionalInformation(final String additionalInformation)
+	{
+		this.additionalInformation = additionalInformation;
+	}
+
+	public void setBank(final String bank)
+	{
+		this.bank = bank;
+	}
+
+	public void setBic(final String bic)
+	{
+		this.bic = bic;
+	}
+
+	public void setContactEmail(final String contactEmail)
+	{
+		this.contactEmail = contactEmail;
+	}
+
+	public void setContactPersonEmail(final String contactPersonEmail)
+	{
+		this.contactPersonEmail = contactPersonEmail;
+	}
+
+	public void setContactPersonFirstname(final String contactPersonFirstname)
+	{
+		this.contactPersonFirstname = contactPersonFirstname;
+	}
+
+	public void setContactPersonMobile(final String contactPersonMobile)
+	{
+		this.contactPersonMobile = contactPersonMobile;
+	}
+
+	public void setContactPersonPhone(final String contactPersonPhone)
+	{
+		this.contactPersonPhone = contactPersonPhone;
+	}
+
+	public void setContactPersonSalutation(final String contactPersonSalutation)
+	{
+		this.contactPersonSalutation = contactPersonSalutation;
+	}
+
+	public void setContactPersonSurname(final String contactPersonSurname)
+	{
+		this.contactPersonSurname = contactPersonSurname;
+	}
+
+	public void setContactPersonTelefax(final String contactPersonTelefax)
+	{
+		this.contactPersonTelefax = contactPersonTelefax;
+	}
+
+	public void setContactPhone(final String contactPhone)
+	{
+		this.contactPhone = contactPhone;
+	}
+
+	public void setContactTelefax(final String contactTelefax)
+	{
+		this.contactTelefax = contactTelefax;
+	}
+
+	public void setContactWebsite(final String contactWebsite)
+	{
+		this.contactWebsite = contactWebsite;
+	}
+
+	public void setCreditorIdentifier(final String creditorIdentifier)
 	{
 		this.creditorIdentifier = creditorIdentifier;
+	}
+
+	public void setCustomerNumber(final String customerNumber)
+	{
+		this.customerNumber = customerNumber;
+	}
+
+	public void setDelayedDeliveryStarting(final BigDecimal delayedDeliveryStarting)
+	{
+		this.delayedDeliveryStarting = delayedDeliveryStarting;
+	}
+
+	public void setDeliveryTime(final BigDecimal deliveryTime)
+	{
+		this.deliveryTime = deliveryTime;
+	}
+
+	public void setDeliveryWeekdays(final BigDecimal deliveryWeekdays)
+	{
+		this.deliveryWeekdays = deliveryWeekdays;
+	}
+
+	public void setIban(final String iban)
+	{
+		this.iban = iban;
+	}
+
+	public void setOrderEmail(final String orderEmail)
+	{
+		this.orderEmail = orderEmail;
+	}
+
+	public void setOrderPhone(final String orderPhone)
+	{
+		this.orderPhone = orderPhone;
+	}
+
+	public void setOrderTimeFrom(final Date orderTimeFrom)
+	{
+		this.orderTimeFrom = orderTimeFrom;
+	}
+
+	public void setOrderTimeTo(final Date orderTimeTo)
+	{
+		this.orderTimeTo = orderTimeTo;
+	}
+
+	public void setOrderWeekdays(final BigDecimal orderWeekdays)
+	{
+		this.orderWeekdays = orderWeekdays;
+	}
+
+	public void setPaymentCurrency(final Currency paymentCurrency)
+	{
+		this.paymentCurrency = paymentCurrency;
+	}
+
+	public void setPaymentMethod(final String paymentMethod)
+	{
+		this.paymentMethod = paymentMethod;
+	}
+
+	public void setRountingCode(final String rountingCode)
+	{
+		this.rountingCode = rountingCode;
+	}
+
+	public void setShipper(final String shipper)
+	{
+		this.shipper = shipper;
 	}
 
 	@Override
@@ -657,106 +657,172 @@ public class Supplier extends AbstractNameAndNumberApiObject<Supplier>
 	public static Supplier fromJSON(JSONObject obj) throws JSONException, ParseException
 	{
 		if (obj.has("result") && obj.getString("result") != null)
+		{
 			obj = obj.getJSONObject("result");
+		}
 
-		Supplier sup = new Supplier.Builder().build();
+		final Supplier sup = new Supplier.Builder().build();
 
 		if (obj.has("number"))
+		{
 			sup.setNumber(obj.getString("number"));
+		}
 
 		if (!obj.isNull("uuid"))
+		{
 			sup.setId(obj.getString("uuid"));
+		}
 
 		if (!obj.isNull("customerNumber"))
+		{
 			sup.setCustomerNumber(obj.getString("customerNumber"));
+		}
 
 		if (!obj.isNull("additionalInformation"))
+		{
 			sup.setAdditionalInformation(obj.getString("additionalInformation"));
+		}
 
 		if (!obj.isNull("contactPersonSalutation"))
+		{
 			sup.setContactPersonSalutation(obj.getString("contactPersonSalutation"));
+		}
 
 		if (!obj.isNull("contactPersonFirstname"))
+		{
 			sup.setContactPersonFirstname(obj.getString("contactPersonFirstname"));
+		}
 
 		if (!obj.isNull("contactPersonSurname"))
+		{
 			sup.setContactPersonSurname(obj.getString("contactPersonSurname"));
+		}
 
 		if (!obj.isNull("contactPersonEmail"))
+		{
 			sup.setContactPersonEmail(obj.getString("contactPersonEmail"));
+		}
 
 		if (!obj.isNull("contactPersonPhone"))
+		{
 			sup.setContactPersonPhone(obj.getString("contactPersonPhone"));
+		}
 
 		if (!obj.isNull("contactPersonMobile"))
+		{
 			sup.setContactPersonMobile(obj.getString("contactPersonMobile"));
+		}
 
 		if (!obj.isNull("contactPersonTelefax"))
+		{
 			sup.setContactPersonTelefax(obj.getString("contactPersonTelefax"));
+		}
 
 		if (!obj.isNull("contactPhone"))
+		{
 			sup.setContactPhone(obj.getString("contactPhone"));
+		}
 
 		if (!obj.isNull("contactTelefax"))
+		{
 			sup.setContactTelefax(obj.getString("contactTelefax"));
+		}
 
 		if (!obj.isNull("contactEmail"))
+		{
 			sup.setContactEmail(obj.getString("contactEmail"));
+		}
 
 		if (!obj.isNull("contactWebsite"))
+		{
 			sup.setContactWebsite(obj.getString("contactWebsite"));
+		}
 
 		if (!obj.isNull("orderPhone"))
+		{
 			sup.setOrderPhone(obj.getString("orderPhone"));
+		}
 
 		if (!obj.isNull("orderEmail"))
+		{
 			sup.setOrderEmail(obj.getString("orderEmail"));
+		}
 
 		if (!obj.isNull("orderWeekdays"))
-			sup.setOrderWeekdays(new BigDecimal(obj.getDouble("orderWeekdays")));
+		{
+			sup.setOrderWeekdays(prepareBigDecimal(obj, "orderWeekdays"));
+		}
 
 		if (!obj.isNull("orderTimeFrom"))
-			sup.setOrderTimeFrom(inputDf.parse(obj.getString("orderTimeFrom")));
+		{
+			sup.setOrderTimeFrom(prepareDate(obj, "orderTimeFrom"));
+		}
 
 		if (!obj.isNull("orderTimeTo"))
-			sup.setOrderTimeTo(inputDf.parse(obj.getString("orderTimeTo")));
+		{
+			sup.setOrderTimeTo(prepareDate(obj, "orderTimeTo"));
+		}
 
 		if (!obj.isNull("deliveryWeekdays"))
-			sup.setDeliveryWeekdays(new BigDecimal(obj.getDouble("deliveryWeekdays")));
+		{
+			sup.setDeliveryWeekdays(prepareBigDecimal(obj, "deliveryWeekdays"));
+		}
 
 		if (!obj.isNull("deliveryTime"))
-			sup.setDeliveryTime(new BigDecimal(obj.getDouble("deliveryTime")));
+		{
+			sup.setDeliveryTime(prepareBigDecimal(obj, "deliveryTime"));
+		}
 
 		if (!obj.isNull("delayedDeliveryStarting"))
-			sup.setDelayedDeliveryStarting(new BigDecimal(obj.getDouble("delayedDeliveryStarting")));
+		{
+			sup.setDelayedDeliveryStarting(prepareBigDecimal(obj, "delayedDeliveryStarting"));
+		}
 
 		if (!obj.isNull("shipper"))
+		{
 			sup.setShipper(obj.getString("shipper"));
+		}
 
 		if (!obj.isNull("paymentCurrency"))
+		{
 			sup.setPaymentCurrency(new Currency.Builder().id(obj.getString("paymentCurrency"))
 				.build());
+		}
 
 		if (!obj.isNull("paymentMethod"))
+		{
 			sup.setPaymentMethod(obj.getString("paymentMethod"));
+		}
 
 		if (!obj.isNull("bank"))
+		{
 			sup.setBank(obj.getString("bank"));
+		}
 
 		if (!obj.isNull("rountingCode"))
+		{
 			sup.setRountingCode(obj.getString("rountingCode"));
+		}
 
 		if (!obj.isNull("bic"))
+		{
 			sup.setBic(obj.getString("bic"));
+		}
 
 		if (!obj.isNull("accountNumber"))
+		{
 			sup.setAccountNumber(obj.getString("accountNumber"));
+		}
 
 		if (!obj.isNull("iban"))
+		{
 			sup.setIban(obj.getString("iban"));
+		}
 
 		if (!obj.isNull("creditorIdentifier"))
+		{
 			sup.setCreditorIdentifier(obj.getString("creditorIdentifier"));
+		}
 
 		return sup;
 	}

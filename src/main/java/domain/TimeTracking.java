@@ -62,31 +62,6 @@ public class TimeTracking extends AbstractApiObject<TimeTracking>
 	 */
 	private static final long serialVersionUID = -740149629390934463L;
 
-	public static TimeTracking fromJSON(JSONObject obj) throws JSONException, ParseException
-	{
-		if (obj.has("result") && obj.getString("result") != null)
-			obj = obj.getJSONObject("result");
-
-		// Date
-		final String date = obj.getString("start");
-		Date startTime = null;
-
-		startTime = inputDf.parse(date);
-
-
-		final TimeTrackingEntities ent = new TimeTrackingEntities.Builder().build();
-		ent.setId(obj.getString("timeTrackingEntity"));
-		final Cashier cash = new Cashier.Builder().build();
-		cash.setId(obj.getString("cashier"));
-		final TimeTracking tTrack = new TimeTracking.Builder().deleted(obj.getBoolean("deleted"))
-			.start(startTime)
-			.timeTrackingentity(ent)
-			.cashier(cash)
-			.revision(obj.getLong("revision"))
-			.build();
-		return tTrack;
-	}
-
 	private Cashier cashier;
 
 	private String org;
@@ -94,16 +69,6 @@ public class TimeTracking extends AbstractApiObject<TimeTracking>
 	private Date start;
 
 	private TimeTrackingEntities timeTrackingEntity;
-
-// public boolean post() throws IOException
-// {
-//
-// if (cashier != null && cashier.getUuid() == null)
-// cashier.post();
-// if (timeTrackingEntity != null && timeTrackingEntity.getUuid() == null)
-// timeTrackingEntity.post();
-// return CloudLink.getConnector().postData(DataType.timeTracking, this.toJSON());
-// }
 
 	private TimeTracking(final Init<?> init)
 	{
@@ -114,6 +79,16 @@ public class TimeTracking extends AbstractApiObject<TimeTracking>
 		timeTrackingEntity = init.timeTrackingEntity;
 
 	}
+
+// public boolean post() throws IOException
+// {
+//
+// if (cashier != null && cashier.getUuid() == null)
+// cashier.post();
+// if (timeTrackingEntity != null && timeTrackingEntity.getUuid() == null)
+// timeTrackingEntity.post();
+// return CloudLink.getConnector().postData(DataType.timeTracking, this.toJSON());
+// }
 
 	@Override
 	public boolean equals(final Object obj)
@@ -166,11 +141,11 @@ public class TimeTracking extends AbstractApiObject<TimeTracking>
 		this.cashier = cashier;
 	}
 
-
 	public void setOrg(final String org)
 	{
 		this.org = org;
 	}
+
 
 	public void setStart(final Date start)
 	{
@@ -194,5 +169,25 @@ public class TimeTracking extends AbstractApiObject<TimeTracking>
 		obj.put("timeTrackingEntity", timeTrackingEntity);
 
 		return obj;
+	}
+
+	public static TimeTracking fromJSON(JSONObject obj) throws JSONException, ParseException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+		{
+			obj = obj.getJSONObject("result");
+		}
+
+		final TimeTrackingEntities ent = new TimeTrackingEntities.Builder().build();
+		ent.setId(obj.getString("timeTrackingEntity"));
+		final Cashier cash = new Cashier.Builder().build();
+		cash.setId(obj.getString("cashier"));
+		final TimeTracking tTrack = new TimeTracking.Builder().deleted(obj.getBoolean("deleted"))
+			.start(prepareDate(obj, "start"))
+			.timeTrackingentity(ent)
+			.cashier(cash)
+			.revision(obj.getLong("revision"))
+			.build();
+		return tTrack;
 	}
 }

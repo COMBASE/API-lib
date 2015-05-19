@@ -44,6 +44,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		private List<SupplierItemPrice> supplierItemPrices = null;
 		private Boolean packaging = null;
 		private List<SubProduct> subProducts = new ArrayList<SubProduct>();
+		private BigDecimal recommendedRetailPrice = null;
 
 		private Boolean preparationArticle = null;
 
@@ -154,6 +155,12 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		public T prices(final Price p)
 		{
 			prices.add(p);
+			return self();
+		}
+
+		public T recommendedRetailPrice(final BigDecimal value)
+		{
+			recommendedRetailPrice = value;
 			return self();
 		}
 
@@ -277,6 +284,8 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 
 	private List<SubProduct> subProducts;
 
+	private BigDecimal recommendedRetailPrice;
+
 	private Product(final Init<?> init)
 	{
 		super(init);
@@ -301,6 +310,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		packaging = init.packaging;
 		tags = init.tags;
 		subProducts = init.subProducts;
+		setRecommendedRetailPrice(init.recommendedRetailPrice);
 	}
 
 	public void addCodes(final Collection<Product_Code> coll)
@@ -539,6 +549,11 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		return prices;
 	}
 
+	public BigDecimal getRecommendedRetailPrice()
+	{
+		return recommendedRetailPrice;
+	}
+
 	public Sector getSector()
 	{
 		return sector;
@@ -697,6 +712,11 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		this.prices = prices;
 	}
 
+	public void setRecommendedRetailPrice(final BigDecimal recommendedRetailPrice)
+	{
+		this.recommendedRetailPrice = recommendedRetailPrice;
+	}
+
 	public void setRequiresSerialNumber(final Boolean requiresSerialNumber)
 	{
 		this.requiresSerialNumber = requiresSerialNumber;
@@ -754,6 +774,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		obj.put("requiresSerialNumber", requiresSerialNumber);
 		obj.put("trackInventory", trackInventory);
 		obj.put("packaging", packaging);
+		obj.put("recommendedRetailPrice", recommendedRetailPrice);
 		// obj.put("packaging", packaging);
 		obj.put("preparationArticle", preparationArticle);
 		if (commodityGroup != null)
@@ -786,7 +807,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 			obj.put("supplierItemPrices", array);
 		}
 
-		if (prices != null && !prices.isEmpty())
+		if (prices != null)
 		{
 			final JSONArray array = new JSONArray();
 			for (final Price p : prices)
@@ -860,8 +881,6 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		return stringBuilder.toString();
 	}
 
-	// TODO implement BD fields basePriceMax basePriceMin in from/to JSON
-	// TODO implement SupplierItemPrice
 	public static Product fromJSON(JSONObject obj) throws JSONException, ParseException
 	{
 		if (obj.has("result") && obj.getString("result") != null)
@@ -905,6 +924,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 			.preparationArticle(obj.getBoolean("preparationArticle"))
 			.packaging(obj.getBoolean("packaging"))
 			.priceChangeable(obj.getBoolean("priceChangeable"))
+			.recommendedRetailPrice(prepareBigDecimal(obj, "recommendedRetailPrice"))
 			.build();
 
 		if (obj.has("number"))

@@ -185,45 +185,8 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 
 	private static final long serialVersionUID = 889206414092644647L;
 
-	public static Receipt fromJSON(JSONObject obj) throws JSONException, ParseException
-	{
-		if (obj.has("result") && obj.getString("result") != null)
-			obj = obj.getJSONObject("result");
-
-
-		final Cashier cash = new Cashier.Builder().build();
-		cash.setId(obj.getString("cashier"));
-		final CustomerGroup cGrp = new CustomerGroup.Builder().build();
-		cGrp.setId(obj.getString("customerGroup"));
-		final Customer cust = new Customer.Builder().build();
-		cust.setId(obj.getString("customer"));
-		Receipt rec = null;
-		rec = new Receipt.Builder().number(obj.getString("number"))
-			.deleted(obj.getBoolean("deleted"))
-			.revision(obj.getLong("revision"))
-			.cashier(cash)
-			.customerGroup(cGrp)
-			.customer(cust)
-			.receiptDiscountGrossAmount(prepareBigDecimal(obj, "receiptDiscountGrossAmount"))
-			.voided(obj.getBoolean("voided"))
-			.id(obj.getString("uuid"))
-			.grossTotalAmount(prepareBigDecimal(obj, "grossTotalAmount"))
-			.netTotalAmount(prepareBigDecimal(obj, "netTotalAmount"))
-			.taxAmount(prepareBigDecimal(obj, "taxAmount"))
-			.grossRevenueAmount(prepareBigDecimal(obj, "grossRevenueAmount"))
-			.netRevenueAmount(prepareBigDecimal(obj, "netRevenueAmount"))
-			.receiptDiscountAmount(prepareBigDecimal(obj, "receiptDiscountAmount"))
-			.receiptDiscountGrossAmount(prepareBigDecimal(obj, "receiptDiscountGrossAmount"))
-			.receiptDiscountNetAmount(prepareBigDecimal(obj, "receiptDiscountNetAmount"))
-			.creatTime(inputDf.parse(obj.getString("createTime")))
-			.modifiedTime(inputDf.parse(obj.getString("modifiedTime")))
-			.finishTime(inputDf.parse(obj.getString("finishTime")))
-			.build();
-
-		return rec;
-	}
-
 	private Cashier cashier;
+
 	private Date creatTime;
 	private String currency;
 	private CustomerGroup customerGroup;
@@ -241,22 +204,11 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 	private BigDecimal receiptDiscountAmount;
 	private BigDecimal receiptDiscountGrossAmount;
 	private BigDecimal receiptDiscountNetAmount;
-
 	private BigDecimal zCount;
 
 	private Boolean voided;
 
 	private Customer customer;
-
-
-// public boolean post() throws IOException
-// {
-//
-// if (cashier != null && cashier.getUuid() == null)
-// cashier.post();
-//
-// return CloudLink.getConnector().postData(DataType.receipt, this.toJSON());
-// }
 
 	public Receipt(final Init<?> init)
 	{
@@ -284,6 +236,16 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 		customer = init.customer;
 
 	}
+
+
+// public boolean post() throws IOException
+// {
+//
+// if (cashier != null && cashier.getUuid() == null)
+// cashier.post();
+//
+// return CloudLink.getConnector().postData(DataType.receipt, this.toJSON());
+// }
 
 	@Override
 	public boolean equals(final Object obj)
@@ -525,5 +487,45 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 		final JSONObject obj = new JSONObject();
 		appendJSON(obj);
 		return obj;
+	}
+
+	public static Receipt fromJSON(JSONObject obj) throws JSONException, ParseException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+		{
+			obj = obj.getJSONObject("result");
+		}
+
+
+		final Cashier cash = new Cashier.Builder().build();
+		cash.setId(obj.getString("cashier"));
+		final CustomerGroup cGrp = new CustomerGroup.Builder().build();
+		cGrp.setId(obj.getString("customerGroup"));
+		final Customer cust = new Customer.Builder().build();
+		cust.setId(obj.getString("customer"));
+		Receipt rec = null;
+		rec = new Receipt.Builder().number(obj.getString("number"))
+			.deleted(obj.getBoolean("deleted"))
+			.revision(obj.getLong("revision"))
+			.cashier(cash)
+			.customerGroup(cGrp)
+			.customer(cust)
+			.receiptDiscountGrossAmount(prepareBigDecimal(obj, "receiptDiscountGrossAmount"))
+			.voided(obj.getBoolean("voided"))
+			.id(obj.getString("uuid"))
+			.grossTotalAmount(prepareBigDecimal(obj, "grossTotalAmount"))
+			.netTotalAmount(prepareBigDecimal(obj, "netTotalAmount"))
+			.taxAmount(prepareBigDecimal(obj, "taxAmount"))
+			.grossRevenueAmount(prepareBigDecimal(obj, "grossRevenueAmount"))
+			.netRevenueAmount(prepareBigDecimal(obj, "netRevenueAmount"))
+			.receiptDiscountAmount(prepareBigDecimal(obj, "receiptDiscountAmount"))
+			.receiptDiscountGrossAmount(prepareBigDecimal(obj, "receiptDiscountGrossAmount"))
+			.receiptDiscountNetAmount(prepareBigDecimal(obj, "receiptDiscountNetAmount"))
+			.creatTime(prepareDate(obj, "createTime"))
+			.modifiedTime(prepareDate(obj, "modifiedTime"))
+			.finishTime(prepareDate(obj, "finishTime"))
+			.build();
+
+		return rec;
 	}
 }

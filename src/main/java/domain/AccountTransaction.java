@@ -87,51 +87,12 @@ public class AccountTransaction extends AbstractApiObject<AccountTransaction>
 
 	private static final long serialVersionUID = -6707310291148051948L;
 
-	public static AccountTransaction fromJSON(JSONObject obj) throws JSONException, ParseException
-	{
-		if (obj.has("result") && obj.getString("result") != null)
-			obj = obj.getJSONObject("result");
-
-		// date
-		final String date = obj.getString("bookingTime");
-		Date bTime = null;
-
-		bTime = inputDf.parse(date);
-
-		final Account account = new Account.Builder().build();
-		account.setId(obj.getString("account"));
-
-		final Receipt rec = new Receipt.Builder().build();
-		rec.setId(obj.getString("receipt"));
-
-		final Cashier cash = new Cashier.Builder().build();
-		cash.setId(obj.getString("cashier"));
-
-		final POS pos = new POS.Builder().build();
-		pos.setId(obj.getString("pos"));
-
-		final AccountTransaction accountTransaction = new AccountTransaction.Builder().deleted(
-			obj.getBoolean("deleted"))
-			.revision(obj.getLong("revision"))
-			.id(obj.getString("uuid"))
-			.receipt(rec)
-			.cashier(cash)
-			.pos(pos)
-			.account(account)
-			.amount(prepareBigDecimal(obj, "amount"))
-			.bookingTime(bTime)
-			.receiptIndex(obj.getInt("receiptIndex"))
-			.description(obj.getString("description"))
-			.build();
-		return accountTransaction;
-	}
-
 	private Account account;
+
 	private Receipt receipt;
 	private Cashier cashier;
 	private POS pos;
 	private BigDecimal amount;
-
 	private Date bookingTime;
 
 	private Integer receiptIndex;
@@ -275,6 +236,41 @@ public class AccountTransaction extends AbstractApiObject<AccountTransaction>
 		obj.put("description", description);
 
 		return obj;
+	}
+
+	public static AccountTransaction fromJSON(JSONObject obj) throws JSONException, ParseException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+		{
+			obj = obj.getJSONObject("result");
+		}
+
+		final Account account = new Account.Builder().build();
+		account.setId(obj.getString("account"));
+
+		final Receipt rec = new Receipt.Builder().build();
+		rec.setId(obj.getString("receipt"));
+
+		final Cashier cash = new Cashier.Builder().build();
+		cash.setId(obj.getString("cashier"));
+
+		final POS pos = new POS.Builder().build();
+		pos.setId(obj.getString("pos"));
+
+		final AccountTransaction accountTransaction = new AccountTransaction.Builder().deleted(
+			obj.getBoolean("deleted"))
+			.revision(obj.getLong("revision"))
+			.id(obj.getString("uuid"))
+			.receipt(rec)
+			.cashier(cash)
+			.pos(pos)
+			.account(account)
+			.amount(prepareBigDecimal(obj, "amount"))
+			.bookingTime(prepareDate(obj, "bookingTime"))
+			.receiptIndex(obj.getInt("receiptIndex"))
+			.description(obj.getString("description"))
+			.build();
+		return accountTransaction;
 	}
 
 

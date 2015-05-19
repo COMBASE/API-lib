@@ -79,26 +79,26 @@ public abstract class AbstractApiObject<T extends HasId> implements HasId, Seria
 	}
 
 	@Override
+	public JSONObject appendJSON(final JSONObject obj) throws JSONException
+	{
+		obj.put("uuid", getId());
+		obj.put("deleted", isDeleted());
+		obj.put("revision", getRevision());
+
+		return obj;
+	}
+
+
+	@Override
 	public String getId()
 	{
 		return id;
 	}
 
-
 	@Override
 	public Long getRevision()
 	{
 		return revision;
-	}
-
-	protected int hashCode(int result)
-	{
-		final int prime = 31;
-		result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-		result = prime * result + ((this.revision == null) ? 0 : this.revision.hashCode());
-		result = prime * result + ((this.deleted == null) ? 0 : this.deleted.hashCode());
-
-		return result;
 	}
 
 	@Override
@@ -127,6 +127,16 @@ public abstract class AbstractApiObject<T extends HasId> implements HasId, Seria
 
 	public abstract JSONObject toJSON() throws JSONException;
 
+	protected int hashCode(int result)
+	{
+		final int prime = 31;
+		result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
+		result = prime * result + ((this.revision == null) ? 0 : this.revision.hashCode());
+		result = prime * result + ((this.deleted == null) ? 0 : this.deleted.hashCode());
+
+		return result;
+	}
+
 	protected StringBuilder toString(final StringBuilder builder)
 	{
 		if (id != null)
@@ -147,16 +157,6 @@ public abstract class AbstractApiObject<T extends HasId> implements HasId, Seria
 		return builder;
 	}
 
-	@Override
-	public JSONObject appendJSON(final JSONObject obj) throws JSONException
-	{
-		obj.put("uuid", getId());
-		obj.put("deleted", isDeleted());
-		obj.put("revision", getRevision());
-
-		return obj;
-	}
-
 	protected static BigDecimal prepareBigDecimal(final JSONObject obj,
 		final String bigDecimalString) throws JSONException
 	{
@@ -169,10 +169,8 @@ public abstract class AbstractApiObject<T extends HasId> implements HasId, Seria
 	protected static Date prepareDate(final JSONObject obj, final String dateString)
 		throws ParseException, JSONException
 	{
-		@SuppressWarnings("unused")
-		Date date = null;
 		if (!obj.isNull(dateString) || !obj.getString(dateString).equalsIgnoreCase("null"))
-			return date = inputDf.parse(obj.getString(dateString));
+			return inputDf.parse(obj.getString(dateString));
 		return null;
 	}
 }

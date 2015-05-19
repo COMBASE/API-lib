@@ -17,7 +17,7 @@ public class Pricelist extends AbstractNameAndNumberApiObject<Pricelist>
 
 	}
 	protected static abstract class Init<T extends Init<T>> extends
-		AbstractNameAndNumberApiObject.Init<T>
+	AbstractNameAndNumberApiObject.Init<T>
 	{
 		private String uuidOfCurrency = null;
 		private Boolean netPrices = null;
@@ -45,30 +45,9 @@ public class Pricelist extends AbstractNameAndNumberApiObject<Pricelist>
 	private static final long serialVersionUID = 563916800781375676L;
 
 
-	public static Pricelist fromJSON(JSONObject obj) throws JSONException
-	{
-		if (obj.has("result") && obj.getString("result") != null)
-			obj = obj.getJSONObject("result");
-
-		final Pricelist priceList = new Pricelist.Builder().name(obj.getString("name"))
-			.uuidOfCurrency(obj.getString("currency"))
-			.deleted(obj.getBoolean("deleted"))
-			.id(obj.getString("uuid"))
-			.build();
-		if (obj.has("number"))
-			priceList.setNumber(obj.getString("number"));
-
-		return priceList;
-	}
-
 	private Boolean netPrices;
 
 	private String uuidOfCurrency;
-
-// public static Pricelist fromJSON(JSONObject obj) throws JSONException
-// {
-//
-// }
 
 	public Pricelist(final Init<?> init)
 	{
@@ -76,6 +55,11 @@ public class Pricelist extends AbstractNameAndNumberApiObject<Pricelist>
 		this.netPrices = init.netPrices;
 		this.uuidOfCurrency = init.uuidOfCurrency;
 	}
+
+// public static Pricelist fromJSON(JSONObject obj) throws JSONException
+// {
+//
+// }
 
 	@Override
 	public boolean equals(final Object obj)
@@ -88,21 +72,6 @@ public class Pricelist extends AbstractNameAndNumberApiObject<Pricelist>
 	{
 		return uuidOfCurrency;
 	}
-
-// public boolean post() throws ApiNotReachableException
-// {
-// boolean result = false;
-// if (uuid == null)
-// {
-// result = CloudLink.getConnector().postData(DataType.priceList, this.toJSON());
-// if (number != null)
-// uuid = CloudLink.getUUIDByNumber(DataType.priceList, number);
-// else
-// uuid = CloudLink.getUUIDByName(DataType.priceList, name);
-// }
-// return result;
-//
-// }
 
 	@Override
 	public int hashCode()
@@ -153,5 +122,25 @@ public class Pricelist extends AbstractNameAndNumberApiObject<Pricelist>
 		ret.append(this.getName());
 
 		return ret.toString();
+	}
+
+	public static Pricelist fromJSON(JSONObject obj) throws JSONException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+		{
+			obj = obj.getJSONObject("result");
+		}
+
+		final Pricelist priceList = new Pricelist.Builder().name(obj.getString("name"))
+			.uuidOfCurrency(obj.getString("currency"))
+			.deleted(obj.getBoolean("deleted"))
+			.id(obj.getString("uuid"))
+			.build();
+		if (obj.has("number"))
+		{
+			priceList.setNumber(obj.getString("number"));
+		}
+
+		return priceList;
 	}
 }

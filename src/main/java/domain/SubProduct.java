@@ -59,10 +59,10 @@ public class SubProduct
 		return sp;
 	}
 
-	public SubProduct(String article, BigDecimal amount, List<Price> prices, Integer position)
+	public SubProduct(String articleId, BigDecimal amount, List<Price> prices, Integer position)
 	{
 		super();
-		this.article = article;
+		this.article = articleId;
 		this.amount = amount;
 		this.prices = prices;
 		this.position = position;

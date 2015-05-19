@@ -105,70 +105,13 @@ public class PosBalance extends AbstractApiObject<PosBalance>
 	 */
 	private static final long serialVersionUID = 3747780830697069675L;
 
-	public static PosBalance fromJSON(JSONObject obj) throws JSONException
-	{
-		if (obj.has("result") && obj.getString("result") != null)
-			obj = obj.getJSONObject("result");
-
-		final Collection<ItemSummary> itemSummaryObjs = new ArrayList<ItemSummary>();
-
-		JSONArray itemSummaries = null;
-		if (!obj.isNull("itemSummaries"))
-		{
-			itemSummaries = obj.getJSONArray("itemSummaries");
-
-
-			for (int i = 0; i <= itemSummaries.length() - 1; i++)
-			{
-				final JSONObject itemSummary = itemSummaries.getJSONObject(i);
-				final ItemSummary itemSummaryObj = ItemSummary.fromJSON(itemSummary);
-				itemSummaryObjs.add(itemSummaryObj);
-			}
-		}
-
-		final POS pos = new POS.Builder().id(obj.getString("pos")).build();
-		final Cashier cashier = new Cashier.Builder().id(obj.getString("cashier")).build();
-
-		// date
-		Date createTimeFormatted = null;
-		Date finishTimeFormatted = null;
-		try
-		{
-			String date = obj.getString("createTime");
-			createTimeFormatted = inputDf.parse(date);
-			date = obj.getString("finishTime");
-			finishTimeFormatted = inputDf.parse(date);
-		}
-		catch (final ParseException e)
-		{
-			e.printStackTrace();
-		}
-
-		final PosBalance posBalance = new PosBalance.Builder().deleted(obj.getBoolean("deleted"))
-			.revision(obj.getLong("revision"))
-			.id(obj.getString("uuid"))
-			.pos(pos)
-			.cashier(cashier)
-			.createTime(createTimeFormatted)
-			.finishTime(finishTimeFormatted)
-			.itemSummaries(itemSummaryObjs)
-			.balanceAttempts(obj.getInt("balanceAttempts"))
-			.expectedTotal(obj.getDouble("expectedTotal"))
-			.actualTotal(obj.getDouble("actualTotal"))
-			.zCount(obj.getInt("zCount"))
-			.build();
-
-
-		return posBalance;
-	}
-
 	private POS pos;
+
 	private Cashier cashier;
 	private Date createTime;
 	private Date finishTime;
 	private Collection<ItemSummary> itemSummaries;
 	private Integer balanceAttempts;
-
 	private Double expectedTotal;
 
 	private Double actualTotal;
@@ -188,7 +131,6 @@ public class PosBalance extends AbstractApiObject<PosBalance>
 		this.actualTotal = init.actualTotal;
 		this.zCount = init.zCount;
 	}
-
 
 	@Override
 	public boolean equals(final Object obj)
@@ -300,6 +242,7 @@ public class PosBalance extends AbstractApiObject<PosBalance>
 		this.createTime = createTime;
 	}
 
+
 	public void setExpectedTotal(final double expectedTotal)
 	{
 		this.expectedTotal = expectedTotal;
@@ -331,5 +274,49 @@ public class PosBalance extends AbstractApiObject<PosBalance>
 		final JSONObject obj = new JSONObject();
 		appendJSON(obj);
 		return obj;
+	}
+
+	public static PosBalance fromJSON(JSONObject obj) throws JSONException, ParseException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+		{
+			obj = obj.getJSONObject("result");
+		}
+
+		final Collection<ItemSummary> itemSummaryObjs = new ArrayList<ItemSummary>();
+
+		JSONArray itemSummaries = null;
+		if (!obj.isNull("itemSummaries"))
+		{
+			itemSummaries = obj.getJSONArray("itemSummaries");
+
+
+			for (int i = 0; i <= itemSummaries.length() - 1; i++)
+			{
+				final JSONObject itemSummary = itemSummaries.getJSONObject(i);
+				final ItemSummary itemSummaryObj = ItemSummary.fromJSON(itemSummary);
+				itemSummaryObjs.add(itemSummaryObj);
+			}
+		}
+
+		final POS pos = new POS.Builder().id(obj.getString("pos")).build();
+		final Cashier cashier = new Cashier.Builder().id(obj.getString("cashier")).build();
+
+		final PosBalance posBalance = new PosBalance.Builder().deleted(obj.getBoolean("deleted"))
+			.revision(obj.getLong("revision"))
+			.id(obj.getString("uuid"))
+			.pos(pos)
+			.cashier(cashier)
+			.createTime(prepareDate(obj, "createTime"))
+			.finishTime(prepareDate(obj, "finishTime"))
+			.itemSummaries(itemSummaryObjs)
+			.balanceAttempts(obj.getInt("balanceAttempts"))
+			.expectedTotal(obj.getDouble("expectedTotal"))
+			.actualTotal(obj.getDouble("actualTotal"))
+			.zCount(obj.getInt("zCount"))
+			.build();
+
+
+		return posBalance;
 	}
 }

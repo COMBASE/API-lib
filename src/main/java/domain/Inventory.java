@@ -11,44 +11,16 @@ import org.codehaus.jettison.json.JSONObject;
 
 public class Inventory extends AbstractNameAndNumberApiObject<Inventory>
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -4473050181320272357L;
+	public static class Builder extends Init<Builder>
+	{
 
-	private User user;
+		@Override
+		protected Builder self()
+		{
+			return this;
+		}
 
-	private String description;
-
-	private List<OrganizationalUnit> organizationalUnits;
-
-	private Date createTime;
-
-	private Date processTime;
-
-	private final InventoryProcedureType inventoryProcedure;
-
-	private Integer automaticBookingDays;
-
-	private Integer maxArticlesPerList;
-
-	private Boolean automaticBooking;
-
-	private Boolean fridayInventory;
-
-	private Boolean mondayInventory;
-
-	private Boolean oneCommodityGroupPerList;
-
-	private Boolean saturdayInventory;
-
-	private Boolean sundayInventory;
-
-	private Boolean thursdayInventory;
-
-	private Boolean tuesdayInventory;
-
-	private Boolean wednesdayInventory;
+	}
 
 	protected static abstract class Init<T extends Init<T>> extends
 		AbstractNameAndNumberApiObject.Init<T>
@@ -88,39 +60,9 @@ public class Inventory extends AbstractNameAndNumberApiObject<Inventory>
 		private Boolean wednesdayInventory = null;
 
 
-		public T user(final User value)
+		public T automaticBooking(final Boolean value)
 		{
-			user = value;
-			return self();
-		}
-
-		public T description(final String value)
-		{
-			description = value;
-			return self();
-		}
-
-		public T organizationalUnits(final List<OrganizationalUnit> value)
-		{
-			organizationalUnits = value;
-			return self();
-		}
-
-		public T createTime(final Date value)
-		{
-			createTime = value;
-			return self();
-		}
-
-		public T processTime(final Date value)
-		{
-			processTime = value;
-			return self();
-		}
-
-		public T inventoryProcedure(final InventoryProcedureType value)
-		{
-			inventoryProcedure = value;
+			automaticBooking = value;
 			return self();
 		}
 
@@ -130,21 +72,39 @@ public class Inventory extends AbstractNameAndNumberApiObject<Inventory>
 			return self();
 		}
 
-		public T maxArticlesPerList(final Integer value)
+		@Override
+		public Inventory build()
 		{
-			maxArticlesPerList = value;
+			return new Inventory(this);
+		}
+
+		public T createTime(final Date value)
+		{
+			createTime = value;
 			return self();
 		}
 
-		public T automaticBooking(final Boolean value)
+		public T description(final String value)
 		{
-			automaticBooking = value;
+			description = value;
 			return self();
 		}
 
 		public T fridayInventory(final Boolean value)
 		{
 			fridayInventory = value;
+			return self();
+		}
+
+		public T inventoryProcedure(final InventoryProcedureType value)
+		{
+			inventoryProcedure = value;
+			return self();
+		}
+
+		public T maxArticlesPerList(final Integer value)
+		{
+			maxArticlesPerList = value;
 			return self();
 		}
 
@@ -157,6 +117,18 @@ public class Inventory extends AbstractNameAndNumberApiObject<Inventory>
 		public T oneCommodityGroupPerList(final Boolean value)
 		{
 			oneCommodityGroupPerList = value;
+			return self();
+		}
+
+		public T organizationalUnits(final List<OrganizationalUnit> value)
+		{
+			organizationalUnits = value;
+			return self();
+		}
+
+		public T processTime(final Date value)
+		{
+			processTime = value;
 			return self();
 		}
 
@@ -184,29 +156,57 @@ public class Inventory extends AbstractNameAndNumberApiObject<Inventory>
 			return self();
 		}
 
+		public T user(final User value)
+		{
+			user = value;
+			return self();
+		}
+
 		public T wednesdayInventory(final Boolean value)
 		{
 			wednesdayInventory = value;
 			return self();
 		}
-
-		@Override
-		public Inventory build()
-		{
-			return new Inventory(this);
-		}
 	}
 
-	public static class Builder extends Init<Builder>
-	{
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = -4473050181320272357L;
 
-		@Override
-		protected Builder self()
-		{
-			return this;
-		}
+	private User user;
 
-	}
+	private String description;
+
+	private List<OrganizationalUnit> organizationalUnits;
+
+	private Date createTime;
+
+	private Date processTime;
+
+	private final InventoryProcedureType inventoryProcedure;
+
+	private Integer automaticBookingDays;
+
+	private Integer maxArticlesPerList;
+
+	private Boolean automaticBooking;
+
+	private Boolean fridayInventory;
+
+	private Boolean mondayInventory;
+
+	private Boolean oneCommodityGroupPerList;
+
+	private Boolean saturdayInventory;
+
+	private Boolean sundayInventory;
+
+	private Boolean thursdayInventory;
+
+	private Boolean tuesdayInventory;
+
+	private Boolean wednesdayInventory;
 
 	public Inventory(final Init<?> init)
 	{
@@ -272,81 +272,20 @@ public class Inventory extends AbstractNameAndNumberApiObject<Inventory>
 // }
 
 
-	public User getUser()
-	{
-		return user;
-	}
-
-	public void setUser(final User user)
-	{
-		this.user = user;
-	}
-
-	public String getDescription()
-	{
-		return description;
-	}
-
-	public void setDescription(final String description)
-	{
-		this.description = description;
-	}
-
-	public List<OrganizationalUnit> getOrganizationalUnits()
-	{
-		return organizationalUnits;
-	}
-
-	public void setOrganizationalUnits(final List<OrganizationalUnit> organizationalUnits)
-	{
-		this.organizationalUnits = organizationalUnits;
-	}
-
 	public void addOrganizationalUnit(final OrganizationalUnit value)
 	{
 		if (organizationalUnits == null)
+		{
 			organizationalUnits = new ArrayList<OrganizationalUnit>();
+		}
 		this.organizationalUnits.add(value);
 	}
 
-	public Date getCreateTime()
+	@Override
+	public boolean equals(final Object obj)
 	{
-		return createTime;
-	}
 
-	public void setCreateTime(final Date createTime)
-	{
-		this.createTime = createTime;
-	}
-
-	public Date getProcessTime()
-	{
-		return processTime;
-	}
-
-	public void setProcessTime(final Date processTime)
-	{
-		this.processTime = processTime;
-	}
-
-	public Integer getAutomaticBookingDays()
-	{
-		return automaticBookingDays;
-	}
-
-	public void setAutomaticBookingDays(final Integer automaticBookingDays)
-	{
-		this.automaticBookingDays = automaticBookingDays;
-	}
-
-	public Integer getMaxArticlesPerList()
-	{
-		return maxArticlesPerList;
-	}
-
-	public void setMaxArticlesPerList(final Integer maxArticlesPerList)
-	{
-		this.maxArticlesPerList = maxArticlesPerList;
+		return obj.hashCode() == this.hashCode();
 	}
 
 	public Boolean getAutomaticBooking()
@@ -354,9 +293,19 @@ public class Inventory extends AbstractNameAndNumberApiObject<Inventory>
 		return automaticBooking;
 	}
 
-	public void setAutomaticBooking(final Boolean automaticBooking)
+	public Integer getAutomaticBookingDays()
 	{
-		this.automaticBooking = automaticBooking;
+		return automaticBookingDays;
+	}
+
+	public Date getCreateTime()
+	{
+		return createTime;
+	}
+
+	public String getDescription()
+	{
+		return description;
 	}
 
 	public Boolean getFridayInventory()
@@ -364,9 +313,9 @@ public class Inventory extends AbstractNameAndNumberApiObject<Inventory>
 		return fridayInventory;
 	}
 
-	public void setFridayInventory(final Boolean fridayInventory)
+	public Integer getMaxArticlesPerList()
 	{
-		this.fridayInventory = fridayInventory;
+		return maxArticlesPerList;
 	}
 
 	public Boolean getMondayInventory()
@@ -374,19 +323,19 @@ public class Inventory extends AbstractNameAndNumberApiObject<Inventory>
 		return mondayInventory;
 	}
 
-	public void setMondayInventory(final Boolean mondayInventory)
-	{
-		this.mondayInventory = mondayInventory;
-	}
-
 	public Boolean getOneCommodityGroupPerList()
 	{
 		return oneCommodityGroupPerList;
 	}
 
-	public void setOneCommodityGroupPerList(final Boolean oneCommodityGroupPerList)
+	public List<OrganizationalUnit> getOrganizationalUnits()
 	{
-		this.oneCommodityGroupPerList = oneCommodityGroupPerList;
+		return organizationalUnits;
+	}
+
+	public Date getProcessTime()
+	{
+		return processTime;
 	}
 
 	public Boolean getSaturdayInventory()
@@ -394,19 +343,9 @@ public class Inventory extends AbstractNameAndNumberApiObject<Inventory>
 		return saturdayInventory;
 	}
 
-	public void setSaturdayInventory(final Boolean saturdayInventory)
-	{
-		this.saturdayInventory = saturdayInventory;
-	}
-
 	public Boolean getSundayInventory()
 	{
 		return sundayInventory;
-	}
-
-	public void setSundayInventory(final Boolean sundayInventory)
-	{
-		this.sundayInventory = sundayInventory;
 	}
 
 	public Boolean getThursdayInventory()
@@ -414,56 +353,19 @@ public class Inventory extends AbstractNameAndNumberApiObject<Inventory>
 		return thursdayInventory;
 	}
 
-	public void setThursdayInventory(final Boolean thursdayInventory)
-	{
-		this.thursdayInventory = thursdayInventory;
-	}
-
 	public Boolean getTuesdayInventory()
 	{
 		return tuesdayInventory;
 	}
 
-	public void setTuesdayInventory(final Boolean tuesdayInventory)
+	public User getUser()
 	{
-		this.tuesdayInventory = tuesdayInventory;
+		return user;
 	}
 
 	public Boolean getWednesdayInventory()
 	{
 		return wednesdayInventory;
-	}
-
-	public void setWednesdayInventory(final Boolean wednesdayInventory)
-	{
-		this.wednesdayInventory = wednesdayInventory;
-	}
-
-
-// public JSONObject toJSON()
-// {
-// final JSONObject jObj = new JSONObject();
-//
-// try
-// {
-//
-// }
-// catch (final JSONException e)
-// {
-//
-// e.printStackTrace();
-// return null;
-// }
-//
-//
-// return jObj;
-// }
-
-	@Override
-	public boolean equals(final Object obj)
-	{
-
-		return obj.hashCode() == this.hashCode();
 	}
 
 	@Override
@@ -507,6 +409,106 @@ public class Inventory extends AbstractNameAndNumberApiObject<Inventory>
 		return result;
 	}
 
+	public void setAutomaticBooking(final Boolean automaticBooking)
+	{
+		this.automaticBooking = automaticBooking;
+	}
+
+	public void setAutomaticBookingDays(final Integer automaticBookingDays)
+	{
+		this.automaticBookingDays = automaticBookingDays;
+	}
+
+	public void setCreateTime(final Date createTime)
+	{
+		this.createTime = createTime;
+	}
+
+	public void setDescription(final String description)
+	{
+		this.description = description;
+	}
+
+	public void setFridayInventory(final Boolean fridayInventory)
+	{
+		this.fridayInventory = fridayInventory;
+	}
+
+	public void setMaxArticlesPerList(final Integer maxArticlesPerList)
+	{
+		this.maxArticlesPerList = maxArticlesPerList;
+	}
+
+	public void setMondayInventory(final Boolean mondayInventory)
+	{
+		this.mondayInventory = mondayInventory;
+	}
+
+	public void setOneCommodityGroupPerList(final Boolean oneCommodityGroupPerList)
+	{
+		this.oneCommodityGroupPerList = oneCommodityGroupPerList;
+	}
+
+	public void setOrganizationalUnits(final List<OrganizationalUnit> organizationalUnits)
+	{
+		this.organizationalUnits = organizationalUnits;
+	}
+
+	public void setProcessTime(final Date processTime)
+	{
+		this.processTime = processTime;
+	}
+
+	public void setSaturdayInventory(final Boolean saturdayInventory)
+	{
+		this.saturdayInventory = saturdayInventory;
+	}
+
+	public void setSundayInventory(final Boolean sundayInventory)
+	{
+		this.sundayInventory = sundayInventory;
+	}
+
+	public void setThursdayInventory(final Boolean thursdayInventory)
+	{
+		this.thursdayInventory = thursdayInventory;
+	}
+
+	public void setTuesdayInventory(final Boolean tuesdayInventory)
+	{
+		this.tuesdayInventory = tuesdayInventory;
+	}
+
+
+// public JSONObject toJSON()
+// {
+// final JSONObject jObj = new JSONObject();
+//
+// try
+// {
+//
+// }
+// catch (final JSONException e)
+// {
+//
+// e.printStackTrace();
+// return null;
+// }
+//
+//
+// return jObj;
+// }
+
+	public void setUser(final User user)
+	{
+		this.user = user;
+	}
+
+	public void setWednesdayInventory(final Boolean wednesdayInventory)
+	{
+		this.wednesdayInventory = wednesdayInventory;
+	}
+
 	@Override
 	public JSONObject toJSON() throws JSONException
 	{
@@ -514,7 +516,9 @@ public class Inventory extends AbstractNameAndNumberApiObject<Inventory>
 		appendJSON(obj);
 
 		if (user != null)
+		{
 			obj.put("user", user.getId());
+		}
 
 		obj.put("description", description);
 
@@ -525,19 +529,27 @@ public class Inventory extends AbstractNameAndNumberApiObject<Inventory>
 			for (final OrganizationalUnit organizationalUnit : organizationalUnits)
 			{
 				if (organizationalUnit != null && !organizationalUnit.getId().equalsIgnoreCase(""))
+				{
 					array.put(organizationalUnit.getId());
+				}
 			}
 			obj.put("organizationalUnits", array);
 		}
 
 		if (createTime != null)
+		{
 			obj.put("createTime", inputDf.format(createTime));
+		}
 
 		if (processTime != null)
+		{
 			obj.put("processTime", inputDf.format(processTime));
+		}
 
 		if (inventoryProcedure != null)
+		{
 			obj.put("inventoryProcedure", inventoryProcedure.name());
+		}
 
 		// some caching magic
 		obj.remove("name");
@@ -551,7 +563,9 @@ public class Inventory extends AbstractNameAndNumberApiObject<Inventory>
 	{
 
 		if (obj.has("result") && !obj.getString("result").equalsIgnoreCase("null"))
+		{
 			obj = obj.getJSONObject("result");
+		}
 
 		final List<OrganizationalUnit> organizationalUnits = new ArrayList<OrganizationalUnit>();
 		obj.getJSONArray("organizationalUnits");
@@ -565,8 +579,8 @@ public class Inventory extends AbstractNameAndNumberApiObject<Inventory>
 			.user(user)
 			.description(obj.getString("description"))
 			.organizationalUnits(organizationalUnits)
-			.createTime(inputDf.parse(obj.getString("createTime")))
-			.processTime(inputDf.parse(obj.getString("processTime")))
+			.createTime(prepareDate(obj, "createTime"))
+			.processTime(prepareDate(obj, "processTime"))
 			.inventoryProcedure(InventoryProcedureType.valueOf(obj.getString("inventoryProcedure")))
 			.name(obj.getString("description"))
 			.build();

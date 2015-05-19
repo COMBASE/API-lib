@@ -142,44 +142,8 @@ public class Payment extends AbstractApiObject<Payment>
 	 */
 	private static final long serialVersionUID = -3413202913572354611L;
 
-	public static Payment fromJSON(JSONObject obj) throws JSONException, ParseException
-	{
-		if (obj.has("result") && obj.getString("result").equalsIgnoreCase("null"))
-			obj = obj.getJSONObject("result");
-
-		// date
-		final String date = obj.getString("transactionTime");
-		Date tTime = null;
-
-		tTime = inputDf.parse(date);
-
-
-		final Cashier cash = new Cashier.Builder().build();
-		cash.setId(obj.getString("cashier"));
-		final Receipt rec = new Receipt.Builder().build();
-		rec.setId(obj.getString("receipt"));
-		final POS pos = new POS.Builder().build();
-		pos.setId(obj.getString("pos"));
-		final Currency cur = new Currency.Builder().build();
-		cur.setId(obj.getString("currency"));
-		final PaymentMethod payMeth = new PaymentMethod.Builder().build();
-		payMeth.setId(obj.getString("paymentMethod"));
-		final Payment pay = new Payment.Builder().deleted(obj.getBoolean("deleted"))
-			.revision(obj.getLong("revision"))
-			.id(obj.getString("uuid"))
-			.amount(prepareBigDecimal(obj, "amount"))
-			.transactionTime(tTime)
-			.cashier(cash)
-			.receipt(rec)
-			.pos(pos)
-			.currency(cur)
-			.paymentMethod(payMeth)
-			.receiptIndex(obj.getInt("receiptIndex"))
-			.build();
-		return pay;
-	}
-
 	private Cashier cashier;
+
 	private Integer itemNumber;
 	private String itemSequence;
 	private Double manualPrice;
@@ -192,20 +156,11 @@ public class Payment extends AbstractApiObject<Payment>
 	private BigDecimal amount;
 	private Date transactionTime;
 	private POS pos;
-
 	private PaymentMethod paymentMethod;
 
 	private Currency currency;
 
 	private final Integer receiptIndex;
-
-// public boolean post() throws IOException
-// {
-//
-// if (cashier != null && cashier.getUuid() == null)
-// cashier.post();
-// return CloudLink.getConnector().postData(DataType.sale, this.toJSON());
-// }
 
 	private Payment(final Init<?> init)
 	{
@@ -227,6 +182,14 @@ public class Payment extends AbstractApiObject<Payment>
 		paymentMethod = init.paymentMethod;
 		receiptIndex = init.receiptIndex;
 	}
+
+// public boolean post() throws IOException
+// {
+//
+// if (cashier != null && cashier.getUuid() == null)
+// cashier.post();
+// return CloudLink.getConnector().postData(DataType.sale, this.toJSON());
+// }
 
 	@Override
 	public boolean equals(final Object obj)
@@ -423,8 +386,42 @@ public class Payment extends AbstractApiObject<Payment>
 		obj.put("cashier", cashier.getId());
 
 		if (pos != null)
+		{
 			obj.put("pos", pos.getId());
+		}
 
 		return obj;
+	}
+
+	public static Payment fromJSON(JSONObject obj) throws JSONException, ParseException
+	{
+		if (obj.has("result") && obj.getString("result").equalsIgnoreCase("null"))
+		{
+			obj = obj.getJSONObject("result");
+		}
+
+		final Cashier cash = new Cashier.Builder().build();
+		cash.setId(obj.getString("cashier"));
+		final Receipt rec = new Receipt.Builder().build();
+		rec.setId(obj.getString("receipt"));
+		final POS pos = new POS.Builder().build();
+		pos.setId(obj.getString("pos"));
+		final Currency cur = new Currency.Builder().build();
+		cur.setId(obj.getString("currency"));
+		final PaymentMethod payMeth = new PaymentMethod.Builder().build();
+		payMeth.setId(obj.getString("paymentMethod"));
+		final Payment pay = new Payment.Builder().deleted(obj.getBoolean("deleted"))
+			.revision(obj.getLong("revision"))
+			.id(obj.getString("uuid"))
+			.amount(prepareBigDecimal(obj, "amount"))
+			.transactionTime(prepareDate(obj, "transactionTime"))
+			.cashier(cash)
+			.receipt(rec)
+			.pos(pos)
+			.currency(cur)
+			.paymentMethod(payMeth)
+			.receiptIndex(obj.getInt("receiptIndex"))
+			.build();
+		return pay;
 	}
 }

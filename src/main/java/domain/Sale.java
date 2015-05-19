@@ -181,78 +181,8 @@ public class Sale extends AbstractApiObject<Sale>
 	 */
 	private static final long serialVersionUID = -3645926143364056863L;
 
-	public static Sale fromJSON(JSONObject obj) throws JSONException, ParseException
-	{
-		if (obj.has("result") && obj.getString("result") != null)
-			obj = obj.getJSONObject("result");
-
-
-		final Product prod = new Product.Builder().build();
-		prod.setId(obj.getString("article"));
-
-		final Cashier cash = new Cashier.Builder().build();
-		cash.setId(obj.getString("cashier"));
-
-		final CommodityGroup grp = new CommodityGroup.Builder().build();
-		grp.setId(obj.getString("commodityGroup"));
-
-		final Sector sec = new Sector.Builder().build();
-		sec.setId(obj.getString("sector"));
-
-		final Receipt rec = new Receipt.Builder().build();
-		rec.setId(obj.getString("receipt"));
-
-		final POS pos = new POS.Builder().build();
-		pos.setId(obj.getString("pos"));
-
-		// date
-		Date bTime = null;
-
-		final String date = obj.getString("bookingTime");
-		bTime = inputDf.parse(date);
-
-
-		final Sale sale = new Sale.Builder().deleted(obj.getBoolean("deleted"))
-			.revision(obj.getLong("revision"))
-			.id(obj.getString("uuid"))
-			.article(prod)
-			.cashier(cash)
-			.commodityGroup(grp)
-			.bookingTime(bTime)
-			.description(obj.getString("description"))
-			.infoTexts(obj.getString("infoTexts"))
-			.sector(sec)
-			.receiptNumber(obj.getString("receiptNumber"))
-			.receiptIndex(obj.getInt("receiptIndex"))
-			.quantity(prepareBigDecimal(obj, "quantity"))
-			.receipt(rec)
-			.itemPrice(prepareBigDecimal(obj, "itemPrice"))
-			.netItemPrice(prepareBigDecimal(obj, "netItemPrice"))
-			.baseItemPrice(prepareBigDecimal(obj, "baseItemPrice"))
-			.grossItemPrice(prepareBigDecimal(obj, "grossItemPrice"))
-			.pos(pos)
-			.build();
-
-		JSONArray jTax = new JSONArray();
-		jTax = obj.getJSONArray("taxPayments");
-		if (!jTax.isNull(0))
-		{
-			for (int i = 0; i <= jTax.length() - 1; i++)
-			{
-				JSONObject tax = new JSONObject();
-				tax = jTax.getJSONObject(i);
-				final TaxPayments taxO = new TaxPayments(tax.getString("salesTax"),
-					prepareBigDecimal(tax, "currentTaxRate"), prepareBigDecimal(tax, "amount"));
-				final List<TaxPayments> taxL = new ArrayList<TaxPayments>();
-				taxL.add(taxO);
-				sale.setTaxPayments(taxL);
-			}
-		}
-
-		return sale;
-	}
-
 	private Product article;
+
 	private Cashier cashier;
 	private CommodityGroup commodityGroup;
 	private Date bookingTime;
@@ -268,26 +198,11 @@ public class Sale extends AbstractApiObject<Sale>
 	private BigDecimal itemPrice;
 	private BigDecimal grossItemPrice;
 	private BigDecimal netItemPrice;
-
 	private BigDecimal baseItemPrice;
 
 	private String serialNumber;
 
 	private List<TaxPayments> taxPayments;
-
-// public boolean post() throws ApiNotReachableException, IOException
-// {
-//
-// if (commodityGroup != null && commodityGroup.getUuid() == null)
-// commodityGroup.post();
-// if (sector != null && sector.getUuid() == null)
-// sector.post();
-// if (cashier != null && cashier.getUuid() == null)
-// cashier.post();
-// if (article != null && article.getUuid() == null)
-// article.post();
-// return CloudLink.getConnector().postData(DataType.sale, this.toJSON());
-// }
 
 	private Sale(final Init<?> init)
 	{
@@ -312,6 +227,20 @@ public class Sale extends AbstractApiObject<Sale>
 		pos = init.pos;
 		taxPayments = init.taxPayments;
 	}
+
+// public boolean post() throws ApiNotReachableException, IOException
+// {
+//
+// if (commodityGroup != null && commodityGroup.getUuid() == null)
+// commodityGroup.post();
+// if (sector != null && sector.getUuid() == null)
+// sector.post();
+// if (cashier != null && cashier.getUuid() == null)
+// cashier.post();
+// if (article != null && article.getUuid() == null)
+// article.post();
+// return CloudLink.getConnector().postData(DataType.sale, this.toJSON());
+// }
 
 	@Override
 	public boolean equals(final Object obj)
@@ -549,14 +478,88 @@ public class Sale extends AbstractApiObject<Sale>
 		obj.put("quantity", quantity);
 
 		if (cashier != null)
+		{
 			obj.put("cashier", cashier.getId());
+		}
 		if (article != null)
+		{
 			obj.put("article", article.getId());
+		}
 		if (commodityGroup != null)
+		{
 			obj.put("commodityGroup", commodityGroup.getId());
+		}
 		if (sector != null)
+		{
 			obj.put("sector", sector.getId());
+		}
 
 		return obj;
+	}
+
+	public static Sale fromJSON(JSONObject obj) throws JSONException, ParseException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+		{
+			obj = obj.getJSONObject("result");
+		}
+
+
+		final Product prod = new Product.Builder().build();
+		prod.setId(obj.getString("article"));
+
+		final Cashier cash = new Cashier.Builder().build();
+		cash.setId(obj.getString("cashier"));
+
+		final CommodityGroup grp = new CommodityGroup.Builder().build();
+		grp.setId(obj.getString("commodityGroup"));
+
+		final Sector sec = new Sector.Builder().build();
+		sec.setId(obj.getString("sector"));
+
+		final Receipt rec = new Receipt.Builder().build();
+		rec.setId(obj.getString("receipt"));
+
+		final POS pos = new POS.Builder().build();
+		pos.setId(obj.getString("pos"));
+
+		final Sale sale = new Sale.Builder().deleted(obj.getBoolean("deleted"))
+			.revision(obj.getLong("revision"))
+			.id(obj.getString("uuid"))
+			.article(prod)
+			.cashier(cash)
+			.commodityGroup(grp)
+			.bookingTime(prepareDate(obj, "bookingTime"))
+			.description(obj.getString("description"))
+			.infoTexts(obj.getString("infoTexts"))
+			.sector(sec)
+			.receiptNumber(obj.getString("receiptNumber"))
+			.receiptIndex(obj.getInt("receiptIndex"))
+			.quantity(prepareBigDecimal(obj, "quantity"))
+			.receipt(rec)
+			.itemPrice(prepareBigDecimal(obj, "itemPrice"))
+			.netItemPrice(prepareBigDecimal(obj, "netItemPrice"))
+			.baseItemPrice(prepareBigDecimal(obj, "baseItemPrice"))
+			.grossItemPrice(prepareBigDecimal(obj, "grossItemPrice"))
+			.pos(pos)
+			.build();
+
+		JSONArray jTax = new JSONArray();
+		jTax = obj.getJSONArray("taxPayments");
+		if (!jTax.isNull(0))
+		{
+			for (int i = 0; i <= jTax.length() - 1; i++)
+			{
+				JSONObject tax = new JSONObject();
+				tax = jTax.getJSONObject(i);
+				final TaxPayments taxO = new TaxPayments(tax.getString("salesTax"),
+					prepareBigDecimal(tax, "currentTaxRate"), prepareBigDecimal(tax, "amount"));
+				final List<TaxPayments> taxL = new ArrayList<TaxPayments>();
+				taxL.add(taxO);
+				sale.setTaxPayments(taxL);
+			}
+		}
+
+		return sale;
 	}
 }
