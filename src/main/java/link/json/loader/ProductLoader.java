@@ -109,7 +109,21 @@ public class ProductLoader extends AbstractHasNameJsonLoader<Product>
 		}
 		catch (final KoronaCloudAPIErrorMessageException e)
 		{
-			throw new KoronaCloudAPIErrorMessageException(e.getCause(), null);
+
+			final Map<String, String> errorMap = e.getErrorMap();
+
+			if (errorMap.containsKey(ErrorMessages.articlecode_must_be_unique.getErrorString()))
+			{
+				LOGGER.info("Some articles were not posted! Article Code already in use.");
+			}
+
+			if (errorMap.containsKey(ErrorMessages.Code_not_found_for_Price.getErrorString()))
+			{
+				LOGGER.info("Some articles were not posted! Article Code on Prices not in use.");
+			}
+
+			throw new KoronaCloudAPIErrorMessageException(e, e.getErrorMap());
+
 		}
 
 	}
@@ -133,7 +147,12 @@ public class ProductLoader extends AbstractHasNameJsonLoader<Product>
 
 			if (errorMap.containsKey(ErrorMessages.articlecode_must_be_unique.getErrorString()))
 			{
-				LOGGER.debug("Some articles were not posted! Article Code already in use.");
+				LOGGER.info("Some articles were not posted! Article Code already in use.");
+			}
+
+			if (errorMap.containsKey(ErrorMessages.Code_not_found_for_Price.getErrorString()))
+			{
+				LOGGER.info("Some articles were not posted! Article Code on Prices not in use.");
 			}
 
 			throw new KoronaCloudAPIErrorMessageException(e, e.getErrorMap());
