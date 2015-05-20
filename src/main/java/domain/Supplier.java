@@ -20,7 +20,7 @@ public class Supplier extends AbstractNameAndNumberApiObject<Supplier>
 	}
 
 	protected static abstract class Init<T extends Init<T>> extends
-	AbstractNameAndNumberApiObject.Init<T>
+		AbstractNameAndNumberApiObject.Init<T>
 	{
 		private String customerNumber;
 		private String additionalInformation;
@@ -633,8 +633,14 @@ public class Supplier extends AbstractNameAndNumberApiObject<Supplier>
 		obj.put("orderPhone", orderPhone);
 		obj.put("orderEmail", orderEmail);
 		obj.put("orderWeekdays", orderWeekdays);
-		obj.put("orderTimeFrom", inputDf.format(orderTimeFrom));
-		obj.put("orderTimeTo", inputDf.format(orderTimeTo));
+		if (paymentCurrency != null)
+		{
+			obj.put("orderTimeFrom", inputDf.format(orderTimeFrom));
+		}
+		if (paymentCurrency != null)
+		{
+			obj.put("orderTimeTo", inputDf.format(orderTimeTo));
+		}
 		obj.put("deliveryWeekdays", deliveryWeekdays);
 		obj.put("deliveryTime", deliveryTime);
 		obj.put("delayedDeliveryStarting", delayedDeliveryStarting);
@@ -651,7 +657,7 @@ public class Supplier extends AbstractNameAndNumberApiObject<Supplier>
 		obj.put("iban", iban);
 		obj.put("creditorIdentifier", creditorIdentifier);
 
-		return null;
+		return obj;
 	}
 
 	public static Supplier fromJSON(JSONObject obj) throws JSONException, ParseException
