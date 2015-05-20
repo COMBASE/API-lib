@@ -14,6 +14,7 @@ public class Price
 	private Pricelist priceList;
 	private Date validFrom;
 	private BigDecimal value;
+	private String articleCode;
 	private OrganizationalUnit organizationalUnit;
 
 	public Price(final OrganizationalUnit organizationalUnit, final BigDecimal value)
@@ -38,76 +39,12 @@ public class Price
 		this.value = value;
 	}
 
-	// TODO replace new Date(0) with null after release 30.01.15
-	public JSONObject toJSON()
+	public Price(final String articleCode, final Pricelist pricelist, final BigDecimal value)
 	{
-
-		final JSONObject obj = new JSONObject();
-
-		try
-		{
-			if (priceList != null)
-				obj.put("priceList", priceList.getId());
-
-			if (validFrom != null)
-				obj.put("validFrom", inputDf.format(validFrom));
-
-			obj.put("value", value);
-
-			if (organizationalUnit != null)
-				obj.put("organizationalUnit", organizationalUnit.getId());
-
-			return obj;
-
-		}
-		catch (final JSONException e)
-		{
-
-			e.printStackTrace();
-
-			return null;
-
-		}
-	}
-
-	public Pricelist getPriceList()
-	{
-		return priceList;
-	}
-
-	public void setPriceList(final Pricelist priceList)
-	{
-		this.priceList = priceList;
-	}
-
-	public BigDecimal getValue()
-	{
-		return value;
-	}
-
-	public OrganizationalUnit getOrganizationalUnit()
-	{
-		return organizationalUnit;
-	}
-
-	public void setValue(final BigDecimal value)
-	{
+		super();
 		this.value = value;
-	}
-
-	public void setOrganizationalUnit(final OrganizationalUnit organizationalUnit)
-	{
-		this.organizationalUnit = organizationalUnit;
-	}
-
-	public Date getValidFrom()
-	{
-		return validFrom;
-	}
-
-	public void setValidFrom(final Date validFrom)
-	{
-		this.validFrom = validFrom;
+		this.articleCode = articleCode;
+		this.priceList = pricelist;
 	}
 
 	@Override
@@ -115,6 +52,31 @@ public class Price
 	{
 
 		return obj.hashCode() == this.hashCode();
+	}
+
+	public String getArticleCode()
+	{
+		return articleCode;
+	}
+
+	public OrganizationalUnit getOrganizationalUnit()
+	{
+		return organizationalUnit;
+	}
+
+	public Pricelist getPriceList()
+	{
+		return priceList;
+	}
+
+	public Date getValidFrom()
+	{
+		return validFrom;
+	}
+
+	public BigDecimal getValue()
+	{
+		return value;
 	}
 
 	@Override
@@ -129,6 +91,71 @@ public class Price
 
 
 		return result;
+	}
+
+	public void setArticleCode(final String articleCode)
+	{
+		this.articleCode = articleCode;
+	}
+
+	public void setOrganizationalUnit(final OrganizationalUnit organizationalUnit)
+	{
+		this.organizationalUnit = organizationalUnit;
+	}
+
+	public void setPriceList(final Pricelist priceList)
+	{
+		this.priceList = priceList;
+	}
+
+	public void setValidFrom(final Date validFrom)
+	{
+		this.validFrom = validFrom;
+	}
+
+	public void setValue(final BigDecimal value)
+	{
+		this.value = value;
+	}
+
+	// TODO replace new Date(0) with null after release 30.01.15
+	public JSONObject toJSON()
+	{
+
+		final JSONObject obj = new JSONObject();
+
+		try
+		{
+			if (priceList != null)
+			{
+				obj.put("priceList", priceList.getId());
+			}
+
+			if (validFrom != null)
+			{
+				obj.put("validFrom", inputDf.format(validFrom));
+			}
+
+			obj.put("value", value);
+
+			if (organizationalUnit != null)
+			{
+				obj.put("organizationalUnit", organizationalUnit.getId());
+			}
+
+			obj.put("articleCode", articleCode);
+
+			return obj;
+
+		}
+		catch (final JSONException e)
+		{
+
+			e.printStackTrace();
+
+			return null;
+
+		}
 	}
 
 }
