@@ -25,7 +25,6 @@ import error.ApiNotReachableException;
 
 public class PostListThread implements Callable<String>
 {
-
 	private final static Logger LOGGER = LoggerFactory.getLogger(PostListThread.class);
 
 	private final String cloudURL;
@@ -33,44 +32,6 @@ public class PostListThread implements Callable<String>
 	private final DataType type;
 	private final JSONArray obj;
 	private String ret;
-
-	public PostListThread(final String cloudURL, final String token, final DataType type,
-		final JSONArray jsonArray)
-	{
-
-		super();
-
-		this.cloudURL = cloudURL;
-
-		this.token = token;
-
-		this.type = type;
-
-		this.obj = jsonArray;
-
-	}
-
-	public String getReturn()
-	{
-		return ret;
-	}
-
-	/**
-	 * applies our low-security Profile to our Connection
-	 */
-	private void setupConnection()
-	{
-		try
-		{
-			final SSLContext sc = SSLContext.getInstance("TLS");
-			sc.init(null, trustAllCerts, new SecureRandom());
-			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-		}
-		catch (final Exception e)
-		{
-			LOGGER.error(e.getMessage());
-		}
-	}
 
 	private final static TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager()
 	{
@@ -91,13 +52,31 @@ public class PostListThread implements Callable<String>
 		}
 	} };
 
+	public PostListThread(final String cloudURL, final String token, final DataType type,
+		final JSONArray jsonArray)
+	{
+
+		super();
+
+		this.cloudURL = cloudURL;
+
+		this.token = token;
+
+		this.type = type;
+
+		this.obj = jsonArray;
+
+	}
+
 	@Override
 	public String call() throws ApiNotReachableException
 	{
-
+		LOGGER.debug("Thread execution started " + Thread.currentThread().getName());
 		String slash = "";
 		if (!cloudURL.endsWith("/"))
+		{
 			slash = "/";
+		}
 		final String url = cloudURL + slash + token + "/" + type.getReference() + "/saveAll/";
 		try
 		{
@@ -126,7 +105,9 @@ public class PostListThread implements Callable<String>
 			wr.flush();
 			wr.close();
 			if (out != null)
+			{
 				out.close();
+			}
 			if (con.getResponseCode() == 200)
 			{
 				final BufferedReader in = new BufferedReader(new InputStreamReader(
@@ -142,6 +123,8 @@ public class PostListThread implements Callable<String>
 				con.disconnect(); // Disconnect
 
 				ret = response.toString();
+
+				LOGGER.debug("Thread execution stopped " + Thread.currentThread().getName());
 
 				return response.toString();
 
@@ -163,7 +146,11 @@ public class PostListThread implements Callable<String>
 				LOGGER.error("APICON:FAILED POST -> Type:" + type.getReference());
 
 				con.disconnect(); // Disconnect
+
 				LOGGER.error(String.valueOf(con.getResponseCode()));
+
+				LOGGER.debug("Thread execution stopped " + Thread.currentThread().getName());
+
 				return response.toString();
 			}
 		}
@@ -171,6 +158,28 @@ public class PostListThread implements Callable<String>
 		{
 			LOGGER.error(type.toString() + obj.toString(), e);
 			throw new ApiNotReachableException(url, null);
+		}
+	}
+
+	public String getReturn()
+	{
+		return ret;
+	}
+
+	/**
+	 * applies our low-security Profile to our Connection
+	 */
+	private void setupConnection()
+	{
+		try
+		{
+			final SSLContext sc = SSLContext.getInstance("TLS");
+			sc.init(null, trustAllCerts, new SecureRandom());
+			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+		}
+		catch (final Exception e)
+		{
+			LOGGER.error(e.getMessage());
 		}
 	}
 }
