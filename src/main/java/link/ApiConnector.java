@@ -205,11 +205,11 @@ public class ApiConnector
 
 		if (obj.length() == 0)
 		{
-			LOGGER.debug("NO OBJECTS POSTED");
+			LOGGER.info("NO OBJECTS POSTED");
 		}
 		else
 		{
-			LOGGER.debug("posting " + obj.length() + " " + type + "s");
+			LOGGER.info("posting " + obj.length() + " " + type + "s");
 		}
 
 		while (i < obj.length())
