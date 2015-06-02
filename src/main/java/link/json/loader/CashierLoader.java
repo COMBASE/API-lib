@@ -10,6 +10,9 @@ import org.codehaus.jettison.json.JSONObject;
 
 import domain.Cashier;
 import domain.enums.DataType;
+import error.ApiNotReachableException;
+import error.InvalidTokenException;
+import error.KoronaCloudAPIErrorMessageException;
 
 public class CashierLoader extends AbstractHasNameJsonLoader<Cashier>
 {
@@ -20,19 +23,28 @@ public class CashierLoader extends AbstractHasNameJsonLoader<Cashier>
 	}
 
 	@Override
+	public Cashier fromJSON(final JSONObject obj) throws JSONException, ParseException
+	{
+		final Cashier cashier = Cashier.fromJSON(obj);
+		return cashier;
+	}
+
+	@Override
+	public Cashier postAndResolve(final Cashier obj) throws JSONException, ParseException,
+	KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException
+	{
+		LOGGER.debug(super.getDataType() + ": Nothing to resolve and to pre-post");
+
+		return post(obj);
+	}
+
+	@Override
 	public JSONObject toJSON(final Cashier value) throws JSONException
 	{
 		final JSONObject obj = value.toJSON();
 
 
 		return obj;
-	}
-
-	@Override
-	public Cashier fromJSON(final JSONObject obj) throws JSONException, ParseException
-	{
-		final Cashier cashier = Cashier.fromJSON(obj);
-		return cashier;
 	}
 
 }

@@ -35,7 +35,7 @@ public class ProductLoader extends AbstractHasNameJsonLoader<Product>
 	}
 
 	public Product downloadByCode(final String code) throws ApiNotReachableException,
-	JSONException, ParseException, KoronaCloudAPIErrorMessageException, InvalidTokenException
+		JSONException, ParseException, KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 
 		final Product cachedObject = codeCache.get(code);
@@ -98,7 +98,7 @@ public class ProductLoader extends AbstractHasNameJsonLoader<Product>
 
 	@Override
 	public Product post(final Product obj) throws ApiNotReachableException, JSONException,
-		ParseException, InvalidTokenException, KoronaCloudAPIErrorMessageException
+	ParseException, InvalidTokenException, KoronaCloudAPIErrorMessageException
 	{
 
 		try
@@ -129,10 +129,50 @@ public class ProductLoader extends AbstractHasNameJsonLoader<Product>
 	}
 
 	@Override
+	public Product postAndResolve(final Product obj) throws JSONException, ParseException,
+	KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException
+	{
+		if (obj.getCommodityGroup() != null &&
+			(obj.getCommodityGroup().getName() != null ||
+				obj.getCommodityGroup().getNumber() != null || obj.getCommodityGroup().getId() != null))
+		{
+			final CommodityGroupLoader loader = new CommodityGroupLoader(cloudLink);
+
+			loader.post(obj.getCommodityGroup());
+		}
+
+		if (obj.getSector() != null &&
+			(obj.getSector().getName() != null || obj.getSector().getNumber() != null || obj.getSector()
+			.getId() != null))
+		{
+			final SectorLoader loader = new SectorLoader(cloudLink);
+			loader.post(obj.getSector());
+		}
+
+		if (obj.getAltsector() != null &&
+			(obj.getAltsector().getName() != null || obj.getAltsector().getNumber() != null || obj.getAltsector()
+			.getId() != null))
+		{
+			final SectorLoader loader = new SectorLoader(cloudLink);
+			loader.post(obj.getAltsector());
+		}
+
+		if (obj.getAssortment() != null &&
+			(obj.getAssortment().getName() != null || obj.getAssortment().getNumber() != null || obj.getAssortment()
+			.getId() != null))
+		{
+			final AssortmentLoader loader = new AssortmentLoader(cloudLink);
+			loader.post(obj.getAssortment());
+		}
+
+		return post(obj);
+	}
+
+	@Override
 	public List<Product> postList(final List<? extends Product> objs, final int limit,
 		final int threads) throws JSONException, ParseException,
 		KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException
-		{
+	{
 
 		try
 		{
@@ -158,7 +198,7 @@ public class ProductLoader extends AbstractHasNameJsonLoader<Product>
 			throw new KoronaCloudAPIErrorMessageException(e, e.getErrorMap());
 
 		}
-		}
+	}
 
 	@Override
 	public JSONObject toJSON(final Product value) throws JSONException

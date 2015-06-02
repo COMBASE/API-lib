@@ -499,12 +499,18 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 
 		final Cashier cash = new Cashier.Builder().build();
 		cash.setId(obj.getString("cashier"));
+
 		final CustomerGroup cGrp = new CustomerGroup.Builder().build();
 		cGrp.setId(obj.getString("customerGroup"));
-		final Customer cust = new Customer.Builder().build();
-		cust.setId(obj.getString("customer"));
-		Receipt rec = null;
-		rec = new Receipt.Builder().number(obj.getString("number"))
+
+		Customer cust = null;
+		if (!obj.isNull("customer"))
+		{
+			cust = new Customer.Builder().build();
+			cust.setId(obj.getString("customer"));
+		}
+
+		final Receipt rec = new Receipt.Builder().number(obj.getString("number"))
 			.deleted(obj.getBoolean("deleted"))
 			.revision(obj.getLong("revision"))
 			.cashier(cash)

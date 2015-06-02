@@ -10,6 +10,9 @@ import org.codehaus.jettison.json.JSONObject;
 
 import domain.PriceStandalone;
 import domain.enums.DataType;
+import error.ApiNotReachableException;
+import error.InvalidTokenException;
+import error.KoronaCloudAPIErrorMessageException;
 
 /**
  *
@@ -18,6 +21,7 @@ import domain.enums.DataType;
  */
 public class PriceStandaloneLoader extends AbstractHasNumberJsonLoader<PriceStandalone>
 {
+	OrganizationalUnitLoader organizationalUnitLoader;
 
 	public PriceStandaloneLoader(final CloudLink cloudLink)
 	{
@@ -28,6 +32,26 @@ public class PriceStandaloneLoader extends AbstractHasNumberJsonLoader<PriceStan
 	public PriceStandalone fromJSON(final JSONObject obj) throws JSONException, ParseException
 	{
 		return null;
+	}
+
+	@Override
+	public PriceStandalone postAndResolve(final PriceStandalone obj) throws JSONException,
+		ParseException, KoronaCloudAPIErrorMessageException, InvalidTokenException,
+		ApiNotReachableException
+	{
+		if (obj.getOrganizationalUnit() != null)
+		{
+			if (organizationalUnitLoader == null)
+			{
+				organizationalUnitLoader = new OrganizationalUnitLoader(cloudLink);
+			}
+			organizationalUnitLoader.postAndResolve(obj.getOrganizationalUnit());
+		}
+		else
+		{
+			LOGGER.debug(super.getDataType() + ": No OrganizationalUnit to resolve and to pre-post");
+		}
+		return post(obj);
 	}
 
 	@Override

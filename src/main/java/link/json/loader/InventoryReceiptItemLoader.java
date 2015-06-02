@@ -24,6 +24,7 @@ public class InventoryReceiptItemLoader extends AbstractHasIdJsonLoader<Inventor
 
 	InventoryReceiptLoader inventoryReceiptLoader;
 
+	ProductLoader productLoader;
 
 	public InventoryReceiptItemLoader(final CloudLink cloudLink)
 	{
@@ -37,6 +38,40 @@ public class InventoryReceiptItemLoader extends AbstractHasIdJsonLoader<Inventor
 	{
 		final InventoryReceiptItem inventoryReceiptItem = InventoryReceiptItem.fromJSON(obj);
 		return inventoryReceiptItem;
+	}
+
+	@Override
+	public InventoryReceiptItem postAndResolve(final InventoryReceiptItem obj)
+		throws JSONException, ParseException, KoronaCloudAPIErrorMessageException,
+		InvalidTokenException, ApiNotReachableException
+	{
+		if (obj.getArticle() != null)
+		{
+			if (productLoader == null)
+			{
+				productLoader = new ProductLoader(cloudLink);
+			}
+			productLoader.postAndResolve(obj.getArticle());
+		}
+		else
+		{
+			LOGGER.debug(super.getDataType() + ": No Article to resolve and to pre-post");
+		}
+
+		if (obj.getReceipt() != null)
+		{
+			if (inventoryReceiptLoader == null)
+			{
+				inventoryReceiptLoader = new InventoryReceiptLoader(cloudLink);
+			}
+			inventoryReceiptLoader.postAndResolve(obj.getReceipt());
+		}
+		else
+		{
+			LOGGER.debug(super.getDataType() + ": No inventoryReceipt to resolve and to pre-post");
+		}
+
+		return post(obj);
 	}
 
 	/**

@@ -10,13 +10,46 @@ import org.codehaus.jettison.json.JSONObject;
 
 import domain.CommodityGroup;
 import domain.enums.DataType;
+import error.ApiNotReachableException;
+import error.InvalidTokenException;
+import error.KoronaCloudAPIErrorMessageException;
 
 public class CommodityGroupLoader extends AbstractHasNameJsonLoader<CommodityGroup>
 {
 
+	CommodityGroupLoader commodityGroupLoader;
+
 	public CommodityGroupLoader(final CloudLink cloudLink)
 	{
 		super(DataType.commodityGroup, cloudLink);
+	}
+
+	@Override
+	public CommodityGroup fromJSON(final JSONObject obj) throws JSONException, ParseException
+	{
+		final CommodityGroup commodityGroup = CommodityGroup.fromJSON(obj);
+		return commodityGroup;
+	}
+
+	@Override
+	public CommodityGroup postAndResolve(final CommodityGroup obj) throws JSONException,
+	ParseException, KoronaCloudAPIErrorMessageException, InvalidTokenException,
+	ApiNotReachableException
+	{
+		if (obj.getParent() != null)
+		{
+			if (commodityGroupLoader == null)
+			{
+				commodityGroupLoader = new CommodityGroupLoader(cloudLink);
+			}
+			commodityGroupLoader.postAndResolve(obj.getParent());
+		}
+		else
+		{
+			LOGGER.debug(super.getDataType() + ": No Commodity Group to resolve and to pre-post");
+		}
+
+		return post(obj);
 	}
 
 	@Override
@@ -25,13 +58,6 @@ public class CommodityGroupLoader extends AbstractHasNameJsonLoader<CommodityGro
 		final JSONObject obj = value.toJSON();
 
 		return obj;
-	}
-
-	@Override
-	public CommodityGroup fromJSON(final JSONObject obj) throws JSONException, ParseException
-	{
-		final CommodityGroup commodityGroup = CommodityGroup.fromJSON(obj);
-		return commodityGroup;
 	}
 
 }

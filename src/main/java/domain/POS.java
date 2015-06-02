@@ -17,7 +17,7 @@ public class POS extends AbstractNameAndNumberApiObject<POS>
 
 	}
 	protected static abstract class Init<T extends Init<T>> extends
-		AbstractNameAndNumberApiObject.Init<T>
+	AbstractNameAndNumberApiObject.Init<T>
 	{
 		private Integer autoLogoutDelay = null;
 		private Boolean autoReceiptPrint = null;
@@ -25,7 +25,7 @@ public class POS extends AbstractNameAndNumberApiObject<POS>
 		private String customerDisplayOnlineText = null;
 		private String distributerCode = null;
 		private CustomerGroup defaultCustomerGroup = null;
-		private Payment defaultPaymentMethod = null;
+		private PaymentMethod defaultPaymentMethod = null;
 		private EconomicZone economicZone = null;
 		private Boolean forceClosedDrawer = null;
 		private CustomerGroup friendsBonusCustomerGroup = null;
@@ -93,7 +93,7 @@ public class POS extends AbstractNameAndNumberApiObject<POS>
 			return self();
 		}
 
-		public T defaultPaymentMethod(final Payment value)
+		public T defaultPaymentMethod(final PaymentMethod value)
 		{
 			this.defaultPaymentMethod = value;
 			return self();
@@ -207,29 +207,14 @@ public class POS extends AbstractNameAndNumberApiObject<POS>
 	 */
 	private static final long serialVersionUID = -7976248646395275345L;
 
-	public static POS fromJSON(JSONObject obj) throws JSONException
-	{
-		if (obj.has("result") && obj.getString("result") != null)
-			obj = obj.getJSONObject("result");
-		final OrganizationalUnit orgUnit = new OrganizationalUnit.Builder().build();
-		orgUnit.setId(obj.getString("organizationalUnit"));
-
-		final POS pos = new POS.Builder().number(obj.getString("number"))
-			.organizationalUnit(orgUnit)
-			.id(obj.getString("uuid"))
-
-
-			.build();
-		return pos;
-	}
-
 	private Integer autoLogoutDelay;
+
 	private Boolean autoReceiptPrint;
 	private String customerDisplayOfflineText;
 	private String customerDisplayOnlineText;
 	private String distributerCode;
 	private CustomerGroup defaultCustomerGroup;
-	private Payment defaultPaymentMethod;
+	private PaymentMethod defaultPaymentMethod;
 	private EconomicZone economicZone;
 	private Boolean forceClosedDrawer;
 	private CustomerGroup friendsBonusCustomerGroup;
@@ -245,41 +230,11 @@ public class POS extends AbstractNameAndNumberApiObject<POS>
 	private String automaticEndOfDayIntervalStr;
 	private Boolean centInput;
 	private Boolean requirePaymentAmountInput;
-
 	private Boolean kioskMode;
 
 	private String automaticPaymentFinalization;
 
 	private String StringbloyalDeviceKey;
-
-// public JSONObject toJSON()
-// {
-// final JSONObject obj = new JSONObject();
-// try
-// {
-
-//
-// return obj;
-// }
-// catch (final JSONException e)
-// {
-// e.printStackTrace();
-// return null;
-// }
-// }
-//
-// public static POS fromJSON(JSONObject obj) throws JSONException
-// {
-//
-// }
-//
-// public boolean post() throws IOException
-// {
-//
-// if (organizationalUnit != null && organizationalUnit.getUuid() == null)
-// organizationalUnit.post();
-// return CloudLink.getConnector().postData(DataType.pos, this.toJSON());
-// }
 
 	private POS(final Init<?> init)
 	{
@@ -311,6 +266,35 @@ public class POS extends AbstractNameAndNumberApiObject<POS>
 		automaticPaymentFinalization = init.automaticPaymentization;
 		StringbloyalDeviceKey = init.StringbloyalDeviceKey;
 	}
+
+// public JSONObject toJSON()
+// {
+// final JSONObject obj = new JSONObject();
+// try
+// {
+
+//
+// return obj;
+// }
+// catch (final JSONException e)
+// {
+// e.printStackTrace();
+// return null;
+// }
+// }
+//
+// public static POS fromJSON(JSONObject obj) throws JSONException
+// {
+//
+// }
+//
+// public boolean post() throws IOException
+// {
+//
+// if (organizationalUnit != null && organizationalUnit.getUuid() == null)
+// organizationalUnit.post();
+// return CloudLink.getConnector().postData(DataType.pos, this.toJSON());
+// }
 
 	@Override
 	public boolean equals(final Object obj)
@@ -349,7 +333,7 @@ public class POS extends AbstractNameAndNumberApiObject<POS>
 		return defaultCustomerGroup;
 	}
 
-	public Payment getDefaultPaymentMethod()
+	public PaymentMethod getDefaultPaymentMethod()
 	{
 		return defaultPaymentMethod;
 	}
@@ -527,7 +511,7 @@ public class POS extends AbstractNameAndNumberApiObject<POS>
 		this.defaultCustomerGroup = defaultCustomerGroup;
 	}
 
-	public void setDefaultPaymentMethod(final Payment defaultPaymentMethod)
+	public void setDefaultPaymentMethod(final PaymentMethod defaultPaymentMethod)
 	{
 		this.defaultPaymentMethod = defaultPaymentMethod;
 	}
@@ -615,16 +599,44 @@ public class POS extends AbstractNameAndNumberApiObject<POS>
 		appendJSON(obj);
 
 		if (organizationalUnit != null)
+		{
 			obj.put("organizationalUnit", organizationalUnit.getId());
+		}
 		if (defaultCustomerGroup != null)
+		{
 			obj.put("defaultCustomerGroup", defaultCustomerGroup.getId());
+		}
 		if (defaultPaymentMethod != null)
+		{
 			obj.put("defaultPaymentMethod", defaultPaymentMethod.getId());
+		}
 		if (economicZone != null)
+		{
 			obj.put("sector", economicZone.getId());
+		}
 		if (friendsBonusCustomerGroup != null)
+		{
 			obj.put("friendsBonusCustomerGroup", friendsBonusCustomerGroup.getId());
+		}
 
 		return obj;
+	}
+
+	public static POS fromJSON(JSONObject obj) throws JSONException
+	{
+		if (obj.has("result") && obj.getString("result") != null)
+		{
+			obj = obj.getJSONObject("result");
+		}
+		final OrganizationalUnit orgUnit = new OrganizationalUnit.Builder().build();
+		orgUnit.setId(obj.getString("organizationalUnit"));
+
+		final POS pos = new POS.Builder().number(obj.getString("number"))
+			.organizationalUnit(orgUnit)
+			.id(obj.getString("uuid"))
+
+
+			.build();
+		return pos;
 	}
 }

@@ -90,7 +90,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	 * @throws JSONException
 	 */
 	public JSONArray downloadAllByOffset(final long revision) throws ApiNotReachableException,
-	KoronaCloudAPIErrorMessageException, InvalidTokenException
+		KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		try
 		{
@@ -119,7 +119,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	 * @throws KoronaCloudAPIErrorMessageException
 	 */
 	public JSONArray downloadAllExisting() throws ApiNotReachableException,
-		KoronaCloudAPIErrorMessageException, InvalidTokenException
+	KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		try
 		{
@@ -155,7 +155,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	 * @throws JSONException
 	 */
 	public JSONArray downloadByOffset(final long revision) throws ApiNotReachableException,
-	KoronaCloudAPIErrorMessageException, InvalidTokenException
+		KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		try
 		{
@@ -225,7 +225,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	 * @throws KoronaCloudAPIErrorMessageException
 	 */
 	public JSONArray downloadByRevision(final long revision) throws ApiNotReachableException,
-	KoronaCloudAPIErrorMessageException, InvalidTokenException
+		KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		try
 		{
@@ -255,7 +255,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	 * @throws KoronaCloudAPIErrorMessageException
 	 */
 	public T downloadByUUID(final String uuid) throws ApiNotReachableException, ParseException,
-	KoronaCloudAPIErrorMessageException, InvalidTokenException
+		KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 
 		final T cachedObject = idCache.get(uuid);
@@ -328,6 +328,34 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 		}
 	}
 
+	public T find(final String reference) throws ApiNotReachableException, ParseException,
+	KoronaCloudAPIErrorMessageException, InvalidTokenException, IllegalArgumentException
+	{
+		try
+		{
+			final String[] components = reference.split("-");
+			if (components.length != 5)
+				throw new IllegalArgumentException("Invalid UUID string: " + reference);
+
+			return downloadByUUID(reference);
+		}
+		catch (final KoronaCloudAPIErrorMessageException e)
+		{
+			if (e.getErrorMap().containsKey(ErrorMessages.Invalid_UUID_string.getErrorString()))
+			{
+				LOGGER.debug("Not an UID String: " + reference + " Type is " + dataType.toString());
+				return null;
+			}
+			if (e.getErrorMap().containsKey(ErrorMessages.No_object_found_for_id))
+			{
+				LOGGER.debug("No Object for ID: " + reference + " Type is " + dataType.toString());
+				return null;
+			}
+			else
+				throw new KoronaCloudAPIErrorMessageException(e, e.getErrorMap());
+		}
+
+	}
 
 	public abstract T fromJSON(JSONObject obj) throws JSONException, ParseException;
 
@@ -352,7 +380,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	}
 
 	public Iterator<JSONObject> iterator(final long revision) throws ApiNotReachableException,
-		JSONException, KoronaCloudAPIErrorMessageException, InvalidTokenException
+	JSONException, KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		return new CloudResultIterator(this, revision);
 	}
@@ -373,7 +401,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	 * @throws PostWithNoReferenceSetException
 	 */
 	public T post(final T obj) throws ApiNotReachableException, JSONException, ParseException,
-		KoronaCloudAPIErrorMessageException, InvalidTokenException
+	KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 // if (obj == null || obj.getId() == null)
 // throw new PostWithNoReferenceSetException(null);
@@ -381,6 +409,31 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 		return upload(obj);
 
 	}
+
+	/**
+	 * Puts the object into ID, Number and Name caches overriding existing objects with same ID,
+	 * Number or Name. Invoking this method will automatically try to update all caches by calling
+	 * super method super.post(obj).
+	 *
+	 * This Method auto posts all necessary subpojos like commodityGroup of Product as long as the
+	 * corresponding subpojo is contained by the mainPojo.
+	 *
+	 * @param obj
+	 * @return the updated obj:T previously inserted into this method.
+	 * @throws JSONException
+	 * @throws ParseException
+	 * @throws KoronaCloudAPIErrorMessageException
+	 * @throws InvalidTokenException
+	 * @throws ApiNotReachableException
+	 */
+	public abstract T postAndResolve(final T obj) throws JSONException, ParseException,
+		KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException;
+
+// public T postAndResolve(final T obj) throws JSONException, ParseException,
+// KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException
+// {
+// return null;
+// }
 
 	/**
 	 * posts all Data
@@ -400,7 +453,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	public List<T> postList(final List<? extends T> objs, final int limit, final int threads)
 		throws KoronaCloudAPIErrorMessageException, InvalidTokenException, JSONException,
 		ParseException, ApiNotReachableException
-		{
+	{
 
 		if (objs == null || objs.size() == 0)
 			return null;
@@ -414,14 +467,17 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 
 		}
 
-		final JSONArray result = CloudLink.getConnector().postData(getDataType(), jsonObjs, limit,
+		updateCache(objs);
+
+		JSONArray result = CloudLink.getConnector().postData(getDataType(), jsonObjs, limit,
 			threads);
 
 		List<T> ret = null;
 
 		if (result != null)
 		{
-			for (int i = 0; result.length() < i; i++)
+			result = result.getJSONArray(0);
+			for (int i = 0; result.length() > i; i++)
 			{
 
 				final JSONObject resultObj = result.getJSONObject(i);
@@ -436,21 +492,30 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 				ret.add(obj);
 
 			}
+			updateCache(ret);
 		}
+
 
 		return ret;
 
-		}
+	}
 
 	public abstract JSONObject toJSON(T value) throws JSONException;
 
-	public void updateCache(final List<T> objs)
+	public void updateCache(final List<? extends T> objs)
 	{
 		for (final T obj : objs)
 		{
 			if (obj.getId() != null)
 			{
-				idCache.put(obj.getId(), obj);
+				if (obj.isDeleted())
+				{
+					idCache.remove(obj.getId());
+				}
+				else
+				{
+					idCache.put(obj.getId(), obj);
+				}
 			}
 		}
 
@@ -465,6 +530,10 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	{
 		if (obj.getId() != null)
 		{
+			if (obj.isDeleted())
+			{
+				idCache.remove(obj.getId());
+			}
 			idCache.put(obj.getId(), obj);
 		}
 	}
@@ -603,7 +672,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	}
 
 	protected T upload(final T obj) throws JSONException, ParseException,
-	KoronaCloudAPIErrorMessageException, InvalidTokenException
+		KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		updateCache(obj);
 
@@ -630,95 +699,4 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 
 		return ret;
 	}
-
-	/**
-	 *
-	 * @param responseJson
-	 * @throws JSONException
-	 * @throws KoronaCloudAPIErrorMessageException
-	 * @throws InvalidTokenException
-	 * @throws ArticleCodeMustBeUniqueException
-	 */
-	private void interpretResponse(final JSONObject responseJson) throws JSONException,
-		KoronaCloudAPIErrorMessageException, InvalidTokenException
-	{
-
-		try
-		{
-			// Invalid Token
-			if (!responseJson.isNull("error"))
-			{
-
-				final String errorStr = responseJson.getString("error");
-
-				if (errorStr.equalsIgnoreCase(ErrorMessages.Invalid_Token.getErrorString()))
-					throw new InvalidTokenException(null);
-
-				else
-				{
-
-					final Map<String, String> errorMap = new HashMap<String, String>();
-
-					final String[] errorMapping = errorStr.split(":");
-
-					if (errorMapping.length == 1)
-					{
-						errorMap.put(errorMapping[0],
-							"KORONA.CLOUD.API haven't returned any values corresponding to this error key");
-					}
-					else
-					{
-						errorMap.put(errorMapping[0], errorMapping[1]);
-					}
-
-					throw new KoronaCloudAPIErrorMessageException(null, errorMap);
-
-				}
-
-			}
-
-			// API Exception Handling
-			if (!responseJson.isNull("errorList"))
-			{
-				final JSONArray errorList = responseJson.getJSONArray("errorList");
-
-				// contains all error objects
-				final Map<String, String> errorMap = new HashMap<String, String>();
-
-				for (int i = 0; i < errorList.length(); i++)
-				{
-
-					final String[] errorMapping = errorList.getString(i).split(":");
-
-					if (errorMap.containsKey(errorMapping[0]))
-					{
-
-						final String errorValue = errorMap.get(errorMapping[0]);
-
-						errorMap.put(errorMapping[0], errorValue + ", " + errorMapping[1]);
-
-					}
-					else
-					{
-						errorMap.put(errorMapping[0], errorMapping[1]);
-					}
-
-
-					if (errorMap.containsKey("Invalid Token"))
-						throw new InvalidTokenException(null);
-
-				}
-
-				throw new KoronaCloudAPIErrorMessageException(null, errorMap);
-
-			}
-		}
-		catch (final JSONException e)
-		{
-			LOGGER.error("missing error or errorList key: " + responseJson.toString(), e);
-		}
-
-
-	}
-
 }

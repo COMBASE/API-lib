@@ -64,9 +64,7 @@ public abstract class AbstractHasNameJsonLoader<T extends HasId & HasNumber & Ha
 			if (errorMap.containsKey(ErrorMessages.No_Object_found_for_name.getErrorString()))
 				return null;
 			else
-			{
 				throw new KoronaCloudAPIErrorMessageException(e, errorMap);
-			}
 
 		}
 
@@ -96,6 +94,20 @@ public abstract class AbstractHasNameJsonLoader<T extends HasId & HasNumber & Ha
 	}
 
 	@Override
+	public T find(final String reference) throws ApiNotReachableException, ParseException,
+		KoronaCloudAPIErrorMessageException, InvalidTokenException, IllegalArgumentException
+	{
+		final T obj = super.find(reference);
+
+		if (obj == null)
+			return downloadByName(reference);
+
+		return obj;
+
+
+	}
+
+	@Override
 	public T getCachedObject(final T object)
 	{
 
@@ -121,12 +133,22 @@ public abstract class AbstractHasNameJsonLoader<T extends HasId & HasNumber & Ha
 	}
 
 	@Override
-	public void updateCache(final List<T> objs)
+	public void updateCache(final List<? extends T> objs)
 	{
 		for (final T obj : objs)
 		{
 			if (obj.getName() != null)
-				nameCache.put(obj.getName(), obj);
+			{
+				if (obj.isDeleted())
+				{
+					nameCache.remove(obj.getName());
+				}
+				else
+				{
+					nameCache.put(obj.getName(), obj);
+				}
+
+			}
 		}
 
 		super.updateCache(objs);
@@ -137,7 +159,9 @@ public abstract class AbstractHasNameJsonLoader<T extends HasId & HasNumber & Ha
 	public void updateCache(final T obj)
 	{
 		if (obj.getName() != null)
+		{
 			nameCache.put(obj.getName(), obj);
+		}
 
 		super.updateCache(obj);
 	}

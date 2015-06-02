@@ -10,13 +10,47 @@ import org.codehaus.jettison.json.JSONObject;
 
 import domain.CustomerGroup;
 import domain.enums.DataType;
+import error.ApiNotReachableException;
+import error.InvalidTokenException;
+import error.KoronaCloudAPIErrorMessageException;
 
 public class CustomerGroupLoader extends AbstractHasNameJsonLoader<CustomerGroup>
 {
+	PricelistLoader pricelistLoader;
 
 	public CustomerGroupLoader(final CloudLink cloudLink)
 	{
 		super(DataType.customergroup, cloudLink);
+	}
+
+	@Override
+	public CustomerGroup fromJSON(final JSONObject obj) throws JSONException, ParseException
+	{
+		final CustomerGroup customerGroup = CustomerGroup.fromJSON(obj);
+		return customerGroup;
+	}
+
+	@Override
+	public CustomerGroup postAndResolve(final CustomerGroup obj) throws JSONException,
+	ParseException, KoronaCloudAPIErrorMessageException, InvalidTokenException,
+	ApiNotReachableException
+	{
+
+		if (obj.getPriceGroup() != null)
+		{
+			if (pricelistLoader == null)
+			{
+				pricelistLoader = new PricelistLoader(cloudLink);
+			}
+			pricelistLoader.postAndResolve(obj.getPriceGroup());
+		}
+		else
+		{
+			LOGGER.debug(super.getDataType() + ": No Price Group to resolve and to pre-post");
+		}
+
+		return post(obj);
+
 	}
 
 	@Override
@@ -31,13 +65,6 @@ public class CustomerGroupLoader extends AbstractHasNameJsonLoader<CustomerGroup
 		obj.put("number", value.getNumber());
 
 		return obj;
-	}
-
-	@Override
-	public CustomerGroup fromJSON(final JSONObject obj) throws JSONException, ParseException
-	{
-		final CustomerGroup customerGroup = CustomerGroup.fromJSON(obj);
-		return customerGroup;
 	}
 
 }

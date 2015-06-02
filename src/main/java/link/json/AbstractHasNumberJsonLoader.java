@@ -41,7 +41,7 @@ AbstractHasIdJsonLoader<T>
 	 * @throws KoronaCloudAPIErrorMessageException
 	 */
 	public T downloadByNumber(final String number) throws ApiNotReachableException, ParseException,
-		KoronaCloudAPIErrorMessageException, InvalidTokenException
+	KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		final T cachedObject = numberCache.get(number);
 		if (cachedObject != null)
@@ -62,9 +62,7 @@ AbstractHasIdJsonLoader<T>
 			if (errorMap.containsKey(ErrorMessages.No_object_found_for_number.getErrorString()))
 				return null;
 			else
-			{
 				throw new KoronaCloudAPIErrorMessageException(e, errorMap);
-			}
 
 		}
 
@@ -91,6 +89,33 @@ AbstractHasIdJsonLoader<T>
 	}
 
 	@Override
+	public T find(final String reference) throws ApiNotReachableException, ParseException,
+	KoronaCloudAPIErrorMessageException, InvalidTokenException, IllegalArgumentException
+	{
+		final T obj = super.find(reference);
+
+		if (obj == null)
+		{
+			try
+			{
+				return downloadByNumber(reference);
+			}
+			catch (final KoronaCloudAPIErrorMessageException e)
+			{
+				if (e.getErrorMap().containsKey(ErrorMessages.No_object_found_for_number))
+				{
+					LOGGER.debug("Not a Number String");
+					return null;
+				}
+			}
+		}
+
+		return obj;
+
+
+	}
+
+	@Override
 	public T getCachedObject(final T object)
 	{
 
@@ -106,7 +131,7 @@ AbstractHasIdJsonLoader<T>
 
 	@Override
 	public T post(final T obj) throws ApiNotReachableException, JSONException, ParseException,
-		KoronaCloudAPIErrorMessageException, InvalidTokenException
+	KoronaCloudAPIErrorMessageException, InvalidTokenException
 
 	{
 // if (obj == null || (obj.getNumber() == null && obj.getId() == null))
@@ -116,12 +141,21 @@ AbstractHasIdJsonLoader<T>
 	}
 
 	@Override
-	public void updateCache(final List<T> objs)
+	public void updateCache(final List<? extends T> objs)
 	{
 		for (final T obj : objs)
 		{
 			if (obj.getNumber() != null)
-				numberCache.put(obj.getNumber(), obj);
+			{
+				if (obj.isDeleted())
+				{
+					numberCache.remove(obj.getNumber());
+				}
+				else
+				{
+					numberCache.put(obj.getNumber(), obj);
+				}
+			}
 		}
 
 		super.updateCache(objs);
@@ -132,7 +166,9 @@ AbstractHasIdJsonLoader<T>
 	public void updateCache(final T obj)
 	{
 		if (obj.getNumber() != null)
+		{
 			numberCache.put(obj.getNumber(), obj);
+		}
 
 		super.updateCache(obj);
 	}
