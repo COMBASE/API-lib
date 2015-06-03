@@ -2,8 +2,11 @@ package domain;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -29,6 +32,7 @@ public class AccountTransaction extends AbstractApiObject<AccountTransaction>
 		private Date bookingTime = null;
 		private Integer receiptIndex = null;
 		private String description = null;
+		private List<String> serialNumbers = null;
 
 		public T account(final Account acc)
 		{
@@ -83,6 +87,12 @@ public class AccountTransaction extends AbstractApiObject<AccountTransaction>
 			receiptIndex = value;
 			return self();
 		}
+
+		public T serialNumbers(final List<String> values)
+		{
+			serialNumbers = values;
+			return self();
+		}
 	}
 
 	private static final long serialVersionUID = -6707310291148051948L;
@@ -94,10 +104,9 @@ public class AccountTransaction extends AbstractApiObject<AccountTransaction>
 	private POS pos;
 	private BigDecimal amount;
 	private Date bookingTime;
-
 	private Integer receiptIndex;
-
 	private String description;
+	private final List<String> serialNumbers;
 
 	public AccountTransaction(final Init<?> init)
 	{
@@ -110,6 +119,7 @@ public class AccountTransaction extends AbstractApiObject<AccountTransaction>
 		bookingTime = init.bookingTime;
 		receiptIndex = init.receiptIndex;
 		description = init.description;
+		serialNumbers = init.serialNumbers;
 	}
 
 	@Override
@@ -157,6 +167,11 @@ public class AccountTransaction extends AbstractApiObject<AccountTransaction>
 	public int getReceiptIndex()
 	{
 		return receiptIndex;
+	}
+
+	public List<String> getSerialNumbers()
+	{
+		return serialNumbers;
 	}
 
 	@Override
@@ -235,6 +250,19 @@ public class AccountTransaction extends AbstractApiObject<AccountTransaction>
 		obj.put("receiptIndex", receiptIndex);
 		obj.put("description", description);
 
+		if (serialNumbers != null)
+		{
+			final JSONArray array = new JSONArray();
+			for (final String number : serialNumbers)
+			{
+				if (number != null)
+				{
+					array.put(number);
+				}
+			}
+			obj.put("serialNumbers", array);
+		}
+
 		return obj;
 	}
 
@@ -257,6 +285,24 @@ public class AccountTransaction extends AbstractApiObject<AccountTransaction>
 		final POS pos = new POS.Builder().build();
 		pos.setId(obj.getString("pos"));
 
+		List<String> serialNumbers = null;
+		if (!obj.isNull("serialNumbers"))
+		{
+			final JSONArray jSerialNumbers = obj.getJSONArray("serialNumbers");
+			if (jSerialNumbers.length() > 0)
+			{
+				if (serialNumbers == null)
+				{
+					serialNumbers = new ArrayList<>();
+				}
+				for (int i = 0; jSerialNumbers.length() > i; i++)
+				{
+					serialNumbers.add(jSerialNumbers.getString(i));
+				}
+
+			}
+		}
+
 		final AccountTransaction accountTransaction = new AccountTransaction.Builder().deleted(
 			obj.getBoolean("deleted"))
 			.revision(obj.getLong("revision"))
@@ -269,7 +315,9 @@ public class AccountTransaction extends AbstractApiObject<AccountTransaction>
 			.bookingTime(prepareDate(obj, "bookingTime"))
 			.receiptIndex(obj.getInt("receiptIndex"))
 			.description(obj.getString("description"))
+			.serialNumbers(serialNumbers)
 			.build();
+
 		return accountTransaction;
 	}
 

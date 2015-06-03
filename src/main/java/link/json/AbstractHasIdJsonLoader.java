@@ -469,6 +469,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 
 		updateCache(objs);
 
+
 		JSONArray result = CloudLink.getConnector().postData(getDataType(), jsonObjs, limit,
 			threads);
 
@@ -534,7 +535,10 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 			{
 				idCache.remove(obj.getId());
 			}
-			idCache.put(obj.getId(), obj);
+			else
+			{
+				idCache.put(obj.getId(), obj);
+			}
 		}
 	}
 
@@ -677,7 +681,9 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 		updateCache(obj);
 
 		final String result = CloudLink.getConnector().postData(getDataType(), toJSON(obj));
+
 		T ret;
+
 		try
 		{
 			final JSONObject jObj = new JSONObject(result);
