@@ -119,7 +119,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	 * @throws KoronaCloudAPIErrorMessageException
 	 */
 	public JSONArray downloadAllExisting() throws ApiNotReachableException,
-	KoronaCloudAPIErrorMessageException, InvalidTokenException
+		KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		try
 		{
@@ -329,7 +329,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	}
 
 	public T find(final String reference) throws ApiNotReachableException, ParseException,
-	KoronaCloudAPIErrorMessageException, InvalidTokenException, IllegalArgumentException
+		KoronaCloudAPIErrorMessageException, InvalidTokenException, IllegalArgumentException
 	{
 		try
 		{
@@ -380,7 +380,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	}
 
 	public Iterator<JSONObject> iterator(final long revision) throws ApiNotReachableException,
-	JSONException, KoronaCloudAPIErrorMessageException, InvalidTokenException
+		JSONException, KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		return new CloudResultIterator(this, revision);
 	}
@@ -401,7 +401,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	 * @throws PostWithNoReferenceSetException
 	 */
 	public T post(final T obj) throws ApiNotReachableException, JSONException, ParseException,
-	KoronaCloudAPIErrorMessageException, InvalidTokenException
+		KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 // if (obj == null || obj.getId() == null)
 // throw new PostWithNoReferenceSetException(null);
@@ -509,7 +509,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 		{
 			if (obj.getId() != null)
 			{
-				if (obj.isDeleted())
+				if (obj.isDeleted() != null && obj.isDeleted())
 				{
 					idCache.remove(obj.getId());
 				}
@@ -531,7 +531,7 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 	{
 		if (obj.getId() != null)
 		{
-			if (obj.isDeleted())
+			if (obj.isDeleted() != null && obj.isDeleted())
 			{
 				idCache.remove(obj.getId());
 			}

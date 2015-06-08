@@ -147,7 +147,7 @@ public abstract class AbstractHasNumberJsonLoader<T extends HasId & HasNumber> e
 		{
 			if (obj.getNumber() != null)
 			{
-				if (obj.isDeleted())
+				if (obj.isDeleted() != null && obj.isDeleted())
 				{
 					numberCache.remove(obj.getNumber());
 				}
@@ -167,7 +167,7 @@ public abstract class AbstractHasNumberJsonLoader<T extends HasId & HasNumber> e
 	{
 		if (obj.getNumber() != null)
 		{
-			if (obj.isDeleted())
+			if (obj.isDeleted() != null && obj.isDeleted())
 			{
 				numberCache.remove(obj.getNumber());
 			}

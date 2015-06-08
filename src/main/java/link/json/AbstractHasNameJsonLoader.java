@@ -20,7 +20,7 @@ import error.InvalidTokenException;
 import error.KoronaCloudAPIErrorMessageException;
 
 public abstract class AbstractHasNameJsonLoader<T extends HasId & HasNumber & HasName> extends
-AbstractHasNumberJsonLoader<T>
+	AbstractHasNumberJsonLoader<T>
 {
 
 	private final Map<String, T> nameCache = new HashMap<String, T>();
@@ -95,7 +95,7 @@ AbstractHasNumberJsonLoader<T>
 
 	@Override
 	public T find(final String reference) throws ApiNotReachableException, ParseException,
-	KoronaCloudAPIErrorMessageException, InvalidTokenException, IllegalArgumentException
+		KoronaCloudAPIErrorMessageException, InvalidTokenException, IllegalArgumentException
 	{
 		final T obj = super.find(reference);
 
@@ -137,7 +137,7 @@ AbstractHasNumberJsonLoader<T>
 	{
 		for (final T obj : objs)
 		{
-			if (obj.getName() != null)
+			if (obj.isDeleted() != null && obj.getName() != null)
 			{
 				if (obj.isDeleted())
 				{
@@ -160,7 +160,7 @@ AbstractHasNumberJsonLoader<T>
 	{
 		if (obj.getName() != null)
 		{
-			if (obj.isDeleted())
+			if (obj.isDeleted() != null && obj.isDeleted())
 			{
 				nameCache.remove(obj.getName());
 			}
