@@ -361,6 +361,17 @@ public class ApiConnector
 				LOGGER.info("APICON:POST -> Type:" + type.getReference() + " JSON=" +
 					obj.toString());
 				con.disconnect(); // Disconnect
+
+				try
+				{
+					final JSONObject responseJson = new JSONObject(response.toString());
+					interpretResponse(responseJson);
+				}
+				catch (final JSONException e)
+				{
+					LOGGER.error("Could not interpret responseMessage from API! Malformed JSONSyntax");
+				}
+
 				return response.toString();
 			}
 			else
@@ -414,7 +425,7 @@ public class ApiConnector
 	 * @throws ArticleCodeMustBeUniqueException
 	 */
 	private void interpretResponse(final JSONObject responseJson) throws JSONException,
-	KoronaCloudAPIErrorMessageException, InvalidTokenException
+		KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 
 		try
