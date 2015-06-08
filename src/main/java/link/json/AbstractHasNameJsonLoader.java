@@ -40,7 +40,7 @@ public abstract class AbstractHasNameJsonLoader<T extends HasId & HasNumber & Ha
 	 * @throws InvalidTokenException
 	 */
 	public T downloadByName(final String name) throws ApiNotReachableException, ParseException,
-		KoronaCloudAPIErrorMessageException, InvalidTokenException
+	KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		final T cachedObject = nameCache.get(name);
 
@@ -123,7 +123,7 @@ public abstract class AbstractHasNameJsonLoader<T extends HasId & HasNumber & Ha
 
 	@Override
 	public T post(final T obj) throws ApiNotReachableException, JSONException, ParseException,
-		KoronaCloudAPIErrorMessageException, InvalidTokenException
+	KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 // if (obj == null ||
 // (obj.getName() == null && obj.getNumber() == null && obj.getId() == null))
@@ -139,7 +139,7 @@ public abstract class AbstractHasNameJsonLoader<T extends HasId & HasNumber & Ha
 		{
 			if (obj.isDeleted() != null && obj.getName() != null)
 			{
-				if (obj.isDeleted())
+				if (obj.isDeleted() != null && obj.isDeleted())
 				{
 					nameCache.remove(obj.getName());
 				}
