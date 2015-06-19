@@ -35,7 +35,7 @@ public class ProductLoader extends AbstractHasNameJsonLoader<Product>
 	}
 
 	public Product downloadByCode(final String code) throws ApiNotReachableException,
-		JSONException, ParseException, KoronaCloudAPIErrorMessageException, InvalidTokenException
+	JSONException, ParseException, KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 
 		final Product cachedObject = codeCache.get(code);
@@ -103,7 +103,6 @@ public class ProductLoader extends AbstractHasNameJsonLoader<Product>
 
 		try
 		{
-
 			return upload(obj);
 
 		}
@@ -116,8 +115,10 @@ public class ProductLoader extends AbstractHasNameJsonLoader<Product>
 			{
 				LOGGER.info("Some articles were not posted! Article Code already in use.");
 			}
+			final String code = ErrorMessages.Code_not_found_for_Price.getErrorString();
+			final String errorKey = ErrorMessages.Code_not_found_for_Price.getErrorString();
 
-			if (errorMap.containsKey(ErrorMessages.Code_not_found_for_Price.getErrorString()))
+			if (errorMap.containsKey(code))
 			{
 				LOGGER.info("Some articles were not posted! Article Code on Prices not in use.");
 			}
@@ -130,11 +131,11 @@ public class ProductLoader extends AbstractHasNameJsonLoader<Product>
 
 	@Override
 	public Product postAndResolve(final Product obj) throws JSONException, ParseException,
-	KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException
+		KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException
 	{
 		if (obj.getCommodityGroup() != null &&
 			(obj.getCommodityGroup().getName() != null ||
-				obj.getCommodityGroup().getNumber() != null || obj.getCommodityGroup().getId() != null))
+			obj.getCommodityGroup().getNumber() != null || obj.getCommodityGroup().getId() != null))
 		{
 			final CommodityGroupLoader loader = new CommodityGroupLoader(cloudLink);
 
@@ -143,7 +144,7 @@ public class ProductLoader extends AbstractHasNameJsonLoader<Product>
 
 		if (obj.getSector() != null &&
 			(obj.getSector().getName() != null || obj.getSector().getNumber() != null || obj.getSector()
-			.getId() != null))
+				.getId() != null))
 		{
 			final SectorLoader loader = new SectorLoader(cloudLink);
 			loader.post(obj.getSector());
@@ -151,7 +152,7 @@ public class ProductLoader extends AbstractHasNameJsonLoader<Product>
 
 		if (obj.getAltsector() != null &&
 			(obj.getAltsector().getName() != null || obj.getAltsector().getNumber() != null || obj.getAltsector()
-			.getId() != null))
+				.getId() != null))
 		{
 			final SectorLoader loader = new SectorLoader(cloudLink);
 			loader.post(obj.getAltsector());
@@ -159,7 +160,7 @@ public class ProductLoader extends AbstractHasNameJsonLoader<Product>
 
 		if (obj.getAssortment() != null &&
 			(obj.getAssortment().getName() != null || obj.getAssortment().getNumber() != null || obj.getAssortment()
-			.getId() != null))
+				.getId() != null))
 		{
 			final AssortmentLoader loader = new AssortmentLoader(cloudLink);
 			loader.post(obj.getAssortment());
@@ -172,7 +173,7 @@ public class ProductLoader extends AbstractHasNameJsonLoader<Product>
 	public List<Product> postList(final List<? extends Product> objs, final int limit,
 		final int threads) throws JSONException, ParseException,
 		KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException
-	{
+		{
 
 		try
 		{
@@ -198,7 +199,7 @@ public class ProductLoader extends AbstractHasNameJsonLoader<Product>
 			throw new KoronaCloudAPIErrorMessageException(e, e.getErrorMap());
 
 		}
-	}
+		}
 
 	@Override
 	public JSONObject toJSON(final Product value) throws JSONException
@@ -209,13 +210,48 @@ public class ProductLoader extends AbstractHasNameJsonLoader<Product>
 	}
 
 	@Override
+	public void updateCache(final List<? extends Product> objs)
+	{
+		for (final Product obj : objs)
+		{
+			if (obj.isDeleted() != null && obj.isDeleted())
+			{
+				for (final Product_Code code : obj.getCodes())
+				{
+					codeCache.remove(code.getCode());
+				}
+			}
+			else
+			{
+				for (final Product_Code code : obj.getCodes())
+				{
+					codeCache.put(code.getCode(), obj);
+				}
+			}
+		}
+
+		super.updateCache(objs);
+
+	}
+
+	@Override
 	public void updateCache(final Product obj)
 	{
 		if (obj.getCodes() != null && !obj.getCodes().isEmpty())
 		{
-			for (final Product_Code code : obj.getCodes())
+			if (obj.isDeleted() != null && obj.isDeleted())
 			{
-				codeCache.put(code.getCode(), obj);
+				for (final Product_Code code : obj.getCodes())
+				{
+					codeCache.remove(code.getCode());
+				}
+			}
+			else
+			{
+				for (final Product_Code code : obj.getCodes())
+				{
+					codeCache.put(code.getCode(), obj);
+				}
 			}
 		}
 
