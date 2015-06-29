@@ -53,7 +53,7 @@ public class CloudLink
 	 * @throws JSONException
 	 */
 	public String getJSONByCode(String reference) throws ApiNotReachableException, JSONException,
-		KoronaCloudAPIErrorMessageException, InvalidTokenException
+	KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		reference = reference.replaceAll(" ", "%20");
 		reference = reference.replaceAll("/", "%2F");
@@ -75,7 +75,7 @@ public class CloudLink
 	 * @throws JSONException
 	 */
 	public String getJSONByCustomerName(String reference) throws ApiNotReachableException,
-		JSONException, KoronaCloudAPIErrorMessageException, InvalidTokenException
+	JSONException, KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		final String[] names = reference.split(" ");
 		reference = names[0] + "/" + names[1];
@@ -183,6 +183,15 @@ public class CloudLink
 	{
 		final String reference = limit + "/" + offset;
 		return new String(ApiCon.fetchData(type, ReferenceType.page, reference));
+	}
+
+	public String getPersonalizedJSONPageByOffsetWith(final DataType type, final long revision,
+		final String paymentMethodUid, final int limit, final int offset)
+			throws ApiNotReachableException, KoronaCloudAPIErrorMessageException, InvalidTokenException
+	{
+		final String reference = revision + "/" + paymentMethodUid + "/" + limit + "/" + offset +
+			"/" + "personalized";
+		return new String(ApiCon.fetchData(type, ReferenceType.offset, reference));
 	}
 
 	public String getTokenByAuthData(final DataType type, final String reference)
