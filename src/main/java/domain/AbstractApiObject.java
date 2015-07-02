@@ -157,6 +157,14 @@ public abstract class AbstractApiObject<T extends HasId> implements HasId, Seria
 		return builder;
 	}
 
+	protected static String nullStringToNull(final JSONObject obj, final String value)
+		throws JSONException
+	{
+		if (obj.getString(value).equalsIgnoreCase("null"))
+			return null;
+		return value;
+	}
+
 	protected static BigDecimal prepareBigDecimal(final JSONObject obj,
 		final String bigDecimalString) throws JSONException
 	{

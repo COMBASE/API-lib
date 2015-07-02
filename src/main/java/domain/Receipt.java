@@ -31,7 +31,7 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 		private Integer orderNumber = null;
 		private POS pos = null;
 		private OrganizationalUnit organizationalUnit = null;
-		private Pricelist priceGroup = null;
+		private final Pricelist priceGroup = null;
 		private BigDecimal grossTotalAmount = null;
 
 		private BigDecimal netTotalAmount = null;
@@ -46,6 +46,8 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 		private Boolean voided = null;
 		private Customer customer = null;
 
+		private String costCenter = null;
+
 		@Override
 		public Receipt build()
 		{
@@ -55,6 +57,12 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 		public T cashier(final Cashier cash)
 		{
 			this.cashier = cash;
+			return self();
+		}
+
+		public T costCenter(final String value)
+		{
+			this.costCenter = value;
 			return self();
 		}
 
@@ -86,11 +94,6 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 		{
 			this.finishTime = value;
 			return self();
-		}
-
-		public Pricelist getPriceGroup()
-		{
-			return priceGroup;
 		}
 
 		public T grossRevenueAmount(final BigDecimal value)
@@ -159,11 +162,6 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 			return self();
 		}
 
-		public void setPriceGroup(final Pricelist priceGroup)
-		{
-			this.priceGroup = priceGroup;
-		}
-
 		public T taxAmount(final BigDecimal value)
 		{
 			this.taxAmount = value;
@@ -205,6 +203,9 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 	private BigDecimal receiptDiscountGrossAmount;
 	private BigDecimal receiptDiscountNetAmount;
 	private BigDecimal zCount;
+	private String contraAccount;
+
+	private String costCenter;
 
 	private Boolean voided;
 
@@ -234,7 +235,7 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 		zCount = init.zCount;
 		voided = init.voided;
 		customer = init.customer;
-
+		costCenter = init.costCenter;
 	}
 
 
@@ -257,6 +258,16 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 	public Cashier getCashier()
 	{
 		return cashier;
+	}
+
+	public String getContraAccount()
+	{
+		return contraAccount;
+	}
+
+	public String getCostCenter()
+	{
+		return costCenter;
 	}
 
 	public Date getCreatTime()
@@ -381,6 +392,16 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 		this.cashier = cashier;
 	}
 
+	public void setContraAccount(final String contraAccount)
+	{
+		this.contraAccount = contraAccount;
+	}
+
+	public void setCostCenter(final String costCenter)
+	{
+		this.costCenter = costCenter;
+	}
+
 	public void setCreatTime(final Date creatTime)
 	{
 		this.creatTime = creatTime;
@@ -471,15 +492,18 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 		this.taxAmount = taxAmount;
 	}
 
+
 	public void setVoided(final boolean voided)
 	{
 		this.voided = voided;
 	}
 
+
 	public void setzCount(final BigDecimal zCount)
 	{
 		this.zCount = zCount;
 	}
+
 
 	@Override
 	public JSONObject toJSON() throws JSONException
@@ -488,6 +512,7 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 		appendJSON(obj);
 		return obj;
 	}
+
 
 	public static Receipt fromJSON(JSONObject obj) throws JSONException, ParseException
 	{
@@ -508,6 +533,9 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 		{
 			cust = new Customer.Builder().build();
 			cust.setId(obj.getString("customer"));
+			cust.setNumber(obj.getString("customerNr"));
+			cust.setZipCode((obj.getString("customerZip").equalsIgnoreCase("null") ? null
+				: obj.getString("customerZip")));
 		}
 
 		final Receipt rec = new Receipt.Builder().number(obj.getString("number"))
@@ -530,6 +558,7 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 			.creatTime(prepareDate(obj, "createTime"))
 			.modifiedTime(prepareDate(obj, "modifiedTime"))
 			.finishTime(prepareDate(obj, "finishTime"))
+			.costCenter(obj.getString("costCenter"))
 			.build();
 
 		return rec;

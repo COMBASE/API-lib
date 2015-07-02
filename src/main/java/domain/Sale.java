@@ -45,6 +45,7 @@ public class Sale extends AbstractApiObject<Sale>
 		private String serialNumber = null;
 		private POS pos = null;
 		private final List<TaxPayments> taxPayments = null;
+		private String revenueAccount = null;
 
 		public T article(final Product prod)
 		{
@@ -148,6 +149,12 @@ public class Sale extends AbstractApiObject<Sale>
 			return self();
 		}
 
+		public T revenueAccount(final String value)
+		{
+			revenueAccount = value;
+			return self();
+		}
+
 		public T sector(final Sector sec)
 		{
 			sector = sec;
@@ -204,6 +211,8 @@ public class Sale extends AbstractApiObject<Sale>
 
 	private List<TaxPayments> taxPayments;
 
+	private String revenueAccount;
+
 	private Sale(final Init<?> init)
 	{
 		super(init);
@@ -226,6 +235,7 @@ public class Sale extends AbstractApiObject<Sale>
 		serialNumber = init.serialNumber;
 		pos = init.pos;
 		taxPayments = init.taxPayments;
+		revenueAccount = init.revenueAccount;
 	}
 
 // public boolean post() throws ApiNotReachableException, IOException
@@ -327,6 +337,11 @@ public class Sale extends AbstractApiObject<Sale>
 	public String getReceiptNumber()
 	{
 		return this.receiptNumber;
+	}
+
+	public String getRevenueAccount()
+	{
+		return revenueAccount;
 	}
 
 	public Sector getSector()
@@ -448,6 +463,11 @@ public class Sale extends AbstractApiObject<Sale>
 		this.receiptNumber = number;
 	}
 
+	public void setRevenueAccount(final String revenueAccount)
+	{
+		this.revenueAccount = revenueAccount;
+	}
+
 	public void setSector(final Sector sec)
 	{
 		this.sector = sec;
@@ -541,6 +561,7 @@ public class Sale extends AbstractApiObject<Sale>
 			.netItemPrice(prepareBigDecimal(obj, "netItemPrice"))
 			.baseItemPrice(prepareBigDecimal(obj, "baseItemPrice"))
 			.grossItemPrice(prepareBigDecimal(obj, "grossItemPrice"))
+			.revenueAccount(nullStringToNull(obj, "revenueAccount"))
 			.pos(pos)
 			.build();
 
