@@ -162,7 +162,7 @@ public abstract class AbstractApiObject<T extends HasId> implements HasId, Seria
 	{
 		if (obj.getString(value).equalsIgnoreCase("null"))
 			return null;
-		return value;
+		return obj.getString(value);
 	}
 
 	protected static BigDecimal prepareBigDecimal(final JSONObject obj,
