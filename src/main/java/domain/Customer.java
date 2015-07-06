@@ -156,7 +156,7 @@ public class Customer extends AbstractNumberApiObject<Customer>
 		phone = init.phone;
 		birthday = init.birthday;
 		company = init.company;
-		setState(init.state);
+		state = init.state;
 	}
 
 // public static Customer fromJSON(JSONObject obj) throws JSONException
