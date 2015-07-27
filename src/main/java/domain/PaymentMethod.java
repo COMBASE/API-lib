@@ -6,30 +6,6 @@ import org.codehaus.jettison.json.JSONObject;
 
 public class PaymentMethod extends AbstractNameAndNumberApiObject<PaymentMethod>
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -456220004107764453L;
-	private Currency currency;
-
-	protected static abstract class Init<T extends Init<T>> extends
-		AbstractNameAndNumberApiObject.Init<T>
-	{
-		private Currency currency = null;
-
-		public T currency(final Currency currency)
-		{
-			this.currency = currency;
-			return self();
-		}
-
-		@Override
-		public PaymentMethod build()
-		{
-			return new PaymentMethod(this);
-		}
-	}
-
 	public static class Builder extends Init<Builder>
 	{
 
@@ -40,6 +16,30 @@ public class PaymentMethod extends AbstractNameAndNumberApiObject<PaymentMethod>
 		}
 
 	}
+	protected static abstract class Init<T extends Init<T>> extends
+	AbstractNameAndNumberApiObject.Init<T>
+	{
+		private Currency currency = null;
+
+		@Override
+		public PaymentMethod build()
+		{
+			return new PaymentMethod(this);
+		}
+
+		public T currency(final Currency currency)
+		{
+			this.currency = currency;
+			return self();
+		}
+	}
+
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = -456220004107764453L;
+
+	private Currency currency;
 
 	// ctor of PaymentMethods
 	public PaymentMethod(final Init<?> init)
@@ -53,21 +53,16 @@ public class PaymentMethod extends AbstractNameAndNumberApiObject<PaymentMethod>
 // return CloudLink.getConnector().postData(DataType.paymentMethod, this.toJSON());
 // }
 
-	public Currency getCurrency()
-	{
-		return currency;
-	}
-
-	public void setCurrency(final Currency currency)
-	{
-		this.currency = currency;
-	}
-
 	@Override
 	public boolean equals(final Object obj)
 	{
 
 		return obj.hashCode() == this.hashCode();
+	}
+
+	public Currency getCurrency()
+	{
+		return currency;
 	}
 
 	@Override
@@ -83,6 +78,11 @@ public class PaymentMethod extends AbstractNameAndNumberApiObject<PaymentMethod>
 		return result;
 	}
 
+	public void setCurrency(final Currency currency)
+	{
+		this.currency = currency;
+	}
+
 	@Override
 	public JSONObject toJSON() throws JSONException
 	{
@@ -93,19 +93,25 @@ public class PaymentMethod extends AbstractNameAndNumberApiObject<PaymentMethod>
 
 	public static PaymentMethod fromJSON(JSONObject obj) throws JSONException
 	{
-		if (obj.has("result") && obj.getString("result") != null)
+		if (obj.has("result") && nullStringToNull(obj, "result") != null)
+		{
 			obj = obj.getJSONObject("result");
+		}
 
-		final Currency currency = new Currency.Builder().id(obj.getString("currency")).build();
+		final Currency currency = new Currency.Builder().id(nullStringToNull(obj, "currency"))
+			.build();
 
-		final PaymentMethod payMeth = new PaymentMethod.Builder().name(obj.getString("name"))
+		final PaymentMethod payMeth = new PaymentMethod.Builder().name(
+			nullStringToNull(obj, "name"))
 			.deleted(obj.getBoolean("deleted"))
-			.number(obj.getString("number"))
-			.id(obj.getString("uuid"))
+			.number(nullStringToNull(obj, "number"))
+			.id(nullStringToNull(obj, "uuid"))
 			.currency(currency)
 			.build();
 		if (obj.has("number"))
-			payMeth.setNumber(obj.getString("number"));
+		{
+			payMeth.setNumber(nullStringToNull(obj, "number"));
+		}
 
 		return payMeth;
 	}

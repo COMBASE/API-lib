@@ -16,50 +16,17 @@ public class SubProduct
 	private List<Price> prices = new ArrayList<Price>();
 	private Integer position = null;
 
-	public static SubProduct fromJSON(JSONObject obj) throws JSONException, ParseException
+	public SubProduct()
 	{
-		if (obj.has("result") && obj.getString("result") != null)
-			obj = obj.getJSONObject("result");
-		final SubProduct sp = new SubProduct();
-
-		if (obj.has("article"))
-			sp.setArticle(obj.getString("article"));
-
-		if (obj.has("amount"))
-			sp.setAmount(BigDecimal.valueOf(obj.getDouble("amount")));
-
-		if (!obj.isNull("prices") && !obj.getString("prices").equalsIgnoreCase("null"))
-		{
-			final JSONArray jPrices = obj.getJSONArray("prices");
-			final List<Price> prices = new ArrayList<Price>();
-			JSONObject jPrice;
-			for (int i = 0; i <= jPrices.length() - 1; i++)
-			{
-				jPrice = jPrices.getJSONObject(i);
-
-				final BigDecimal value = new BigDecimal(jPrice.getDouble("value"));
-				final Pricelist pricelist = new Pricelist.Builder().id(
-						jPrice.getString("priceList")).build();
-				if (!jPrice.isNull("organizationalUnit"))
-				{
-					final OrganizationalUnit organizationalUnit = new OrganizationalUnit.Builder()
-							.id(jPrice.getString("organizationalUnit")).build();
-
-					prices.add(new Price(organizationalUnit, value));
-				} else
-					prices.add(new Price(pricelist, AbstractApiObject.prepareDate(jPrice,
-							"validFrom"), value));
-			}
-			sp.setPrices(prices);
-		}
-
-		if (obj.has("position"))
-			sp.setPosition(obj.getInt("position"));
-
-		return sp;
+		super();
+		this.article = null;
+		this.amount = null;
+		this.prices = null;
+		this.position = null;
 	}
 
-	public SubProduct(String articleId, BigDecimal amount, List<Price> prices, Integer position)
+	public SubProduct(final String articleId, final BigDecimal amount, final List<Price> prices,
+		final Integer position)
 	{
 		super();
 		this.article = articleId;
@@ -68,13 +35,30 @@ public class SubProduct
 		this.position = position;
 	}
 
-	public SubProduct()
+	@Override
+	public boolean equals(final Object obj)
 	{
-		super();
-		this.article = null;
-		this.amount = null;
-		this.prices = null;
-		this.position = null;
+		return obj.hashCode() == this.hashCode();
+	}
+
+	public BigDecimal getAmount()
+	{
+		return amount;
+	}
+
+	public String getArticle()
+	{
+		return article;
+	}
+
+	public Integer getPosition()
+	{
+		return position;
+	}
+
+	public List<Price> getPrices()
+	{
+		return prices;
 	}
 
 	@Override
@@ -91,19 +75,35 @@ public class SubProduct
 		return result;
 	}
 
-	@Override
-	public boolean equals(final Object obj)
+	public void setAmount(final BigDecimal amount)
 	{
-		return obj.hashCode() == this.hashCode();
+		this.amount = amount;
+	}
+
+	public void setArticle(final String article)
+	{
+		this.article = article;
+	}
+
+	public void setPosition(final Integer position)
+	{
+		this.position = position;
+	}
+
+	public void setPrices(final List<Price> prices)
+	{
+		this.prices = prices;
 	}
 
 	public JSONObject toJSON() throws JSONException
 	{
-		JSONObject obj = new JSONObject();
+		final JSONObject obj = new JSONObject();
 
 		obj.put("article", article);
 		if (amount != null)
+		{
 			obj.put("amount", amount.doubleValue());
+		}
 		obj.put("position", position);
 
 		if (prices != null && !prices.isEmpty())
@@ -112,50 +112,82 @@ public class SubProduct
 			for (final Price p : prices)
 			{
 				if (p != null)
+				{
 					array.put(p.toJSON());
+				}
 			}
 			obj.put("prices", array);
 		}
 		return obj;
 	}
 
-	public String getArticle()
+	public static SubProduct fromJSON(JSONObject obj) throws JSONException, ParseException
 	{
-		return article;
+		if (obj.has("result") && nullStringToNull(obj, "result") != null)
+		{
+			obj = obj.getJSONObject("result");
+		}
+		final SubProduct sp = new SubProduct();
+
+		if (obj.has("article"))
+		{
+			sp.setArticle(nullStringToNull(obj, "article"));
+		}
+
+		if (obj.has("amount"))
+		{
+			sp.setAmount(BigDecimal.valueOf(obj.getDouble("amount")));
+		}
+
+		if (!obj.isNull("prices") && !nullStringToNull(obj, "prices").equalsIgnoreCase("null"))
+		{
+			final JSONArray jPrices = obj.getJSONArray("prices");
+			final List<Price> prices = new ArrayList<Price>();
+			JSONObject jPrice;
+			for (int i = 0; i <= jPrices.length() - 1; i++)
+			{
+				jPrice = jPrices.getJSONObject(i);
+
+				final BigDecimal value = new BigDecimal(jPrice.getDouble("value"));
+				final Pricelist pricelist = new Pricelist.Builder().id(
+					jPrice.getString("priceList")).build();
+				if (!jPrice.isNull("organizationalUnit"))
+				{
+					final OrganizationalUnit organizationalUnit = new OrganizationalUnit.Builder().id(
+						jPrice.getString("organizationalUnit"))
+						.build();
+
+					prices.add(new Price(organizationalUnit, value));
+				}
+				else
+				{
+					prices.add(new Price(pricelist, AbstractApiObject.prepareDate(jPrice,
+						"validFrom"), value));
+				}
+			}
+			sp.setPrices(prices);
+		}
+
+		if (obj.has("position"))
+		{
+			sp.setPosition(obj.getInt("position"));
+		}
+
+		return sp;
 	}
 
-	public void setArticle(String article)
+	/**
+	 *
+	 * @param obj
+	 * @param value
+	 * @return
+	 * @throws JSONException
+	 */
+	protected static String nullStringToNull(final JSONObject obj, final String value)
+		throws JSONException
 	{
-		this.article = article;
-	}
-
-	public BigDecimal getAmount()
-	{
-		return amount;
-	}
-
-	public void setAmount(BigDecimal amount)
-	{
-		this.amount = amount;
-	}
-
-	public List<Price> getPrices()
-	{
-		return prices;
-	}
-
-	public void setPrices(List<Price> prices)
-	{
-		this.prices = prices;
-	}
-
-	public Integer getPosition()
-	{
-		return position;
-	}
-
-	public void setPosition(Integer position)
-	{
-		this.position = position;
+		if (obj.getString(value).equalsIgnoreCase("null"))
+			return null;
+		return obj.getString(value);
 	}
 }

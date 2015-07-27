@@ -157,6 +157,13 @@ public abstract class AbstractApiObject<T extends HasId> implements HasId, Seria
 		return builder;
 	}
 
+	/**
+	 *
+	 * @param obj
+	 * @param value
+	 * @return
+	 * @throws JSONException
+	 */
 	protected static String nullStringToNull(final JSONObject obj, final String value)
 		throws JSONException
 	{
@@ -174,6 +181,14 @@ public abstract class AbstractApiObject<T extends HasId> implements HasId, Seria
 		return null;
 	}
 
+	/**
+	 *
+	 * @param obj
+	 * @param dateString
+	 * @return
+	 * @throws ParseException
+	 * @throws JSONException
+	 */
 	protected static Date prepareDate(final JSONObject obj, final String dateString)
 		throws ParseException, JSONException
 	{

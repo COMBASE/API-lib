@@ -16,12 +16,58 @@ public class EndOfDayAccountSummary
 
 	public BigDecimal transactions = null;
 
+	public Account getAccount()
+	{
+		return account;
+	}
+
+	public BigDecimal getAmount()
+	{
+		return amount;
+	}
+
+	public EndOfDayStatement getEndOfDayStatement()
+	{
+		return endOfDayStatement;
+	}
+
+
+	public BigDecimal getTransactions()
+	{
+		return transactions;
+	}
+
+
+	public void setAccount(final Account account)
+	{
+		this.account = account;
+	}
+
+
+	public void setAmount(final BigDecimal amount)
+	{
+		this.amount = amount;
+	}
+
+
+	public void setEndOfDayStatement(final EndOfDayStatement endOfDayStatement)
+	{
+		this.endOfDayStatement = endOfDayStatement;
+	}
+
+
+	public void setTransactions(final BigDecimal transactions)
+	{
+		this.transactions = transactions;
+	}
+
+
 	public static EndOfDayAccountSummary fromJSON(final JSONObject obj) throws JSONException
 	{
 
 		final EndOfDayAccountSummary endOfDayAccountSummary = new EndOfDayAccountSummary();
 
-		final Account account = new Account.Builder().id(obj.getString("account")).build();
+		final Account account = new Account.Builder().id(nullStringToNull(obj, "account")).build();
 
 		endOfDayAccountSummary.setAccount(account);
 
@@ -33,50 +79,19 @@ public class EndOfDayAccountSummary
 		return endOfDayAccountSummary;
 	}
 
-	public Account getAccount()
+
+	/**
+	 *
+	 * @param obj
+	 * @param value
+	 * @return
+	 * @throws JSONException
+	 */
+	protected static String nullStringToNull(final JSONObject obj, final String value)
+		throws JSONException
 	{
-		return account;
-	}
-
-
-	public void setAccount(final Account account)
-	{
-		this.account = account;
-	}
-
-
-	public BigDecimal getAmount()
-	{
-		return amount;
-	}
-
-
-	public void setAmount(final BigDecimal amount)
-	{
-		this.amount = amount;
-	}
-
-
-	public EndOfDayStatement getEndOfDayStatement()
-	{
-		return endOfDayStatement;
-	}
-
-
-	public void setEndOfDayStatement(final EndOfDayStatement endOfDayStatement)
-	{
-		this.endOfDayStatement = endOfDayStatement;
-	}
-
-
-	public BigDecimal getTransactions()
-	{
-		return transactions;
-	}
-
-
-	public void setTransactions(final BigDecimal transactions)
-	{
-		this.transactions = transactions;
+		if (obj.getString(value).equalsIgnoreCase("null"))
+			return null;
+		return obj.getString(value);
 	}
 }

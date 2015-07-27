@@ -5,8 +5,6 @@ import org.codehaus.jettison.json.JSONObject;
 
 public class Tag extends AbstractNameAndNumberApiObject<Assortment>
 {
-	private static final long serialVersionUID = 5955525950261593638L;
-
 	public static class Builder extends Init<Builder>
 	{
 
@@ -19,7 +17,7 @@ public class Tag extends AbstractNameAndNumberApiObject<Assortment>
 	}
 
 	protected static abstract class Init<T extends Init<T>> extends
-			AbstractNameAndNumberApiObject.Init<T>
+		AbstractNameAndNumberApiObject.Init<T>
 	{
 		@Override
 		public Tag build()
@@ -28,6 +26,8 @@ public class Tag extends AbstractNameAndNumberApiObject<Assortment>
 		}
 
 	}
+
+	private static final long serialVersionUID = 5955525950261593638L;
 
 	private Tag(final Init<?> init)
 	{
@@ -54,6 +54,15 @@ public class Tag extends AbstractNameAndNumberApiObject<Assortment>
 	}
 
 	@Override
+	public JSONObject toJSON() throws JSONException
+	{
+		JSONObject obj = new JSONObject();
+		obj = super.appendJSON(obj);
+
+		return obj;
+	}
+
+	@Override
 	public String toString()
 	{
 		final StringBuilder builder = new StringBuilder();
@@ -63,22 +72,17 @@ public class Tag extends AbstractNameAndNumberApiObject<Assortment>
 		return builder.toString();
 	}
 
-	@Override
-	public JSONObject toJSON() throws JSONException
-	{
-		JSONObject obj = new JSONObject();
-		obj = super.appendJSON(obj);
-
-		return obj;
-	}
-
 	public static Tag fromJSON(JSONObject obj) throws JSONException
 	{
-		if (obj.has("result") && obj.getString("result") != null)
+		if (obj.has("result") && nullStringToNull(obj, "result") != null)
+		{
 			obj = obj.getJSONObject("result");
+		}
 
-		final Tag tag = new Tag.Builder().name(obj.getString("name"))
-				.number(obj.getString("number")).id(obj.getString("uuid")).build();
+		final Tag tag = new Tag.Builder().name(nullStringToNull(obj, "name"))
+			.number(nullStringToNull(obj, "number"))
+			.id(nullStringToNull(obj, "uuid"))
+			.build();
 		return tag;
 	}
 }

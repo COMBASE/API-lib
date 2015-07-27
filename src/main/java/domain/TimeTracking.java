@@ -173,15 +173,15 @@ public class TimeTracking extends AbstractApiObject<TimeTracking>
 
 	public static TimeTracking fromJSON(JSONObject obj) throws JSONException, ParseException
 	{
-		if (obj.has("result") && obj.getString("result") != null)
+		if (obj.has("result") && nullStringToNull(obj, "result") != null)
 		{
 			obj = obj.getJSONObject("result");
 		}
 
 		final TimeTrackingEntities ent = new TimeTrackingEntities.Builder().build();
-		ent.setId(obj.getString("timeTrackingEntity"));
+		ent.setId(nullStringToNull(obj, "timeTrackingEntity"));
 		final Cashier cash = new Cashier.Builder().build();
-		cash.setId(obj.getString("cashier"));
+		cash.setId(nullStringToNull(obj, "cashier"));
 		final TimeTracking tTrack = new TimeTracking.Builder().deleted(obj.getBoolean("deleted"))
 			.start(prepareDate(obj, "start"))
 			.timeTrackingentity(ent)

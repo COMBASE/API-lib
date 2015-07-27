@@ -69,7 +69,7 @@ public class FinancialAccountingPosBalance
 		ParseException
 	{
 
-		if (jObj.has("result") && jObj.getString("result") != null)
+		if (jObj.has("result") && nullStringToNull(jObj, "result") != null)
 		{
 			jObj = jObj.getJSONObject("result");
 		}
@@ -98,6 +98,21 @@ public class FinancialAccountingPosBalance
 
 		return accountingPosBalance;
 
+	}
+
+	/**
+	 *
+	 * @param obj
+	 * @param value
+	 * @return
+	 * @throws JSONException
+	 */
+	protected static String nullStringToNull(final JSONObject obj, final String value)
+		throws JSONException
+	{
+		if (obj.getString(value).equalsIgnoreCase("null"))
+			return null;
+		return obj.getString(value);
 	}
 
 }

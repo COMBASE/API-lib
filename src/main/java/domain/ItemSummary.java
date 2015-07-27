@@ -49,32 +49,9 @@ public class ItemSummary
 
 	}
 
-	public static ItemSummary fromJSON(JSONObject obj) throws JSONException
-	{
-		if (obj.has("result") && obj.getString("result") != null)
-			obj = obj.getJSONObject("result");
-
-		final PaymentMethod paymentMethods = new PaymentMethod.Builder().name(
-			obj.getString("paymentMethodName"))
-			// .revision(33l)
-			.id(obj.getString("paymentMethod"))
-			.number(obj.getString("paymentMethodNr"))
-			.build();
-
-		final ItemSummary itemSummary = new ItemSummary.Builder().absoluteDifference(
-			obj.getDouble("absoluteDifference"))
-			.actualItemTotal(obj.getDouble("actualItemTotal"))
-			.expectedItemTotal(obj.getDouble("expectedItemTotal"))
-			.paymentMethod(paymentMethods)
-			.build();
-		return itemSummary;
-
-
-	}
-
 	private PaymentMethod paymentMethod;
-	private Double actualItemTotal;
 
+	private Double actualItemTotal;
 	private Double expectedItemTotal;
 
 	private Double absoluteDifference;
@@ -132,5 +109,45 @@ public class ItemSummary
 	public void setPaymentMethod(final PaymentMethod paymentMethod)
 	{
 		this.paymentMethod = paymentMethod;
+	}
+
+	public static ItemSummary fromJSON(JSONObject obj) throws JSONException
+	{
+		if (obj.has("result") && nullStringToNull(obj, "result") != null)
+		{
+			obj = obj.getJSONObject("result");
+		}
+
+		final PaymentMethod paymentMethods = new PaymentMethod.Builder().name(
+			nullStringToNull(obj, "paymentMethodName"))
+			// .revision(33l)
+			.id(nullStringToNull(obj, "paymentMethod"))
+			.number(nullStringToNull(obj, "paymentMethodNr"))
+			.build();
+
+		final ItemSummary itemSummary = new ItemSummary.Builder().absoluteDifference(
+			obj.getDouble("absoluteDifference"))
+			.actualItemTotal(obj.getDouble("actualItemTotal"))
+			.expectedItemTotal(obj.getDouble("expectedItemTotal"))
+			.paymentMethod(paymentMethods)
+			.build();
+		return itemSummary;
+
+
+	}
+
+	/**
+	 *
+	 * @param obj
+	 * @param value
+	 * @return
+	 * @throws JSONException
+	 */
+	protected static String nullStringToNull(final JSONObject obj, final String value)
+		throws JSONException
+	{
+		if (obj.getString(value).equalsIgnoreCase("null"))
+			return null;
+		return obj.getString(value);
 	}
 }

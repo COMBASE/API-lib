@@ -2,6 +2,7 @@ package domain;
 
 import java.math.BigDecimal;
 
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 public class EndOfDayCashierSummary
@@ -35,19 +36,10 @@ public class EndOfDayCashierSummary
 		return cancalledItemsAmount;
 	}
 
-	public void setCancalledItemsAmount(final BigDecimal cancalledItemsAmount)
-	{
-		this.cancalledItemsAmount = cancalledItemsAmount;
-	}
 
 	public BigDecimal getCancalledItemsCount()
 	{
 		return cancalledItemsCount;
-	}
-
-	public void setCancalledItemsCount(final BigDecimal cancalledItemsCount)
-	{
-		this.cancalledItemsCount = cancalledItemsCount;
 	}
 
 	public BigDecimal getCancalledReceiptsAmount()
@@ -55,19 +47,9 @@ public class EndOfDayCashierSummary
 		return cancalledReceiptsAmount;
 	}
 
-	public void setCancalledReceiptsAmount(final BigDecimal cancalledReceiptsAmount)
-	{
-		this.cancalledReceiptsAmount = cancalledReceiptsAmount;
-	}
-
 	public BigDecimal getCancalledReceiptsCount()
 	{
 		return cancalledReceiptsCount;
-	}
-
-	public void setCancalledReceiptsCount(final BigDecimal cancalledReceiptsCount)
-	{
-		this.cancalledReceiptsCount = cancalledReceiptsCount;
 	}
 
 	public Cashier getCashier()
@@ -75,9 +57,9 @@ public class EndOfDayCashierSummary
 		return cashier;
 	}
 
-	public void setCashier(final Cashier cashier)
+	public EndOfDayStatement getEndOfDayStatement()
 	{
-		this.cashier = cashier;
+		return endOfDayStatement;
 	}
 
 	public BigDecimal getReceiptsAmount()
@@ -85,19 +67,9 @@ public class EndOfDayCashierSummary
 		return receiptsAmount;
 	}
 
-	public void setReceiptsAmount(final BigDecimal receiptsAmount)
-	{
-		this.receiptsAmount = receiptsAmount;
-	}
-
 	public BigDecimal getReceiptsCount()
 	{
 		return receiptsCount;
-	}
-
-	public void setReceiptsCount(final BigDecimal receiptsCount)
-	{
-		this.receiptsCount = receiptsCount;
 	}
 
 	public BigDecimal getReturnsAmount()
@@ -105,19 +77,9 @@ public class EndOfDayCashierSummary
 		return returnsAmount;
 	}
 
-	public void setReturnsAmount(final BigDecimal returnsAmount)
-	{
-		this.returnsAmount = returnsAmount;
-	}
-
 	public BigDecimal getReturnsCount()
 	{
 		return returnsCount;
-	}
-
-	public void setReturnsCount(final BigDecimal returnsCount)
-	{
-		this.returnsCount = returnsCount;
 	}
 
 	public BigDecimal getVoidedReceiptsAmount()
@@ -125,29 +87,69 @@ public class EndOfDayCashierSummary
 		return voidedReceiptsAmount;
 	}
 
-	public void setVoidedReceiptsAmount(final BigDecimal voidedReceiptsAmount)
-	{
-		this.voidedReceiptsAmount = voidedReceiptsAmount;
-	}
-
 	public BigDecimal getVoidedReceiptsCount()
 	{
 		return voidedReceiptsCount;
 	}
 
-	public void setVoidedReceiptsCount(final BigDecimal voidedReceiptsCount)
+	public void setCancalledItemsAmount(final BigDecimal cancalledItemsAmount)
 	{
-		this.voidedReceiptsCount = voidedReceiptsCount;
+		this.cancalledItemsAmount = cancalledItemsAmount;
 	}
 
-	public EndOfDayStatement getEndOfDayStatement()
+	public void setCancalledItemsCount(final BigDecimal cancalledItemsCount)
 	{
-		return endOfDayStatement;
+		this.cancalledItemsCount = cancalledItemsCount;
+	}
+
+	public void setCancalledReceiptsAmount(final BigDecimal cancalledReceiptsAmount)
+	{
+		this.cancalledReceiptsAmount = cancalledReceiptsAmount;
+	}
+
+	public void setCancalledReceiptsCount(final BigDecimal cancalledReceiptsCount)
+	{
+		this.cancalledReceiptsCount = cancalledReceiptsCount;
+	}
+
+	public void setCashier(final Cashier cashier)
+	{
+		this.cashier = cashier;
 	}
 
 	public void setEndOfDayStatement(final EndOfDayStatement endOfDayStatement)
 	{
 		this.endOfDayStatement = endOfDayStatement;
+	}
+
+	public void setReceiptsAmount(final BigDecimal receiptsAmount)
+	{
+		this.receiptsAmount = receiptsAmount;
+	}
+
+	public void setReceiptsCount(final BigDecimal receiptsCount)
+	{
+		this.receiptsCount = receiptsCount;
+	}
+
+	public void setReturnsAmount(final BigDecimal returnsAmount)
+	{
+		this.returnsAmount = returnsAmount;
+	}
+
+	public void setReturnsCount(final BigDecimal returnsCount)
+	{
+		this.returnsCount = returnsCount;
+	}
+
+	public void setVoidedReceiptsAmount(final BigDecimal voidedReceiptsAmount)
+	{
+		this.voidedReceiptsAmount = voidedReceiptsAmount;
+	}
+
+	public void setVoidedReceiptsCount(final BigDecimal voidedReceiptsCount)
+	{
+		this.voidedReceiptsCount = voidedReceiptsCount;
 	}
 
 	public static EndOfDayCashierSummary fromJSON(final JSONObject jEndOfDayCashierSummary)
@@ -156,5 +158,20 @@ public class EndOfDayCashierSummary
 
 
 		return cashierSummary;
+	}
+
+	/**
+	 *
+	 * @param obj
+	 * @param value
+	 * @return
+	 * @throws JSONException
+	 */
+	protected static String nullStringToNull(final JSONObject obj, final String value)
+		throws JSONException
+	{
+		if (obj.getString(value).equalsIgnoreCase("null"))
+			return null;
+		return obj.getString(value);
 	}
 }

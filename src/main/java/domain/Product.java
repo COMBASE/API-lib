@@ -23,7 +23,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 	}
 
 	protected static abstract class Init<T extends Init<T>> extends
-		AbstractNameAndNumberApiObject.Init<T>
+	AbstractNameAndNumberApiObject.Init<T>
 	{
 		private Boolean activeAssortment = null;
 		private Date activeAssortmentFrom = null;
@@ -883,7 +883,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 
 	public static Product fromJSON(JSONObject obj) throws JSONException, ParseException
 	{
-		if (obj.has("result") && obj.getString("result") != null)
+		if (obj.has("result") && nullStringToNull(obj, "result") != null)
 		{
 			obj = obj.getJSONObject("result");
 		}
@@ -891,26 +891,26 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		final Assortment assortment = new Assortment.Builder().build();
 		if (!obj.isNull("assortment"))
 		{
-			assortment.setId(obj.getString("assortment"));
+			assortment.setId(nullStringToNull(obj, "assortment"));
 		}
 
 		final Sector sector = new Sector.Builder().build();
 		if (!obj.isNull("sector"))
 		{
-			sector.setId(obj.getString("sector"));
+			sector.setId(nullStringToNull(obj, "sector"));
 		}
 
 		final Sector altSector = new Sector.Builder().build();
 		if (!obj.isNull("alternativeSector"))
 		{
-			altSector.setId(obj.getString("alternativeSector"));
+			altSector.setId(nullStringToNull(obj, "alternativeSector"));
 		}
 
 		final CommodityGroup commodityGroup = new CommodityGroup.Builder().id(
-			obj.getString("commodityGroup")).build();
+			nullStringToNull(obj, "commodityGroup")).build();
 
-		final Product prod = new Product.Builder().name(obj.getString("name"))
-			.id(obj.getString("uuid"))
+		final Product prod = new Product.Builder().name(nullStringToNull(obj, "name"))
+			.id(nullStringToNull(obj, "uuid"))
 			.sector(sector)
 			.deleted(obj.getBoolean("deleted"))
 			.altsector(altSector)
@@ -929,10 +929,11 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 
 		if (obj.has("number"))
 		{
-			prod.setNumber(obj.getString("number"));
+			prod.setNumber(nullStringToNull(obj, "number"));
 		}
 
-		if (!obj.isNull("articleCodes") && !obj.getString("articleCodes").equalsIgnoreCase("null"))
+		if (!obj.isNull("articleCodes") &&
+			!nullStringToNull(obj, "articleCodes").equalsIgnoreCase("null"))
 		{
 			final JSONArray jACode = obj.getJSONArray("articleCodes");
 			JSONObject jCode = new JSONObject();
@@ -953,7 +954,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 		}
 
 		if (!obj.isNull("subarticleRelations") &&
-			!obj.getString("subarticleRelations").equalsIgnoreCase("null"))
+			!nullStringToNull(obj, "subarticleRelations").equalsIgnoreCase("null"))
 		{
 			JSONArray jSProducts = new JSONArray();
 			jSProducts = obj.getJSONArray("subarticleRelations");
@@ -1008,7 +1009,8 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 			prod.setSubProducts(spList);
 		}
 
-		if (!obj.isNull("articleTexts") && !obj.getString("articleTexts").equalsIgnoreCase("null"))
+		if (!obj.isNull("articleTexts") &&
+			!nullStringToNull(obj, "articleTexts").equalsIgnoreCase("null"))
 		{
 			JSONArray jAText = new JSONArray();
 			jAText = obj.getJSONArray("articleTexts");
@@ -1039,7 +1041,7 @@ public class Product extends AbstractNameAndNumberApiObject<Product>
 			prod.setTexts(textList);
 		}
 
-		if (!obj.isNull("prices") && !obj.getString("prices").equalsIgnoreCase("null"))
+		if (!obj.isNull("prices") && !nullStringToNull(obj, "prices").equalsIgnoreCase("null"))
 		{
 			final JSONArray jPrices = obj.getJSONArray("prices");
 			final List<Price> prices = new ArrayList<Price>();

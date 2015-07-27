@@ -12,58 +12,15 @@ import org.codehaus.jettison.json.JSONObject;
 public class StockOrder extends AbstractNumberApiObject<StockOrder>
 {
 
-	private static final long serialVersionUID = -2586046426436166290L;
-
-	private final Date requiredFrom;
-	private final Date requiredTo;
-	private final Date pickUpDate;
-	private final Date autoFinalization;
-	private final Boolean autoSend;
-	private final Date posFinalizationTime;
-	private final Date dispatchNotificationCreationTime;
-	private final Date stockReceiptCreationTime;
-	private final Date stockReceiptFinalizationTime;
-	private final Date returnCreationTime;
-	private final Date bookingTime;
-	private final Date createTime;
-	private final Boolean send;
-	private final String currency;
-	private final String specialOfferCode;
-	private final String bookedBy;
-	private final String createdBy;
-	private final String target;
-	private final String supplier;
-	private final String source;
-	private final String description;
-	private final List<StockOrderItem> items;
-
-	public StockOrder(final Init<?> init)
+	public static class Builder extends Init<Builder>
 	{
-		super(init);
-		requiredFrom = init.requiredFrom;
-		requiredTo = init.requiredTo;
-		pickUpDate = init.pickUpDate;
-		autoFinalization = init.autoFinalization;
-		autoSend = init.autoSend;
-		posFinalizationTime = init.posFinalizationTime;
-		dispatchNotificationCreationTime = init.dispatchNotificationCreationTime;
-		stockReceiptCreationTime = init.stockReceiptCreationTime;
-		stockReceiptFinalizationTime = init.stockReceiptFinalizationTime;
-		returnCreationTime = init.returnCreationTime;
-		bookingTime = init.bookingTime;
-		createTime = init.createTime;
 
-		send = init.send;
+		@Override
+		protected Builder self()
+		{
+			return this;
+		}
 
-		currency = init.currency;
-		specialOfferCode = init.specialOfferCode;
-		bookedBy = init.bookedBy;
-		createdBy = init.createdBy;
-		target = init.target;
-		supplier = init.supplier;
-		source = init.source;
-		description = init.description;
-		items = init.items;
 	}
 
 	protected static abstract class Init<T extends Init<T>> extends AbstractNumberApiObject.Init<T>
@@ -93,24 +50,6 @@ public class StockOrder extends AbstractNumberApiObject<StockOrder>
 		private String description = null;
 		private List<StockOrderItem> items = null;
 
-		public T requiredFrom(final Date value)
-		{
-			this.requiredFrom = value;
-			return self();
-		}
-
-		public T requiredTo(final Date value)
-		{
-			this.requiredTo = value;
-			return self();
-		}
-
-		public T pickUpDate(final Date value)
-		{
-			this.pickUpDate = value;
-			return self();
-		}
-
 		public T autoFinalization(final Date value)
 		{
 			this.autoFinalization = value;
@@ -123,15 +62,105 @@ public class StockOrder extends AbstractNumberApiObject<StockOrder>
 			return self();
 		}
 
-		public T posFinalizationTime(final Date value)
+		public T bookedBy(final String value)
 		{
-			this.posFinalizationTime = value;
+			this.bookedBy = value;
+			return self();
+		}
+
+		public T bookingTime(final Date value)
+		{
+			this.bookingTime = value;
+			return self();
+		}
+
+		@Override
+		public StockOrder build()
+		{
+			return new StockOrder(this);
+		}
+
+		public T createdBy(final String value)
+		{
+			this.createdBy = value;
+			return self();
+		}
+
+		public T createTime(final Date value)
+		{
+			this.createTime = value;
+			return self();
+		}
+
+		public T currency(final String value)
+		{
+			this.currency = value;
+			return self();
+		}
+
+		public T description(final String value)
+		{
+			this.description = value;
 			return self();
 		}
 
 		public T dispatchNotificationCreationTime(final Date value)
 		{
 			this.dispatchNotificationCreationTime = value;
+			return self();
+		}
+
+		public T items(final List<StockOrderItem> value)
+		{
+			this.items = value;
+			return self();
+		}
+
+		public T pickUpDate(final Date value)
+		{
+			this.pickUpDate = value;
+			return self();
+		}
+
+		public T posFinalizationTime(final Date value)
+		{
+			this.posFinalizationTime = value;
+			return self();
+		}
+
+		public T requiredFrom(final Date value)
+		{
+			this.requiredFrom = value;
+			return self();
+		}
+
+		public T requiredTo(final Date value)
+		{
+			this.requiredTo = value;
+			return self();
+		}
+
+		public T returnCreationTime(final Date value)
+		{
+			this.returnCreationTime = value;
+			return self();
+		}
+
+		public T send(final Boolean value)
+		{
+			this.send = value;
+			return self();
+		}
+
+		public T source(final String value)
+		{
+			this.source = value;
+			return self();
+		}
+
+		public T specialOfferCode(final String value)
+		{
+			this.specialOfferCode = value;
 			return self();
 		}
 
@@ -147,51 +176,9 @@ public class StockOrder extends AbstractNumberApiObject<StockOrder>
 			return self();
 		}
 
-		public T returnCreationTime(final Date value)
+		public T supplier(final String value)
 		{
-			this.returnCreationTime = value;
-			return self();
-		}
-
-		public T bookingTime(final Date value)
-		{
-			this.bookingTime = value;
-			return self();
-		}
-
-		public T createTime(final Date value)
-		{
-			this.createTime = value;
-			return self();
-		}
-
-		public T send(final Boolean value)
-		{
-			this.send = value;
-			return self();
-		}
-
-		public T currency(final String value)
-		{
-			this.currency = value;
-			return self();
-		}
-
-		public T specialOfferCode(final String value)
-		{
-			this.specialOfferCode = value;
-			return self();
-		}
-
-		public T bookedBy(final String value)
-		{
-			this.bookedBy = value;
-			return self();
-		}
-
-		public T createdBy(final String value)
-		{
-			this.createdBy = value;
+			this.supplier = value;
 			return self();
 		}
 
@@ -200,47 +187,61 @@ public class StockOrder extends AbstractNumberApiObject<StockOrder>
 			this.target = value;
 			return self();
 		}
-
-		public T supplier(final String value)
-		{
-			this.supplier = value;
-			return self();
-		}
-
-		public T source(final String value)
-		{
-			this.source = value;
-			return self();
-		}
-
-		public T description(final String value)
-		{
-			this.description = value;
-			return self();
-		}
-
-		public T items(final List<StockOrderItem> value)
-		{
-			this.items = value;
-			return self();
-		}
-
-		@Override
-		public StockOrder build()
-		{
-			return new StockOrder(this);
-		}
 	}
 
-	public static class Builder extends Init<Builder>
+	private static final long serialVersionUID = -2586046426436166290L;
+	private final Date requiredFrom;
+	private final Date requiredTo;
+	private final Date pickUpDate;
+	private final Date autoFinalization;
+	private final Boolean autoSend;
+	private final Date posFinalizationTime;
+	private final Date dispatchNotificationCreationTime;
+	private final Date stockReceiptCreationTime;
+	private final Date stockReceiptFinalizationTime;
+	private final Date returnCreationTime;
+	private final Date bookingTime;
+	private final Date createTime;
+	private final Boolean send;
+	private final String currency;
+	private final String specialOfferCode;
+	private final String bookedBy;
+	private final String createdBy;
+	private final String target;
+	private final String supplier;
+	private final String source;
+
+	private final String description;
+
+	private final List<StockOrderItem> items;
+
+	public StockOrder(final Init<?> init)
 	{
+		super(init);
+		requiredFrom = init.requiredFrom;
+		requiredTo = init.requiredTo;
+		pickUpDate = init.pickUpDate;
+		autoFinalization = init.autoFinalization;
+		autoSend = init.autoSend;
+		posFinalizationTime = init.posFinalizationTime;
+		dispatchNotificationCreationTime = init.dispatchNotificationCreationTime;
+		stockReceiptCreationTime = init.stockReceiptCreationTime;
+		stockReceiptFinalizationTime = init.stockReceiptFinalizationTime;
+		returnCreationTime = init.returnCreationTime;
+		bookingTime = init.bookingTime;
+		createTime = init.createTime;
 
-		@Override
-		protected Builder self()
-		{
-			return this;
-		}
+		send = init.send;
 
+		currency = init.currency;
+		specialOfferCode = init.specialOfferCode;
+		bookedBy = init.bookedBy;
+		createdBy = init.createdBy;
+		target = init.target;
+		supplier = init.supplier;
+		source = init.source;
+		description = init.description;
+		items = init.items;
 	}
 
 	@Override
@@ -301,40 +302,62 @@ public class StockOrder extends AbstractNumberApiObject<StockOrder>
 		appendJSON(obj);
 
 		if (requiredFrom != null)
+		{
 			obj.put("requiredFrom", inputDf.format(requiredFrom));
+		}
 
 		if (requiredTo != null)
+		{
 			obj.put("requiredTo", inputDf.format(requiredTo));
+		}
 
 		if (pickUpDate != null)
+		{
 			obj.put("pickUpDate", inputDf.format(pickUpDate));
+		}
 
 		if (autoFinalization != null)
+		{
 			obj.put("autoFinalization", inputDf.format(autoFinalization));
+		}
 
 		obj.put("autoSend", autoSend);
 
 		if (posFinalizationTime != null)
+		{
 			obj.put("posFinalizationTime", inputDf.format(posFinalizationTime));
+		}
 
 		if (dispatchNotificationCreationTime != null)
+		{
 			obj.put("dispatchNotificationCreationTime",
 				inputDf.format(dispatchNotificationCreationTime));
+		}
 
 		if (stockReceiptCreationTime != null)
+		{
 			obj.put("stockReceiptCreationTime", inputDf.format(stockReceiptCreationTime));
+		}
 
 		if (stockReceiptFinalizationTime != null)
+		{
 			obj.put("stockReceiptFinalizationTime", inputDf.format(stockReceiptFinalizationTime));
+		}
 
 		if (returnCreationTime != null)
+		{
 			obj.put("returnCreationTime", inputDf.format(returnCreationTime));
+		}
 
 		if (bookingTime != null)
+		{
 			obj.put("bookingTime", inputDf.format(bookingTime));
+		}
 
 		if (createTime != null)
+		{
 			obj.put("createTime", inputDf.format(createTime));
+		}
 
 		obj.put("send", send);
 		obj.put("currency", currency);
@@ -367,17 +390,17 @@ public class StockOrder extends AbstractNumberApiObject<StockOrder>
 		}
 
 		final StockOrder stockOrder = new StockOrder.Builder().deleted(obj.getBoolean("deleted"))
-			.number(obj.getString("number"))
-			.id(obj.getString("uuid"))
+			.number(nullStringToNull(obj, "number"))
+			.id(nullStringToNull(obj, "uuid"))
 			.revision(obj.getLong("revision"))
 			.autoFinalization(prepareDate(obj, "autoFinalization"))
 			.autoSend(obj.getBoolean("autoSend"))
-			.bookedBy(obj.getString("bookedBy"))
+			.bookedBy(nullStringToNull(obj, "bookedBy"))
 			.bookingTime(prepareDate(obj, "bookingTime"))
-			.createdBy(obj.getString("createdBy"))
+			.createdBy(nullStringToNull(obj, "createdBy"))
 			.createTime(prepareDate(obj, "createTime"))
-			.currency(obj.getString("currency"))
-			.description(obj.getString("description"))
+			.currency(nullStringToNull(obj, "currency"))
+			.description(nullStringToNull(obj, "description"))
 			.dispatchNotificationCreationTime(prepareDate(obj, "dispatchNotificationCreationTime"))
 			.pickUpDate(prepareDate(obj, "pickUpDate"))
 			.posFinalizationTime(prepareDate(obj, "posFinalizationTime"))
@@ -385,12 +408,12 @@ public class StockOrder extends AbstractNumberApiObject<StockOrder>
 			.requiredTo(prepareDate(obj, "requiredTo"))
 			.returnCreationTime(prepareDate(obj, "returnCreationTime"))
 			.send(obj.getBoolean("send"))
-			.source(obj.getString("source"))
-			.specialOfferCode(obj.getString("specialOfferCode"))
+			.source(nullStringToNull(obj, "source"))
+			.specialOfferCode(nullStringToNull(obj, "specialOfferCode"))
 			.stockReceiptCreationTime(prepareDate(obj, "stockReceiptCreationTime"))
 			.stockReceiptFinalizationTime(prepareDate(obj, "stockReceiptFinalizationTime"))
-			.supplier(obj.getString("supplier"))
-			.target(obj.getString("target"))
+			.supplier(nullStringToNull(obj, "supplier"))
+			.target(nullStringToNull(obj, "target"))
 			.items(items)
 
 			.build();

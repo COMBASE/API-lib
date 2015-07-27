@@ -24,39 +24,9 @@ public class EndOfDayCommoditygroupSummary
 		return commodityGroup;
 	}
 
-	public void setCommodityGroup(final CommodityGroup commodityGroup)
-	{
-		this.commodityGroup = commodityGroup;
-	}
-
 	public BigDecimal getDiscountAmount()
 	{
 		return discountAmount;
-	}
-
-	public void setDiscountAmount(final BigDecimal discountAmount)
-	{
-		this.discountAmount = discountAmount;
-	}
-
-	public BigDecimal getItems()
-	{
-		return items;
-	}
-
-	public void setItems(final BigDecimal items)
-	{
-		this.items = items;
-	}
-
-	public BigDecimal getRevenue()
-	{
-		return revenue;
-	}
-
-	public void setRevenue(final BigDecimal revenue)
-	{
-		this.revenue = revenue;
 	}
 
 	public EndOfDayStatement getEndOfDayStatement()
@@ -64,14 +34,39 @@ public class EndOfDayCommoditygroupSummary
 		return endOfDayStatement;
 	}
 
+	public BigDecimal getItems()
+	{
+		return items;
+	}
+
+	public BigDecimal getRevenue()
+	{
+		return revenue;
+	}
+
+	public void setCommodityGroup(final CommodityGroup commodityGroup)
+	{
+		this.commodityGroup = commodityGroup;
+	}
+
+	public void setDiscountAmount(final BigDecimal discountAmount)
+	{
+		this.discountAmount = discountAmount;
+	}
+
 	public void setEndOfDayStatement(final EndOfDayStatement endOfDayStatement)
 	{
 		this.endOfDayStatement = endOfDayStatement;
 	}
 
-	public static long getSerialversionuid()
+	public void setItems(final BigDecimal items)
 	{
-		return serialVersionUID;
+		this.items = items;
+	}
+
+	public void setRevenue(final BigDecimal revenue)
+	{
+		this.revenue = revenue;
 	}
 
 	public static EndOfDayCommoditygroupSummary fromJSON(final JSONObject obj) throws JSONException
@@ -80,7 +75,7 @@ public class EndOfDayCommoditygroupSummary
 		final EndOfDayCommoditygroupSummary commoditygroupSummary = new EndOfDayCommoditygroupSummary();
 
 		final CommodityGroup commodityGroup = new CommodityGroup.Builder().id(
-			obj.getString("commodityGroup")).build();
+			nullStringToNull(obj, "commodityGroup")).build();
 
 		commoditygroupSummary.setCommodityGroup(commodityGroup);
 
@@ -94,5 +89,25 @@ public class EndOfDayCommoditygroupSummary
 
 		return commoditygroupSummary;
 
+	}
+
+	public static long getSerialversionuid()
+	{
+		return serialVersionUID;
+	}
+
+	/**
+	 *
+	 * @param obj
+	 * @param value
+	 * @return
+	 * @throws JSONException
+	 */
+	protected static String nullStringToNull(final JSONObject obj, final String value)
+		throws JSONException
+	{
+		if (obj.getString(value).equalsIgnoreCase("null"))
+			return null;
+		return obj.getString(value);
 	}
 }

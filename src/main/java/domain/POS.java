@@ -17,7 +17,7 @@ public class POS extends AbstractNameAndNumberApiObject<POS>
 
 	}
 	protected static abstract class Init<T extends Init<T>> extends
-	AbstractNameAndNumberApiObject.Init<T>
+		AbstractNameAndNumberApiObject.Init<T>
 	{
 		private Integer autoLogoutDelay = null;
 		private Boolean autoReceiptPrint = null;
@@ -624,16 +624,16 @@ public class POS extends AbstractNameAndNumberApiObject<POS>
 
 	public static POS fromJSON(JSONObject obj) throws JSONException
 	{
-		if (obj.has("result") && obj.getString("result") != null)
+		if (obj.has("result") && nullStringToNull(obj, "result") != null)
 		{
 			obj = obj.getJSONObject("result");
 		}
 		final OrganizationalUnit orgUnit = new OrganizationalUnit.Builder().build();
-		orgUnit.setId(obj.getString("organizationalUnit"));
+		orgUnit.setId(nullStringToNull(obj, "organizationalUnit"));
 
-		final POS pos = new POS.Builder().number(obj.getString("number"))
+		final POS pos = new POS.Builder().number(nullStringToNull(obj, "number"))
 			.organizationalUnit(orgUnit)
-			.id(obj.getString("uuid"))
+			.id(nullStringToNull(obj, "uuid"))
 
 
 			.build();

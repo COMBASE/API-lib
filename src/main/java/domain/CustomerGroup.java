@@ -6,30 +6,6 @@ import org.codehaus.jettison.json.JSONObject;
 
 public class CustomerGroup extends AbstractNameAndNumberApiObject<CustomerGroup>
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 633716651892752195L;
-	private Pricelist priceGroup;
-
-	protected static abstract class Init<T extends Init<T>> extends
-		AbstractNameAndNumberApiObject.Init<T>
-	{
-		private Pricelist priceGroup = null;
-
-		public T priceGroup(final Pricelist list)
-		{
-			priceGroup = list;
-			return self();
-		}
-
-		@Override
-		public CustomerGroup build()
-		{
-			return new CustomerGroup(this);
-		}
-	}
-
 	public static class Builder extends Init<Builder>
 	{
 
@@ -40,6 +16,30 @@ public class CustomerGroup extends AbstractNameAndNumberApiObject<CustomerGroup>
 		}
 
 	}
+	protected static abstract class Init<T extends Init<T>> extends
+	AbstractNameAndNumberApiObject.Init<T>
+	{
+		private Pricelist priceGroup = null;
+
+		@Override
+		public CustomerGroup build()
+		{
+			return new CustomerGroup(this);
+		}
+
+		public T priceGroup(final Pricelist list)
+		{
+			priceGroup = list;
+			return self();
+		}
+	}
+
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 633716651892752195L;
+
+	private Pricelist priceGroup;
 
 
 	private CustomerGroup(final Init<?> init)
@@ -48,21 +48,16 @@ public class CustomerGroup extends AbstractNameAndNumberApiObject<CustomerGroup>
 		priceGroup = init.priceGroup;
 	}
 
-	public Pricelist getPriceGroup()
-	{
-		return priceGroup;
-	}
-
-	public void setPriceGroup(final Pricelist priceGroup)
-	{
-		this.priceGroup = priceGroup;
-	}
-
 	@Override
 	public boolean equals(final Object obj)
 	{
 
 		return obj.hashCode() == this.hashCode();
+	}
+
+	public Pricelist getPriceGroup()
+	{
+		return priceGroup;
 	}
 
 	@Override
@@ -75,6 +70,11 @@ public class CustomerGroup extends AbstractNameAndNumberApiObject<CustomerGroup>
 		result = prime * result + ((this.priceGroup == null) ? 0 : this.priceGroup.hashCode());
 
 		return result;
+	}
+
+	public void setPriceGroup(final Pricelist priceGroup)
+	{
+		this.priceGroup = priceGroup;
 	}
 
 	@Override
@@ -90,14 +90,18 @@ public class CustomerGroup extends AbstractNameAndNumberApiObject<CustomerGroup>
 
 	public static CustomerGroup fromJSON(JSONObject obj) throws JSONException
 	{
-		if (obj.has("result") && obj.getString("result") != null)
+		if (obj.has("result") && nullStringToNull(obj, "result") != null)
+		{
 			obj = obj.getJSONObject("result");
+		}
 
-		final Pricelist pricelist = new Pricelist.Builder().id(obj.getString("priceGroup")).build();
+		final Pricelist pricelist = new Pricelist.Builder().id(nullStringToNull(obj, "priceGroup"))
+			.build();
 
-		final CustomerGroup custGrp = new CustomerGroup.Builder().name(obj.getString("name"))
-			.id(obj.getString("uuid"))
-			.number(obj.getString("number"))
+		final CustomerGroup custGrp = new CustomerGroup.Builder().name(
+			nullStringToNull(obj, "name"))
+			.id(nullStringToNull(obj, "uuid"))
+			.number(nullStringToNull(obj, "number"))
 			.deleted(obj.getBoolean("deleted"))
 			.revision(obj.getLong("revision"))
 			.priceGroup(pricelist)

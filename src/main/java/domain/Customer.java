@@ -376,27 +376,27 @@ public class Customer extends AbstractNumberApiObject<Customer>
 
 	public static Customer fromJSON(JSONObject obj) throws JSONException, ParseException
 	{
-		if (obj.has("result") && obj.getString("result") != null)
+		if (obj.has("result") && nullStringToNull(obj, "result") != null)
 		{
 			obj = obj.getJSONObject("result");
 		}
 
-		final Customer cust = new Customer.Builder().id(obj.getString("uuid"))
+		final Customer cust = new Customer.Builder().id(nullStringToNull(obj, "uuid"))
 			.deleted(obj.getBoolean("deleted"))
 			.revision(obj.getLong("revision"))
-			.number(obj.getString("number"))
-			.firstName(obj.getString("firstName"))
-			.lastName(obj.getString("lastName"))
-			.email(obj.getString("email"))
-			.gender(obj.getString("gender"))
-			.zipCode(obj.getString("zipCode"))
-			.addressLine1(obj.getString("addressLine1"))
-			.city(obj.getString("city"))
-			.state(obj.getString("state"))
-			.country(obj.getString("country"))
-			.phone(obj.getString("phone"))
+			.number(nullStringToNull(obj, "number"))
+			.firstName(nullStringToNull(obj, "firstName"))
+			.lastName(nullStringToNull(obj, "lastName"))
+			.email(nullStringToNull(obj, "email"))
+			.gender(nullStringToNull(obj, "gender"))
+			.zipCode(nullStringToNull(obj, "zipCode"))
+			.addressLine1(nullStringToNull(obj, "addressLine1"))
+			.city(nullStringToNull(obj, "city"))
+			.state(nullStringToNull(obj, "state"))
+			.country(nullStringToNull(obj, "country"))
+			.phone(nullStringToNull(obj, "phone"))
 			.birthday(prepareDate(obj, "birthday"))
-			.company(obj.getString("company"))
+			.company(nullStringToNull(obj, "company"))
 			.birthday(prepareDate(obj, "birthday"))
 			.build();
 

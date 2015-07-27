@@ -23,7 +23,7 @@ public class OrganizationalUnit extends AbstractNameAndNumberApiObject<Organizat
 
 	}
 	protected static abstract class Init<T extends Init<T>> extends
-	AbstractNameAndNumberApiObject.Init<T>
+		AbstractNameAndNumberApiObject.Init<T>
 	{
 		private OrganizationalUnit parent = null;
 
@@ -346,28 +346,9 @@ public class OrganizationalUnit extends AbstractNameAndNumberApiObject<Organizat
 
 	private static final long serialVersionUID = -5837677863056916822L;
 
-	public static OrganizationalUnit fromJSON(JSONObject obj) throws JSONException
-	{
-		if (obj.has("result") && obj.getString("result") != null)
-			obj = obj.getJSONObject("result");
-		final OrganizationalUnit orgUnit = new OrganizationalUnit.Builder().name(
-			obj.getString("name"))
-			.deleted(obj.getBoolean("deleted"))
-			.number(obj.getString("number"))
-			.id(obj.getString("uuid"))
-			.revision(obj.getLong("revision"))
-			.build();
-		return orgUnit;
-	}
+	private OrganizationalUnit parent;
 
 	// private SupplierCaseEntityInformationReadable addressInformation;
-
-	public static long getSerialversionuid()
-	{
-		return serialVersionUID;
-	}
-
-	private OrganizationalUnit parent;
 
 	private EconomicZone economicZone;
 
@@ -965,10 +946,14 @@ public class OrganizationalUnit extends AbstractNameAndNumberApiObject<Organizat
 		}
 
 		if (priceGroup != null)
+		{
 			obj.put("priceGroup", priceGroup.getId());
+		}
 
 		if (economicZone != null)
+		{
 			obj.put("economicZone", economicZone.getId());
+		}
 
 		if (!orderingSources.isEmpty())
 		{
@@ -1015,5 +1000,26 @@ public class OrganizationalUnit extends AbstractNameAndNumberApiObject<Organizat
 		obj.put("warehouse", warehouse);
 
 		return obj;
+	}
+
+	public static OrganizationalUnit fromJSON(JSONObject obj) throws JSONException
+	{
+		if (obj.has("result") && nullStringToNull(obj, "result") != null)
+		{
+			obj = obj.getJSONObject("result");
+		}
+		final OrganizationalUnit orgUnit = new OrganizationalUnit.Builder().name(
+			nullStringToNull(obj, "name"))
+			.deleted(obj.getBoolean("deleted"))
+			.number(nullStringToNull(obj, "number"))
+			.id(nullStringToNull(obj, "uuid"))
+			.revision(obj.getLong("revision"))
+			.build();
+		return orgUnit;
+	}
+
+	public static long getSerialversionuid()
+	{
+		return serialVersionUID;
 	}
 }

@@ -24,7 +24,7 @@ public class Tax extends AbstractNameAndNumberApiObject<Tax>
 
 	}
 	public static abstract class Init<T extends Init<T>> extends
-		AbstractNameAndNumberApiObject.Init<T>
+	AbstractNameAndNumberApiObject.Init<T>
 	{
 
 		private EconomicZone economicZone = null;
@@ -59,7 +59,10 @@ public class Tax extends AbstractNameAndNumberApiObject<Tax>
 
 		public T rateList(final Rate rate)
 		{
-			if (rateList == null) rateList = new ArrayList<Rate>(); 
+			if (rateList == null)
+			{
+				rateList = new ArrayList<Rate>();
+			}
 			rateList.add(rate);
 			return self();
 		}
@@ -70,52 +73,22 @@ public class Tax extends AbstractNameAndNumberApiObject<Tax>
 	 */
 	private static final long serialVersionUID = 928711587195250693L;
 
-	public static Tax fromJSON(JSONObject obj) throws JSONException, ParseException
-	{
-		if (obj.has("result") && obj.getString("result") != null)
-			obj = obj.getJSONObject("result");
-		JSONArray jRates = null;
-
-		if (!obj.isNull("rates"))
-		{
-			jRates = obj.getJSONArray("rates");
-		}
-		
-		final List<Rate> rates = new ArrayList<Rate>();
-
-		if (jRates != null)
-		{
-			for (int i = 0; i < jRates.length(); i++)
-			{
-				final JSONObject jRate = jRates.getJSONObject(i);
-				final Rate rate = new Rate(new BigDecimal(jRate.getString("rate")),
-					inputDf.parse(jRate.getString("validFrom")));
-				rates.add(rate);
-			}
-		}
-		final EconomicZone economicZone = new EconomicZone.Builder().build();
-		economicZone.setId(obj.getString("economicZone"));
-
-		final Tax tax = new Tax.Builder().name(obj.getString("name"))
-			.economicZone(economicZone)
-			.rateList(rates)
-			.id(obj.getString("uuid"))
-			.number(obj.getString("number"))
-			.deleted(obj.getBoolean("deleted"))
-			.build();
-
-		return tax;
-	}
-
-
-	public static long getSerialversionuid()
-	{
-		return serialVersionUID;
-	}
-
 	private Boolean included;
 
+
 	private EconomicZone economicZone;
+
+	private List<Rate> rateList;
+
+	private Tax(final Init<?> init)
+	{
+
+		super(init);
+		included = init.included;
+		economicZone = init.economicZone;
+		rateList = init.rateList;
+
+	}
 
 // public boolean post() throws IOException, ApiNotReachableException
 // {
@@ -130,18 +103,6 @@ public class Tax extends AbstractNameAndNumberApiObject<Tax>
 // uuid = CloudLink.getUUIDByName(DataType.tax, name);
 // return result;
 // }
-
-	private List<Rate> rateList;
-
-	private Tax(final Init<?> init)
-	{
-
-		super(init);
-		included = init.included;
-		economicZone = init.economicZone;
-		rateList = init.rateList;
-
-	}
 
 	@Override
 	public boolean equals(final Object obj)
@@ -216,5 +177,49 @@ public class Tax extends AbstractNameAndNumberApiObject<Tax>
 		}
 
 		return obj;
+	}
+
+	public static Tax fromJSON(JSONObject obj) throws JSONException, ParseException
+	{
+		if (obj.has("result") && nullStringToNull(obj, "result") != null)
+		{
+			obj = obj.getJSONObject("result");
+		}
+		JSONArray jRates = null;
+
+		if (!obj.isNull("rates"))
+		{
+			jRates = obj.getJSONArray("rates");
+		}
+
+		final List<Rate> rates = new ArrayList<Rate>();
+
+		if (jRates != null)
+		{
+			for (int i = 0; i < jRates.length(); i++)
+			{
+				final JSONObject jRate = jRates.getJSONObject(i);
+				final Rate rate = new Rate(new BigDecimal(jRate.getString("rate")),
+					inputDf.parse(jRate.getString("validFrom")));
+				rates.add(rate);
+			}
+		}
+		final EconomicZone economicZone = new EconomicZone.Builder().build();
+		economicZone.setId(nullStringToNull(obj, "economicZone"));
+
+		final Tax tax = new Tax.Builder().name(nullStringToNull(obj, "name"))
+			.economicZone(economicZone)
+			.rateList(rates)
+			.id(nullStringToNull(obj, "uuid"))
+			.number(nullStringToNull(obj, "number"))
+			.deleted(obj.getBoolean("deleted"))
+			.build();
+
+		return tax;
+	}
+
+	public static long getSerialversionuid()
+	{
+		return serialVersionUID;
 	}
 }

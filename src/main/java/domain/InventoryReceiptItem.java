@@ -7,20 +7,16 @@ import org.codehaus.jettison.json.JSONObject;
 
 public class InventoryReceiptItem extends AbstractApiObject<InventoryReceiptItem>
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 7867322273575161809L;
+	public static class Builder extends Init<Builder>
+	{
 
-	private BigDecimal nominalGoods;
+		@Override
+		protected Builder self()
+		{
+			return this;
+		}
 
-	private BigDecimal actualGoods;
-
-	private String differenceReason;
-
-	private Product article;
-
-	private InventoryReceipt receipt;
+	}
 
 	protected static abstract class Init<T extends Init<T>> extends AbstractApiObject.Init<T>
 	{
@@ -34,21 +30,9 @@ public class InventoryReceiptItem extends AbstractApiObject<InventoryReceiptItem
 
 		private InventoryReceipt receipt = null;
 
-		public T nominalGoods(final BigDecimal value)
-		{
-			nominalGoods = value;
-			return self();
-		}
-
 		public T actualGoods(final BigDecimal value)
 		{
 			actualGoods = value;
-			return self();
-		}
-
-		public T differenceReason(final String value)
-		{
-			differenceReason = value;
 			return self();
 		}
 
@@ -58,29 +42,45 @@ public class InventoryReceiptItem extends AbstractApiObject<InventoryReceiptItem
 			return self();
 		}
 
-		public T receipt(final InventoryReceipt value)
-		{
-			receipt = value;
-			return self();
-		}
-
 		@Override
 		public InventoryReceiptItem build()
 		{
 			return new InventoryReceiptItem(this);
 		}
-	}
 
-	public static class Builder extends Init<Builder>
-	{
-
-		@Override
-		protected Builder self()
+		public T differenceReason(final String value)
 		{
-			return this;
+			differenceReason = value;
+			return self();
 		}
 
+		public T nominalGoods(final BigDecimal value)
+		{
+			nominalGoods = value;
+			return self();
+		}
+
+		public T receipt(final InventoryReceipt value)
+		{
+			receipt = value;
+			return self();
+		}
 	}
+
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 7867322273575161809L;
+
+	private BigDecimal nominalGoods;
+
+	private BigDecimal actualGoods;
+
+	private String differenceReason;
+
+	private Product article;
+
+	private InventoryReceipt receipt;
 
 
 	public InventoryReceiptItem(final Init<?> init)
@@ -98,34 +98,9 @@ public class InventoryReceiptItem extends AbstractApiObject<InventoryReceiptItem
 		this.receipt = init.receipt;
 	}
 
-	public BigDecimal getNominalGoods()
-	{
-		return nominalGoods;
-	}
-
-	public void setNominalGoods(final BigDecimal nominalGoods)
-	{
-		this.nominalGoods = nominalGoods;
-	}
-
 	public BigDecimal getActualGoods()
 	{
 		return actualGoods;
-	}
-
-	public void setActualGoods(final BigDecimal actualGoods)
-	{
-		this.actualGoods = actualGoods;
-	}
-
-	public String getDifferenceReason()
-	{
-		return differenceReason;
-	}
-
-	public void setDifferenceReason(final String differenceReason)
-	{
-		this.differenceReason = differenceReason;
 	}
 
 	public Product getArticle()
@@ -133,14 +108,39 @@ public class InventoryReceiptItem extends AbstractApiObject<InventoryReceiptItem
 		return article;
 	}
 
-	public void setArticle(final Product article)
+	public String getDifferenceReason()
 	{
-		this.article = article;
+		return differenceReason;
+	}
+
+	public BigDecimal getNominalGoods()
+	{
+		return nominalGoods;
 	}
 
 	public InventoryReceipt getReceipt()
 	{
 		return receipt;
+	}
+
+	public void setActualGoods(final BigDecimal actualGoods)
+	{
+		this.actualGoods = actualGoods;
+	}
+
+	public void setArticle(final Product article)
+	{
+		this.article = article;
+	}
+
+	public void setDifferenceReason(final String differenceReason)
+	{
+		this.differenceReason = differenceReason;
+	}
+
+	public void setNominalGoods(final BigDecimal nominalGoods)
+	{
+		this.nominalGoods = nominalGoods;
 	}
 
 	public void setReceipt(final InventoryReceipt receipt)
@@ -161,30 +161,36 @@ public class InventoryReceiptItem extends AbstractApiObject<InventoryReceiptItem
 		obj.put("differenceReason", differenceReason);
 
 		if (article != null)
+		{
 			obj.put("article", article.getId());
+		}
 
 		if (receipt != null)
+		{
 			obj.put("receipt", receipt.getId());
+		}
 
 		return obj;
 	}
 
 	public static InventoryReceiptItem fromJSON(JSONObject obj) throws JSONException
 	{
-		if (obj.has("result") && obj.getString("result") != null)
+		if (obj.has("result") && nullStringToNull(obj, "result") != null)
+		{
 			obj = obj.getJSONObject("result");
+		}
 
-		final Product product = new Product.Builder().id(obj.getString("article")).build();
+		final Product product = new Product.Builder().id(nullStringToNull(obj, "article")).build();
 
-		final InventoryReceipt receipt = new InventoryReceipt.Builder().id(obj.getString("receipt"))
-			.build();
+		final InventoryReceipt receipt = new InventoryReceipt.Builder().id(
+			nullStringToNull(obj, "receipt")).build();
 
 		final InventoryReceiptItem inventoryReceiptItem = new InventoryReceiptItem.Builder().id(
-			obj.getString("uuid"))
+			nullStringToNull(obj, "uuid"))
 			.nominalGoods(prepareBigDecimal(obj, "nominalGoods"))
 			.actualGoods(prepareBigDecimal(obj, "actualGoods"))
 			.article(product)
-			.differenceReason(obj.getString("differenceReason"))
+			.differenceReason(nullStringToNull(obj, "differenceReason"))
 			.receipt(receipt)
 			.build();
 

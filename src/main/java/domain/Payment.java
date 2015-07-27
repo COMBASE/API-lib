@@ -395,24 +395,24 @@ public class Payment extends AbstractApiObject<Payment>
 
 	public static Payment fromJSON(JSONObject obj) throws JSONException, ParseException
 	{
-		if (obj.has("result") && obj.getString("result").equalsIgnoreCase("null"))
+		if (obj.has("result") && nullStringToNull(obj, "result").equalsIgnoreCase("null"))
 		{
 			obj = obj.getJSONObject("result");
 		}
 
 		final Cashier cash = new Cashier.Builder().build();
-		cash.setId(obj.getString("cashier"));
+		cash.setId(nullStringToNull(obj, "cashier"));
 		final Receipt rec = new Receipt.Builder().build();
-		rec.setId(obj.getString("receipt"));
+		rec.setId(nullStringToNull(obj, "receipt"));
 		final POS pos = new POS.Builder().build();
-		pos.setId(obj.getString("pos"));
+		pos.setId(nullStringToNull(obj, "pos"));
 		final Currency cur = new Currency.Builder().build();
-		cur.setId(obj.getString("currency"));
+		cur.setId(nullStringToNull(obj, "currency"));
 		final PaymentMethod payMeth = new PaymentMethod.Builder().build();
-		payMeth.setId(obj.getString("paymentMethod"));
+		payMeth.setId(nullStringToNull(obj, "paymentMethod"));
 		final Payment pay = new Payment.Builder().deleted(obj.getBoolean("deleted"))
 			.revision(obj.getLong("revision"))
-			.id(obj.getString("uuid"))
+			.id(nullStringToNull(obj, "uuid"))
 			.amount(prepareBigDecimal(obj, "amount"))
 			.transactionTime(prepareDate(obj, "transactionTime"))
 			.cashier(cash)

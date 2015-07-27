@@ -116,139 +116,6 @@ public class EndOfDayStatement extends AbstractApiObject<EndOfDayStatement>
 	 */
 	private static final long serialVersionUID = 4420456052325768842L;
 
-	public static EndOfDayStatement fromJSON(JSONObject obj) throws JSONException, ParseException
-	{
-		if (obj.has("result") && obj.getString("result") != null)
-			obj = obj.getJSONObject("result");
-
-		final List<EndOfDayAccountSummary> endOfDayAccountSummaries = new ArrayList<EndOfDayAccountSummary>();
-		EndOfDayAccountSummary endOfDayAccountSummary = null;
-
-		final List<EndOfDayCashierSummary> cashierSummaries = new ArrayList<EndOfDayCashierSummary>();
-		EndOfDayCashierSummary cashierSummary = null;
-
-		final List<EndOfDayCommoditygroupSummary> commoditygroupSummaries = new ArrayList<EndOfDayCommoditygroupSummary>();
-		EndOfDayCommoditygroupSummary commoditygroupSummary = null;
-
-		final List<EndOfDayCustomergroupSummary> customergroupSummaries = new ArrayList<EndOfDayCustomergroupSummary>();
-		EndOfDayCustomergroupSummary customergroupSummary = null;
-
-		final List<EndOfDayPaymentSummary> paymentSummaries = new ArrayList<EndOfDayPaymentSummary>();
-		EndOfDayPaymentSummary paymentSummary = null;
-
-		final List<EndOfDayTaxSummary> taxSummaries = new ArrayList<EndOfDayTaxSummary>();
-		EndOfDayTaxSummary taxSummary = null;
-
-		// AccountSummaries
-		if (!obj.isNull("accountSummaries"))
-		{
-			final JSONArray jEndOfDayAccountSummaries = obj.getJSONArray("accountSummaries");
-			if (jEndOfDayAccountSummaries.length() != 0)
-				for (int i = 0; i < jEndOfDayAccountSummaries.length(); i++)
-				{
-					final JSONObject jEndOfDayAccountSummary = jEndOfDayAccountSummaries.getJSONObject(i);
-					endOfDayAccountSummary = EndOfDayAccountSummary.fromJSON(jEndOfDayAccountSummary);
-					if (endOfDayAccountSummary != null)
-						endOfDayAccountSummaries.add(endOfDayAccountSummary);
-				}
-		}
-
-
-		// CashierSummaries
-		if (!obj.isNull("cashierSummaries"))
-		{
-			final JSONArray jEndOfDayCashierSummaries = obj.getJSONArray("cashierSummaries");
-			if (jEndOfDayCashierSummaries.length() != 0)
-				for (int i = 0; i < jEndOfDayCashierSummaries.length(); i++)
-				{
-					final JSONObject jEndOfDayCashierSummary = jEndOfDayCashierSummaries.getJSONObject(i);
-					cashierSummary = EndOfDayCashierSummary.fromJSON(jEndOfDayCashierSummary);
-					if (cashierSummary != null)
-						cashierSummaries.add(cashierSummary);
-				}
-		}
-
-		// CommodityGroup
-		if (!obj.isNull("commodityGroupSummaries"))
-		{
-			final JSONArray jEndOfDayCommoditygroupSummaries = obj.getJSONArray("commodityGroupSummaries");
-			if (jEndOfDayCommoditygroupSummaries.length() != 0)
-				for (int i = 0; i < jEndOfDayCommoditygroupSummaries.length(); i++)
-				{
-					final JSONObject jEndOfDayCommoditygroupSummary = jEndOfDayCommoditygroupSummaries.getJSONObject(i);
-					commoditygroupSummary = EndOfDayCommoditygroupSummary.fromJSON(jEndOfDayCommoditygroupSummary);
-					if (endOfDayAccountSummary != null)
-						commoditygroupSummaries.add(commoditygroupSummary);
-				}
-		}
-
-		// CustomerGroup
-		if (!obj.isNull("customerGroupSummaries"))
-		{
-			final JSONArray jEndOfDayCustomergroupSummaries = obj.getJSONArray("customerGroupSummaries");
-			if (jEndOfDayCustomergroupSummaries.length() != 0)
-				for (int i = 0; i < jEndOfDayCustomergroupSummaries.length(); i++)
-				{
-					final JSONObject jEndOfDayCustomergroupSummary = jEndOfDayCustomergroupSummaries.getJSONObject(i);
-					customergroupSummary = EndOfDayCustomergroupSummary.fromJSON(jEndOfDayCustomergroupSummary);
-					if (customergroupSummary != null)
-						customergroupSummaries.add(customergroupSummary);
-				}
-		}
-
-
-		// Payment
-		if (!obj.isNull("paymentSummaries"))
-		{
-			final JSONArray jEndOfDayPaymentSummaries = obj.getJSONArray("paymentSummaries");
-			if (jEndOfDayPaymentSummaries.length() != 0)
-				for (int i = 0; i < jEndOfDayPaymentSummaries.length(); i++)
-				{
-					final JSONObject jEndOfDayPaymentSummary = jEndOfDayPaymentSummaries.getJSONObject(i);
-					paymentSummary = EndOfDayPaymentSummary.fromJSON(jEndOfDayPaymentSummary);
-					if (paymentSummary != null)
-						paymentSummaries.add(paymentSummary);
-				}
-		}
-
-
-		// Tax
-		if (!obj.isNull("taxSummaries"))
-		{
-			final JSONArray jEndOfDayTaxSummaries = obj.getJSONArray("taxSummaries");
-			if (jEndOfDayTaxSummaries.length() != 0)
-				for (int i = 0; i < jEndOfDayTaxSummaries.length(); i++)
-				{
-					final JSONObject jEndOfDayTaxSummary = jEndOfDayTaxSummaries.getJSONObject(i);
-					taxSummary = EndOfDayTaxSummary.fromJSON(jEndOfDayTaxSummary);
-					if (taxSummary != null)
-						taxSummaries.add(taxSummary);
-				}
-		}
-
-		// POS
-		final POS pos = new POS.Builder().id(obj.getString("pos")).build();
-
-
-		final EndOfDayStatement endOfDayStatement = new EndOfDayStatement.Builder().deleted(
-			obj.getBoolean("deleted"))
-			.revision(obj.getLong("revision"))
-			.id(obj.getString("uuid"))
-			.finishTime(prepareDate(obj, "finishTime"))
-			.pos(pos)
-			.receiptCount(obj.getLong("receiptCount"))
-			.zCount(obj.getLong("zCount"))
-			.accountSummaries(endOfDayAccountSummaries)
-			.cashierSummaries(cashierSummaries)
-			.commodityGroupSummaries(commoditygroupSummaries)
-			.customerGroupSummaries(customergroupSummaries)
-			.paymentSummaries(paymentSummaries)
-			.taxSummaries(taxSummaries)
-			.build();
-
-		return endOfDayStatement;
-	}
-
 	private List<EndOfDayAccountSummary> accountSummaries;
 
 	private List<EndOfDayCashierSummary> cashierSummaries;
@@ -331,11 +198,11 @@ public class EndOfDayStatement extends AbstractApiObject<EndOfDayStatement>
 		return paymentSummaries;
 	}
 
-
 	public POS getPos()
 	{
 		return pos;
 	}
+
 
 	public long getReceiptCount()
 	{
@@ -461,5 +328,164 @@ public class EndOfDayStatement extends AbstractApiObject<EndOfDayStatement>
 		JSONObject obj = new JSONObject();
 		obj = appendJSON(obj);
 		return obj;
+	}
+
+	public static EndOfDayStatement fromJSON(JSONObject obj) throws JSONException, ParseException
+	{
+		if (obj.has("result") && nullStringToNull(obj, "result") != null)
+		{
+			obj = obj.getJSONObject("result");
+		}
+
+		final List<EndOfDayAccountSummary> endOfDayAccountSummaries = new ArrayList<EndOfDayAccountSummary>();
+		EndOfDayAccountSummary endOfDayAccountSummary = null;
+
+		final List<EndOfDayCashierSummary> cashierSummaries = new ArrayList<EndOfDayCashierSummary>();
+		EndOfDayCashierSummary cashierSummary = null;
+
+		final List<EndOfDayCommoditygroupSummary> commoditygroupSummaries = new ArrayList<EndOfDayCommoditygroupSummary>();
+		EndOfDayCommoditygroupSummary commoditygroupSummary = null;
+
+		final List<EndOfDayCustomergroupSummary> customergroupSummaries = new ArrayList<EndOfDayCustomergroupSummary>();
+		EndOfDayCustomergroupSummary customergroupSummary = null;
+
+		final List<EndOfDayPaymentSummary> paymentSummaries = new ArrayList<EndOfDayPaymentSummary>();
+		EndOfDayPaymentSummary paymentSummary = null;
+
+		final List<EndOfDayTaxSummary> taxSummaries = new ArrayList<EndOfDayTaxSummary>();
+		EndOfDayTaxSummary taxSummary = null;
+
+		// AccountSummaries
+		if (!obj.isNull("accountSummaries"))
+		{
+			final JSONArray jEndOfDayAccountSummaries = obj.getJSONArray("accountSummaries");
+			if (jEndOfDayAccountSummaries.length() != 0)
+			{
+				for (int i = 0; i < jEndOfDayAccountSummaries.length(); i++)
+				{
+					final JSONObject jEndOfDayAccountSummary = jEndOfDayAccountSummaries.getJSONObject(i);
+					endOfDayAccountSummary = EndOfDayAccountSummary.fromJSON(jEndOfDayAccountSummary);
+					if (endOfDayAccountSummary != null)
+					{
+						endOfDayAccountSummaries.add(endOfDayAccountSummary);
+					}
+				}
+			}
+		}
+
+
+		// CashierSummaries
+		if (!obj.isNull("cashierSummaries"))
+		{
+			final JSONArray jEndOfDayCashierSummaries = obj.getJSONArray("cashierSummaries");
+			if (jEndOfDayCashierSummaries.length() != 0)
+			{
+				for (int i = 0; i < jEndOfDayCashierSummaries.length(); i++)
+				{
+					final JSONObject jEndOfDayCashierSummary = jEndOfDayCashierSummaries.getJSONObject(i);
+					cashierSummary = EndOfDayCashierSummary.fromJSON(jEndOfDayCashierSummary);
+					if (cashierSummary != null)
+					{
+						cashierSummaries.add(cashierSummary);
+					}
+				}
+			}
+		}
+
+		// CommodityGroup
+		if (!obj.isNull("commodityGroupSummaries"))
+		{
+			final JSONArray jEndOfDayCommoditygroupSummaries = obj.getJSONArray("commodityGroupSummaries");
+			if (jEndOfDayCommoditygroupSummaries.length() != 0)
+			{
+				for (int i = 0; i < jEndOfDayCommoditygroupSummaries.length(); i++)
+				{
+					final JSONObject jEndOfDayCommoditygroupSummary = jEndOfDayCommoditygroupSummaries.getJSONObject(i);
+					commoditygroupSummary = EndOfDayCommoditygroupSummary.fromJSON(jEndOfDayCommoditygroupSummary);
+					if (endOfDayAccountSummary != null)
+					{
+						commoditygroupSummaries.add(commoditygroupSummary);
+					}
+				}
+			}
+		}
+
+		// CustomerGroup
+		if (!obj.isNull("customerGroupSummaries"))
+		{
+			final JSONArray jEndOfDayCustomergroupSummaries = obj.getJSONArray("customerGroupSummaries");
+			if (jEndOfDayCustomergroupSummaries.length() != 0)
+			{
+				for (int i = 0; i < jEndOfDayCustomergroupSummaries.length(); i++)
+				{
+					final JSONObject jEndOfDayCustomergroupSummary = jEndOfDayCustomergroupSummaries.getJSONObject(i);
+					customergroupSummary = EndOfDayCustomergroupSummary.fromJSON(jEndOfDayCustomergroupSummary);
+					if (customergroupSummary != null)
+					{
+						customergroupSummaries.add(customergroupSummary);
+					}
+				}
+			}
+		}
+
+
+		// Payment
+		if (!obj.isNull("paymentSummaries"))
+		{
+			final JSONArray jEndOfDayPaymentSummaries = obj.getJSONArray("paymentSummaries");
+			if (jEndOfDayPaymentSummaries.length() != 0)
+			{
+				for (int i = 0; i < jEndOfDayPaymentSummaries.length(); i++)
+				{
+					final JSONObject jEndOfDayPaymentSummary = jEndOfDayPaymentSummaries.getJSONObject(i);
+					paymentSummary = EndOfDayPaymentSummary.fromJSON(jEndOfDayPaymentSummary);
+					if (paymentSummary != null)
+					{
+						paymentSummaries.add(paymentSummary);
+					}
+				}
+			}
+		}
+
+
+		// Tax
+		if (!obj.isNull("taxSummaries"))
+		{
+			final JSONArray jEndOfDayTaxSummaries = obj.getJSONArray("taxSummaries");
+			if (jEndOfDayTaxSummaries.length() != 0)
+			{
+				for (int i = 0; i < jEndOfDayTaxSummaries.length(); i++)
+				{
+					final JSONObject jEndOfDayTaxSummary = jEndOfDayTaxSummaries.getJSONObject(i);
+					taxSummary = EndOfDayTaxSummary.fromJSON(jEndOfDayTaxSummary);
+					if (taxSummary != null)
+					{
+						taxSummaries.add(taxSummary);
+					}
+				}
+			}
+		}
+
+		// POS
+		final POS pos = new POS.Builder().id(nullStringToNull(obj, "pos")).build();
+
+
+		final EndOfDayStatement endOfDayStatement = new EndOfDayStatement.Builder().deleted(
+			obj.getBoolean("deleted"))
+			.revision(obj.getLong("revision"))
+			.id(nullStringToNull(obj, "uuid"))
+			.finishTime(prepareDate(obj, "finishTime"))
+			.pos(pos)
+			.receiptCount(obj.getLong("receiptCount"))
+			.zCount(obj.getLong("zCount"))
+			.accountSummaries(endOfDayAccountSummaries)
+			.cashierSummaries(cashierSummaries)
+			.commodityGroupSummaries(commoditygroupSummaries)
+			.customerGroupSummaries(customergroupSummaries)
+			.paymentSummaries(paymentSummaries)
+			.taxSummaries(taxSummaries)
+			.build();
+
+		return endOfDayStatement;
 	}
 }

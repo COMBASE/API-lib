@@ -24,39 +24,9 @@ public class EndOfDayCustomergroupSummary
 		return customerGroup;
 	}
 
-	public void setCustomerGroup(final CustomerGroup customerGroup)
-	{
-		this.customerGroup = customerGroup;
-	}
-
 	public BigDecimal getDiscountAmount()
 	{
 		return discountAmount;
-	}
-
-	public void setDiscountAmount(final BigDecimal discountAmount)
-	{
-		this.discountAmount = discountAmount;
-	}
-
-	public BigDecimal getItems()
-	{
-		return items;
-	}
-
-	public void setItems(final BigDecimal items)
-	{
-		this.items = items;
-	}
-
-	public BigDecimal getRevenue()
-	{
-		return revenue;
-	}
-
-	public void setRevenue(final BigDecimal revenue)
-	{
-		this.revenue = revenue;
 	}
 
 	public EndOfDayStatement getEndOfDayStatement()
@@ -64,14 +34,39 @@ public class EndOfDayCustomergroupSummary
 		return endOfDayStatement;
 	}
 
+	public BigDecimal getItems()
+	{
+		return items;
+	}
+
+	public BigDecimal getRevenue()
+	{
+		return revenue;
+	}
+
+	public void setCustomerGroup(final CustomerGroup customerGroup)
+	{
+		this.customerGroup = customerGroup;
+	}
+
+	public void setDiscountAmount(final BigDecimal discountAmount)
+	{
+		this.discountAmount = discountAmount;
+	}
+
 	public void setEndOfDayStatement(final EndOfDayStatement endOfDayStatement)
 	{
 		this.endOfDayStatement = endOfDayStatement;
 	}
 
-	public static long getSerialversionuid()
+	public void setItems(final BigDecimal items)
 	{
-		return serialVersionUID;
+		this.items = items;
+	}
+
+	public void setRevenue(final BigDecimal revenue)
+	{
+		this.revenue = revenue;
 	}
 
 	public static EndOfDayCustomergroupSummary fromJSON(final JSONObject obj) throws JSONException
@@ -80,7 +75,7 @@ public class EndOfDayCustomergroupSummary
 		final EndOfDayCustomergroupSummary customergroupSummary = new EndOfDayCustomergroupSummary();
 
 		final CustomerGroup customerGroup = new CustomerGroup.Builder().id(
-			obj.getString("customerGroup")).build();
+			nullStringToNull(obj, "customerGroup")).build();
 
 		customergroupSummary.setCustomerGroup(customerGroup);
 
@@ -93,5 +88,25 @@ public class EndOfDayCustomergroupSummary
 
 		return customergroupSummary;
 
+	}
+
+	public static long getSerialversionuid()
+	{
+		return serialVersionUID;
+	}
+
+	/**
+	 *
+	 * @param obj
+	 * @param value
+	 * @return
+	 * @throws JSONException
+	 */
+	protected static String nullStringToNull(final JSONObject obj, final String value)
+		throws JSONException
+	{
+		if (obj.getString(value).equalsIgnoreCase("null"))
+			return null;
+		return obj.getString(value);
 	}
 }

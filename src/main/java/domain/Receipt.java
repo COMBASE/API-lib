@@ -28,7 +28,7 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 		private CustomerGroup customerGroup = null;
 		private Date finishTime = null;
 		private Date modifiedTime = null;
-		private Integer orderNumber = null;
+		private String orderNumber = null;
 		private POS pos = null;
 		private OrganizationalUnit organizationalUnit = null;
 		private final Pricelist priceGroup = null;
@@ -126,7 +126,7 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 			return self();
 		}
 
-		public T orderNumber(final int value)
+		public T orderNumber(final String value)
 		{
 			this.orderNumber = value;
 			return self();
@@ -190,7 +190,7 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 	private CustomerGroup customerGroup;
 	private Date finishTime;
 	private Date modifiedTime;
-	private Integer orderNumber;
+	private String orderNumber;
 	private POS pos;
 	private OrganizationalUnit organizationalUnit;
 	private Pricelist priceGroup;
@@ -320,7 +320,7 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 		return netTotalAmount;
 	}
 
-	public int getOrderNumber()
+	public String getOrderNumber()
 	{
 		return orderNumber;
 	}
@@ -452,7 +452,7 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 		this.netTotalAmount = netTotalAmount;
 	}
 
-	public void setOrderNumber(final int orderNumber)
+	public void setOrderNumber(final String orderNumber)
 	{
 		this.orderNumber = orderNumber;
 	}
@@ -516,29 +516,29 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 
 	public static Receipt fromJSON(JSONObject obj) throws JSONException, ParseException
 	{
-		if (obj.has("result") && obj.getString("result") != null)
+		if (obj.has("result") && nullStringToNull(obj, "result") != null)
 		{
 			obj = obj.getJSONObject("result");
 		}
 
 
 		final Cashier cash = new Cashier.Builder().build();
-		cash.setId(obj.getString("cashier"));
+		cash.setId(nullStringToNull(obj, "cashier"));
 
 		final CustomerGroup cGrp = new CustomerGroup.Builder().build();
-		cGrp.setId(obj.getString("customerGroup"));
+		cGrp.setId(nullStringToNull(obj, "customerGroup"));
 
 		Customer cust = null;
 		if (!obj.isNull("customer"))
 		{
 			cust = new Customer.Builder().build();
-			cust.setId(obj.getString("customer"));
-			cust.setNumber(obj.getString("customerNr"));
-			cust.setZipCode((obj.getString("customerZip").equalsIgnoreCase("null") ? null
-				: obj.getString("customerZip")));
+			cust.setId(nullStringToNull(obj, "customer"));
+			cust.setNumber(nullStringToNull(obj, "customerNr"));
+			cust.setZipCode((nullStringToNull(obj, "customerZip").equalsIgnoreCase("null") ? null
+				: nullStringToNull(obj, "customerZip")));
 		}
 
-		final Receipt rec = new Receipt.Builder().number(obj.getString("number"))
+		final Receipt rec = new Receipt.Builder().number(nullStringToNull(obj, "number"))
 			.deleted(obj.getBoolean("deleted"))
 			.revision(obj.getLong("revision"))
 			.cashier(cash)
@@ -546,7 +546,7 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 			.customer(cust)
 			.receiptDiscountGrossAmount(prepareBigDecimal(obj, "receiptDiscountGrossAmount"))
 			.voided(obj.getBoolean("voided"))
-			.id(obj.getString("uuid"))
+			.id(nullStringToNull(obj, "uuid"))
 			.grossTotalAmount(prepareBigDecimal(obj, "grossTotalAmount"))
 			.netTotalAmount(prepareBigDecimal(obj, "netTotalAmount"))
 			.taxAmount(prepareBigDecimal(obj, "taxAmount"))
@@ -558,7 +558,8 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 			.creatTime(prepareDate(obj, "createTime"))
 			.modifiedTime(prepareDate(obj, "modifiedTime"))
 			.finishTime(prepareDate(obj, "finishTime"))
-			.costCenter(obj.getString("costCenter"))
+			.costCenter(nullStringToNull(obj, "costCenter"))
+			.orderNumber(nullStringToNull(obj, "orderNumber"))
 			.build();
 
 		return rec;

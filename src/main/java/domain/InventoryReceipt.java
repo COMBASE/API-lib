@@ -8,30 +8,16 @@ import org.codehaus.jettison.json.JSONObject;
 
 public class InventoryReceipt extends AbstractNumberApiObject<InventoryReceipt>
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 2039817144646051158L;
+	public static class Builder extends Init<Builder>
+	{
 
-	private Date bookingTime;
+		@Override
+		protected Builder self()
+		{
+			return this;
+		}
 
-	private Cashier cashier;
-
-	private Date createTime;
-
-	private String description;
-
-	private Date finishTime;
-
-	private Date modifiedTime;
-
-	private POS pos;
-
-	private OrganizationalUnit organizationalUnit;
-
-	private String user;
-
-	private Inventory inventory;
+	}
 
 	protected static abstract class Init<T extends Init<T>> extends AbstractNumberApiObject.Init<T>
 	{
@@ -61,6 +47,12 @@ public class InventoryReceipt extends AbstractNumberApiObject<InventoryReceipt>
 			return self();
 		}
 
+		@Override
+		public InventoryReceipt build()
+		{
+			return new InventoryReceipt(this);
+		}
+
 		public T cashier(final Cashier value)
 		{
 			cashier = value;
@@ -85,15 +77,15 @@ public class InventoryReceipt extends AbstractNumberApiObject<InventoryReceipt>
 			return self();
 		}
 
-		public T modifiedTime(final Date value)
+		public T inventory(final Inventory value)
 		{
-			modifiedTime = value;
+			inventory = value;
 			return self();
 		}
 
-		public T pos(final POS value)
+		public T modifiedTime(final Date value)
 		{
-			pos = value;
+			modifiedTime = value;
 			return self();
 		}
 
@@ -103,35 +95,43 @@ public class InventoryReceipt extends AbstractNumberApiObject<InventoryReceipt>
 			return self();
 		}
 
+		public T pos(final POS value)
+		{
+			pos = value;
+			return self();
+		}
+
 		public T user(final String value)
 		{
 			user = value;
 			return self();
 		}
-
-		public T inventory(final Inventory value)
-		{
-			inventory = value;
-			return self();
-		}
-
-		@Override
-		public InventoryReceipt build()
-		{
-			return new InventoryReceipt(this);
-		}
 	}
 
-	public static class Builder extends Init<Builder>
-	{
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 2039817144646051158L;
 
-		@Override
-		protected Builder self()
-		{
-			return this;
-		}
+	private Date bookingTime;
 
-	}
+	private Cashier cashier;
+
+	private Date createTime;
+
+	private String description;
+
+	private Date finishTime;
+
+	private Date modifiedTime;
+
+	private POS pos;
+
+	private OrganizationalUnit organizationalUnit;
+
+	private String user;
+
+	private Inventory inventory;
 
 	public InventoryReceipt(final Init<?> init)
 	{
@@ -158,14 +158,16 @@ public class InventoryReceipt extends AbstractNumberApiObject<InventoryReceipt>
 		this.inventory = init.inventory;
 	}
 
+	@Override
+	public boolean equals(final Object obj)
+	{
+
+		return obj.hashCode() == this.hashCode();
+	}
+
 	public Date getBookingTime()
 	{
 		return bookingTime;
-	}
-
-	public void setBookingTime(final Date bookingTime)
-	{
-		this.bookingTime = bookingTime;
 	}
 
 	public Cashier getCashier()
@@ -173,19 +175,9 @@ public class InventoryReceipt extends AbstractNumberApiObject<InventoryReceipt>
 		return cashier;
 	}
 
-	public void setCashier(final Cashier cashier)
-	{
-		this.cashier = cashier;
-	}
-
 	public Date getCreateTime()
 	{
 		return createTime;
-	}
-
-	public void setCreateTime(final Date createTime)
-	{
-		this.createTime = createTime;
 	}
 
 	public String getDescription()
@@ -193,59 +185,9 @@ public class InventoryReceipt extends AbstractNumberApiObject<InventoryReceipt>
 		return description;
 	}
 
-	public void setDescription(final String description)
-	{
-		this.description = description;
-	}
-
 	public Date getFinishTime()
 	{
 		return finishTime;
-	}
-
-	public void setFinishTime(final Date finishTime)
-	{
-		this.finishTime = finishTime;
-	}
-
-	public Date getModifiedTime()
-	{
-		return modifiedTime;
-	}
-
-	public void setModifiedTime(final Date modifiedTime)
-	{
-		this.modifiedTime = modifiedTime;
-	}
-
-	public POS getPos()
-	{
-		return pos;
-	}
-
-	public void setPos(final POS pos)
-	{
-		this.pos = pos;
-	}
-
-	public OrganizationalUnit getOrganizationalUnit()
-	{
-		return organizationalUnit;
-	}
-
-	public void setOrganizationalUnit(final OrganizationalUnit organizationalUnit)
-	{
-		this.organizationalUnit = organizationalUnit;
-	}
-
-	public String getUser()
-	{
-		return user;
-	}
-
-	public void setUser(final String user)
-	{
-		this.user = user;
 	}
 
 	public Inventory getInventory()
@@ -253,16 +195,24 @@ public class InventoryReceipt extends AbstractNumberApiObject<InventoryReceipt>
 		return inventory;
 	}
 
-	public void setInventory(final Inventory inventory)
+	public Date getModifiedTime()
 	{
-		this.inventory = inventory;
+		return modifiedTime;
 	}
 
-	@Override
-	public boolean equals(final Object obj)
+	public OrganizationalUnit getOrganizationalUnit()
 	{
+		return organizationalUnit;
+	}
 
-		return obj.hashCode() == this.hashCode();
+	public POS getPos()
+	{
+		return pos;
+	}
+
+	public String getUser()
+	{
+		return user;
 	}
 
 	@Override
@@ -287,6 +237,56 @@ public class InventoryReceipt extends AbstractNumberApiObject<InventoryReceipt>
 		return result;
 	}
 
+	public void setBookingTime(final Date bookingTime)
+	{
+		this.bookingTime = bookingTime;
+	}
+
+	public void setCashier(final Cashier cashier)
+	{
+		this.cashier = cashier;
+	}
+
+	public void setCreateTime(final Date createTime)
+	{
+		this.createTime = createTime;
+	}
+
+	public void setDescription(final String description)
+	{
+		this.description = description;
+	}
+
+	public void setFinishTime(final Date finishTime)
+	{
+		this.finishTime = finishTime;
+	}
+
+	public void setInventory(final Inventory inventory)
+	{
+		this.inventory = inventory;
+	}
+
+	public void setModifiedTime(final Date modifiedTime)
+	{
+		this.modifiedTime = modifiedTime;
+	}
+
+	public void setOrganizationalUnit(final OrganizationalUnit organizationalUnit)
+	{
+		this.organizationalUnit = organizationalUnit;
+	}
+
+	public void setPos(final POS pos)
+	{
+		this.pos = pos;
+	}
+
+	public void setUser(final String user)
+	{
+		this.user = user;
+	}
+
 	@Override
 	public JSONObject toJSON() throws JSONException
 	{
@@ -294,55 +294,74 @@ public class InventoryReceipt extends AbstractNumberApiObject<InventoryReceipt>
 		appendJSON(obj);
 
 		if (bookingTime != null)
+		{
 			obj.put("bookingTime", inputDf.format(bookingTime));
+		}
 
 		if (cashier != null)
+		{
 			obj.put("cashier", cashier.getId());
+		}
 
 		if (createTime != null)
+		{
 			obj.put("createTime", inputDf.format(createTime));
+		}
 
 		obj.put("description", description);
 
 		if (finishTime != null)
+		{
 			obj.put("finishTime", inputDf.format(finishTime));
+		}
 
 		if (modifiedTime != null)
+		{
 			obj.put("modifiedTime", inputDf.format(modifiedTime));
+		}
 
 		if (pos != null)
+		{
 			obj.put("pos", pos.getId());
+		}
 
 		if (organizationalUnit != null)
+		{
 			obj.put("organizationalUnit", organizationalUnit.getId());
+		}
 
 		obj.put("user", user);
 
 		if (inventory != null)
+		{
 			obj.put("inventory", inventory.getId());
+		}
 
 		return obj;
 	}
 
 	public static InventoryReceipt fromJSON(JSONObject obj) throws JSONException, ParseException
 	{
-		if (obj.has("result") && obj.getString("result") != null)
+		if (obj.has("result") && nullStringToNull(obj, "result") != null)
+		{
 			obj = obj.getJSONObject("result");
+		}
 
-		final Cashier cashier = new Cashier.Builder().id(obj.getString("cashier")).build();
+		final Cashier cashier = new Cashier.Builder().id(nullStringToNull(obj, "cashier")).build();
 
 		final OrganizationalUnit organizationalUnit = new OrganizationalUnit.Builder().id(
-			obj.getString("organizationalUnit")).build();
+			nullStringToNull(obj, "organizationalUnit")).build();
 
-		final Inventory inventory = new Inventory.Builder().id(obj.getString("inventory")).build();
+		final Inventory inventory = new Inventory.Builder().id(nullStringToNull(obj, "inventory"))
+			.build();
 
 		final InventoryReceipt inventoryReceipt = new InventoryReceipt.Builder().id(
-			obj.getString("uuid"))
-			.number(obj.getString("number"))
+			nullStringToNull(obj, "uuid"))
+			.number(nullStringToNull(obj, "number"))
 			.bookingTime(prepareDate(obj, "bookingTime"))
 			.cashier(cashier)
 			.createTime(prepareDate(obj, "createTime"))
-			.description(obj.getString("description"))
+			.description(nullStringToNull(obj, "description"))
 			.finishTime(prepareDate(obj, "finishTime"))
 			.organizationalUnit(organizationalUnit)
 			.inventory(inventory)

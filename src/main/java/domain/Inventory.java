@@ -23,7 +23,7 @@ public class Inventory extends AbstractNameAndNumberApiObject<Inventory>
 	}
 
 	protected static abstract class Init<T extends Init<T>> extends
-		AbstractNameAndNumberApiObject.Init<T>
+	AbstractNameAndNumberApiObject.Init<T>
 	{
 		private User user = null;
 
@@ -250,7 +250,7 @@ public class Inventory extends AbstractNameAndNumberApiObject<Inventory>
 // public static Inventory fromJSON(JSONObject jObj) throws JSONException, ParseException
 // {
 //
-// if (jObj.has("result") && jObj.getString("result").equalsIgnoreCase("null"))
+// if (jObj.has("result") && jnullStringToNull(obj,"result").equalsIgnoreCase("null"))
 // jObj = jObj.getJSONObject("result");
 //
 // final List<OrganizationalUnit> organizationalUnits = new ArrayList<OrganizationalUnit>();
@@ -258,14 +258,14 @@ public class Inventory extends AbstractNameAndNumberApiObject<Inventory>
 //
 // final Inventory inventory = new Inventory.Builder().deleted(jObj.getBoolean("deleted"))
 // .revision(jObj.getLong("revision"))
-// .uuid(jObj.getString("uuid"))
-// .number(jObj.getString("number"))
-// .user(jObj.getString("user"))
-// .description(jObj.getString("description"))
+// .uuid(jnullStringToNull(obj,"uuid"))
+// .number(jnullStringToNull(obj,"number"))
+// .user(jnullStringToNull(obj,"user"))
+// .description(jnullStringToNull(obj,"description"))
 // .organizationalUnits(organizationalUnits)
-// .createTime(inputDf.parse(jObj.getString("createTime")))
-// .processTime(inputDf.parse(jObj.getString("processTime")))
-// .inventoryProcedure(jObj.getString("inventoryProcedure"))
+// .createTime(inputDf.parse(jnullStringToNull(obj,"createTime")))
+// .processTime(inputDf.parse(jnullStringToNull(obj,"processTime")))
+// .inventoryProcedure(jnullStringToNull(obj,"inventoryProcedure"))
 // .build();
 //
 // return inventory;
@@ -562,7 +562,7 @@ public class Inventory extends AbstractNameAndNumberApiObject<Inventory>
 	public static Inventory fromJSON(JSONObject obj) throws JSONException, ParseException
 	{
 
-		if (obj.has("result") && !obj.getString("result").equalsIgnoreCase("null"))
+		if (obj.has("result") && !nullStringToNull(obj, "result").equalsIgnoreCase("null"))
 		{
 			obj = obj.getJSONObject("result");
 		}
@@ -570,19 +570,20 @@ public class Inventory extends AbstractNameAndNumberApiObject<Inventory>
 		final List<OrganizationalUnit> organizationalUnits = new ArrayList<OrganizationalUnit>();
 		obj.getJSONArray("organizationalUnits");
 
-		final User user = new User.Builder().id(obj.getString("user")).build();
+		final User user = new User.Builder().id(nullStringToNull(obj, "user")).build();
 
 		final Inventory inventory = new Inventory.Builder().deleted(obj.getBoolean("deleted"))
 			.revision(obj.getLong("revision"))
-			.id(obj.getString("uuid"))
-			.number(obj.getString("number"))
+			.id(nullStringToNull(obj, "uuid"))
+			.number(nullStringToNull(obj, "number"))
 			.user(user)
-			.description(obj.getString("description"))
+			.description(nullStringToNull(obj, "description"))
 			.organizationalUnits(organizationalUnits)
 			.createTime(prepareDate(obj, "createTime"))
 			.processTime(prepareDate(obj, "processTime"))
-			.inventoryProcedure(InventoryProcedureType.valueOf(obj.getString("inventoryProcedure")))
-			.name(obj.getString("description"))
+			.inventoryProcedure(
+				InventoryProcedureType.valueOf(nullStringToNull(obj, "inventoryProcedure")))
+			.name(nullStringToNull(obj, "description"))
 			.build();
 
 		return inventory;

@@ -18,7 +18,7 @@ public class Cashier extends AbstractNameAndNumberApiObject<Cashier>
 
 	}
 	protected static abstract class Init<T extends Init<T>> extends
-	AbstractNameAndNumberApiObject.Init<T>
+		AbstractNameAndNumberApiObject.Init<T>
 	{
 		private String firstName = null;
 		private String surName = null;
@@ -52,29 +52,12 @@ public class Cashier extends AbstractNameAndNumberApiObject<Cashier>
 
 	private static final long serialVersionUID = -229595034107308709L;
 
-	public static Cashier fromJSON(JSONObject obj) throws JSONException
-	{
-		if (obj.has("result") && obj.getString("result") != null)
-			obj = obj.getJSONObject("result");
-
-
-		final Cashier cash = new Cashier.Builder().deleted(obj.getBoolean("deleted"))
-			.number(obj.getString("number"))
-			.revision(obj.getLong("revision"))
-			.firstName(obj.getString("firstname"))
-			.surName(obj.getString("surname"))
-			.id(obj.getString("uuid"))
-			.loginCode(obj.getString("loginCode"))
-			.build();
-		return cash;
-	}
-
 	private final String firstName;
 
 	private String surName;
 
-
 	private String loginCode;
+
 
 	private Cashier(final Init<?> init)
 	{
@@ -143,5 +126,24 @@ public class Cashier extends AbstractNameAndNumberApiObject<Cashier>
 		super.toString(builder);
 
 		return builder.toString();
+	}
+
+	public static Cashier fromJSON(JSONObject obj) throws JSONException
+	{
+		if (obj.has("result") && nullStringToNull(obj, "result") != null)
+		{
+			obj = obj.getJSONObject("result");
+		}
+
+
+		final Cashier cash = new Cashier.Builder().deleted(obj.getBoolean("deleted"))
+			.number(nullStringToNull(obj, "number"))
+			.revision(obj.getLong("revision"))
+			.firstName(nullStringToNull(obj, "firstname"))
+			.surName(nullStringToNull(obj, "surname"))
+			.id(nullStringToNull(obj, "uuid"))
+			.loginCode(nullStringToNull(obj, "loginCode"))
+			.build();
+		return cash;
 	}
 }

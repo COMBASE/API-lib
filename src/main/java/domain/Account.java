@@ -18,7 +18,7 @@ public class Account extends AbstractNameAndNumberApiObject<Account>
 	}
 
 	protected static abstract class Init<T extends Init<T>> extends
-		AbstractNameAndNumberApiObject.Init<T>
+	AbstractNameAndNumberApiObject.Init<T>
 	{
 		private String type = null;
 
@@ -55,26 +55,9 @@ public class Account extends AbstractNameAndNumberApiObject<Account>
 
 	private static final long serialVersionUID = 4756810592495231540L;
 
-	public static Account fromJSON(JSONObject obj) throws JSONException
-	{
-		if (obj.has("result") && obj.getString("result") != null)
-			obj = obj.getJSONObject("result");
-
-		final Account acc = new Account.Builder().deleted(obj.getBoolean("deleted"))
-			.revision(obj.getLong("revision"))
-			.number(obj.getString("number"))
-			.id(obj.getString("uuid"))
-			.name(obj.getString("name"))
-			.type(obj.getString("type"))
-			.requiresSerialNumber(obj.getBoolean("requiresSerialNumber"))
-			.denominationInput(obj.getBoolean("denominationInput"))
-			.build();
-		return acc;
-	}
+	private String type;
 
 	// private Producer producer;
-
-	private String type;
 
 	private Boolean requiresSerialNumber;
 
@@ -142,11 +125,11 @@ public class Account extends AbstractNameAndNumberApiObject<Account>
 		this.requiresSerialNumber = requiresSerialNumber;
 	}
 
-
 	public void setType(final String type)
 	{
 		this.type = type;
 	}
+
 
 	@Override
 	public JSONObject toJSON() throws JSONException
@@ -159,5 +142,24 @@ public class Account extends AbstractNameAndNumberApiObject<Account>
 
 		return obj;
 
+	}
+
+	public static Account fromJSON(JSONObject obj) throws JSONException
+	{
+		if (obj.has("result") && nullStringToNull(obj, "result") != null)
+		{
+			obj = obj.getJSONObject("result");
+		}
+
+		final Account acc = new Account.Builder().deleted(obj.getBoolean("deleted"))
+			.revision(obj.getLong("revision"))
+			.number(nullStringToNull(obj, "number"))
+			.id(nullStringToNull(obj, "uuid"))
+			.name(nullStringToNull(obj, "name"))
+			.type(nullStringToNull(obj, "type"))
+			.requiresSerialNumber(obj.getBoolean("requiresSerialNumber"))
+			.denominationInput(obj.getBoolean("denominationInput"))
+			.build();
+		return acc;
 	}
 }

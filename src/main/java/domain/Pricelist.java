@@ -17,7 +17,7 @@ public class Pricelist extends AbstractNameAndNumberApiObject<Pricelist>
 
 	}
 	protected static abstract class Init<T extends Init<T>> extends
-	AbstractNameAndNumberApiObject.Init<T>
+		AbstractNameAndNumberApiObject.Init<T>
 	{
 		private String uuidOfCurrency = null;
 		private Boolean netPrices = null;
@@ -126,19 +126,19 @@ public class Pricelist extends AbstractNameAndNumberApiObject<Pricelist>
 
 	public static Pricelist fromJSON(JSONObject obj) throws JSONException
 	{
-		if (obj.has("result") && obj.getString("result") != null)
+		if (obj.has("result") && nullStringToNull(obj, "result") != null)
 		{
 			obj = obj.getJSONObject("result");
 		}
 
-		final Pricelist priceList = new Pricelist.Builder().name(obj.getString("name"))
-			.uuidOfCurrency(obj.getString("currency"))
+		final Pricelist priceList = new Pricelist.Builder().name(nullStringToNull(obj, "name"))
+			.uuidOfCurrency(nullStringToNull(obj, "currency"))
 			.deleted(obj.getBoolean("deleted"))
-			.id(obj.getString("uuid"))
+			.id(nullStringToNull(obj, "uuid"))
 			.build();
 		if (obj.has("number"))
 		{
-			priceList.setNumber(obj.getString("number"));
+			priceList.setNumber(nullStringToNull(obj, "number"));
 		}
 
 		return priceList;

@@ -20,7 +20,7 @@ public class Supplier extends AbstractNameAndNumberApiObject<Supplier>
 	}
 
 	protected static abstract class Init<T extends Init<T>> extends
-		AbstractNameAndNumberApiObject.Init<T>
+	AbstractNameAndNumberApiObject.Init<T>
 	{
 		private String customerNumber;
 		private String additionalInformation;
@@ -662,7 +662,7 @@ public class Supplier extends AbstractNameAndNumberApiObject<Supplier>
 
 	public static Supplier fromJSON(JSONObject obj) throws JSONException, ParseException
 	{
-		if (obj.has("result") && obj.getString("result") != null)
+		if (obj.has("result") && nullStringToNull(obj, "result") != null)
 		{
 			obj = obj.getJSONObject("result");
 		}
@@ -671,87 +671,87 @@ public class Supplier extends AbstractNameAndNumberApiObject<Supplier>
 
 		if (obj.has("number"))
 		{
-			sup.setNumber(obj.getString("number"));
+			sup.setNumber(nullStringToNull(obj, "number"));
 		}
 
 		if (!obj.isNull("uuid"))
 		{
-			sup.setId(obj.getString("uuid"));
+			sup.setId(nullStringToNull(obj, "uuid"));
 		}
 
 		if (!obj.isNull("customerNumber"))
 		{
-			sup.setCustomerNumber(obj.getString("customerNumber"));
+			sup.setCustomerNumber(nullStringToNull(obj, "customerNumber"));
 		}
 
 		if (!obj.isNull("additionalInformation"))
 		{
-			sup.setAdditionalInformation(obj.getString("additionalInformation"));
+			sup.setAdditionalInformation(nullStringToNull(obj, "additionalInformation"));
 		}
 
 		if (!obj.isNull("contactPersonSalutation"))
 		{
-			sup.setContactPersonSalutation(obj.getString("contactPersonSalutation"));
+			sup.setContactPersonSalutation(nullStringToNull(obj, "contactPersonSalutation"));
 		}
 
 		if (!obj.isNull("contactPersonFirstname"))
 		{
-			sup.setContactPersonFirstname(obj.getString("contactPersonFirstname"));
+			sup.setContactPersonFirstname(nullStringToNull(obj, "contactPersonFirstname"));
 		}
 
 		if (!obj.isNull("contactPersonSurname"))
 		{
-			sup.setContactPersonSurname(obj.getString("contactPersonSurname"));
+			sup.setContactPersonSurname(nullStringToNull(obj, "contactPersonSurname"));
 		}
 
 		if (!obj.isNull("contactPersonEmail"))
 		{
-			sup.setContactPersonEmail(obj.getString("contactPersonEmail"));
+			sup.setContactPersonEmail(nullStringToNull(obj, "contactPersonEmail"));
 		}
 
 		if (!obj.isNull("contactPersonPhone"))
 		{
-			sup.setContactPersonPhone(obj.getString("contactPersonPhone"));
+			sup.setContactPersonPhone(nullStringToNull(obj, "contactPersonPhone"));
 		}
 
 		if (!obj.isNull("contactPersonMobile"))
 		{
-			sup.setContactPersonMobile(obj.getString("contactPersonMobile"));
+			sup.setContactPersonMobile(nullStringToNull(obj, "contactPersonMobile"));
 		}
 
 		if (!obj.isNull("contactPersonTelefax"))
 		{
-			sup.setContactPersonTelefax(obj.getString("contactPersonTelefax"));
+			sup.setContactPersonTelefax(nullStringToNull(obj, "contactPersonTelefax"));
 		}
 
 		if (!obj.isNull("contactPhone"))
 		{
-			sup.setContactPhone(obj.getString("contactPhone"));
+			sup.setContactPhone(nullStringToNull(obj, "contactPhone"));
 		}
 
 		if (!obj.isNull("contactTelefax"))
 		{
-			sup.setContactTelefax(obj.getString("contactTelefax"));
+			sup.setContactTelefax(nullStringToNull(obj, "contactTelefax"));
 		}
 
 		if (!obj.isNull("contactEmail"))
 		{
-			sup.setContactEmail(obj.getString("contactEmail"));
+			sup.setContactEmail(nullStringToNull(obj, "contactEmail"));
 		}
 
 		if (!obj.isNull("contactWebsite"))
 		{
-			sup.setContactWebsite(obj.getString("contactWebsite"));
+			sup.setContactWebsite(nullStringToNull(obj, "contactWebsite"));
 		}
 
 		if (!obj.isNull("orderPhone"))
 		{
-			sup.setOrderPhone(obj.getString("orderPhone"));
+			sup.setOrderPhone(nullStringToNull(obj, "orderPhone"));
 		}
 
 		if (!obj.isNull("orderEmail"))
 		{
-			sup.setOrderEmail(obj.getString("orderEmail"));
+			sup.setOrderEmail(nullStringToNull(obj, "orderEmail"));
 		}
 
 		if (!obj.isNull("orderWeekdays"))
@@ -786,48 +786,48 @@ public class Supplier extends AbstractNameAndNumberApiObject<Supplier>
 
 		if (!obj.isNull("shipper"))
 		{
-			sup.setShipper(obj.getString("shipper"));
+			sup.setShipper(nullStringToNull(obj, "shipper"));
 		}
 
 		if (!obj.isNull("paymentCurrency"))
 		{
-			sup.setPaymentCurrency(new Currency.Builder().id(obj.getString("paymentCurrency"))
-				.build());
+			sup.setPaymentCurrency(new Currency.Builder().id(
+				nullStringToNull(obj, "paymentCurrency")).build());
 		}
 
 		if (!obj.isNull("paymentMethod"))
 		{
-			sup.setPaymentMethod(obj.getString("paymentMethod"));
+			sup.setPaymentMethod(nullStringToNull(obj, "paymentMethod"));
 		}
 
 		if (!obj.isNull("bank"))
 		{
-			sup.setBank(obj.getString("bank"));
+			sup.setBank(nullStringToNull(obj, "bank"));
 		}
 
 		if (!obj.isNull("rountingCode"))
 		{
-			sup.setRountingCode(obj.getString("rountingCode"));
+			sup.setRountingCode(nullStringToNull(obj, "rountingCode"));
 		}
 
 		if (!obj.isNull("bic"))
 		{
-			sup.setBic(obj.getString("bic"));
+			sup.setBic(nullStringToNull(obj, "bic"));
 		}
 
 		if (!obj.isNull("accountNumber"))
 		{
-			sup.setAccountNumber(obj.getString("accountNumber"));
+			sup.setAccountNumber(nullStringToNull(obj, "accountNumber"));
 		}
 
 		if (!obj.isNull("iban"))
 		{
-			sup.setIban(obj.getString("iban"));
+			sup.setIban(nullStringToNull(obj, "iban"));
 		}
 
 		if (!obj.isNull("creditorIdentifier"))
 		{
-			sup.setCreditorIdentifier(obj.getString("creditorIdentifier"));
+			sup.setCreditorIdentifier(nullStringToNull(obj, "creditorIdentifier"));
 		}
 
 		return sup;

@@ -98,7 +98,9 @@ public class User extends AbstractNumberApiObject<User>
 		public T orgs(final Collection<OrganizationalUnit> values)
 		{
 			if (orgs == null)
+			{
 				orgs = new ArrayList<OrganizationalUnit>();
+			}
 			orgs.addAll(values);
 			return self();
 		}
@@ -118,7 +120,9 @@ public class User extends AbstractNumberApiObject<User>
 		public T permissions(final Collection<UserPermissions> value)
 		{
 			if (permissions == null)
+			{
 				permissions = new ArrayList<UserPermissions>();
+			}
 			permissions.addAll(value);
 			return self();
 		}
@@ -145,51 +149,6 @@ public class User extends AbstractNumberApiObject<User>
 
 	private static final long serialVersionUID = 6155723487145223684L;
 
-	public static User fromJSON(final JSONObject obj) throws JSONException, ParseException
-	{
-		final Collection<OrganizationalUnit> organizationalUnits = new ArrayList<OrganizationalUnit>();
-		if (!obj.isNull("orgs"))
-		{
-			final JSONArray jArray = obj.getJSONArray("orgs");
-			for (int i = 0; i < jArray.length(); i++)
-			{
-				final String orgId = jArray.getString(i);
-				final OrganizationalUnit organizationalUnit = new OrganizationalUnit.Builder().id(
-					orgId).build();
-				organizationalUnits.add(organizationalUnit);
-			}
-		}
-
-		final Collection<UserPermissions> permissions = new ArrayList<UserPermissions>();
-		if (obj.isNull("permissions"))
-		{
-			final JSONArray jsonArray = obj.getJSONArray("permissions");
-			for (int i = 0; i < jsonArray.length(); i++)
-			{
-				final String permissionString = jsonArray.getString(i);
-				final UserPermissions permission = UserPermissions.valueOf(permissionString);
-				permissions.add(permission);
-			}
-		}
-
-// final OrganizationalUnit selectedOrg = new OrganizationalUnit.Builder().id(
-// obj.getString("selectedOrg")).build();
-
-		final User user = new User.Builder().created(inputDf.parse(obj.getString("created")))
-			.deleted(obj.getBoolean("deleted"))
-			.email(obj.getString("email"))
-			.firstname(obj.getString("firstname"))
-			.id(obj.getString("uuid"))
-			.number(obj.getString("number"))
-			.orgs(organizationalUnits)
-			.permissions(permissions)
-			.revision(obj.getLong("revision"))
-			.surname(obj.getString("surname"))
-			.build();
-
-		return user;
-	}
-
 	private Date created;
 
 	private String email;
@@ -202,13 +161,13 @@ public class User extends AbstractNumberApiObject<User>
 
 	private List<OrganizationalUnit> orgs = new ArrayList<OrganizationalUnit>();
 
-	// private final Set<LoginTicketReadable> loginTickets = new TreeSet<LoginTicketReadable>();
-
 	private String passwordHash;
 
-	// private UserRoleReadable role;
+	// private final Set<LoginTicketReadable> loginTickets = new TreeSet<LoginTicketReadable>();
 
 	private String passwordSalt;
+
+	// private UserRoleReadable role;
 
 	private List<UserPermissions> permissions = new ArrayList<UserPermissions>();
 
@@ -217,7 +176,6 @@ public class User extends AbstractNumberApiObject<User>
 	private String locale;
 
 	private OrganizationalUnit selectedOrg;
-
 
 	private User(final Init<?> init)
 	{
@@ -252,6 +210,7 @@ public class User extends AbstractNumberApiObject<User>
 		this.selectedOrg = init.selectedOrg;
 
 	}
+
 
 	@Override
 	public boolean equals(final Object obj)
@@ -416,7 +375,9 @@ public class User extends AbstractNumberApiObject<User>
 		appendJSON(obj);
 
 		if (created != null)
+		{
 			obj.put("created", inputDf.format(created));
+		}
 
 		obj.put("email", email);
 
@@ -432,7 +393,9 @@ public class User extends AbstractNumberApiObject<User>
 			for (final OrganizationalUnit organizationalUnit : orgs)
 			{
 				if (organizationalUnit != null && organizationalUnit.getId() != null)
+				{
 					OrganizationalUnitIDs.add(organizationalUnit.getId());
+				}
 			}
 			obj.put("orgs", orgs);
 		}
@@ -456,9 +419,57 @@ public class User extends AbstractNumberApiObject<User>
 		obj.put("locale", locale);
 
 		if (selectedOrg != null)
+		{
 			obj.put("selectedOrg", selectedOrg.getId());
+		}
 
 		return obj;
+	}
+
+	public static User fromJSON(final JSONObject obj) throws JSONException, ParseException
+	{
+		final Collection<OrganizationalUnit> organizationalUnits = new ArrayList<OrganizationalUnit>();
+		if (!obj.isNull("orgs"))
+		{
+			final JSONArray jArray = obj.getJSONArray("orgs");
+			for (int i = 0; i < jArray.length(); i++)
+			{
+				final String orgId = jArray.getString(i);
+				final OrganizationalUnit organizationalUnit = new OrganizationalUnit.Builder().id(
+					orgId).build();
+				organizationalUnits.add(organizationalUnit);
+			}
+		}
+
+		final Collection<UserPermissions> permissions = new ArrayList<UserPermissions>();
+		if (obj.isNull("permissions"))
+		{
+			final JSONArray jsonArray = obj.getJSONArray("permissions");
+			for (int i = 0; i < jsonArray.length(); i++)
+			{
+				final String permissionString = jsonArray.getString(i);
+				final UserPermissions permission = UserPermissions.valueOf(permissionString);
+				permissions.add(permission);
+			}
+		}
+
+// final OrganizationalUnit selectedOrg = new OrganizationalUnit.Builder().id(
+// nullStringToNull(obj,"selectedOrg")).build();
+
+		final User user = new User.Builder().created(
+			inputDf.parse(nullStringToNull(obj, "created")))
+			.deleted(obj.getBoolean("deleted"))
+			.email(nullStringToNull(obj, "email"))
+			.firstname(nullStringToNull(obj, "firstname"))
+			.id(nullStringToNull(obj, "uuid"))
+			.number(nullStringToNull(obj, "number"))
+			.orgs(organizationalUnits)
+			.permissions(permissions)
+			.revision(obj.getLong("revision"))
+			.surname(nullStringToNull(obj, "surname"))
+			.build();
+
+		return user;
 	}
 
 }

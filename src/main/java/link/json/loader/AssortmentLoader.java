@@ -27,7 +27,7 @@ public class AssortmentLoader extends AbstractHasNameJsonLoader<Assortment>
 	}
 
 	@Override
-	public Assortment fromJSON(final JSONObject obj) throws JSONException
+	public Assortment fromJSON(final JSONObject obj) throws JSONException, ParseException
 	{
 		final Assortment assortment = Assortment.fromJSON(obj);
 
@@ -36,7 +36,7 @@ public class AssortmentLoader extends AbstractHasNameJsonLoader<Assortment>
 
 	@Override
 	public Assortment postAndResolve(final Assortment obj) throws JSONException, ParseException,
-		KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException
+	KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException
 	{
 		LOGGER.debug(super.getDataType() + ": Nothing to resolve and to pre-post");
 

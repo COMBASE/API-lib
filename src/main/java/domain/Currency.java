@@ -6,46 +6,6 @@ import org.codehaus.jettison.json.JSONObject;
 
 public class Currency extends AbstractNameAndNumberApiObject<Currency>
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -4139497347198731346L;
-	private String symbol;
-	private String key;
-	private String centName;
-
-	protected static abstract class Init<T extends Init<T>> extends
-		AbstractNameAndNumberApiObject.Init<T>
-	{
-		private String symbol = null;
-		private String key = null;
-		private String centName = null;
-
-		public T symbol(final String value)
-		{
-			symbol = value;
-			return self();
-		}
-
-		public T key(final String value)
-		{
-			key = value;
-			return self();
-		}
-
-		public T centName(final String value)
-		{
-			centName = value;
-			return self();
-		}
-
-		@Override
-		public Currency build()
-		{
-			return new Currency(this);
-		}
-	}
-
 	public static class Builder extends Init<Builder>
 	{
 
@@ -56,6 +16,47 @@ public class Currency extends AbstractNameAndNumberApiObject<Currency>
 		}
 
 	}
+	protected static abstract class Init<T extends Init<T>> extends
+	AbstractNameAndNumberApiObject.Init<T>
+	{
+		private String symbol = null;
+		private String key = null;
+		private String centName = null;
+
+		@Override
+		public Currency build()
+		{
+			return new Currency(this);
+		}
+
+		public T centName(final String value)
+		{
+			centName = value;
+			return self();
+		}
+
+		public T key(final String value)
+		{
+			key = value;
+			return self();
+		}
+
+		public T symbol(final String value)
+		{
+			symbol = value;
+			return self();
+		}
+	}
+
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = -4139497347198731346L;
+	private String symbol;
+
+	private String key;
+
+	private String centName;
 
 	private Currency(final Init<?> init)
 	{
@@ -83,38 +84,25 @@ public class Currency extends AbstractNameAndNumberApiObject<Currency>
 //
 // public static Currency fromJSON(JSONObject obj) throws JSONException
 // {
-// if (obj.has("result") && obj.getString("result") != null)
+// if (obj.has("result") && nullStringToNull(obj,"result") != null)
 // obj = obj.getJSONObject("result");
-// final Currency cur = new Currency.Builder(obj.getString("name")).deleted(
+// final Currency cur = new Currency.Builder(nullStringToNull(obj,"name")).deleted(
 // obj.getBoolean("deleted"))
-// .revision(obj.getString("revision"))
-// .uuid(obj.getString("uuid"))
-// .number(obj.getString("number"))
-// .symbol(obj.getString("symbol"))
-// .key(obj.getString("key"))
-// .centName(obj.getString("centName"))
+// .revision(nullStringToNull(obj,"revision"))
+// .uuid(nullStringToNull(obj,"uuid"))
+// .number(nullStringToNull(obj,"number"))
+// .symbol(nullStringToNull(obj,"symbol"))
+// .key(nullStringToNull(obj,"key"))
+// .centName(nullStringToNull(obj,"centName"))
 // .build();
 // return cur;
 // }
 
-	public String getSymbol()
+	@Override
+	public boolean equals(final Object obj)
 	{
-		return symbol;
-	}
 
-	public void setSymbol(final String symbol)
-	{
-		this.symbol = symbol;
-	}
-
-	public String getKey()
-	{
-		return key;
-	}
-
-	public void setKey(final String key)
-	{
-		this.key = key;
+		return obj.hashCode() == this.hashCode();
 	}
 
 	public String getCentName()
@@ -122,16 +110,14 @@ public class Currency extends AbstractNameAndNumberApiObject<Currency>
 		return centName;
 	}
 
-	public void setCentName(final String centName)
+	public String getKey()
 	{
-		this.centName = centName;
+		return key;
 	}
 
-	@Override
-	public boolean equals(final Object obj)
+	public String getSymbol()
 	{
-
-		return obj.hashCode() == this.hashCode();
+		return symbol;
 	}
 
 	@Override
@@ -145,6 +131,21 @@ public class Currency extends AbstractNameAndNumberApiObject<Currency>
 		result = prime * result + ((this.centName == null) ? 0 : this.centName.hashCode());
 
 		return result;
+	}
+
+	public void setCentName(final String centName)
+	{
+		this.centName = centName;
+	}
+
+	public void setKey(final String key)
+	{
+		this.key = key;
+	}
+
+	public void setSymbol(final String symbol)
+	{
+		this.symbol = symbol;
 	}
 
 	@Override
@@ -162,16 +163,18 @@ public class Currency extends AbstractNameAndNumberApiObject<Currency>
 
 	public static Currency fromJSON(JSONObject obj) throws JSONException
 	{
-		if (obj.has("result") && obj.getString("result") != null)
+		if (obj.has("result") && nullStringToNull(obj, "result") != null)
+		{
 			obj = obj.getJSONObject("result");
-		final Currency cur = new Currency.Builder().name(obj.getString("name"))
+		}
+		final Currency cur = new Currency.Builder().name(nullStringToNull(obj, "name"))
 			.deleted(obj.getBoolean("deleted"))
 			.revision(obj.getLong("revision"))
-			.id(obj.getString("uuid"))
-			.number(obj.getString("number"))
-			.symbol(obj.getString("symbol"))
-			.key(obj.getString("key"))
-			.centName(obj.getString("centName"))
+			.id(nullStringToNull(obj, "uuid"))
+			.number(nullStringToNull(obj, "number"))
+			.symbol(nullStringToNull(obj, "symbol"))
+			.key(nullStringToNull(obj, "key"))
+			.centName(nullStringToNull(obj, "centName"))
 			.build();
 		return cur;
 	}

@@ -18,7 +18,7 @@ public class TimeTrackingEntities extends AbstractNameAndNumberApiObject<TimeTra
 
 	}
 	protected static abstract class Init<T extends Init<T>> extends
-		AbstractNameAndNumberApiObject.Init<T>
+	AbstractNameAndNumberApiObject.Init<T>
 	{
 		private Boolean paidTime = null;
 
@@ -37,34 +37,20 @@ public class TimeTrackingEntities extends AbstractNameAndNumberApiObject<TimeTra
 
 	private static final long serialVersionUID = -1501561502510061367L;
 
-	public static TimeTrackingEntities fromJSON(JSONObject obj) throws JSONException
-	{
-		if (obj.has("result") && obj.getString("result") != null)
-			obj = obj.getJSONObject("result");
-		final TimeTrackingEntities tTrackE = new TimeTrackingEntities.Builder().name(
-			obj.getString("name"))
-			.deleted(obj.getBoolean("deleted"))
-			.id(obj.getString("uuid"))
-			.number(obj.getString("number"))
-			.paidTime(obj.getBoolean("paidTime"))
-			.build();
-		return tTrackE;
-	}
-
 	// originControlling
 	private Boolean paidTime;
-
-// public boolean post() throws IOException
-// {
-//
-// return CloudLink.getConnector().postData(DataType.timeTrackingEntity, this.toJSON());
-// }
 
 	private TimeTrackingEntities(final Init<?> init)
 	{
 		super(init);
 		paidTime = init.paidTime;
 	}
+
+// public boolean post() throws IOException
+// {
+//
+// return CloudLink.getConnector().postData(DataType.timeTrackingEntity, this.toJSON());
+// }
 
 	@Override
 	public boolean equals(final Object obj)
@@ -114,5 +100,21 @@ public class TimeTrackingEntities extends AbstractNameAndNumberApiObject<TimeTra
 		final StringBuilder builder = new StringBuilder();
 		super.toString(builder);
 		return builder.toString();
+	}
+
+	public static TimeTrackingEntities fromJSON(JSONObject obj) throws JSONException
+	{
+		if (obj.has("result") && nullStringToNull(obj, "result") != null)
+		{
+			obj = obj.getJSONObject("result");
+		}
+		final TimeTrackingEntities tTrackE = new TimeTrackingEntities.Builder().name(
+			nullStringToNull(obj, "name"))
+			.deleted(obj.getBoolean("deleted"))
+			.id(nullStringToNull(obj, "uuid"))
+			.number(nullStringToNull(obj, "number"))
+			.paidTime(obj.getBoolean("paidTime"))
+			.build();
+		return tTrackE;
 	}
 }

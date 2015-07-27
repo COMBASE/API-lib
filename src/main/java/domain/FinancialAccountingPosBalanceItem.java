@@ -161,28 +161,44 @@ public class FinancialAccountingPosBalanceItem
 		this.value = value;
 	}
 
-	public static FinancialAccountingPosBalanceItem fromJSON(final JSONObject jObj)
+
+	public static FinancialAccountingPosBalanceItem fromJSON(final JSONObject obj)
 		throws JSONException, ParseException
 	{
 		final FinancialAccountingPosBalanceItem accountingPosBalanceItem = new FinancialAccountingPosBalanceItem.Builder().costCenter(
-			jObj.getString("costCenter"))
-			.day(prepareDate(jObj, "day"))
-			.revenueAccount(jObj.getString("revenueAccount"))
-			.typeDescription(jObj.getString("typeDescription"))
-			.type(jObj.getString("type"))
-			.taxId(jObj.getString("taxId"))
-			.value(prepareBigDecimal(jObj, "value"))
+			nullStringToNull(obj, "costCenter"))
+			.day(prepareDate(obj, "day"))
+			.revenueAccount(nullStringToNull(obj, "revenueAccount"))
+			.typeDescription(nullStringToNull(obj, "typeDescription"))
+			.type(nullStringToNull(obj, "type"))
+			.taxId(nullStringToNull(obj, "taxId"))
+			.value(prepareBigDecimal(obj, "value"))
 			.build();
 
 		return accountingPosBalanceItem;
+	}
+
+	/**
+	 *
+	 * @param obj
+	 * @param value
+	 * @return
+	 * @throws JSONException
+	 */
+	protected static String nullStringToNull(final JSONObject obj, final String value)
+		throws JSONException
+	{
+		if (obj.getString(value).equalsIgnoreCase("null"))
+			return null;
+		return obj.getString(value);
 	}
 
 	private static BigDecimal prepareBigDecimal(final JSONObject obj, final String bigDecimalString)
 		throws JSONException
 	{
 		if (!obj.isNull(bigDecimalString) &&
-			!obj.getString(bigDecimalString).equalsIgnoreCase("null"))
-			return new BigDecimal(obj.getString(bigDecimalString));
+			!nullStringToNull(obj, bigDecimalString).equalsIgnoreCase("null"))
+			return new BigDecimal(nullStringToNull(obj, bigDecimalString));
 		return null;
 	}
 
@@ -191,8 +207,8 @@ public class FinancialAccountingPosBalanceItem
 	{
 		@SuppressWarnings("unused")
 		Date date = null;
-		if (!obj.isNull(dateString) || !obj.getString(dateString).equalsIgnoreCase("null"))
-			return date = inputDf.parse(obj.getString(dateString));
+		if (!obj.isNull(dateString) || !nullStringToNull(obj, dateString).equalsIgnoreCase("null"))
+			return date = inputDf.parse(nullStringToNull(obj, dateString));
 		return null;
 	}
 

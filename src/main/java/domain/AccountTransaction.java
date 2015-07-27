@@ -268,22 +268,22 @@ public class AccountTransaction extends AbstractApiObject<AccountTransaction>
 
 	public static AccountTransaction fromJSON(JSONObject obj) throws JSONException, ParseException
 	{
-		if (obj.has("result") && obj.getString("result") != null)
+		if (obj.has("result") && nullStringToNull(obj, "result") != null)
 		{
 			obj = obj.getJSONObject("result");
 		}
 
 		final Account account = new Account.Builder().build();
-		account.setId(obj.getString("account"));
+		account.setId(nullStringToNull(obj, "account"));
 
 		final Receipt rec = new Receipt.Builder().build();
-		rec.setId(obj.getString("receipt"));
+		rec.setId(nullStringToNull(obj, "receipt"));
 
 		final Cashier cash = new Cashier.Builder().build();
-		cash.setId(obj.getString("cashier"));
+		cash.setId(nullStringToNull(obj, "cashier"));
 
 		final POS pos = new POS.Builder().build();
-		pos.setId(obj.getString("pos"));
+		pos.setId(nullStringToNull(obj, "pos"));
 
 		List<String> serialNumbers = null;
 		if (!obj.isNull("serialNumbers"))
@@ -306,7 +306,7 @@ public class AccountTransaction extends AbstractApiObject<AccountTransaction>
 		final AccountTransaction accountTransaction = new AccountTransaction.Builder().deleted(
 			obj.getBoolean("deleted"))
 			.revision(obj.getLong("revision"))
-			.id(obj.getString("uuid"))
+			.id(nullStringToNull(obj, "uuid"))
 			.receipt(rec)
 			.cashier(cash)
 			.pos(pos)
@@ -314,7 +314,7 @@ public class AccountTransaction extends AbstractApiObject<AccountTransaction>
 			.amount(prepareBigDecimal(obj, "amount"))
 			.bookingTime(prepareDate(obj, "bookingTime"))
 			.receiptIndex(obj.getInt("receiptIndex"))
-			.description(obj.getString("description"))
+			.description(nullStringToNull(obj, "description"))
 			.serialNumbers(serialNumbers)
 			.build();
 

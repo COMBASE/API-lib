@@ -15,7 +15,7 @@ public class CommodityGroup extends AbstractNameAndNumberApiObject<CommodityGrou
 	}
 
 	protected static abstract class Init<T extends Init<T>> extends
-			AbstractNameAndNumberApiObject.Init<T>
+		AbstractNameAndNumberApiObject.Init<T>
 	{
 		private Boolean hasChildren = null;
 		private String key = null;
@@ -48,25 +48,20 @@ public class CommodityGroup extends AbstractNameAndNumberApiObject<CommodityGrou
 
 	private static final long serialVersionUID = -1157923369749796851L;
 
-	public static CommodityGroup fromJSON(JSONObject obj) throws JSONException
-	{
-		if (obj.has("result") && obj.getString("result") != null)
-			obj = obj.getJSONObject("result");
-		final CommodityGroup grp = new CommodityGroup.Builder().name(obj.getString("name"))
-				.revision(obj.getLong("revision")).deleted(obj.getBoolean("deleted")).build();
-		if (obj.has("number"))
-			grp.setNumber(obj.getString("number"));
-		if (obj.has("uuid"))
-			grp.setId(obj.getString("uuid"));
-
-		return grp;
-	}
-
 	private Boolean hasChildren;
 
 	private String key;
 
 	private CommodityGroup parent;
+
+	private CommodityGroup(final Init<?> init)
+	{
+		super(init);
+		hasChildren = init.hasChildren;
+		key = init.key;
+		parent = init.parent;
+
+	}
 
 	// public JSONObject toJSON()
 	// {
@@ -110,15 +105,6 @@ public class CommodityGroup extends AbstractNameAndNumberApiObject<CommodityGrou
 	// uuid = CloudLink.getUUIDByName(DataType.commodityGroup, name);
 	// return result;
 	// }
-
-	private CommodityGroup(final Init<?> init)
-	{
-		super(init);
-		hasChildren = init.hasChildren;
-		key = init.key;
-		parent = init.parent;
-
-	}
 
 	@Override
 	public boolean equals(final Object obj)
@@ -181,8 +167,32 @@ public class CommodityGroup extends AbstractNameAndNumberApiObject<CommodityGrou
 		obj.put("hasChildren", hasChildren);
 		obj.put("key", key);
 		if (parent != null)
+		{
 			obj.put("parentCommodityGroup", parent.getId());
+		}
 
 		return obj;
+	}
+
+	public static CommodityGroup fromJSON(JSONObject obj) throws JSONException
+	{
+		if (obj.has("result") && nullStringToNull(obj, "result") != null)
+		{
+			obj = obj.getJSONObject("result");
+		}
+		final CommodityGroup grp = new CommodityGroup.Builder().name(nullStringToNull(obj, "name"))
+			.revision(obj.getLong("revision"))
+			.deleted(obj.getBoolean("deleted"))
+			.build();
+		if (obj.has("number"))
+		{
+			grp.setNumber(nullStringToNull(obj, "number"));
+		}
+		if (obj.has("uuid"))
+		{
+			grp.setId(nullStringToNull(obj, "uuid"));
+		}
+
+		return grp;
 	}
 }

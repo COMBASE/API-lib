@@ -278,7 +278,7 @@ public class PosBalance extends AbstractApiObject<PosBalance>
 
 	public static PosBalance fromJSON(JSONObject obj) throws JSONException, ParseException
 	{
-		if (obj.has("result") && obj.getString("result") != null)
+		if (obj.has("result") && nullStringToNull(obj, "result") != null)
 		{
 			obj = obj.getJSONObject("result");
 		}
@@ -299,12 +299,12 @@ public class PosBalance extends AbstractApiObject<PosBalance>
 			}
 		}
 
-		final POS pos = new POS.Builder().id(obj.getString("pos")).build();
-		final Cashier cashier = new Cashier.Builder().id(obj.getString("cashier")).build();
+		final POS pos = new POS.Builder().id(nullStringToNull(obj, "pos")).build();
+		final Cashier cashier = new Cashier.Builder().id(nullStringToNull(obj, "cashier")).build();
 
 		final PosBalance posBalance = new PosBalance.Builder().deleted(obj.getBoolean("deleted"))
 			.revision(obj.getLong("revision"))
-			.id(obj.getString("uuid"))
+			.id(nullStringToNull(obj, "uuid"))
 			.pos(pos)
 			.cashier(cashier)
 			.createTime(prepareDate(obj, "createTime"))

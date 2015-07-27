@@ -519,41 +519,41 @@ public class Sale extends AbstractApiObject<Sale>
 
 	public static Sale fromJSON(JSONObject obj) throws JSONException, ParseException
 	{
-		if (obj.has("result") && obj.getString("result") != null)
+		if (obj.has("result") && nullStringToNull(obj, "result") != null)
 		{
 			obj = obj.getJSONObject("result");
 		}
 
 
 		final Product prod = new Product.Builder().build();
-		prod.setId(obj.getString("article"));
+		prod.setId(nullStringToNull(obj, "article"));
 
 		final Cashier cash = new Cashier.Builder().build();
-		cash.setId(obj.getString("cashier"));
+		cash.setId(nullStringToNull(obj, "cashier"));
 
 		final CommodityGroup grp = new CommodityGroup.Builder().build();
-		grp.setId(obj.getString("commodityGroup"));
+		grp.setId(nullStringToNull(obj, "commodityGroup"));
 
 		final Sector sec = new Sector.Builder().build();
-		sec.setId(obj.getString("sector"));
+		sec.setId(nullStringToNull(obj, "sector"));
 
 		final Receipt rec = new Receipt.Builder().build();
-		rec.setId(obj.getString("receipt"));
+		rec.setId(nullStringToNull(obj, "receipt"));
 
 		final POS pos = new POS.Builder().build();
-		pos.setId(obj.getString("pos"));
+		pos.setId(nullStringToNull(obj, "pos"));
 
 		final Sale sale = new Sale.Builder().deleted(obj.getBoolean("deleted"))
 			.revision(obj.getLong("revision"))
-			.id(obj.getString("uuid"))
+			.id(nullStringToNull(obj, "uuid"))
 			.article(prod)
 			.cashier(cash)
 			.commodityGroup(grp)
 			.bookingTime(prepareDate(obj, "bookingTime"))
-			.description(obj.getString("description"))
-			.infoTexts(obj.getString("infoTexts"))
+			.description(nullStringToNull(obj, "description"))
+			.infoTexts(nullStringToNull(obj, "infoTexts"))
 			.sector(sec)
-			.receiptNumber(obj.getString("receiptNumber"))
+			.receiptNumber(nullStringToNull(obj, "receiptNumber"))
 			.receiptIndex(obj.getInt("receiptIndex"))
 			.quantity(prepareBigDecimal(obj, "quantity"))
 			.receipt(rec)

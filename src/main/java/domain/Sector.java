@@ -10,46 +10,6 @@ import org.codehaus.jettison.json.JSONObject;
 public class Sector extends AbstractNameAndNumberApiObject<Sector>
 {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2798024033200003781L;
-	private List<Tax> taxlist;
-
-	private Sector(final Init<?> init)
-	{
-		super(init);
-		taxlist = init.taxlist;
-	}
-
-	protected static abstract class Init<T extends Init<T>> extends
-		AbstractNameAndNumberApiObject.Init<T>
-	{
-		private List<Tax> taxlist = null;
-
-
-		public T taxlist(final Tax t)
-		{
-			if (taxlist == null)
-				taxlist = new ArrayList<Tax>();
-			if (t != null)
-				taxlist.add(t);
-			return self();
-		}
-
-		public T taxlist(final List<Tax> taxes)
-		{
-			this.taxlist = taxes;
-			return self();
-		}
-
-		@Override
-		public Sector build()
-		{
-			return new Sector(this);
-		}
-	}
-
 	public static class Builder extends Init<Builder>
 	{
 
@@ -59,6 +19,50 @@ public class Sector extends AbstractNameAndNumberApiObject<Sector>
 			return this;
 		}
 
+	}
+	protected static abstract class Init<T extends Init<T>> extends
+	AbstractNameAndNumberApiObject.Init<T>
+	{
+		private List<Tax> taxlist = null;
+
+
+		@Override
+		public Sector build()
+		{
+			return new Sector(this);
+		}
+
+		public T taxlist(final List<Tax> taxes)
+		{
+			this.taxlist = taxes;
+			return self();
+		}
+
+		public T taxlist(final Tax t)
+		{
+			if (taxlist == null)
+			{
+				taxlist = new ArrayList<Tax>();
+			}
+			if (t != null)
+			{
+				taxlist.add(t);
+			}
+			return self();
+		}
+	}
+
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = -2798024033200003781L;
+
+	private List<Tax> taxlist;
+
+	private Sector(final Init<?> init)
+	{
+		super(init);
+		taxlist = init.taxlist;
 	}
 
 // public boolean post() throws ApiNotReachableException, IOException
@@ -79,21 +83,16 @@ public class Sector extends AbstractNameAndNumberApiObject<Sector>
 // return result;
 // }
 
-	public List<Tax> getTaxlist()
-	{
-		return taxlist;
-	}
-
-	public void setTaxlist(final List<Tax> taxlist)
-	{
-		this.taxlist = taxlist;
-	}
-
 	@Override
 	public boolean equals(final Object obj)
 	{
 
 		return obj.hashCode() == this.hashCode();
+	}
+
+	public List<Tax> getTaxlist()
+	{
+		return taxlist;
 	}
 
 	@Override
@@ -105,6 +104,11 @@ public class Sector extends AbstractNameAndNumberApiObject<Sector>
 		result = prime * result + ((this.taxlist == null) ? 0 : this.taxlist.hashCode());
 
 		return result;
+	}
+
+	public void setTaxlist(final List<Tax> taxlist)
+	{
+		this.taxlist = taxlist;
 	}
 
 	@Override
@@ -133,17 +137,19 @@ public class Sector extends AbstractNameAndNumberApiObject<Sector>
 
 	public static Sector fromJSON(JSONObject obj) throws JSONException
 	{
-		if (obj.has("result") && obj.getString("result") != null)
+		if (obj.has("result") && nullStringToNull(obj, "result") != null)
+		{
 			obj = obj.getJSONObject("result");
+		}
 
 		JSONArray jTaxItems = null;
-		
+
 		if (!obj.isNull("items"))
 		{
 			jTaxItems = obj.getJSONArray("items");
 		}
 		Tax tax = null;
-		
+
 		if (jTaxItems != null && jTaxItems.length() != 0)
 		{
 			final JSONObject jTaxItem = jTaxItems.getJSONObject(0);
@@ -151,13 +157,15 @@ public class Sector extends AbstractNameAndNumberApiObject<Sector>
 			tax = new Tax.Builder().id(jTaxItem.getString("tax")).build();
 		}
 
-		final Sector sec = new Sector.Builder().name(obj.getString("name"))
-			.id(obj.getString("uuid"))
+		final Sector sec = new Sector.Builder().name(nullStringToNull(obj, "name"))
+			.id(nullStringToNull(obj, "uuid"))
 			.taxlist(tax)
 			.deleted(obj.getBoolean("deleted"))
 			.build();
 		if (obj.has("number"))
-			sec.setNumber(obj.getString("number"));
+		{
+			sec.setNumber(nullStringToNull(obj, "number"));
+		}
 
 
 		return sec;

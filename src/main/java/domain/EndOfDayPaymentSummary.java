@@ -11,9 +11,29 @@ public class EndOfDayPaymentSummary
 	private BigDecimal actualAmount;
 	private BigDecimal expectedAmount;
 
+	public BigDecimal getActualAmount()
+	{
+		return actualAmount;
+	}
+
+	public BigDecimal getExpectedAmount()
+	{
+		return expectedAmount;
+	}
+
 	public PaymentMethod getPaymentMethods()
 	{
 		return paymentMethods;
+	}
+
+	public void setActualAmount(final BigDecimal actualAmount)
+	{
+		this.actualAmount = actualAmount;
+	}
+
+	public void setExpectedAmount(final BigDecimal expectedAmount)
+	{
+		this.expectedAmount = expectedAmount;
 	}
 
 	public void setPaymentMethods(final PaymentMethod paymentMethods)
@@ -27,7 +47,7 @@ public class EndOfDayPaymentSummary
 		final EndOfDayPaymentSummary paymentSummary = new EndOfDayPaymentSummary();
 
 		final PaymentMethod paymentMethods = new PaymentMethod.Builder().id(
-			obj.getString("paymentMethod")).build();
+			nullStringToNull(obj, "paymentMethod")).build();
 
 		paymentSummary.setPaymentMethods(paymentMethods);
 		// paymentSummary.setActualAmount(new
@@ -38,23 +58,18 @@ public class EndOfDayPaymentSummary
 		return paymentSummary;
 	}
 
-	public BigDecimal getActualAmount()
+	/**
+	 *
+	 * @param obj
+	 * @param value
+	 * @return
+	 * @throws JSONException
+	 */
+	protected static String nullStringToNull(final JSONObject obj, final String value)
+		throws JSONException
 	{
-		return actualAmount;
-	}
-
-	public void setActualAmount(final BigDecimal actualAmount)
-	{
-		this.actualAmount = actualAmount;
-	}
-
-	public BigDecimal getExpectedAmount()
-	{
-		return expectedAmount;
-	}
-
-	public void setExpectedAmount(final BigDecimal expectedAmount)
-	{
-		this.expectedAmount = expectedAmount;
+		if (obj.getString(value).equalsIgnoreCase("null"))
+			return null;
+		return obj.getString(value);
 	}
 }
