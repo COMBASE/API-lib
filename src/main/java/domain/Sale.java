@@ -46,6 +46,7 @@ public class Sale extends AbstractApiObject<Sale>
 		private POS pos = null;
 		private final List<TaxPayments> taxPayments = null;
 		private String revenueAccount = null;
+		private String costCenter = null;
 
 		public T article(final Product prod)
 		{
@@ -83,10 +84,21 @@ public class Sale extends AbstractApiObject<Sale>
 			return self();
 		}
 
+		public T costCenter(final String value)
+		{
+			setCostCenter(value);
+			return self();
+		}
+
 		public T description(final String txt)
 		{
 			description = txt;
 			return self();
+		}
+
+		public String getCostCenter()
+		{
+			return costCenter;
 		}
 
 		public T grossItemPrice(final BigDecimal value)
@@ -167,6 +179,11 @@ public class Sale extends AbstractApiObject<Sale>
 			return self();
 		}
 
+		public void setCostCenter(final String costCenter)
+		{
+			this.costCenter = costCenter;
+		}
+
 		public T taxPayments(final Collection<TaxPayments> coll)
 		{
 			for (final TaxPayments taxPay : coll)
@@ -206,6 +223,7 @@ public class Sale extends AbstractApiObject<Sale>
 	private BigDecimal grossItemPrice;
 	private BigDecimal netItemPrice;
 	private BigDecimal baseItemPrice;
+	private String costCenter;
 
 	private String serialNumber;
 
@@ -236,6 +254,7 @@ public class Sale extends AbstractApiObject<Sale>
 		pos = init.pos;
 		taxPayments = init.taxPayments;
 		revenueAccount = init.revenueAccount;
+		costCenter = init.costCenter;
 	}
 
 // public boolean post() throws ApiNotReachableException, IOException
@@ -282,6 +301,11 @@ public class Sale extends AbstractApiObject<Sale>
 	public CommodityGroup getCommodityGroup()
 	{
 		return this.commodityGroup;
+	}
+
+	public String getCostCenter()
+	{
+		return costCenter;
 	}
 
 	public String getDescription()
@@ -406,6 +430,11 @@ public class Sale extends AbstractApiObject<Sale>
 	public void setCommodityGroup(final CommodityGroup grp)
 	{
 		this.commodityGroup = grp;
+	}
+
+	public void setCostCenter(final String costCenter)
+	{
+		this.costCenter = costCenter;
 	}
 
 	public void setDescription(final String txt)
@@ -562,6 +591,7 @@ public class Sale extends AbstractApiObject<Sale>
 			.baseItemPrice(prepareBigDecimal(obj, "baseItemPrice"))
 			.grossItemPrice(prepareBigDecimal(obj, "grossItemPrice"))
 			.revenueAccount(nullStringToNull(obj, "revenueAccount"))
+			.costCenter(nullStringToNull(obj, "costCenter"))
 			.pos(pos)
 			.build();
 
