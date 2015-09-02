@@ -54,6 +54,7 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 			return new Receipt(this);
 		}
 
+
 		public T cashier(final Cashier cash)
 		{
 			this.cashier = cash;
@@ -562,5 +563,5 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 			.build();
 
 		return rec;
-	}
+	};
 }

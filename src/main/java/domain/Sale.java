@@ -47,6 +47,7 @@ public class Sale extends AbstractApiObject<Sale>
 		private final List<TaxPayments> taxPayments = null;
 		private String revenueAccount = null;
 		private String costCenter = null;
+		private Boolean discountable = null;
 
 		public T article(final Product prod)
 		{
@@ -93,6 +94,12 @@ public class Sale extends AbstractApiObject<Sale>
 		public T description(final String txt)
 		{
 			description = txt;
+			return self();
+		}
+
+		public T discountable(final boolean value)
+		{
+			discountable = value;
 			return self();
 		}
 
@@ -231,6 +238,8 @@ public class Sale extends AbstractApiObject<Sale>
 
 	private String revenueAccount;
 
+	private Boolean discountable;
+
 	private Sale(final Init<?> init)
 	{
 		super(init);
@@ -255,21 +264,8 @@ public class Sale extends AbstractApiObject<Sale>
 		taxPayments = init.taxPayments;
 		revenueAccount = init.revenueAccount;
 		costCenter = init.costCenter;
+		setDiscountable(init.discountable);
 	}
-
-// public boolean post() throws ApiNotReachableException, IOException
-// {
-//
-// if (commodityGroup != null && commodityGroup.getUuid() == null)
-// commodityGroup.post();
-// if (sector != null && sector.getUuid() == null)
-// sector.post();
-// if (cashier != null && cashier.getUuid() == null)
-// cashier.post();
-// if (article != null && article.getUuid() == null)
-// article.post();
-// return CloudLink.getConnector().postData(DataType.sale, this.toJSON());
-// }
 
 	@Override
 	public boolean equals(final Object obj)
@@ -311,6 +307,11 @@ public class Sale extends AbstractApiObject<Sale>
 	public String getDescription()
 	{
 		return this.description;
+	}
+
+	public Boolean getDiscountable()
+	{
+		return discountable;
 	}
 
 	public BigDecimal getGrossItemPrice()
@@ -440,6 +441,11 @@ public class Sale extends AbstractApiObject<Sale>
 	public void setDescription(final String txt)
 	{
 		this.description = txt;
+	}
+
+	public void setDiscountable(final Boolean discountable)
+	{
+		this.discountable = discountable;
 	}
 
 	public void setGrossItemPrice(final BigDecimal grossItemPrice)
@@ -611,5 +617,5 @@ public class Sale extends AbstractApiObject<Sale>
 		}
 
 		return sale;
-	}
+	};
 }
