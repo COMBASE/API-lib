@@ -30,6 +30,7 @@ public class CloudResultIterator implements Iterator<JSONObject>
 	private final AbstractHasIdJsonLoader<?> downloader;
 	private final long revision;
 	private boolean emptyData;
+	private long totalElements;
 
 	/**
 	 * ctor
@@ -128,7 +129,7 @@ public class CloudResultIterator implements Iterator<JSONObject>
 	}
 
 	private void refreshBuffer() throws ApiNotReachableException, JSONException,
-	KoronaCloudAPIErrorMessageException, InvalidTokenException
+		KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		try
 		{
@@ -136,15 +137,28 @@ public class CloudResultIterator implements Iterator<JSONObject>
 		}
 		catch (final KoronaCloudAPIErrorMessageException e)
 		{
-			if (e.getErrorMap().containsKey(
-				ErrorMessages.No_object_found_for_revision.getErrorString()))
+			if (e.getErrorMap()
+				.containsKey(ErrorMessages.No_object_found_for_revision.getErrorString()))
 			{
 				buffer = null;
 			}
 			else
 				throw new KoronaCloudAPIErrorMessageException(e, e.getErrorMap());
 		}
+
+		try
+		{
+			totalElements = downloader.getTotalElements();
+		}
+		catch (final NumberFormatException e)
+		{
+			LOGGER.error("could not parse totalElements");
+		}
+
+		LOGGER.debug("iterator detected " + totalElements + " elements");
+
 		currentBufferIndex = -1;
+
 		if (buffer == null)
 		{
 			emptyData = true;

@@ -1,8 +1,11 @@
 package domain;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -34,6 +37,7 @@ public class Customer extends AbstractNumberApiObject<Customer>
 		private String email = null;
 		private String phone = null;
 		private Date birthday = null;
+		private List<CustomerInformation> informations = null;
 
 		public T addressLine1(final String value)
 		{
@@ -95,6 +99,24 @@ public class Customer extends AbstractNumberApiObject<Customer>
 			return self();
 		}
 
+		public T information(final CustomerInformation value)
+		{
+			if (informations == null)
+			{
+				informations = new ArrayList<>();
+			}
+
+
+			informations.add(value);
+			return self();
+		}
+
+		public T information(final List<CustomerInformation> values)
+		{
+			informations = values;
+			return self();
+		}
+
 		public T lastName(final String value)
 		{
 			lastName = value;
@@ -124,6 +146,49 @@ public class Customer extends AbstractNumberApiObject<Customer>
 	 *
 	 */
 	private static final long serialVersionUID = 2258389891494944765L;
+
+	public static Customer fromJSON(JSONObject obj) throws JSONException, ParseException
+	{
+		if (obj.has("result") && nullStringToNull(obj, "result") != null)
+		{
+			obj = obj.getJSONObject("result");
+		}
+
+		if (nullStringToNull(obj, "information") != null)
+		{
+			final JSONArray jInformations = obj.getJSONArray("information");
+
+			for (int i = 0; i < jInformations.length(); i++)
+			{
+				final JSONObject jInfo = jInformations.getJSONObject(i);
+				final CustomerInformation information = new CustomerInformation(
+					nullStringToNull(jInfo, "text"), nullStringToNull(jInfo, "creatora"),
+					prepareDate(jInfo, "date"));
+			}
+		}
+
+		final Customer cust = new Customer.Builder().id(nullStringToNull(obj, "uuid"))
+			.deleted(obj.getBoolean("deleted"))
+			.revision(obj.getLong("revision"))
+			.number(nullStringToNull(obj, "number"))
+			.firstName(nullStringToNull(obj, "firstName"))
+			.lastName(nullStringToNull(obj, "lastName"))
+			.email(nullStringToNull(obj, "email"))
+			.gender(nullStringToNull(obj, "gender"))
+			.zipCode(nullStringToNull(obj, "zipCode"))
+			.addressLine1(nullStringToNull(obj, "addressLine1"))
+			.city(nullStringToNull(obj, "city"))
+			.state(nullStringToNull(obj, "state"))
+			.country(nullStringToNull(obj, "country"))
+			.phone(nullStringToNull(obj, "phone"))
+			.birthday(prepareDate(obj, "birthday"))
+			.company(nullStringToNull(obj, "company"))
+			.birthday(prepareDate(obj, "birthday"))
+			.build();
+
+		return cust;
+	}
+
 	private CustomerGroup customerGroup;
 	private String company;
 	private String firstName;
@@ -133,12 +198,15 @@ public class Customer extends AbstractNumberApiObject<Customer>
 	private String city;
 	private String zipCode;
 	private String country;
+
 	private String email;
 
 	private String phone;
-
 	private Date birthday;
+
 	private String state;
+
+	private List<CustomerInformation> informations;
 
 	public Customer(final Init<?> init)
 	{
@@ -158,37 +226,6 @@ public class Customer extends AbstractNumberApiObject<Customer>
 		company = init.company;
 		state = init.state;
 	}
-
-// public static Customer fromJSON(JSONObject obj) throws JSONException
-// {
-//
-//
-// }
-//
-// public JSONObject toJSON()
-// {
-// JSONObject obj = new JSONObject();
-// try
-// {
-
-//
-// return obj;
-// }
-// catch ( JSONException e)
-// {
-// e.printStackTrace();
-// return null;
-// }
-// }
-//
-// public boolean post() throws IOException
-// {
-//
-// if (customerGroup != null && customerGroup.getUuid() == null)
-// customerGroup.post();
-//
-// return CloudLink.getConnector().postData(DataType.customer, this.toJSON());
-// }
 
 	@Override
 	public boolean equals(final Object obj)
@@ -240,6 +277,11 @@ public class Customer extends AbstractNumberApiObject<Customer>
 	public String getGender()
 	{
 		return gender;
+	}
+
+	public List<CustomerInformation> getInformations()
+	{
+		return informations;
 	}
 
 	public String getLastName()
@@ -331,6 +373,11 @@ public class Customer extends AbstractNumberApiObject<Customer>
 		this.gender = gender;
 	}
 
+	public void setInformations(final List<CustomerInformation> informations)
+	{
+		this.informations = informations;
+	}
+
 	public void setLastName(final String lastName)
 	{
 		this.lastName = lastName;
@@ -372,34 +419,5 @@ public class Customer extends AbstractNumberApiObject<Customer>
 		obj.put("state", state);
 
 		return obj;
-	}
-
-	public static Customer fromJSON(JSONObject obj) throws JSONException, ParseException
-	{
-		if (obj.has("result") && nullStringToNull(obj, "result") != null)
-		{
-			obj = obj.getJSONObject("result");
-		}
-
-		final Customer cust = new Customer.Builder().id(nullStringToNull(obj, "uuid"))
-			.deleted(obj.getBoolean("deleted"))
-			.revision(obj.getLong("revision"))
-			.number(nullStringToNull(obj, "number"))
-			.firstName(nullStringToNull(obj, "firstName"))
-			.lastName(nullStringToNull(obj, "lastName"))
-			.email(nullStringToNull(obj, "email"))
-			.gender(nullStringToNull(obj, "gender"))
-			.zipCode(nullStringToNull(obj, "zipCode"))
-			.addressLine1(nullStringToNull(obj, "addressLine1"))
-			.city(nullStringToNull(obj, "city"))
-			.state(nullStringToNull(obj, "state"))
-			.country(nullStringToNull(obj, "country"))
-			.phone(nullStringToNull(obj, "phone"))
-			.birthday(prepareDate(obj, "birthday"))
-			.company(nullStringToNull(obj, "company"))
-			.birthday(prepareDate(obj, "birthday"))
-			.build();
-
-		return cust;
 	}
 }

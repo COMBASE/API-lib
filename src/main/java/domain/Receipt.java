@@ -534,8 +534,7 @@ public class Receipt extends AbstractNumberApiObject<Receipt>
 			cust = new Customer.Builder().build();
 			cust.setId(nullStringToNull(obj, "customer"));
 			cust.setNumber(nullStringToNull(obj, "customerNr"));
-			cust.setZipCode((nullStringToNull(obj, "customerZip").equalsIgnoreCase("null") ? null
-				: nullStringToNull(obj, "customerZip")));
+			cust.setZipCode(nullStringToNull(obj, "customerZip"));
 		}
 
 		final Receipt rec = new Receipt.Builder().number(nullStringToNull(obj, "number"))

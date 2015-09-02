@@ -595,16 +595,15 @@ public class Sale extends AbstractApiObject<Sale>
 			.pos(pos)
 			.build();
 
-		JSONArray jTax = new JSONArray();
-		jTax = obj.getJSONArray("taxPayments");
+		final JSONArray jTax = obj.getJSONArray("taxPayments");
 		if (!jTax.isNull(0))
 		{
 			for (int i = 0; i <= jTax.length() - 1; i++)
 			{
-				JSONObject tax = new JSONObject();
-				tax = jTax.getJSONObject(i);
+				final JSONObject tax = jTax.getJSONObject(i);
 				final TaxPayments taxO = new TaxPayments(tax.getString("salesTax"),
-					prepareBigDecimal(tax, "currentTaxRate"), prepareBigDecimal(tax, "amount"));
+					prepareBigDecimal(tax, "currentTaxRate"), prepareBigDecimal(tax, "amount"),
+					prepareBigDecimal(tax, "netAmount"), prepareBigDecimal(tax, "grossAmount"));
 				final List<TaxPayments> taxL = new ArrayList<TaxPayments>();
 				taxL.add(taxO);
 				sale.setTaxPayments(taxL);
