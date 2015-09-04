@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.combase.lib</groupId>
 	<artifactId>CloudApiLib</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>CloudAPIlib</name>
 	<dependencies>
 	

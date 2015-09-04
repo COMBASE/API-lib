@@ -531,6 +531,7 @@ public class Sale extends AbstractApiObject<Sale>
 		obj.put("receiptNumber", receiptNumber);
 		obj.put("receiptIndex", receiptIndex);
 		obj.put("quantity", quantity);
+		obj.put("discountable", discountable);
 
 		if (cashier != null)
 		{
@@ -599,6 +600,7 @@ public class Sale extends AbstractApiObject<Sale>
 			.revenueAccount(nullStringToNull(obj, "revenueAccount"))
 			.costCenter(nullStringToNull(obj, "costCenter"))
 			.pos(pos)
+			.discountable(obj.getBoolean("discountable"))
 			.build();
 
 		final JSONArray jTax = obj.getJSONArray("taxPayments");

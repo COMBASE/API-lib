@@ -2,9 +2,6 @@ package link.json.loader;
 
 import java.text.ParseException;
 
-import link.CloudLink;
-import link.json.AbstractHasNumberJsonLoader;
-
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -17,6 +14,10 @@ import error.ApiNotReachableException;
 import error.ErrorMessages;
 import error.InvalidTokenException;
 import error.KoronaCloudAPIErrorMessageException;
+import link.CloudLink;
+import link.json.AbstractHasNumberJsonLoader;
+
+
 
 public class FullReceiptLoader extends AbstractHasNumberJsonLoader<FullReceipt>
 {
@@ -24,13 +25,16 @@ public class FullReceiptLoader extends AbstractHasNumberJsonLoader<FullReceipt>
 
 	PaymentLoader paymentLoader;
 
+
 	public FullReceiptLoader(final CloudLink cloudLink)
 	{
 		super(DataType.fullReceipt, cloudLink);
 	}
 
+
 	/**
-	 * Downloads all receipt of the particular paymentMethod with customer set only
+	 * Downloads all receipt of the particular paymentMethod with customer set
+	 * only
 	 *
 	 * @param paymentMethodId
 	 * @param revision
@@ -40,21 +44,17 @@ public class FullReceiptLoader extends AbstractHasNumberJsonLoader<FullReceipt>
 	 * @throws InvalidTokenException
 	 * @throws KoronaCloudAPIErrorMessageException
 	 */
-	public JSONArray downloadAllByLimitedRevisionWith(final String paymentMethodId,
-		final long revision, final int limit) throws ApiNotReachableException,
-		InvalidTokenException, KoronaCloudAPIErrorMessageException
+	public JSONArray downloadAllByLimitedRevisionWith(final String paymentMethodId, final long revision, final int limit) throws ApiNotReachableException, InvalidTokenException, KoronaCloudAPIErrorMessageException
 	{
 		try
 		{
-			final String jStr = cloudLink.getPersonalizedJSONPageByOffsetWith(getDataType(),
-				revision, paymentMethodId, limit, 0);
+			final String jStr = cloudLink.getPersonalizedJSONPageByOffsetWith(getDataType(), revision, paymentMethodId, limit, 0);
 			final JSONArray jArray = createJsonArray(jStr);
 			return jArray;
 		}
 		catch (final KoronaCloudAPIErrorMessageException e)
 		{
-			if (e.getErrorMap().containsKey(
-				ErrorMessages.No_object_found_for_revision.getErrorString()))
+			if (e.getErrorMap().containsKey(ErrorMessages.No_object_found_for_revision.getErrorString()))
 			{
 				totalElements = "0";
 				return null;
@@ -64,10 +64,11 @@ public class FullReceiptLoader extends AbstractHasNumberJsonLoader<FullReceipt>
 		}
 	}
 
+
 	/**
-	 * Downloads the next amountPerPage objects from the cloud starting by the next lowest revision
-	 * provided to this method. The Offset is the page controller iterating over pages by
-	 * offset+amountPerPage.
+	 * Downloads the next amountPerPage objects from the cloud starting by the
+	 * next lowest revision provided to this method. The Offset is the page
+	 * controller iterating over pages by offset+amountPerPage.
 	 *
 	 * @param revision
 	 * @param amountPerPage
@@ -77,14 +78,11 @@ public class FullReceiptLoader extends AbstractHasNumberJsonLoader<FullReceipt>
 	 * @throws InvalidTokenException
 	 * @throws KoronaCloudAPIErrorMessageException
 	 */
-	public JSONArray downloadPersonalizedReceiptWith(final long revision,
-		final String paymentMethodUid, final int amountPerPage, int offset)
-		throws ApiNotReachableException, KoronaCloudAPIErrorMessageException, InvalidTokenException
+	public JSONArray downloadPersonalizedReceiptWith(final long revision, final String paymentMethodUid, final int amountPerPage, int offset) throws ApiNotReachableException, KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		try
 		{
-			final String jStr = cloudLink.getPersonalizedJSONPageByOffsetWith(getDataType(),
-				revision, paymentMethodUid, amountPerPage, offset);
+			final String jStr = cloudLink.getPersonalizedJSONPageByOffsetWith(getDataType(), revision, paymentMethodUid, amountPerPage, offset);
 			final JSONArray jArray = createJsonArray(jStr);
 			if (jArray == null)
 				return null;
@@ -94,13 +92,16 @@ public class FullReceiptLoader extends AbstractHasNumberJsonLoader<FullReceipt>
 		}
 		catch (final KoronaCloudAPIErrorMessageException e)
 		{
-			if (e.getErrorMap().containsKey(
-				ErrorMessages.No_object_found_for_revision.getErrorString()))
+			if (e.getErrorMap().containsKey(ErrorMessages.No_object_found_for_revision.getErrorString()))
+			{
+				totalElements = "0";
 				return null;
+			}
 			else
 				throw new KoronaCloudAPIErrorMessageException(e, e.getErrorMap());
 		}
 	}
+
 
 	@Override
 	public FullReceipt fromJSON(final JSONObject obj) throws JSONException, ParseException
@@ -109,9 +110,9 @@ public class FullReceiptLoader extends AbstractHasNumberJsonLoader<FullReceipt>
 		return fullReceipt;
 	}
 
+
 	@Override
-	public FullReceipt postAndResolve(final FullReceipt obj) throws JSONException, ParseException,
-		KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException
+	public FullReceipt postAndResolve(final FullReceipt obj) throws JSONException, ParseException, KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException
 	{
 		if (obj.getAccountTransaction() != null && !obj.getAccountTransaction().isEmpty())
 		{
@@ -130,8 +131,7 @@ public class FullReceiptLoader extends AbstractHasNumberJsonLoader<FullReceipt>
 		}
 		else
 		{
-			LOGGER.debug(super.getDataType() +
-				": No Account Transaction to resolve and to pre-post");
+			LOGGER.debug(super.getDataType() + ": No Account Transaction to resolve and to pre-post");
 		}
 
 		if (obj.getPayment() != null && !obj.getPayment().isEmpty())
@@ -156,6 +156,7 @@ public class FullReceiptLoader extends AbstractHasNumberJsonLoader<FullReceipt>
 
 		return post(obj);
 	}
+
 
 	@Override
 	public JSONObject toJSON(final FullReceipt value) throws JSONException
