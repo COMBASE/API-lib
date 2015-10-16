@@ -12,6 +12,8 @@ import org.codehaus.jettison.json.JSONObject;
 import domain.interfaces.HasId;
 import domain.interfaces.HasJSON;
 
+
+
 public abstract class AbstractApiObject<T extends HasId> implements HasId, Serializable, HasJSON<T>
 {
 
@@ -21,12 +23,14 @@ public abstract class AbstractApiObject<T extends HasId> implements HasId, Seria
 		@Override
 		public abstract AbstractApiObject<?> build();
 
+
 		@Override
 		protected Builder self()
 		{
 			return this;
 		}
 	}
+
 
 	protected static abstract class Init<T extends Init<T>>
 	{
@@ -36,7 +40,9 @@ public abstract class AbstractApiObject<T extends HasId> implements HasId, Seria
 
 		private Boolean deleted;
 
+
 		public abstract AbstractApiObject<?> build();
+
 
 		public T deleted(final Boolean value)
 		{
@@ -44,11 +50,13 @@ public abstract class AbstractApiObject<T extends HasId> implements HasId, Seria
 			return self();
 		}
 
+
 		public T id(final String value)
 		{
 			id = value;
 			return self();
 		}
+
 
 		public T revision(final Long value)
 		{
@@ -56,11 +64,12 @@ public abstract class AbstractApiObject<T extends HasId> implements HasId, Seria
 			return self();
 		}
 
+
 		protected abstract T self();
 	}
 
-	protected static final SimpleDateFormat inputDf = new SimpleDateFormat(
-		"yyyy-MM-dd'T'HH:mm:ssXXX");
+
+	protected static final SimpleDateFormat inputDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 
 	private static final long serialVersionUID = 2033325648556071101L;
 
@@ -70,6 +79,7 @@ public abstract class AbstractApiObject<T extends HasId> implements HasId, Seria
 
 	private Boolean deleted;
 
+
 	public AbstractApiObject(final Init<?> init)
 	{
 		super();
@@ -77,6 +87,7 @@ public abstract class AbstractApiObject<T extends HasId> implements HasId, Seria
 		this.revision = init.revision;
 		this.deleted = init.deleted;
 	}
+
 
 	@Override
 	public JSONObject appendJSON(final JSONObject obj) throws JSONException
@@ -95,11 +106,13 @@ public abstract class AbstractApiObject<T extends HasId> implements HasId, Seria
 		return id;
 	}
 
+
 	@Override
 	public Long getRevision()
 	{
 		return revision;
 	}
+
 
 	@Override
 	public Boolean isDeleted()
@@ -107,11 +120,13 @@ public abstract class AbstractApiObject<T extends HasId> implements HasId, Seria
 		return deleted;
 	}
 
+
 	@Override
 	public void setDeleted(final Boolean deleted)
 	{
 		this.deleted = deleted;
 	}
+
 
 	@Override
 	public void setId(final String id)
@@ -119,13 +134,16 @@ public abstract class AbstractApiObject<T extends HasId> implements HasId, Seria
 		this.id = id;
 	}
 
+
 	@Override
 	public void setRevision(final Long revision)
 	{
 		this.revision = revision;
 	}
 
+
 	public abstract JSONObject toJSON() throws JSONException;
+
 
 	protected int hashCode(int result)
 	{
@@ -136,6 +154,7 @@ public abstract class AbstractApiObject<T extends HasId> implements HasId, Seria
 
 		return result;
 	}
+
 
 	protected StringBuilder toString(final StringBuilder builder)
 	{
@@ -157,42 +176,47 @@ public abstract class AbstractApiObject<T extends HasId> implements HasId, Seria
 		return builder;
 	}
 
+
 	/**
-	 *
 	 * @param obj
 	 * @param value
 	 * @return
 	 * @throws JSONException
 	 */
-	protected static String nullStringToNull(final JSONObject obj, final String value)
-		throws JSONException
+	protected static String nullStringToNull(final JSONObject obj, final String value) throws JSONException
 	{
 		if (!obj.has(value))
+		{
 			return null;
+		}
+		if (obj.getString(value) == null)
+		{
+			return null;
+		}
 		if (obj.getString(value).equalsIgnoreCase("null"))
+		{
 			return null;
+		}
 		return obj.getString(value);
 	}
 
-	protected static BigDecimal prepareBigDecimal(final JSONObject obj,
-		final String bigDecimalString) throws JSONException
+
+	protected static BigDecimal prepareBigDecimal(final JSONObject obj, final String bigDecimalString) throws JSONException
 	{
-		if (!obj.isNull(bigDecimalString) &&
-			!obj.getString(bigDecimalString).equalsIgnoreCase("null"))
+		if (!obj.isNull(bigDecimalString) && !obj.getString(bigDecimalString).equalsIgnoreCase("null"))
 			return new BigDecimal(obj.getString(bigDecimalString));
 		return null;
 	}
 
+
 	/**
-	 *
 	 * @param obj
 	 * @param dateString
 	 * @return
 	 * @throws ParseException
 	 * @throws JSONException
 	 */
-	protected static Date prepareDate(final JSONObject obj, final String dateString)
-		throws ParseException, JSONException
+	protected static Date prepareDate(final JSONObject obj, final String dateString) throws ParseException, JSONException
 	{
 		if (!obj.isNull(dateString) || !obj.getString(dateString).equalsIgnoreCase("null"))
 			return inputDf.parse(obj.getString(dateString));
