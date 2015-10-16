@@ -19,15 +19,15 @@ import link.json.AbstractHasNumberJsonLoader;
 
 public class ReceiptLoader extends AbstractHasNumberJsonLoader<Receipt>
 {
-	CashierLoader cashierLoader;
+	private CashierLoader cashierLoader;
 
-	CustomerLoader customerLoader;
+	private CustomerLoader customerLoader;
 
-	CustomerGroupLoader customerGroupLoader;
+	private CustomerGroupLoader customerGroupLoader;
 
-	OrganizationalUnitLoader organizationalUnitLoader;
+	private OrganizationalUnitLoader organizationalUnitLoader;
 
-	POSLoader posLoader;
+	private POSLoader posLoader;
 
 
 	public ReceiptLoader(final CloudLink cloudLink)
@@ -102,7 +102,9 @@ public class ReceiptLoader extends AbstractHasNumberJsonLoader<Receipt>
 				return null;
 			}
 			else
+			{
 				throw new KoronaCloudAPIErrorMessageException(e, e.getErrorMap());
+			}
 		}
 	}
 
@@ -193,5 +195,4 @@ public class ReceiptLoader extends AbstractHasNumberJsonLoader<Receipt>
 		final JSONObject obj = value.toJSON();
 		return obj;
 	}
-
 }

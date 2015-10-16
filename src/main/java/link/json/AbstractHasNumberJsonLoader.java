@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import link.CloudLink;
-
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -17,20 +15,23 @@ import error.ApiNotReachableException;
 import error.ErrorMessages;
 import error.InvalidTokenException;
 import error.KoronaCloudAPIErrorMessageException;
+import link.CloudLink;
 
-public abstract class AbstractHasNumberJsonLoader<T extends HasId & HasNumber> extends
-AbstractHasIdJsonLoader<T>
+
+
+public abstract class AbstractHasNumberJsonLoader<T extends HasId & HasNumber> extends AbstractHasIdJsonLoader<T>
 {
 
 	private final Map<String, T> numberCache = new HashMap<String, T>();
+
 
 	public AbstractHasNumberJsonLoader(final DataType dataType, final CloudLink cloudLink)
 	{
 		super(dataType, cloudLink);
 	}
 
+
 	/**
-	 *
 	 * @param number
 	 * @return
 	 * @throws ApiNotReachableException
@@ -40,8 +41,7 @@ AbstractHasIdJsonLoader<T>
 	 * @throws InvalidTokenException
 	 * @throws KoronaCloudAPIErrorMessageException
 	 */
-	public T downloadByNumber(final String number) throws ApiNotReachableException, ParseException,
-	KoronaCloudAPIErrorMessageException, InvalidTokenException
+	public T downloadByNumber(final String number) throws ApiNotReachableException, ParseException, KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		final T cachedObject = numberCache.get(number);
 		if (cachedObject != null)
@@ -88,9 +88,9 @@ AbstractHasIdJsonLoader<T>
 		return downloaded;
 	}
 
+
 	@Override
-	public T find(final String reference) throws ApiNotReachableException, ParseException,
-	KoronaCloudAPIErrorMessageException, InvalidTokenException, IllegalArgumentException
+	public T find(final String reference) throws ApiNotReachableException, ParseException, KoronaCloudAPIErrorMessageException, InvalidTokenException, IllegalArgumentException
 	{
 		final T obj = super.find(reference);
 
@@ -112,8 +112,8 @@ AbstractHasIdJsonLoader<T>
 
 		return obj;
 
-
 	}
+
 
 	@Override
 	public T getCachedObject(final T object)
@@ -129,16 +129,17 @@ AbstractHasIdJsonLoader<T>
 		return null;
 	}
 
+
 	@Override
-	public T post(final T obj) throws ApiNotReachableException, JSONException, ParseException,
-	KoronaCloudAPIErrorMessageException, InvalidTokenException
+	public T post(final T obj) throws ApiNotReachableException, JSONException, ParseException, KoronaCloudAPIErrorMessageException, InvalidTokenException
 
 	{
-// if (obj == null || (obj.getNumber() == null && obj.getId() == null))
-// throw new PostWithNoReferenceSetException(null);
-// else
+		// if (obj == null || (obj.getNumber() == null && obj.getId() == null))
+		// throw new PostWithNoReferenceSetException(null);
+		// else
 		return upload(obj);
 	}
+
 
 	@Override
 	public void updateCache(final List<? extends T> objs)
@@ -161,6 +162,7 @@ AbstractHasIdJsonLoader<T>
 		super.updateCache(objs);
 
 	}
+
 
 	@Override
 	public void updateCache(final T obj)

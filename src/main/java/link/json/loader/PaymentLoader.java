@@ -2,9 +2,6 @@ package link.json.loader;
 
 import java.text.ParseException;
 
-import link.CloudLink;
-import link.json.AbstractHasIdJsonLoader;
-
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -13,23 +10,29 @@ import domain.enums.DataType;
 import error.ApiNotReachableException;
 import error.InvalidTokenException;
 import error.KoronaCloudAPIErrorMessageException;
+import link.CloudLink;
+import link.json.AbstractHasIdJsonLoader;
+
+
 
 public class PaymentLoader extends AbstractHasIdJsonLoader<Payment>
 {
-	CurrencyLoader currencyLoader;
+	private CurrencyLoader currencyLoader;
 
-	CashierLoader cashierLoader;
+	private CashierLoader cashierLoader;
 
-	PaymentMethodLoader paymentMethodLoader;
+	private PaymentMethodLoader paymentMethodLoader;
 
-	POSLoader posLoader;
+	private POSLoader posLoader;
 
-	ReceiptLoader receiptLoader;
+	private ReceiptLoader receiptLoader;
+
 
 	public PaymentLoader(final CloudLink cloudLink)
 	{
 		super(DataType.payment, cloudLink);
 	}
+
 
 	@Override
 	public Payment fromJSON(final JSONObject obj) throws JSONException, ParseException
@@ -38,9 +41,9 @@ public class PaymentLoader extends AbstractHasIdJsonLoader<Payment>
 		return payment;
 	}
 
+
 	@Override
-	public Payment postAndResolve(final Payment obj) throws JSONException, ParseException,
-	KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException
+	public Payment postAndResolve(final Payment obj) throws JSONException, ParseException, KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException
 	{
 		if (obj.getCurrency() != null)
 		{
@@ -109,6 +112,7 @@ public class PaymentLoader extends AbstractHasIdJsonLoader<Payment>
 
 		return post(obj);
 	}
+
 
 	@Override
 	public JSONObject toJSON(final Payment value) throws JSONException

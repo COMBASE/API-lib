@@ -2,9 +2,6 @@ package link.json.loader;
 
 import java.text.ParseException;
 
-import link.CloudLink;
-import link.json.AbstractHasNumberJsonLoader;
-
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -13,15 +10,21 @@ import domain.enums.DataType;
 import error.ApiNotReachableException;
 import error.InvalidTokenException;
 import error.KoronaCloudAPIErrorMessageException;
+import link.CloudLink;
+import link.json.AbstractHasNumberJsonLoader;
+
+
 
 public class CustomerLoader extends AbstractHasNumberJsonLoader<Customer>
 {
 	CustomerGroupLoader customerGroupLoader;
 
+
 	public CustomerLoader(final CloudLink cloudLink)
 	{
 		super(DataType.customer, cloudLink);
 	}
+
 
 	@Override
 	public Customer fromJSON(final JSONObject obj) throws JSONException, ParseException
@@ -30,9 +33,9 @@ public class CustomerLoader extends AbstractHasNumberJsonLoader<Customer>
 		return customer;
 	}
 
+
 	@Override
-	public Customer postAndResolve(final Customer obj) throws JSONException, ParseException,
-	KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException
+	public Customer postAndResolve(final Customer obj) throws JSONException, ParseException, KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException
 	{
 		if (obj.getCustomerGroup() != null)
 		{
@@ -50,12 +53,11 @@ public class CustomerLoader extends AbstractHasNumberJsonLoader<Customer>
 		return post(obj);
 	}
 
+
 	@Override
 	public JSONObject toJSON(final Customer value) throws JSONException
 	{
 		final JSONObject obj = value.toJSON();
-
 		return obj;
 	}
-
 }

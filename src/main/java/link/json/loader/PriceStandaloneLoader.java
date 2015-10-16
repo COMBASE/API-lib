@@ -2,9 +2,6 @@ package link.json.loader;
 
 import java.text.ParseException;
 
-import link.CloudLink;
-import link.json.AbstractHasNumberJsonLoader;
-
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -13,20 +10,24 @@ import domain.enums.DataType;
 import error.ApiNotReachableException;
 import error.InvalidTokenException;
 import error.KoronaCloudAPIErrorMessageException;
+import link.CloudLink;
+import link.json.AbstractHasNumberJsonLoader;
+
+
 
 /**
- *
  * @author mas
- *
  */
 public class PriceStandaloneLoader extends AbstractHasNumberJsonLoader<PriceStandalone>
 {
-	OrganizationalUnitLoader organizationalUnitLoader;
+	private OrganizationalUnitLoader organizationalUnitLoader;
+
 
 	public PriceStandaloneLoader(final CloudLink cloudLink)
 	{
 		super(DataType.priceStandalone, cloudLink);
 	}
+
 
 	@Override
 	public PriceStandalone fromJSON(final JSONObject obj) throws JSONException, ParseException
@@ -34,10 +35,9 @@ public class PriceStandaloneLoader extends AbstractHasNumberJsonLoader<PriceStan
 		return null;
 	}
 
+
 	@Override
-	public PriceStandalone postAndResolve(final PriceStandalone obj) throws JSONException,
-		ParseException, KoronaCloudAPIErrorMessageException, InvalidTokenException,
-		ApiNotReachableException
+	public PriceStandalone postAndResolve(final PriceStandalone obj) throws JSONException, ParseException, KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException
 	{
 		if (obj.getOrganizationalUnit() != null)
 		{
@@ -54,11 +54,11 @@ public class PriceStandaloneLoader extends AbstractHasNumberJsonLoader<PriceStan
 		return post(obj);
 	}
 
+
 	@Override
 	public JSONObject toJSON(final PriceStandalone value) throws JSONException
 	{
 		final JSONObject obj = value.toJSON();
 		return obj;
 	}
-
 }

@@ -2,9 +2,6 @@ package link.json.loader;
 
 import java.text.ParseException;
 
-import link.CloudLink;
-import link.json.AbstractHasIdJsonLoader;
-
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -13,18 +10,27 @@ import domain.enums.DataType;
 import error.ApiNotReachableException;
 import error.InvalidTokenException;
 import error.KoronaCloudAPIErrorMessageException;
+import link.CloudLink;
+import link.json.AbstractHasIdJsonLoader;
+
+
 
 public class AccountTransactionLoader extends AbstractHasIdJsonLoader<AccountTransaction>
 {
-	AccountLoader accountLoader;
-	CashierLoader cashierLoader;
-	POSLoader posLoader;
-	ReceiptLoader receiptLoader;
+	private AccountLoader accountLoader;
+
+	private CashierLoader cashierLoader;
+
+	private POSLoader posLoader;
+
+	private ReceiptLoader receiptLoader;
+
 
 	public AccountTransactionLoader(final CloudLink cloudLink)
 	{
 		super(DataType.accountTransaction, cloudLink);
 	}
+
 
 	@Override
 	public AccountTransaction fromJSON(final JSONObject obj) throws JSONException, ParseException
@@ -33,10 +39,9 @@ public class AccountTransactionLoader extends AbstractHasIdJsonLoader<AccountTra
 		return accountTransaction;
 	}
 
+
 	@Override
-	public AccountTransaction postAndResolve(final AccountTransaction obj) throws JSONException,
-	ParseException, KoronaCloudAPIErrorMessageException, InvalidTokenException,
-	ApiNotReachableException
+	public AccountTransaction postAndResolve(final AccountTransaction obj) throws JSONException, ParseException, KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException
 	{
 		if (obj.getAccount() != null)
 		{
@@ -50,7 +55,6 @@ public class AccountTransactionLoader extends AbstractHasIdJsonLoader<AccountTra
 		{
 			LOGGER.debug(super.getDataType() + ": No Account to resolve and to pre-post");
 		}
-
 
 		if (obj.getCashier() != null)
 		{
@@ -94,12 +98,11 @@ public class AccountTransactionLoader extends AbstractHasIdJsonLoader<AccountTra
 		return post(obj);
 	}
 
+
 	@Override
 	public JSONObject toJSON(final AccountTransaction value) throws JSONException
 	{
 		final JSONObject obj = value.toJSON();
-
-
 		return obj;
 	}
 }

@@ -2,9 +2,6 @@ package link.json.loader;
 
 import java.text.ParseException;
 
-import link.CloudLink;
-import link.json.AbstractHasNameJsonLoader;
-
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -13,14 +10,18 @@ import domain.enums.DataType;
 import error.ApiNotReachableException;
 import error.InvalidTokenException;
 import error.KoronaCloudAPIErrorMessageException;
+import link.CloudLink;
+import link.json.AbstractHasNameJsonLoader;
+
+
 
 public class TagLoader extends AbstractHasNameJsonLoader<Tag>
 {
-
 	public TagLoader(final CloudLink cloudLink)
 	{
 		super(DataType.tag, cloudLink);
 	}
+
 
 	@Override
 	public Tag fromJSON(final JSONObject obj) throws JSONException, ParseException
@@ -29,14 +30,15 @@ public class TagLoader extends AbstractHasNameJsonLoader<Tag>
 		return tag;
 	}
 
+
 	@Override
-	public Tag postAndResolve(final Tag obj) throws JSONException, ParseException,
-	KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException
+	public Tag postAndResolve(final Tag obj) throws JSONException, ParseException, KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException
 	{
 		LOGGER.debug(super.getDataType() + ": Nothing to resolve and to pre-post");
 
 		return post(obj);
 	}
+
 
 	@Override
 	public JSONObject toJSON(final Tag value) throws JSONException
@@ -44,5 +46,4 @@ public class TagLoader extends AbstractHasNameJsonLoader<Tag>
 		final JSONObject obj = value.toJSON();
 		return obj;
 	}
-
 }

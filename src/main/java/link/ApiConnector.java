@@ -5,8 +5,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
@@ -86,6 +91,23 @@ public class ApiConnector
 	}
 
 
+	private URL convertToUrl(final String string)
+	{
+		try
+		{
+			String decodedURL = URLDecoder.decode(string, "UTF-8");
+			URL url = new URL(decodedURL);
+			URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), url.getRef());
+			return uri.toURL();
+		}
+		catch (UnsupportedEncodingException | URISyntaxException | MalformedURLException e)
+		{
+			LOGGER.error("error encoding url: ", e);
+			return null;
+		}
+	}
+
+
 	/**
 	 * Gets an Object from the Cloud
 	 *
@@ -118,9 +140,11 @@ public class ApiConnector
 
 		HttpURLConnection con = null;
 
+		URL obj = null;
+
 		try
 		{
-			final URL obj = new URL(url);
+			obj = convertToUrl(url);
 			if (cloudURL.contains("https"))
 			{
 				setupConnection();
@@ -169,7 +193,7 @@ public class ApiConnector
 		catch (final IOException e)
 		{
 			LOGGER.error(type.toString(), e);
-			throw new ApiNotReachableException(url, e);
+			throw new ApiNotReachableException(obj.toString(), e);
 		}
 		finally
 		{
@@ -316,7 +340,7 @@ public class ApiConnector
 		final String url = cloudURL + slash + token + "/" + type.getReference() + "/save/";
 		try
 		{
-			final URL posturl = new URL(url);
+			final URL posturl = convertToUrl(url);
 			HttpURLConnection con;
 			if (cloudURL.contains("https"))
 			{

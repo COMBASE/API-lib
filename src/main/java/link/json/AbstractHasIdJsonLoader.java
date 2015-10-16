@@ -435,7 +435,6 @@ public abstract class AbstractHasIdJsonLoader<T extends HasId>
 		// throw new PostWithNoReferenceSetException(null);
 		// else
 		return upload(obj);
-
 	}
 
 

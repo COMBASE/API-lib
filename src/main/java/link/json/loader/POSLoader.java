@@ -2,9 +2,6 @@ package link.json.loader;
 
 import java.text.ParseException;
 
-import link.CloudLink;
-import link.json.AbstractHasNameJsonLoader;
-
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -13,21 +10,27 @@ import domain.enums.DataType;
 import error.ApiNotReachableException;
 import error.InvalidTokenException;
 import error.KoronaCloudAPIErrorMessageException;
+import link.CloudLink;
+import link.json.AbstractHasNameJsonLoader;
+
+
 
 public class POSLoader extends AbstractHasNameJsonLoader<POS>
 {
-	CustomerGroupLoader customerGroupLoader;
+	private CustomerGroupLoader customerGroupLoader;
 
-	PaymentMethodLoader paymentMethodLoader;
+	private PaymentMethodLoader paymentMethodLoader;
 
-	EconomicZoneLoader economicZoneLoader;
+	private EconomicZoneLoader economicZoneLoader;
 
-	OrganizationalUnitLoader organizationalUnitLoader;
+	private OrganizationalUnitLoader organizationalUnitLoader;
+
 
 	public POSLoader(final CloudLink cloudLink)
 	{
 		super(DataType.pos, cloudLink);
 	}
+
 
 	@Override
 	public POS fromJSON(final JSONObject obj) throws JSONException, ParseException
@@ -36,9 +39,9 @@ public class POSLoader extends AbstractHasNameJsonLoader<POS>
 		return pos;
 	}
 
+
 	@Override
-	public POS postAndResolve(final POS obj) throws JSONException, ParseException,
-	KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException
+	public POS postAndResolve(final POS obj) throws JSONException, ParseException, KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException
 	{
 		if (obj.getDefaultCustomerGroup() != null)
 		{
@@ -108,11 +111,11 @@ public class POSLoader extends AbstractHasNameJsonLoader<POS>
 		return post(obj);
 	}
 
+
 	@Override
 	public JSONObject toJSON(final POS value) throws JSONException
 	{
 		final JSONObject obj = value.toJSON();
 		return obj;
 	}
-
 }

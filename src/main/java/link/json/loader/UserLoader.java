@@ -2,9 +2,6 @@ package link.json.loader;
 
 import java.text.ParseException;
 
-import link.CloudLink;
-import link.json.AbstractHasNumberJsonLoader;
-
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -14,15 +11,21 @@ import domain.enums.DataType;
 import error.ApiNotReachableException;
 import error.InvalidTokenException;
 import error.KoronaCloudAPIErrorMessageException;
+import link.CloudLink;
+import link.json.AbstractHasNumberJsonLoader;
+
+
 
 public class UserLoader extends AbstractHasNumberJsonLoader<User>
 {
-	OrganizationalUnitLoader organizationalUnitLoader;
+	private OrganizationalUnitLoader organizationalUnitLoader;
+
 
 	public UserLoader(final CloudLink cloudLink)
 	{
 		super(DataType.user, cloudLink);
 	}
+
 
 	@Override
 	public User fromJSON(final JSONObject obj) throws JSONException, ParseException
@@ -31,9 +34,9 @@ public class UserLoader extends AbstractHasNumberJsonLoader<User>
 		return user;
 	}
 
+
 	@Override
-	public User postAndResolve(final User obj) throws JSONException, ParseException,
-	KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException
+	public User postAndResolve(final User obj) throws JSONException, ParseException, KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException
 	{
 		if (obj.getOrgs() != null && !obj.getOrgs().isEmpty())
 		{
@@ -47,13 +50,11 @@ public class UserLoader extends AbstractHasNumberJsonLoader<User>
 					}
 					organizationalUnitLoader.postAndResolve(organizationalUnit);
 				}
-
 			}
 		}
 		else
 		{
-			LOGGER.debug(super.getDataType() +
-				": No Account Transaction to resolve and to pre-post");
+			LOGGER.debug(super.getDataType() + ": No Account Transaction to resolve and to pre-post");
 		}
 
 		if (obj.getSelectedOrg() != null)
@@ -70,8 +71,8 @@ public class UserLoader extends AbstractHasNumberJsonLoader<User>
 		}
 
 		return post(obj);
-
 	}
+
 
 	@Override
 	public JSONObject toJSON(final User value) throws JSONException
@@ -79,6 +80,4 @@ public class UserLoader extends AbstractHasNumberJsonLoader<User>
 		final JSONObject obj = value.toJSON();
 		return obj;
 	}
-
-
 }

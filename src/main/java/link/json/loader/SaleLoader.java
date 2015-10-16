@@ -2,9 +2,6 @@ package link.json.loader;
 
 import java.text.ParseException;
 
-import link.CloudLink;
-import link.json.AbstractHasIdJsonLoader;
-
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -13,23 +10,29 @@ import domain.enums.DataType;
 import error.ApiNotReachableException;
 import error.InvalidTokenException;
 import error.KoronaCloudAPIErrorMessageException;
+import link.CloudLink;
+import link.json.AbstractHasIdJsonLoader;
+
+
 
 public class SaleLoader extends AbstractHasIdJsonLoader<Sale>
 {
-	CashierLoader cashierLoader;
+	private CashierLoader cashierLoader;
 
-	ProductLoader productLoader;
+	private ProductLoader productLoader;
 
-	CommodityGroupLoader commodityGroupLoader;
+	private CommodityGroupLoader commodityGroupLoader;
 
-	ReceiptLoader receiptLoader;
+	private ReceiptLoader receiptLoader;
 
-	POSLoader posLoader;
+	private POSLoader posLoader;
+
 
 	public SaleLoader(final CloudLink cloudLink)
 	{
 		super(DataType.sale, cloudLink);
 	}
+
 
 	@Override
 	public Sale fromJSON(final JSONObject obj) throws JSONException, ParseException
@@ -38,9 +41,9 @@ public class SaleLoader extends AbstractHasIdJsonLoader<Sale>
 		return sale;
 	}
 
+
 	@Override
-	public Sale postAndResolve(final Sale obj) throws JSONException, ParseException,
-	KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException
+	public Sale postAndResolve(final Sale obj) throws JSONException, ParseException, KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException
 	{
 		if (obj.getCashier() != null)
 		{
@@ -110,11 +113,11 @@ public class SaleLoader extends AbstractHasIdJsonLoader<Sale>
 		return post(obj);
 	}
 
+
 	@Override
 	public JSONObject toJSON(final Sale value) throws JSONException
 	{
 		final JSONObject obj = value.toJSON();
 		return obj;
 	}
-
 }
