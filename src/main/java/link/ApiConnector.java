@@ -25,8 +25,6 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import link.thread.PostListThread;
-
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -38,33 +36,39 @@ import error.ApiNotReachableException;
 import error.ErrorMessages;
 import error.InvalidTokenException;
 import error.KoronaCloudAPIErrorMessageException;
+import link.thread.PostListThread;
+
+
 
 /**
  * This Class is our Interface to the Cloud
  *
  * @author Gordon Bosch
- *
  */
 public class ApiConnector
 {
 	private final static Logger LOGGER = Logger.getLogger(ApiConnector.class);
+
 	private final String cloudURL;
+
 	private final String token;
 
 	/**
-	 * trustAllCerts is accepting all Certs in Case we are handling a Https-Connection
+	 * trustAllCerts is accepting all Certs in Case we are handling a
+	 * Https-Connection
 	 */
-	private final static TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager()
-	{
+	private final static TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
 		@Override
 		public void checkClientTrusted(final X509Certificate[] certs, final String authType)
 		{
 		}
 
+
 		@Override
 		public void checkServerTrusted(final X509Certificate[] certs, final String authType)
 		{
 		}
+
 
 		@Override
 		public X509Certificate[] getAcceptedIssuers()
@@ -73,12 +77,14 @@ public class ApiConnector
 		}
 	} };
 
+
 	public ApiConnector(final String cloudURL, final String token)
 	{
 		super();
 		this.cloudURL = cloudURL;
 		this.token = token;
 	}
+
 
 	/**
 	 * Gets an Object from the Cloud
@@ -91,9 +97,7 @@ public class ApiConnector
 	 * @throws JSONException
 	 * @throws IOException
 	 */
-	public String fetchData(final DataType type, final domain.enums.ReferenceType refType,
-		final String reference) throws ApiNotReachableException,
-		KoronaCloudAPIErrorMessageException, InvalidTokenException
+	public String fetchData(final DataType type, final domain.enums.ReferenceType refType, final String reference) throws ApiNotReachableException, KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		String url;
 		String slash = "";
@@ -109,8 +113,7 @@ public class ApiConnector
 		}
 		else
 		{
-			url = cloudURL + slash + token + "/" + type.getReference() + "/" + refType.getType() +
-				"/" + reference;
+			url = cloudURL + slash + token + "/" + type.getReference() + "/" + refType.getType() + "/" + reference;
 		}
 
 		HttpURLConnection con = null;
@@ -121,11 +124,11 @@ public class ApiConnector
 			if (cloudURL.contains("https"))
 			{
 				setupConnection();
-				con = (HttpsURLConnection)obj.openConnection();
+				con = (HttpsURLConnection) obj.openConnection();
 			}
 			else
 			{
-				con = (HttpURLConnection)obj.openConnection();
+				con = (HttpURLConnection) obj.openConnection();
 			}
 			con.setRequestMethod("GET");
 			con.setDoOutput(true);
@@ -133,8 +136,7 @@ public class ApiConnector
 			con.setReadTimeout(5000000);
 			con.setRequestProperty("Content-Type", "application/json");
 			con.connect();
-			final BufferedReader in = new BufferedReader(new InputStreamReader(
-				con.getInputStream(), "UTF-8"));
+			final BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
 			String inputLine;
 			final StringBuilder response = new StringBuilder();
 			while ((inputLine = in.readLine()) != null)
@@ -144,8 +146,7 @@ public class ApiConnector
 			in.close();
 			if (con.getResponseCode() == 200)
 			{
-				LOGGER.debug("APICON:GET -> Type:" + type.getReference() + " JSON=" +
-					obj.toString());
+				LOGGER.debug("APICON:GET -> Type:" + type.getReference() + " JSON=" + obj.toString());
 
 				try
 				{
@@ -159,8 +160,7 @@ public class ApiConnector
 			}
 			else
 			{
-				LOGGER.debug("ERR: APICON:GET -> Type:" + type.getReference() + " JSON=" +
-					obj.toString());
+				LOGGER.debug("ERR: APICON:GET -> Type:" + type.getReference() + " JSON=" + obj.toString());
 				LOGGER.error(con.getResponseMessage() + ":" + con.getResponseCode());
 
 				return null;
@@ -180,6 +180,7 @@ public class ApiConnector
 		}
 	}
 
+
 	/**
 	 * saves a JSONArray in the Cloud
 	 *
@@ -190,9 +191,7 @@ public class ApiConnector
 	 * @throws InvalidTokenException
 	 * @throws ApiNotReachableException
 	 */
-	public JSONArray postData(final DataType type, final JSONArray obj, final int limit,
-		final int threads) throws KoronaCloudAPIErrorMessageException, InvalidTokenException,
-		ApiNotReachableException
+	public JSONArray postData(final DataType type, final JSONArray obj, final int limit, final int threads) throws KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException
 	{
 
 		final ExecutorService exec = Executors.newFixedThreadPool(threads);
@@ -235,11 +234,9 @@ public class ApiConnector
 				}
 
 				i++;
-
 			}
 
-			final Callable<String> callable = new PostListThread(cloudURL, token, type,
-				threadedJson);
+			final Callable<String> callable = new PostListThread(cloudURL, token, type, threadedJson);
 
 			final Future<String> future = exec.submit(callable);
 
@@ -270,7 +267,6 @@ public class ApiConnector
 
 				}
 
-
 			}
 			catch (final JSONException e)
 			{
@@ -299,6 +295,7 @@ public class ApiConnector
 
 	}
 
+
 	/**
 	 * saves a JSONObject in the Cloud
 	 *
@@ -308,8 +305,7 @@ public class ApiConnector
 	 * @throws InvalidTokenException
 	 * @throws KoronaCloudAPIErrorMessageException
 	 */
-	public String postData(final DataType type, final JSONObject obj)
-		throws KoronaCloudAPIErrorMessageException, InvalidTokenException
+	public String postData(final DataType type, final JSONObject obj) throws KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 
 		String slash = "";
@@ -325,11 +321,11 @@ public class ApiConnector
 			if (cloudURL.contains("https"))
 			{
 				setupConnection();
-				con = (HttpsURLConnection)posturl.openConnection();
+				con = (HttpsURLConnection) posturl.openConnection();
 			}
 			else
 			{
-				con = (HttpURLConnection)posturl.openConnection();
+				con = (HttpURLConnection) posturl.openConnection();
 			}
 			con.setRequestMethod("POST");
 			con.setDoOutput(true);
@@ -349,8 +345,7 @@ public class ApiConnector
 			}
 			if (con.getResponseCode() == 200)
 			{
-				final BufferedReader in = new BufferedReader(new InputStreamReader(
-					con.getInputStream(), "UTF-8"));
+				final BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
 				String inputLine;
 				final StringBuilder response = new StringBuilder();
 				while ((inputLine = in.readLine()) != null)
@@ -358,8 +353,7 @@ public class ApiConnector
 					response.append(inputLine);
 				}
 				in.close();
-				LOGGER.info("APICON:POST -> Type:" + type.getReference() + " JSON=" +
-					obj.toString());
+				LOGGER.info("APICON:POST -> Type:" + type.getReference() + " JSON=" + obj.toString());
 				con.disconnect(); // Disconnect
 
 				try
@@ -376,8 +370,7 @@ public class ApiConnector
 			}
 			else
 			{
-				final BufferedReader in = new BufferedReader(new InputStreamReader(
-					con.getInputStream(), "UTF-8"));
+				final BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
 				String inputLine;
 				final StringBuilder response = new StringBuilder();
 				while ((inputLine = in.readLine()) != null)
@@ -386,9 +379,7 @@ public class ApiConnector
 				}
 				in.close();
 
-
-				LOGGER.error("APICON:FAILED POST -> Type:" + type.getReference() + " JSON=" +
-					obj.toString());
+				LOGGER.error("APICON:FAILED POST -> Type:" + type.getReference() + " JSON=" + obj.toString());
 				con.disconnect(); // Disconnect
 
 				try
@@ -416,16 +407,15 @@ public class ApiConnector
 		}
 	}
 
+
 	/**
-	 *
 	 * @param responseJson
 	 * @throws JSONException
 	 * @throws KoronaCloudAPIErrorMessageException
 	 * @throws InvalidTokenException
 	 * @throws ArticleCodeMustBeUniqueException
 	 */
-	private void interpretResponse(final JSONObject responseJson) throws JSONException,
-		KoronaCloudAPIErrorMessageException, InvalidTokenException
+	private void interpretResponse(final JSONObject responseJson) throws JSONException, KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 
 		try
@@ -466,15 +456,13 @@ public class ApiConnector
 			{
 				final JSONArray errorList = responseJson.getJSONArray("errorList");
 
-
 				// contains all error objects
 				final Map<String, String> errorMap = new HashMap<String, String>();
 
 				for (int i = 0; i < errorList.length(); i++)
 				{
 
-					if (errorList.getString(i).equalsIgnoreCase(
-						ErrorMessages.Invalid_Token.getErrorString()))
+					if (errorList.getString(i).equalsIgnoreCase(ErrorMessages.Invalid_Token.getErrorString()))
 						throw new InvalidTokenException(null);
 
 					final String[] errorMapping = errorList.getString(i).split(":");
@@ -492,7 +480,6 @@ public class ApiConnector
 						errorMap.put(errorMapping[0], errorMapping[1]);
 					}
 
-
 					if (errorMap.containsKey("Invalid Token"))
 						throw new InvalidTokenException(null);
 
@@ -507,8 +494,8 @@ public class ApiConnector
 			LOGGER.error("Missing error or errorList key: " + responseJson.toString(), e);
 		}
 
-
 	}
+
 
 	/**
 	 * applies our low-security Profile to our Connection
