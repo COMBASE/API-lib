@@ -185,6 +185,10 @@ public abstract class AbstractApiObject<T extends HasId> implements HasId, Seria
 	 */
 	protected static String nullStringToNull(final JSONObject obj, final String value) throws JSONException
 	{
+		if (obj == null)
+		{
+			return null;
+		}
 		if (!obj.has(value))
 		{
 			return null;
