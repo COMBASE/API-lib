@@ -3,9 +3,6 @@ package link.json.loader;
 import java.text.ParseException;
 import java.util.List;
 
-import link.CloudLink;
-import link.json.AbstractHasIdJsonLoader;
-
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -16,15 +13,19 @@ import domain.enums.DataType;
 import error.ApiNotReachableException;
 import error.InvalidTokenException;
 import error.KoronaCloudAPIErrorMessageException;
+import link.CloudLink;
+import link.json.AbstractHasIdJsonLoader;
+
+
 
 public class InventoryReceiptItemLoader extends AbstractHasIdJsonLoader<InventoryReceiptItem>
 {
+	private InventoryLoader inventoryLoader;
 
-	InventoryLoader inventoryLoader;
+	private InventoryReceiptLoader inventoryReceiptLoader;
 
-	InventoryReceiptLoader inventoryReceiptLoader;
+	private ProductLoader productLoader;
 
-	ProductLoader productLoader;
 
 	public InventoryReceiptItemLoader(final CloudLink cloudLink)
 	{
@@ -33,6 +34,7 @@ public class InventoryReceiptItemLoader extends AbstractHasIdJsonLoader<Inventor
 		inventoryReceiptLoader = new InventoryReceiptLoader(cloudLink);
 	}
 
+
 	@Override
 	public InventoryReceiptItem fromJSON(final JSONObject obj) throws JSONException, ParseException
 	{
@@ -40,10 +42,9 @@ public class InventoryReceiptItemLoader extends AbstractHasIdJsonLoader<Inventor
 		return inventoryReceiptItem;
 	}
 
+
 	@Override
-	public InventoryReceiptItem postAndResolve(final InventoryReceiptItem obj)
-		throws JSONException, ParseException, KoronaCloudAPIErrorMessageException,
-		InvalidTokenException, ApiNotReachableException
+	public InventoryReceiptItem postAndResolve(final InventoryReceiptItem obj) throws JSONException, ParseException, KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException
 	{
 		if (obj.getArticle() != null)
 		{
@@ -74,6 +75,7 @@ public class InventoryReceiptItemLoader extends AbstractHasIdJsonLoader<Inventor
 		return post(obj);
 	}
 
+
 	/**
 	 * Posting complete Inventory Report
 	 *
@@ -89,14 +91,9 @@ public class InventoryReceiptItemLoader extends AbstractHasIdJsonLoader<Inventor
 	 * @throws InvalidTokenException
 	 * @throws ArticleCodeMustBeUniqueException
 	 */
-	public List<InventoryReceiptItem> postList(final List<InventoryReceiptItem> items,
-		List<InventoryReceipt> receipts, List<Inventory> inventories, final int limit,
-		final int threads) throws JSONException, ParseException, ApiNotReachableException,
-		KoronaCloudAPIErrorMessageException, InvalidTokenException
+	public List<InventoryReceiptItem> postList(final List<InventoryReceiptItem> items, List<InventoryReceipt> receipts, List<Inventory> inventories, final int limit, final int threads) throws JSONException, ParseException, ApiNotReachableException, KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
-
 		inventories = inventoryLoader.postList(inventories, limit, threads);
-
 
 		for (final InventoryReceipt receipt : receipts)
 		{
@@ -111,8 +108,8 @@ public class InventoryReceiptItemLoader extends AbstractHasIdJsonLoader<Inventor
 		}
 
 		return super.postList(items, limit, threads);
-
 	}
+
 
 	@Override
 	public JSONObject toJSON(final InventoryReceiptItem value) throws JSONException
@@ -120,5 +117,4 @@ public class InventoryReceiptItemLoader extends AbstractHasIdJsonLoader<Inventor
 		final JSONObject obj = value.toJSON();
 		return obj;
 	}
-
 }

@@ -2,8 +2,6 @@ package link.json.loader;
 
 import java.text.ParseException;
 
-import link.CloudLink;
-
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -14,13 +12,16 @@ import error.ApiNotReachableException;
 import error.ErrorMessages;
 import error.InvalidTokenException;
 import error.KoronaCloudAPIErrorMessageException;
+import link.CloudLink;
+
+
 
 public class FinancialAccountingLoader
 {
-
 	public static final Logger LOGGER = Logger.getLogger(FinancialAccountingLoader.class);
 
 	private final CloudLink cloudLink;
+
 
 	public FinancialAccountingLoader(final CloudLink cloudLink)
 	{
@@ -28,8 +29,8 @@ public class FinancialAccountingLoader
 		this.cloudLink = cloudLink;
 	}
 
-	public JSONObject downloadByDay(final int year, final int month, final int dayOfMonth)
-		throws ApiNotReachableException, KoronaCloudAPIErrorMessageException, InvalidTokenException
+
+	public JSONObject downloadByDay(final int year, final int month, final int dayOfMonth) throws ApiNotReachableException, KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		try
 		{
@@ -40,14 +41,20 @@ public class FinancialAccountingLoader
 		catch (final KoronaCloudAPIErrorMessageException e)
 		{
 			if (e.getErrorMap().containsKey(ErrorMessages.No_object_found_for_day.getErrorString()))
+			{
 				return null;
+			}
 			else
+			{
 				throw new KoronaCloudAPIErrorMessageException(e, e.getErrorMap());
+			}
 		}
 	}
 
+
 	/**
-	 * Returns an org.jettison.JSONObject of all items greater than given revision.
+	 * Returns an org.jettison.JSONObject of all items greater than given
+	 * revision.
 	 *
 	 * @param number
 	 * @return org.jettison.JSONObject
@@ -55,8 +62,7 @@ public class FinancialAccountingLoader
 	 * @throws InvalidTokenException
 	 * @throws KoronaCloudAPIErrorMessageException
 	 */
-	public JSONObject downloadByRevision(final long revision) throws ApiNotReachableException,
-	KoronaCloudAPIErrorMessageException, InvalidTokenException
+	public JSONObject downloadByRevision(final long revision) throws ApiNotReachableException, KoronaCloudAPIErrorMessageException, InvalidTokenException
 	{
 		try
 		{
@@ -66,19 +72,24 @@ public class FinancialAccountingLoader
 		}
 		catch (final KoronaCloudAPIErrorMessageException e)
 		{
-			if (e.getErrorMap().containsKey(
-				ErrorMessages.No_object_found_for_revision.getErrorString()))
+			if (e.getErrorMap().containsKey(ErrorMessages.No_object_found_for_revision.getErrorString()))
+			{
 				return null;
+			}
 			else
+			{
 				throw new KoronaCloudAPIErrorMessageException(e, e.getErrorMap());
+			}
 		}
 	}
+
 
 	public FinancialAccounting fromJSON(final JSONObject obj) throws JSONException, ParseException
 	{
 		final FinancialAccounting financialAccounting = FinancialAccounting.fromJSON(obj);
 		return financialAccounting;
 	}
+
 
 	private JSONObject createJsonObject(final String jStr)
 	{
@@ -95,6 +106,7 @@ public class FinancialAccountingLoader
 			return null;
 		}
 	}
+
 
 	private DataType getDataType()
 	{

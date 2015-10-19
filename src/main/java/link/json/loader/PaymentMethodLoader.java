@@ -2,9 +2,6 @@ package link.json.loader;
 
 import java.text.ParseException;
 
-import link.CloudLink;
-import link.json.AbstractHasNameJsonLoader;
-
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -13,15 +10,21 @@ import domain.enums.DataType;
 import error.ApiNotReachableException;
 import error.InvalidTokenException;
 import error.KoronaCloudAPIErrorMessageException;
+import link.CloudLink;
+import link.json.AbstractHasNameJsonLoader;
+
+
 
 public class PaymentMethodLoader extends AbstractHasNameJsonLoader<PaymentMethod>
 {
-	CurrencyLoader currencyLoader;
+	private CurrencyLoader currencyLoader;
+
 
 	public PaymentMethodLoader(final CloudLink cloudLink)
 	{
 		super(DataType.paymentMethod, cloudLink);
 	}
+
 
 	@Override
 	public PaymentMethod fromJSON(final JSONObject obj) throws JSONException, ParseException
@@ -30,10 +33,9 @@ public class PaymentMethodLoader extends AbstractHasNameJsonLoader<PaymentMethod
 		return paymentMethod;
 	}
 
+
 	@Override
-	public PaymentMethod postAndResolve(final PaymentMethod obj) throws JSONException,
-		ParseException, KoronaCloudAPIErrorMessageException, InvalidTokenException,
-		ApiNotReachableException
+	public PaymentMethod postAndResolve(final PaymentMethod obj) throws JSONException, ParseException, KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException
 	{
 		if (obj.getCurrency() != null)
 		{
@@ -51,11 +53,11 @@ public class PaymentMethodLoader extends AbstractHasNameJsonLoader<PaymentMethod
 		return post(obj);
 	}
 
+
 	@Override
 	public JSONObject toJSON(final PaymentMethod value) throws JSONException
 	{
 		final JSONObject obj = value.toJSON();
 		return obj;
 	}
-
 }

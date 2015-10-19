@@ -2,9 +2,6 @@ package link.json.loader;
 
 import java.text.ParseException;
 
-import link.CloudLink;
-import link.json.AbstractHasNameJsonLoader;
-
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -14,17 +11,23 @@ import domain.enums.DataType;
 import error.ApiNotReachableException;
 import error.InvalidTokenException;
 import error.KoronaCloudAPIErrorMessageException;
+import link.CloudLink;
+import link.json.AbstractHasNameJsonLoader;
+
+
 
 public class InventoryLoader extends AbstractHasNameJsonLoader<Inventory>
 {
-	OrganizationalUnitLoader organizationalUnitLoader;
+	private OrganizationalUnitLoader organizationalUnitLoader;
 
-	UserLoader userLoader;
+	private UserLoader userLoader;
+
 
 	public InventoryLoader(final CloudLink cloudLink)
 	{
 		super(DataType.inventory, cloudLink);
 	}
+
 
 	@Override
 	public Inventory fromJSON(final JSONObject obj) throws JSONException, ParseException
@@ -33,9 +36,9 @@ public class InventoryLoader extends AbstractHasNameJsonLoader<Inventory>
 		return inventory;
 	}
 
+
 	@Override
-	public Inventory postAndResolve(final Inventory obj) throws JSONException, ParseException,
-	KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException
+	public Inventory postAndResolve(final Inventory obj) throws JSONException, ParseException, KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException
 	{
 		if (obj.getOrganizationalUnits() != null && !obj.getOrganizationalUnits().isEmpty())
 		{
@@ -49,7 +52,6 @@ public class InventoryLoader extends AbstractHasNameJsonLoader<Inventory>
 					}
 					organizationalUnitLoader.postAndResolve(organizationalUnit);
 				}
-
 			}
 		}
 		else
@@ -74,12 +76,11 @@ public class InventoryLoader extends AbstractHasNameJsonLoader<Inventory>
 
 	}
 
+
 	@Override
 	public JSONObject toJSON(final Inventory value) throws JSONException
 	{
 		final JSONObject obj = value.toJSON();
-
 		return obj;
 	}
-
 }

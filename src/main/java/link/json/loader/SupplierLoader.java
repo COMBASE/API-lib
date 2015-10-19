@@ -2,9 +2,6 @@ package link.json.loader;
 
 import java.text.ParseException;
 
-import link.CloudLink;
-import link.json.AbstractHasNameJsonLoader;
-
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -13,16 +10,21 @@ import domain.enums.DataType;
 import error.ApiNotReachableException;
 import error.InvalidTokenException;
 import error.KoronaCloudAPIErrorMessageException;
+import link.CloudLink;
+import link.json.AbstractHasNameJsonLoader;
+
+
 
 public class SupplierLoader extends AbstractHasNameJsonLoader<Supplier>
 {
+	private CurrencyLoader currencyLoader;
 
-	CurrencyLoader currencyLoader;
 
 	public SupplierLoader(final CloudLink cloudLink)
 	{
 		super(DataType.supplier, cloudLink);
 	}
+
 
 	@Override
 	public Supplier fromJSON(final JSONObject obj) throws JSONException, ParseException
@@ -32,9 +34,9 @@ public class SupplierLoader extends AbstractHasNameJsonLoader<Supplier>
 		return supplier;
 	}
 
+
 	@Override
-	public Supplier postAndResolve(final Supplier obj) throws JSONException, ParseException,
-		KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException
+	public Supplier postAndResolve(final Supplier obj) throws JSONException, ParseException, KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException
 	{
 		if (obj.getPaymentCurrency() != null)
 		{
@@ -52,6 +54,7 @@ public class SupplierLoader extends AbstractHasNameJsonLoader<Supplier>
 		return post(obj);
 	}
 
+
 	@Override
 	public JSONObject toJSON(final Supplier value) throws JSONException
 	{
@@ -59,5 +62,4 @@ public class SupplierLoader extends AbstractHasNameJsonLoader<Supplier>
 
 		return obj;
 	}
-
 }

@@ -2,9 +2,6 @@ package link.json.loader;
 
 import java.text.ParseException;
 
-import link.CloudLink;
-import link.json.AbstractHasNameJsonLoader;
-
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -13,15 +10,21 @@ import domain.enums.DataType;
 import error.ApiNotReachableException;
 import error.InvalidTokenException;
 import error.KoronaCloudAPIErrorMessageException;
+import link.CloudLink;
+import link.json.AbstractHasNameJsonLoader;
+
+
 
 public class CustomerGroupLoader extends AbstractHasNameJsonLoader<CustomerGroup>
 {
 	PricelistLoader pricelistLoader;
 
+
 	public CustomerGroupLoader(final CloudLink cloudLink)
 	{
 		super(DataType.customergroup, cloudLink);
 	}
+
 
 	@Override
 	public CustomerGroup fromJSON(final JSONObject obj) throws JSONException, ParseException
@@ -30,10 +33,9 @@ public class CustomerGroupLoader extends AbstractHasNameJsonLoader<CustomerGroup
 		return customerGroup;
 	}
 
+
 	@Override
-	public CustomerGroup postAndResolve(final CustomerGroup obj) throws JSONException,
-	ParseException, KoronaCloudAPIErrorMessageException, InvalidTokenException,
-	ApiNotReachableException
+	public CustomerGroup postAndResolve(final CustomerGroup obj) throws JSONException, ParseException, KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException
 	{
 
 		if (obj.getPriceGroup() != null)
@@ -50,8 +52,8 @@ public class CustomerGroupLoader extends AbstractHasNameJsonLoader<CustomerGroup
 		}
 
 		return post(obj);
-
 	}
+
 
 	@Override
 	public JSONObject toJSON(final CustomerGroup value) throws JSONException
@@ -66,5 +68,4 @@ public class CustomerGroupLoader extends AbstractHasNameJsonLoader<CustomerGroup
 
 		return obj;
 	}
-
 }

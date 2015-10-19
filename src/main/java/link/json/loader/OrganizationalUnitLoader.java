@@ -2,9 +2,6 @@ package link.json.loader;
 
 import java.text.ParseException;
 
-import link.CloudLink;
-import link.json.AbstractHasNameJsonLoader;
-
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -13,16 +10,23 @@ import domain.enums.DataType;
 import error.ApiNotReachableException;
 import error.InvalidTokenException;
 import error.KoronaCloudAPIErrorMessageException;
+import link.CloudLink;
+import link.json.AbstractHasNameJsonLoader;
+
+
 
 public class OrganizationalUnitLoader extends AbstractHasNameJsonLoader<OrganizationalUnit>
 {
-	EconomicZoneLoader economicZoneLoader;
-	OrganizationalUnitLoader organizationalUnitLoader;
+	private EconomicZoneLoader economicZoneLoader;
+
+	private OrganizationalUnitLoader organizationalUnitLoader;
+
 
 	public OrganizationalUnitLoader(final CloudLink cloudLink)
 	{
 		super(DataType.organizationalUnit, cloudLink);
 	}
+
 
 	@Override
 	public OrganizationalUnit fromJSON(final JSONObject obj) throws JSONException, ParseException
@@ -31,10 +35,9 @@ public class OrganizationalUnitLoader extends AbstractHasNameJsonLoader<Organiza
 		return organizationalUnit;
 	}
 
+
 	@Override
-	public OrganizationalUnit postAndResolve(final OrganizationalUnit obj) throws JSONException,
-		ParseException, KoronaCloudAPIErrorMessageException, InvalidTokenException,
-		ApiNotReachableException
+	public OrganizationalUnit postAndResolve(final OrganizationalUnit obj) throws JSONException, ParseException, KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException
 	{
 		if (obj.getEconomicZone() != null)
 		{
@@ -65,12 +68,12 @@ public class OrganizationalUnitLoader extends AbstractHasNameJsonLoader<Organiza
 		}
 		else
 		{
-			LOGGER.debug(super.getDataType() +
-				": No Account Transaction to resolve and to pre-post");
+			LOGGER.debug(super.getDataType() + ": No Account Transaction to resolve and to pre-post");
 		}
 
 		return post(obj);
 	}
+
 
 	@Override
 	public JSONObject toJSON(final OrganizationalUnit value) throws JSONException
@@ -79,5 +82,4 @@ public class OrganizationalUnitLoader extends AbstractHasNameJsonLoader<Organiza
 
 		return obj;
 	}
-
 }

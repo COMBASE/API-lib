@@ -2,9 +2,6 @@ package link.json.loader;
 
 import java.text.ParseException;
 
-import link.CloudLink;
-import link.json.AbstractHasIdJsonLoader;
-
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -13,17 +10,23 @@ import domain.enums.DataType;
 import error.ApiNotReachableException;
 import error.InvalidTokenException;
 import error.KoronaCloudAPIErrorMessageException;
+import link.CloudLink;
+import link.json.AbstractHasIdJsonLoader;
+
+
 
 public class TimeTrackingLoader extends AbstractHasIdJsonLoader<TimeTracking>
 {
-	CashierLoader cashierLoader;
+	private CashierLoader cashierLoader;
 
-	TimeTrackingEntitiesLoader timeTrackingEntityLoader;
+	private TimeTrackingEntitiesLoader timeTrackingEntityLoader;
+
 
 	public TimeTrackingLoader(final CloudLink cloudLink)
 	{
 		super(DataType.timeTracking, cloudLink);
 	}
+
 
 	@Override
 	public TimeTracking fromJSON(final JSONObject obj) throws JSONException, ParseException
@@ -32,10 +35,9 @@ public class TimeTrackingLoader extends AbstractHasIdJsonLoader<TimeTracking>
 		return timeTracking;
 	}
 
+
 	@Override
-	public TimeTracking postAndResolve(final TimeTracking obj) throws JSONException,
-	ParseException, KoronaCloudAPIErrorMessageException, InvalidTokenException,
-	ApiNotReachableException
+	public TimeTracking postAndResolve(final TimeTracking obj) throws JSONException, ParseException, KoronaCloudAPIErrorMessageException, InvalidTokenException, ApiNotReachableException
 	{
 		if (obj.getCashier() != null)
 		{
@@ -66,11 +68,11 @@ public class TimeTrackingLoader extends AbstractHasIdJsonLoader<TimeTracking>
 		return null;
 	}
 
+
 	@Override
 	public JSONObject toJSON(final TimeTracking value) throws JSONException
 	{
 		final JSONObject obj = value.toJSON();
 		return obj;
 	}
-
 }

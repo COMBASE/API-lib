@@ -21,9 +21,9 @@ import link.json.AbstractHasNumberJsonLoader;
 
 public class FullReceiptLoader extends AbstractHasNumberJsonLoader<FullReceipt>
 {
-	AccountTransactionLoader accountTransactionLoader;
+	private AccountTransactionLoader accountTransactionLoader;
 
-	PaymentLoader paymentLoader;
+	private PaymentLoader paymentLoader;
 
 
 	public FullReceiptLoader(final CloudLink cloudLink)
@@ -60,7 +60,9 @@ public class FullReceiptLoader extends AbstractHasNumberJsonLoader<FullReceipt>
 				return null;
 			}
 			else
+			{
 				throw new KoronaCloudAPIErrorMessageException(e, e.getErrorMap());
+			}
 		}
 	}
 
@@ -85,7 +87,9 @@ public class FullReceiptLoader extends AbstractHasNumberJsonLoader<FullReceipt>
 			final String jStr = cloudLink.getPersonalizedJSONPageByOffsetWith(getDataType(), revision, paymentMethodUid, amountPerPage, offset);
 			final JSONArray jArray = createJsonArray(jStr);
 			if (jArray == null)
+			{
 				return null;
+			}
 			offset += amountPerPage;
 
 			return jArray;
@@ -98,7 +102,9 @@ public class FullReceiptLoader extends AbstractHasNumberJsonLoader<FullReceipt>
 				return null;
 			}
 			else
+			{
 				throw new KoronaCloudAPIErrorMessageException(e, e.getErrorMap());
+			}
 		}
 	}
 
@@ -126,7 +132,6 @@ public class FullReceiptLoader extends AbstractHasNumberJsonLoader<FullReceipt>
 					}
 					accountTransactionLoader.postAndResolve(accountTransaction);
 				}
-
 			}
 		}
 		else
@@ -146,14 +151,12 @@ public class FullReceiptLoader extends AbstractHasNumberJsonLoader<FullReceipt>
 					}
 					paymentLoader.postAndResolve(payment);
 				}
-
 			}
 		}
 		else
 		{
 			LOGGER.debug(super.getDataType() + ": No Payment to resolve and to pre-post");
 		}
-
 		return post(obj);
 	}
 
@@ -162,7 +165,6 @@ public class FullReceiptLoader extends AbstractHasNumberJsonLoader<FullReceipt>
 	public JSONObject toJSON(final FullReceipt value) throws JSONException
 	{
 		final JSONObject obj = value.toJSON();
-
 		return obj;
 	}
 }
