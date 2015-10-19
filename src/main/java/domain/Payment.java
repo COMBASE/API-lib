@@ -8,6 +8,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 
+
 public class Payment extends AbstractApiObject<Payment>
 {
 	public static class Builder extends Init<Builder>
@@ -20,24 +21,44 @@ public class Payment extends AbstractApiObject<Payment>
 		}
 
 	}
+
+
 	protected static abstract class Init<T extends Init<T>> extends AbstractApiObject.Init<T>
 	{
 		private final String itemSequence = null;
+
 		private Cashier cashier = null;
+
 		private String receiptNumber = null;
+
 		private Double manualPrice = null;
+
 		private Receipt receipt = null;
+
 		private Double itemPrice = null;
+
 		private Integer itemNumber = null;
+
 		private Date transactionTime = null;
+
 		private BigDecimal amount = null;
+
 		private Double netItemPrice = null;
+
 		private Double baseItemPrice = null;
+
 		private String serialNumber = null;
+
 		private POS pos = null;
+
 		private Currency currency = null;
+
 		private PaymentMethod paymentMethod = null;
+
 		private Integer receiptIndex = null;
+
+		public String voucherNumber;
+
 
 		public T amount(final BigDecimal value)
 		{
@@ -45,11 +66,13 @@ public class Payment extends AbstractApiObject<Payment>
 			return self();
 		}
 
+
 		public T baseItemPrice(final double value)
 		{
 			baseItemPrice = value;
 			return self();
 		}
+
 
 		@Override
 		public Payment build()
@@ -64,11 +87,13 @@ public class Payment extends AbstractApiObject<Payment>
 			return self();
 		}
 
+
 		public T currency(final Currency cur)
 		{
 			currency = cur;
 			return self();
 		}
+
 
 		public T itemNumber(final int value)
 		{
@@ -76,11 +101,13 @@ public class Payment extends AbstractApiObject<Payment>
 			return self();
 		}
 
+
 		public T itemPrice(final double value)
 		{
 			itemPrice = value;
 			return self();
 		}
+
 
 		public T manualPrice(final double value)
 		{
@@ -88,11 +115,13 @@ public class Payment extends AbstractApiObject<Payment>
 			return self();
 		}
 
+
 		public T netItemPrice(final double value)
 		{
 			netItemPrice = value;
 			return self();
 		}
+
 
 		public T paymentMethod(final PaymentMethod payMeth)
 		{
@@ -100,11 +129,13 @@ public class Payment extends AbstractApiObject<Payment>
 			return self();
 		}
 
+
 		public T pos(final POS posy)
 		{
 			pos = posy;
 			return self();
 		}
+
 
 		public T receipt(final Receipt rec)
 		{
@@ -112,11 +143,13 @@ public class Payment extends AbstractApiObject<Payment>
 			return self();
 		}
 
+
 		public T receiptIndex(final int value)
 		{
 			this.receiptIndex = value;
 			return self();
 		}
+
 
 		public T receiptNumber(final String value)
 		{
@@ -124,18 +157,28 @@ public class Payment extends AbstractApiObject<Payment>
 			return self();
 		}
 
+
 		public T serialNumber(final String value)
 		{
 			serialNumber = value;
 			return self();
 		}
 
+
 		public T transactionTime(final Date value)
 		{
 			transactionTime = value;
 			return self();
 		}
+
+
+		public T voucherNumber(final String value)
+		{
+			voucherNumber = value;
+			return self();
+		}
 	}
+
 
 	/**
 	 *
@@ -145,22 +188,37 @@ public class Payment extends AbstractApiObject<Payment>
 	private Cashier cashier;
 
 	private Integer itemNumber;
+
 	private String itemSequence;
+
 	private Double manualPrice;
+
 	private Receipt receipt;
+
 	private Double itemPrice;
+
 	private Double netItemPrice;
+
 	private Double baseItemPrice;
+
 	private String receiptNumber;
+
 	private String serialNumber;
+
 	private BigDecimal amount;
+
 	private Date transactionTime;
+
 	private POS pos;
+
 	private PaymentMethod paymentMethod;
+
+	private String voucherNumber;
 
 	private Currency currency;
 
 	private final Integer receiptIndex;
+
 
 	private Payment(final Init<?> init)
 	{
@@ -181,15 +239,18 @@ public class Payment extends AbstractApiObject<Payment>
 		currency = init.currency;
 		paymentMethod = init.paymentMethod;
 		receiptIndex = init.receiptIndex;
+		setVoucherNumber(init.voucherNumber);
+
 	}
 
-// public boolean post() throws IOException
-// {
-//
-// if (cashier != null && cashier.getUuid() == null)
-// cashier.post();
-// return CloudLink.getConnector().postData(DataType.sale, this.toJSON());
-// }
+
+	// public boolean post() throws IOException
+	// {
+	//
+	// if (cashier != null && cashier.getUuid() == null)
+	// cashier.post();
+	// return CloudLink.getConnector().postData(DataType.sale, this.toJSON());
+	// }
 
 	@Override
 	public boolean equals(final Object obj)
@@ -198,85 +259,102 @@ public class Payment extends AbstractApiObject<Payment>
 		return obj.hashCode() == this.hashCode();
 	}
 
+
 	public BigDecimal getAmount()
 	{
 		return amount;
 	}
+
 
 	public double getBaseItemPrice()
 	{
 		return baseItemPrice;
 	}
 
+
 	public Cashier getCashier()
 	{
 		return cashier;
 	}
+
 
 	public Currency getCurrency()
 	{
 		return currency;
 	}
 
+
 	public int getItemNumber()
 	{
 		return itemNumber;
 	}
+
 
 	public double getItemPrice()
 	{
 		return itemPrice;
 	}
 
+
 	public String getItemSequence()
 	{
 		return itemSequence;
 	}
+
 
 	public double getManualPrice()
 	{
 		return manualPrice;
 	}
 
+
 	public double getNetItemPrice()
 	{
 		return netItemPrice;
 	}
+
 
 	public PaymentMethod getPaymentMethod()
 	{
 		return paymentMethod;
 	}
 
+
 	public POS getPos()
 	{
 		return pos;
 	}
+
 
 	public Receipt getReceipt()
 	{
 		return receipt;
 	}
 
+
 	public int getReceiptIndex()
 	{
 		return receiptIndex;
 	}
+
 
 	public String getReceiptNumber()
 	{
 		return receiptNumber;
 	}
 
+
 	public String getSerialNumber()
 	{
 		return serialNumber;
 	}
 
+
 	public Date getTransactionTime()
 	{
 		return transactionTime;
 	}
+
 
 	@Override
 	public int hashCode()
@@ -284,95 +362,108 @@ public class Payment extends AbstractApiObject<Payment>
 		final int prime = 31;
 		int result = 1;
 
-		result = prime * result + ((this.itemSequence == null) ? 0 : this.itemSequence.hashCode());
-		result = prime * result + ((this.serialNumber == null) ? 0 : this.serialNumber.hashCode());
-		result = prime * result + ((this.cashier == null) ? 0 : this.cashier.hashCode());
-		result = prime * result + ((this.currency == null) ? 0 : this.currency.hashCode());
-		result = prime * result +
-			((this.paymentMethod == null) ? 0 : this.paymentMethod.hashCode());
-		result = prime * result + ((this.pos == null) ? 0 : this.pos.hashCode());
-		result = prime * result + ((this.receipt == null) ? 0 : this.receipt.hashCode());
-		result = prime * result +
-			((this.transactionTime == null) ? 0 : this.transactionTime.hashCode());
-
+		result = prime * result + (itemSequence == null ? 0 : itemSequence.hashCode());
+		result = prime * result + (serialNumber == null ? 0 : serialNumber.hashCode());
+		result = prime * result + (cashier == null ? 0 : cashier.hashCode());
+		result = prime * result + (currency == null ? 0 : currency.hashCode());
+		result = prime * result + (paymentMethod == null ? 0 : paymentMethod.hashCode());
+		result = prime * result + (pos == null ? 0 : pos.hashCode());
+		result = prime * result + (receipt == null ? 0 : receipt.hashCode());
+		result = prime * result + (transactionTime == null ? 0 : transactionTime.hashCode());
 
 		return result;
 	}
+
 
 	public void setAmount(final BigDecimal amount)
 	{
 		this.amount = amount;
 	}
 
+
 	public void setBaseItemPrice(final double baseItemPrice)
 	{
 		this.baseItemPrice = baseItemPrice;
 	}
+
 
 	public void setCashier(final Cashier cashier)
 	{
 		this.cashier = cashier;
 	}
 
+
 	public void setCurrency(final Currency currency)
 	{
 		this.currency = currency;
 	}
+
 
 	public void setItemNumber(final int itemNumber)
 	{
 		this.itemNumber = itemNumber;
 	}
 
+
 	public void setItemPrice(final double itemPrice)
 	{
 		this.itemPrice = itemPrice;
 	}
+
 
 	public void setItemSequence(final String itemSequence)
 	{
 		this.itemSequence = itemSequence;
 	}
 
+
 	public void setManualPrice(final double manualPrice)
 	{
 		this.manualPrice = manualPrice;
 	}
+
 
 	public void setNetItemPrice(final double netItemPrice)
 	{
 		this.netItemPrice = netItemPrice;
 	}
 
+
 	public void setPaymentMethod(final PaymentMethod paymentMethod)
 	{
 		this.paymentMethod = paymentMethod;
 	}
+
 
 	public void setPos(final POS pos)
 	{
 		this.pos = pos;
 	}
 
+
 	public void setReceipt(final Receipt receipt)
 	{
 		this.receipt = receipt;
 	}
+
 
 	public void setReceiptNumber(final String receiptNumber)
 	{
 		this.receiptNumber = receiptNumber;
 	}
 
+
 	public void setSerialNumber(final String serialNumber)
 	{
 		this.serialNumber = serialNumber;
 	}
 
+
 	public void setTransactionTime(final Date transactionTime)
 	{
 		this.transactionTime = transactionTime;
 	}
+
 
 	@Override
 	public JSONObject toJSON() throws JSONException
@@ -386,19 +477,16 @@ public class Payment extends AbstractApiObject<Payment>
 		obj.put("cashier", cashier.getId());
 
 		if (pos != null)
-		{
 			obj.put("pos", pos.getId());
-		}
 
 		return obj;
 	}
 
+
 	public static Payment fromJSON(JSONObject obj) throws JSONException, ParseException
 	{
 		if (obj.has("result") && nullStringToNull(obj, "result").equalsIgnoreCase("null"))
-		{
 			obj = obj.getJSONObject("result");
-		}
 
 		final Cashier cash = new Cashier.Builder().build();
 		cash.setId(nullStringToNull(obj, "cashier"));
@@ -410,18 +498,32 @@ public class Payment extends AbstractApiObject<Payment>
 		cur.setId(nullStringToNull(obj, "currency"));
 		final PaymentMethod payMeth = new PaymentMethod.Builder().build();
 		payMeth.setId(nullStringToNull(obj, "paymentMethod"));
-		final Payment pay = new Payment.Builder().deleted(obj.getBoolean("deleted"))
-			.revision(obj.getLong("revision"))
-			.id(nullStringToNull(obj, "uuid"))
-			.amount(prepareBigDecimal(obj, "amount"))
-			.transactionTime(prepareDate(obj, "transactionTime"))
-			.cashier(cash)
-			.receipt(rec)
-			.pos(pos)
-			.currency(cur)
-			.paymentMethod(payMeth)
-			.receiptIndex(obj.getInt("receiptIndex"))
-			.build();
-		return pay;
+
+		return new Payment.Builder().//
+		deleted(obj.getBoolean("deleted")).//
+		revision(obj.getLong("revision")).//
+		id(nullStringToNull(obj, "uuid")).//
+		amount(prepareBigDecimal(obj, "amount")).//
+		transactionTime(prepareDate(obj, "transactionTime")).//
+		cashier(cash).//
+		receipt(rec).//
+		pos(pos).//
+		currency(cur).//
+		paymentMethod(payMeth).//
+		receiptIndex(obj.getInt("receiptIndex")).//
+		voucherNumber(nullStringToNull(obj, "voucherNumber")).//
+		build();
+	}
+
+
+	public String getVoucherNumber()
+	{
+		return voucherNumber;
+	}
+
+
+	public void setVoucherNumber(final String voucherNumber)
+	{
+		this.voucherNumber = voucherNumber;
 	}
 }
